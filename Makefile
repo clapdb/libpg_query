@@ -9,7 +9,7 @@ PGDIRBZ2 = $(root_dir)/tmp/postgres.tar.bz2
 
 PG_VERSION = 13.3
 PG_VERSION_MAJOR = $(call word-dot,$(PG_VERSION),1)
-PROTOC_VERSION = 3.14.0
+PROTOC_VERSION = 3.19.4
 
 VERSION = 2.0.7
 VERSION_MAJOR = $(call word-dot,$(VERSION),1)
