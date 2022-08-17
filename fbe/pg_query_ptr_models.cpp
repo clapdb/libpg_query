@@ -9527,18 +9527,18 @@ void FieldModel_pg_query_TableFunc::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + docexpr.fbe_size()) <= fbe_struct_size)
         {
-            docexpr.get(&fbe_value.docexpr);
+            docexpr.get(fbe_value.docexpr);
         }
     else
-        fbe_value.docexpr = nullptr;
+        fbe_value.docexpr = ::pg_query::Node();
     fbe_current_size += docexpr.fbe_size();
 
     if ((fbe_current_size + rowexpr.fbe_size()) <= fbe_struct_size)
         {
-            rowexpr.get(&fbe_value.rowexpr);
+            rowexpr.get(fbe_value.rowexpr);
         }
     else
-        fbe_value.rowexpr = nullptr;
+        fbe_value.rowexpr = ::pg_query::Node();
     fbe_current_size += rowexpr.fbe_size();
 
     if ((fbe_current_size + colnames.fbe_size()) <= fbe_struct_size)
@@ -10364,10 +10364,10 @@ void FieldModel_pg_query_Var::get_fields(::FBE::Base& base_fbe_value, size_t fbe
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + varno.fbe_size()) <= fbe_struct_size)
@@ -10842,10 +10842,10 @@ void FieldModel_pg_query_Param::get_fields(::FBE::Base& base_fbe_value, size_t f
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + paramkind.fbe_size()) <= fbe_struct_size)
@@ -11392,10 +11392,10 @@ void FieldModel_pg_query_Aggref::get_fields(::FBE::Base& base_fbe_value, size_t 
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + aggfnoid.fbe_size()) <= fbe_struct_size)
@@ -11480,10 +11480,10 @@ void FieldModel_pg_query_Aggref::get_fields(::FBE::Base& base_fbe_value, size_t 
 
     if ((fbe_current_size + aggfilter.fbe_size()) <= fbe_struct_size)
         {
-            aggfilter.get(&fbe_value.aggfilter);
+            aggfilter.get(fbe_value.aggfilter);
         }
     else
-        fbe_value.aggfilter = nullptr;
+        fbe_value.aggfilter = ::pg_query::Node();
     fbe_current_size += aggfilter.fbe_size();
 
     if ((fbe_current_size + aggstar.fbe_size()) <= fbe_struct_size)
@@ -11933,10 +11933,10 @@ void FieldModel_pg_query_GroupingFunc::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + args.fbe_size()) <= fbe_struct_size)
@@ -12411,10 +12411,10 @@ void FieldModel_pg_query_WindowFunc::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + winfnoid.fbe_size()) <= fbe_struct_size)
@@ -12459,10 +12459,10 @@ void FieldModel_pg_query_WindowFunc::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + aggfilter.fbe_size()) <= fbe_struct_size)
         {
-            aggfilter.get(&fbe_value.aggfilter);
+            aggfilter.get(fbe_value.aggfilter);
         }
     else
-        fbe_value.aggfilter = nullptr;
+        fbe_value.aggfilter = ::pg_query::Node();
     fbe_current_size += aggfilter.fbe_size();
 
     if ((fbe_current_size + winref.fbe_size()) <= fbe_struct_size)
@@ -12916,10 +12916,10 @@ void FieldModel_pg_query_SubscriptingRef::get_fields(::FBE::Base& base_fbe_value
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + refcontainertype.fbe_size()) <= fbe_struct_size)
@@ -12972,18 +12972,18 @@ void FieldModel_pg_query_SubscriptingRef::get_fields(::FBE::Base& base_fbe_value
 
     if ((fbe_current_size + refexpr.fbe_size()) <= fbe_struct_size)
         {
-            refexpr.get(&fbe_value.refexpr);
+            refexpr.get(fbe_value.refexpr);
         }
     else
-        fbe_value.refexpr = nullptr;
+        fbe_value.refexpr = ::pg_query::Node();
     fbe_current_size += refexpr.fbe_size();
 
     if ((fbe_current_size + refassgnexpr.fbe_size()) <= fbe_struct_size)
         {
-            refassgnexpr.get(&fbe_value.refassgnexpr);
+            refassgnexpr.get(fbe_value.refassgnexpr);
         }
     else
-        fbe_value.refassgnexpr = nullptr;
+        fbe_value.refassgnexpr = ::pg_query::Node();
     fbe_current_size += refassgnexpr.fbe_size();
 }
 
@@ -13412,10 +13412,10 @@ void FieldModel_pg_query_FuncExpr::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + funcid.fbe_size()) <= fbe_struct_size)
@@ -13872,18 +13872,18 @@ void FieldModel_pg_query_NamedArgExpr::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + name.fbe_size()) <= fbe_struct_size)
@@ -14323,10 +14323,10 @@ void FieldModel_pg_query_OpExpr::get_fields(::FBE::Base& base_fbe_value, size_t 
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + opno.fbe_size()) <= fbe_struct_size)
@@ -14810,10 +14810,10 @@ void FieldModel_pg_query_DistinctExpr::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + opno.fbe_size()) <= fbe_struct_size)
@@ -15297,10 +15297,10 @@ void FieldModel_pg_query_NullIfExpr::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + opno.fbe_size()) <= fbe_struct_size)
@@ -15766,10 +15766,10 @@ void FieldModel_pg_query_ScalarArrayOpExpr::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + opno.fbe_size()) <= fbe_struct_size)
@@ -16190,10 +16190,10 @@ void FieldModel_pg_query_BoolExpr::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + boolop.fbe_size()) <= fbe_struct_size)
@@ -16614,10 +16614,10 @@ void FieldModel_pg_query_SubLink::get_fields(::FBE::Base& base_fbe_value, size_t
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + sub_link_type.fbe_size()) <= fbe_struct_size)
@@ -16638,10 +16638,10 @@ void FieldModel_pg_query_SubLink::get_fields(::FBE::Base& base_fbe_value, size_t
 
     if ((fbe_current_size + testexpr.fbe_size()) <= fbe_struct_size)
         {
-            testexpr.get(&fbe_value.testexpr);
+            testexpr.get(fbe_value.testexpr);
         }
     else
-        fbe_value.testexpr = nullptr;
+        fbe_value.testexpr = ::pg_query::Node();
     fbe_current_size += testexpr.fbe_size();
 
     if ((fbe_current_size + oper_name.fbe_size()) <= fbe_struct_size)
@@ -16654,10 +16654,10 @@ void FieldModel_pg_query_SubLink::get_fields(::FBE::Base& base_fbe_value, size_t
 
     if ((fbe_current_size + subselect.fbe_size()) <= fbe_struct_size)
         {
-            subselect.get(&fbe_value.subselect);
+            subselect.get(fbe_value.subselect);
         }
     else
-        fbe_value.subselect = nullptr;
+        fbe_value.subselect = ::pg_query::Node();
     fbe_current_size += subselect.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -17155,10 +17155,10 @@ void FieldModel_pg_query_SubPlan::get_fields(::FBE::Base& base_fbe_value, size_t
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + sub_link_type.fbe_size()) <= fbe_struct_size)
@@ -17171,10 +17171,10 @@ void FieldModel_pg_query_SubPlan::get_fields(::FBE::Base& base_fbe_value, size_t
 
     if ((fbe_current_size + testexpr.fbe_size()) <= fbe_struct_size)
         {
-            testexpr.get(&fbe_value.testexpr);
+            testexpr.get(fbe_value.testexpr);
         }
     else
-        fbe_value.testexpr = nullptr;
+        fbe_value.testexpr = ::pg_query::Node();
     fbe_current_size += testexpr.fbe_size();
 
     if ((fbe_current_size + param_ids.fbe_size()) <= fbe_struct_size)
@@ -17651,10 +17651,10 @@ void FieldModel_pg_query_AlternativeSubPlan::get_fields(::FBE::Base& base_fbe_va
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + subplans.fbe_size()) <= fbe_struct_size)
@@ -18048,18 +18048,18 @@ void FieldModel_pg_query_FieldSelect::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + fieldnum.fbe_size()) <= fbe_struct_size)
@@ -18472,18 +18472,18 @@ void FieldModel_pg_query_FieldStore::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + newvals.fbe_size()) <= fbe_struct_size)
@@ -18905,18 +18905,18 @@ void FieldModel_pg_query_RelabelType::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + resulttype.fbe_size()) <= fbe_struct_size)
@@ -19347,18 +19347,18 @@ void FieldModel_pg_query_CoerceViaIO::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + resulttype.fbe_size()) <= fbe_struct_size)
@@ -19798,26 +19798,26 @@ void FieldModel_pg_query_ArrayCoerceExpr::get_fields(::FBE::Base& base_fbe_value
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + elemexpr.fbe_size()) <= fbe_struct_size)
         {
-            elemexpr.get(&fbe_value.elemexpr);
+            elemexpr.get(fbe_value.elemexpr);
         }
     else
-        fbe_value.elemexpr = nullptr;
+        fbe_value.elemexpr = ::pg_query::Node();
     fbe_current_size += elemexpr.fbe_size();
 
     if ((fbe_current_size + resulttype.fbe_size()) <= fbe_struct_size)
@@ -20240,18 +20240,18 @@ void FieldModel_pg_query_ConvertRowtypeExpr::get_fields(::FBE::Base& base_fbe_va
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + resulttype.fbe_size()) <= fbe_struct_size)
@@ -20646,18 +20646,18 @@ void FieldModel_pg_query_CollateExpr::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + coll_oid.fbe_size()) <= fbe_struct_size)
@@ -21070,10 +21070,10 @@ void FieldModel_pg_query_CaseExpr::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + casetype.fbe_size()) <= fbe_struct_size)
@@ -21094,10 +21094,10 @@ void FieldModel_pg_query_CaseExpr::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + args.fbe_size()) <= fbe_struct_size)
@@ -21110,10 +21110,10 @@ void FieldModel_pg_query_CaseExpr::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + defresult.fbe_size()) <= fbe_struct_size)
         {
-            defresult.get(&fbe_value.defresult);
+            defresult.get(fbe_value.defresult);
         }
     else
-        fbe_value.defresult = nullptr;
+        fbe_value.defresult = ::pg_query::Node();
     fbe_current_size += defresult.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -21494,26 +21494,26 @@ void FieldModel_pg_query_CaseWhen::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + expr.fbe_size()) <= fbe_struct_size)
         {
-            expr.get(&fbe_value.expr);
+            expr.get(fbe_value.expr);
         }
     else
-        fbe_value.expr = nullptr;
+        fbe_value.expr = ::pg_query::Node();
     fbe_current_size += expr.fbe_size();
 
     if ((fbe_current_size + result.fbe_size()) <= fbe_struct_size)
         {
-            result.get(&fbe_value.result);
+            result.get(fbe_value.result);
         }
     else
-        fbe_value.result = nullptr;
+        fbe_value.result = ::pg_query::Node();
     fbe_current_size += result.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -21891,10 +21891,10 @@ void FieldModel_pg_query_CaseTestExpr::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + type_id.fbe_size()) <= fbe_struct_size)
@@ -22315,10 +22315,10 @@ void FieldModel_pg_query_ArrayExpr::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + array_typeid.fbe_size()) <= fbe_struct_size)
@@ -22757,10 +22757,10 @@ void FieldModel_pg_query_RowExpr::get_fields(::FBE::Base& base_fbe_value, size_t
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + args.fbe_size()) <= fbe_struct_size)
@@ -23199,10 +23199,10 @@ void FieldModel_pg_query_RowCompareExpr::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + rctype.fbe_size()) <= fbe_struct_size)
@@ -23632,10 +23632,10 @@ void FieldModel_pg_query_CoalesceExpr::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + coalescetype.fbe_size()) <= fbe_struct_size)
@@ -24065,10 +24065,10 @@ void FieldModel_pg_query_MinMaxExpr::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + minmaxtype.fbe_size()) <= fbe_struct_size)
@@ -24498,10 +24498,10 @@ void FieldModel_pg_query_SQLValueFunction::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + op.fbe_size()) <= fbe_struct_size)
@@ -24958,10 +24958,10 @@ void FieldModel_pg_query_XmlExpr::get_fields(::FBE::Base& base_fbe_value, size_t
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + op.fbe_size()) <= fbe_struct_size)
@@ -25418,18 +25418,18 @@ void FieldModel_pg_query_NullTest::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + nulltesttype.fbe_size()) <= fbe_struct_size)
@@ -25824,18 +25824,18 @@ void FieldModel_pg_query_BooleanTest::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + booltesttype.fbe_size()) <= fbe_struct_size)
@@ -26248,18 +26248,18 @@ void FieldModel_pg_query_CoerceToDomain::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + resulttype.fbe_size()) <= fbe_struct_size)
@@ -26681,10 +26681,10 @@ void FieldModel_pg_query_CoerceToDomainValue::get_fields(::FBE::Base& base_fbe_v
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + type_id.fbe_size()) <= fbe_struct_size)
@@ -27096,10 +27096,10 @@ void FieldModel_pg_query_SetToDefault::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + type_id.fbe_size()) <= fbe_struct_size)
@@ -27502,10 +27502,10 @@ void FieldModel_pg_query_CurrentOfExpr::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + cvarno.fbe_size()) <= fbe_struct_size)
@@ -27890,10 +27890,10 @@ void FieldModel_pg_query_NextValueExpr::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + seqid.fbe_size()) <= fbe_struct_size)
@@ -28278,18 +28278,18 @@ void FieldModel_pg_query_InferenceElem::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + expr.fbe_size()) <= fbe_struct_size)
         {
-            expr.get(&fbe_value.expr);
+            expr.get(fbe_value.expr);
         }
     else
-        fbe_value.expr = nullptr;
+        fbe_value.expr = ::pg_query::Node();
     fbe_current_size += expr.fbe_size();
 
     if ((fbe_current_size + infercollid.fbe_size()) <= fbe_struct_size)
@@ -28711,18 +28711,18 @@ void FieldModel_pg_query_TargetEntry::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + xpr.fbe_size()) <= fbe_struct_size)
         {
-            xpr.get(&fbe_value.xpr);
+            xpr.get(fbe_value.xpr);
         }
     else
-        fbe_value.xpr = nullptr;
+        fbe_value.xpr = ::pg_query::Node();
     fbe_current_size += xpr.fbe_size();
 
     if ((fbe_current_size + expr.fbe_size()) <= fbe_struct_size)
         {
-            expr.get(&fbe_value.expr);
+            expr.get(fbe_value.expr);
         }
     else
-        fbe_value.expr = nullptr;
+        fbe_value.expr = ::pg_query::Node();
     fbe_current_size += expr.fbe_size();
 
     if ((fbe_current_size + resno.fbe_size()) <= fbe_struct_size)
@@ -29539,18 +29539,18 @@ void FieldModel_pg_query_JoinExpr::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + larg.fbe_size()) <= fbe_struct_size)
         {
-            larg.get(&fbe_value.larg);
+            larg.get(fbe_value.larg);
         }
     else
-        fbe_value.larg = nullptr;
+        fbe_value.larg = ::pg_query::Node();
     fbe_current_size += larg.fbe_size();
 
     if ((fbe_current_size + rarg.fbe_size()) <= fbe_struct_size)
         {
-            rarg.get(&fbe_value.rarg);
+            rarg.get(fbe_value.rarg);
         }
     else
-        fbe_value.rarg = nullptr;
+        fbe_value.rarg = ::pg_query::Node();
     fbe_current_size += rarg.fbe_size();
 
     if ((fbe_current_size + using_clause.fbe_size()) <= fbe_struct_size)
@@ -29563,10 +29563,10 @@ void FieldModel_pg_query_JoinExpr::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + quals.fbe_size()) <= fbe_struct_size)
         {
-            quals.get(&fbe_value.quals);
+            quals.get(fbe_value.quals);
         }
     else
-        fbe_value.quals = nullptr;
+        fbe_value.quals = ::pg_query::Node();
     fbe_current_size += quals.fbe_size();
 
     if ((fbe_current_size + alias.fbe_size()) <= fbe_struct_size)
@@ -29946,10 +29946,10 @@ void FieldModel_pg_query_FromExpr::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + quals.fbe_size()) <= fbe_struct_size)
         {
-            quals.get(&fbe_value.quals);
+            quals.get(fbe_value.quals);
         }
     else
-        fbe_value.quals = nullptr;
+        fbe_value.quals = ::pg_query::Node();
     fbe_current_size += quals.fbe_size();
 }
 
@@ -30369,10 +30369,10 @@ void FieldModel_pg_query_OnConflictExpr::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + arbiter_where.fbe_size()) <= fbe_struct_size)
         {
-            arbiter_where.get(&fbe_value.arbiter_where);
+            arbiter_where.get(fbe_value.arbiter_where);
         }
     else
-        fbe_value.arbiter_where = nullptr;
+        fbe_value.arbiter_where = ::pg_query::Node();
     fbe_current_size += arbiter_where.fbe_size();
 
     if ((fbe_current_size + constraint.fbe_size()) <= fbe_struct_size)
@@ -30393,10 +30393,10 @@ void FieldModel_pg_query_OnConflictExpr::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + on_conflict_where.fbe_size()) <= fbe_struct_size)
         {
-            on_conflict_where.get(&fbe_value.on_conflict_where);
+            on_conflict_where.get(fbe_value.on_conflict_where);
         }
     else
-        fbe_value.on_conflict_where = nullptr;
+        fbe_value.on_conflict_where = ::pg_query::Node();
     fbe_current_size += on_conflict_where.fbe_size();
 
     if ((fbe_current_size + excl_rel_index.fbe_size()) <= fbe_struct_size)
@@ -30870,10 +30870,10 @@ void FieldModel_pg_query_IntoClause::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + view_query.fbe_size()) <= fbe_struct_size)
         {
-            view_query.get(&fbe_value.view_query);
+            view_query.get(fbe_value.view_query);
         }
     else
-        fbe_value.view_query = nullptr;
+        fbe_value.view_query = ::pg_query::Node();
     fbe_current_size += view_query.fbe_size();
 
     if ((fbe_current_size + skip_data.fbe_size()) <= fbe_struct_size)
@@ -31246,10 +31246,10 @@ void FieldModel_pg_query_RawStmt::get_fields(::FBE::Base& base_fbe_value, size_t
 
     if ((fbe_current_size + stmt.fbe_size()) <= fbe_struct_size)
         {
-            stmt.get(&fbe_value.stmt);
+            stmt.get(fbe_value.stmt);
         }
     else
-        fbe_value.stmt = nullptr;
+        fbe_value.stmt = ::pg_query::Node();
     fbe_current_size += stmt.fbe_size();
 
     if ((fbe_current_size + stmt_location.fbe_size()) <= fbe_struct_size)
@@ -31946,10 +31946,10 @@ void FieldModel_pg_query_Query::get_fields(::FBE::Base& base_fbe_value, size_t f
 
     if ((fbe_current_size + utility_stmt.fbe_size()) <= fbe_struct_size)
         {
-            utility_stmt.get(&fbe_value.utility_stmt);
+            utility_stmt.get(fbe_value.utility_stmt);
         }
     else
-        fbe_value.utility_stmt = nullptr;
+        fbe_value.utility_stmt = ::pg_query::Node();
     fbe_current_size += utility_stmt.fbe_size();
 
     if ((fbe_current_size + result_relation.fbe_size()) <= fbe_struct_size)
@@ -32106,10 +32106,10 @@ void FieldModel_pg_query_Query::get_fields(::FBE::Base& base_fbe_value, size_t f
 
     if ((fbe_current_size + having_qual.fbe_size()) <= fbe_struct_size)
         {
-            having_qual.get(&fbe_value.having_qual);
+            having_qual.get(fbe_value.having_qual);
         }
     else
-        fbe_value.having_qual = nullptr;
+        fbe_value.having_qual = ::pg_query::Node();
     fbe_current_size += having_qual.fbe_size();
 
     if ((fbe_current_size + window_clause.fbe_size()) <= fbe_struct_size)
@@ -32138,18 +32138,18 @@ void FieldModel_pg_query_Query::get_fields(::FBE::Base& base_fbe_value, size_t f
 
     if ((fbe_current_size + limit_offset.fbe_size()) <= fbe_struct_size)
         {
-            limit_offset.get(&fbe_value.limit_offset);
+            limit_offset.get(fbe_value.limit_offset);
         }
     else
-        fbe_value.limit_offset = nullptr;
+        fbe_value.limit_offset = ::pg_query::Node();
     fbe_current_size += limit_offset.fbe_size();
 
     if ((fbe_current_size + limit_count.fbe_size()) <= fbe_struct_size)
         {
-            limit_count.get(&fbe_value.limit_count);
+            limit_count.get(fbe_value.limit_count);
         }
     else
-        fbe_value.limit_count = nullptr;
+        fbe_value.limit_count = ::pg_query::Node();
     fbe_current_size += limit_count.fbe_size();
 
     if ((fbe_current_size + limit_option.fbe_size()) <= fbe_struct_size)
@@ -32170,10 +32170,10 @@ void FieldModel_pg_query_Query::get_fields(::FBE::Base& base_fbe_value, size_t f
 
     if ((fbe_current_size + set_operations.fbe_size()) <= fbe_struct_size)
         {
-            set_operations.get(&fbe_value.set_operations);
+            set_operations.get(fbe_value.set_operations);
         }
     else
-        fbe_value.set_operations = nullptr;
+        fbe_value.set_operations = ::pg_query::Node();
     fbe_current_size += set_operations.fbe_size();
 
     if ((fbe_current_size + constraint_deps.fbe_size()) <= fbe_struct_size)
@@ -32650,10 +32650,10 @@ void FieldModel_pg_query_InsertStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + select_stmt.fbe_size()) <= fbe_struct_size)
         {
-            select_stmt.get(&fbe_value.select_stmt);
+            select_stmt.get(fbe_value.select_stmt);
         }
     else
-        fbe_value.select_stmt = nullptr;
+        fbe_value.select_stmt = ::pg_query::Node();
     fbe_current_size += select_stmt.fbe_size();
 
     if ((fbe_current_size + on_conflict_clause.fbe_size()) <= fbe_struct_size)
@@ -33083,10 +33083,10 @@ void FieldModel_pg_query_DeleteStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + where_clause.fbe_size()) <= fbe_struct_size)
         {
-            where_clause.get(&fbe_value.where_clause);
+            where_clause.get(fbe_value.where_clause);
         }
     else
-        fbe_value.where_clause = nullptr;
+        fbe_value.where_clause = ::pg_query::Node();
     fbe_current_size += where_clause.fbe_size();
 
     if ((fbe_current_size + returning_list.fbe_size()) <= fbe_struct_size)
@@ -33507,10 +33507,10 @@ void FieldModel_pg_query_UpdateStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + where_clause.fbe_size()) <= fbe_struct_size)
         {
-            where_clause.get(&fbe_value.where_clause);
+            where_clause.get(fbe_value.where_clause);
         }
     else
-        fbe_value.where_clause = nullptr;
+        fbe_value.where_clause = ::pg_query::Node();
     fbe_current_size += where_clause.fbe_size();
 
     if ((fbe_current_size + from_clause.fbe_size()) <= fbe_struct_size)
@@ -34073,10 +34073,10 @@ void FieldModel_pg_query_SelectStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + where_clause.fbe_size()) <= fbe_struct_size)
         {
-            where_clause.get(&fbe_value.where_clause);
+            where_clause.get(fbe_value.where_clause);
         }
     else
-        fbe_value.where_clause = nullptr;
+        fbe_value.where_clause = ::pg_query::Node();
     fbe_current_size += where_clause.fbe_size();
 
     if ((fbe_current_size + group_clause.fbe_size()) <= fbe_struct_size)
@@ -34089,10 +34089,10 @@ void FieldModel_pg_query_SelectStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + having_clause.fbe_size()) <= fbe_struct_size)
         {
-            having_clause.get(&fbe_value.having_clause);
+            having_clause.get(fbe_value.having_clause);
         }
     else
-        fbe_value.having_clause = nullptr;
+        fbe_value.having_clause = ::pg_query::Node();
     fbe_current_size += having_clause.fbe_size();
 
     if ((fbe_current_size + window_clause.fbe_size()) <= fbe_struct_size)
@@ -34121,18 +34121,18 @@ void FieldModel_pg_query_SelectStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + limit_offset.fbe_size()) <= fbe_struct_size)
         {
-            limit_offset.get(&fbe_value.limit_offset);
+            limit_offset.get(fbe_value.limit_offset);
         }
     else
-        fbe_value.limit_offset = nullptr;
+        fbe_value.limit_offset = ::pg_query::Node();
     fbe_current_size += limit_offset.fbe_size();
 
     if ((fbe_current_size + limit_count.fbe_size()) <= fbe_struct_size)
         {
-            limit_count.get(&fbe_value.limit_count);
+            limit_count.get(fbe_value.limit_count);
         }
     else
-        fbe_value.limit_count = nullptr;
+        fbe_value.limit_count = ::pg_query::Node();
     fbe_current_size += limit_count.fbe_size();
 
     if ((fbe_current_size + limit_option.fbe_size()) <= fbe_struct_size)
@@ -35029,10 +35029,10 @@ void FieldModel_pg_query_AlterTableCmd::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + def.fbe_size()) <= fbe_struct_size)
         {
-            def.get(&fbe_value.def);
+            def.get(fbe_value.def);
         }
     else
-        fbe_value.def = nullptr;
+        fbe_value.def = ::pg_query::Node();
     fbe_current_size += def.fbe_size();
 
     if ((fbe_current_size + behavior.fbe_size()) <= fbe_struct_size)
@@ -35463,10 +35463,10 @@ void FieldModel_pg_query_AlterDomainStmt::get_fields(::FBE::Base& base_fbe_value
 
     if ((fbe_current_size + def.fbe_size()) <= fbe_struct_size)
         {
-            def.get(&fbe_value.def);
+            def.get(fbe_value.def);
         }
     else
-        fbe_value.def = nullptr;
+        fbe_value.def = ::pg_query::Node();
     fbe_current_size += def.fbe_size();
 
     if ((fbe_current_size + behavior.fbe_size()) <= fbe_struct_size)
@@ -35906,18 +35906,18 @@ void FieldModel_pg_query_SetOperationStmt::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + larg.fbe_size()) <= fbe_struct_size)
         {
-            larg.get(&fbe_value.larg);
+            larg.get(fbe_value.larg);
         }
     else
-        fbe_value.larg = nullptr;
+        fbe_value.larg = ::pg_query::Node();
     fbe_current_size += larg.fbe_size();
 
     if ((fbe_current_size + rarg.fbe_size()) <= fbe_struct_size)
         {
-            rarg.get(&fbe_value.rarg);
+            rarg.get(fbe_value.rarg);
         }
     else
-        fbe_value.rarg = nullptr;
+        fbe_value.rarg = ::pg_query::Node();
     fbe_current_size += rarg.fbe_size();
 
     if ((fbe_current_size + col_types.fbe_size()) <= fbe_struct_size)
@@ -38352,10 +38352,10 @@ void FieldModel_pg_query_CopyStmt::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + query.fbe_size()) <= fbe_struct_size)
         {
-            query.get(&fbe_value.query);
+            query.get(fbe_value.query);
         }
     else
-        fbe_value.query = nullptr;
+        fbe_value.query = ::pg_query::Node();
     fbe_current_size += query.fbe_size();
 
     if ((fbe_current_size + attlist.fbe_size()) <= fbe_struct_size)
@@ -38400,10 +38400,10 @@ void FieldModel_pg_query_CopyStmt::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + where_clause.fbe_size()) <= fbe_struct_size)
         {
-            where_clause.get(&fbe_value.where_clause);
+            where_clause.get(fbe_value.where_clause);
         }
     else
-        fbe_value.where_clause = nullptr;
+        fbe_value.where_clause = ::pg_query::Node();
     fbe_current_size += where_clause.fbe_size();
 }
 
@@ -40562,10 +40562,10 @@ void FieldModel_pg_query_CommentStmt::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
         {
-            object.get(&fbe_value.object);
+            object.get(fbe_value.object);
         }
     else
-        fbe_value.object = nullptr;
+        fbe_value.object = ::pg_query::Node();
     fbe_current_size += object.fbe_size();
 
     if ((fbe_current_size + comment.fbe_size()) <= fbe_struct_size)
@@ -41566,10 +41566,10 @@ void FieldModel_pg_query_IndexStmt::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + where_clause.fbe_size()) <= fbe_struct_size)
         {
-            where_clause.get(&fbe_value.where_clause);
+            where_clause.get(fbe_value.where_clause);
         }
     else
-        fbe_value.where_clause = nullptr;
+        fbe_value.where_clause = ::pg_query::Node();
     fbe_current_size += where_clause.fbe_size();
 
     if ((fbe_current_size + exclude_op_names.fbe_size()) <= fbe_struct_size)
@@ -43293,10 +43293,10 @@ void FieldModel_pg_query_RenameStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
         {
-            object.get(&fbe_value.object);
+            object.get(fbe_value.object);
         }
     else
-        fbe_value.object = nullptr;
+        fbe_value.object = ::pg_query::Node();
     fbe_current_size += object.fbe_size();
 
     if ((fbe_current_size + subname.fbe_size()) <= fbe_struct_size)
@@ -43745,10 +43745,10 @@ void FieldModel_pg_query_RuleStmt::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + where_clause.fbe_size()) <= fbe_struct_size)
         {
-            where_clause.get(&fbe_value.where_clause);
+            where_clause.get(fbe_value.where_clause);
         }
     else
-        fbe_value.where_clause = nullptr;
+        fbe_value.where_clause = ::pg_query::Node();
     fbe_current_size += where_clause.fbe_size();
 
     if ((fbe_current_size + event.fbe_size()) <= fbe_struct_size)
@@ -45649,10 +45649,10 @@ void FieldModel_pg_query_ViewStmt::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + query.fbe_size()) <= fbe_struct_size)
         {
-            query.get(&fbe_value.query);
+            query.get(fbe_value.query);
         }
     else
-        fbe_value.query = nullptr;
+        fbe_value.query = ::pg_query::Node();
     fbe_current_size += query.fbe_size();
 
     if ((fbe_current_size + replace.fbe_size()) <= fbe_struct_size)
@@ -47889,10 +47889,10 @@ void FieldModel_pg_query_ExplainStmt::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + query.fbe_size()) <= fbe_struct_size)
         {
-            query.get(&fbe_value.query);
+            query.get(fbe_value.query);
         }
     else
-        fbe_value.query = nullptr;
+        fbe_value.query = ::pg_query::Node();
     fbe_current_size += query.fbe_size();
 
     if ((fbe_current_size + options.fbe_size()) <= fbe_struct_size)
@@ -48277,10 +48277,10 @@ void FieldModel_pg_query_CreateTableAsStmt::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + query.fbe_size()) <= fbe_struct_size)
         {
-            query.get(&fbe_value.query);
+            query.get(fbe_value.query);
         }
     else
-        fbe_value.query = nullptr;
+        fbe_value.query = ::pg_query::Node();
     fbe_current_size += query.fbe_size();
 
     if ((fbe_current_size + into.fbe_size()) <= fbe_struct_size)
@@ -50732,10 +50732,10 @@ void FieldModel_pg_query_CreateTrigStmt::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + when_clause.fbe_size()) <= fbe_struct_size)
         {
-            when_clause.get(&fbe_value.when_clause);
+            when_clause.get(fbe_value.when_clause);
         }
     else
-        fbe_value.when_clause = nullptr;
+        fbe_value.when_clause = ::pg_query::Node();
     fbe_current_size += when_clause.fbe_size();
 
     if ((fbe_current_size + isconstraint.fbe_size()) <= fbe_struct_size)
@@ -57709,10 +57709,10 @@ void FieldModel_pg_query_PrepareStmt::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + query.fbe_size()) <= fbe_struct_size)
         {
-            query.get(&fbe_value.query);
+            query.get(fbe_value.query);
         }
     else
-        fbe_value.query = nullptr;
+        fbe_value.query = ::pg_query::Node();
     fbe_current_size += query.fbe_size();
 }
 
@@ -58792,10 +58792,10 @@ void FieldModel_pg_query_DeclareCursorStmt::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + query.fbe_size()) <= fbe_struct_size)
         {
-            query.get(&fbe_value.query);
+            query.get(fbe_value.query);
         }
     else
-        fbe_value.query = nullptr;
+        fbe_value.query = ::pg_query::Node();
     fbe_current_size += query.fbe_size();
 }
 
@@ -59947,10 +59947,10 @@ void FieldModel_pg_query_AlterObjectDependsStmt::get_fields(::FBE::Base& base_fb
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
         {
-            object.get(&fbe_value.object);
+            object.get(fbe_value.object);
         }
     else
-        fbe_value.object = nullptr;
+        fbe_value.object = ::pg_query::Node();
     fbe_current_size += object.fbe_size();
 
     if ((fbe_current_size + extname.fbe_size()) <= fbe_struct_size)
@@ -60362,10 +60362,10 @@ void FieldModel_pg_query_AlterObjectSchemaStmt::get_fields(::FBE::Base& base_fbe
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
         {
-            object.get(&fbe_value.object);
+            object.get(fbe_value.object);
         }
     else
-        fbe_value.object = nullptr;
+        fbe_value.object = ::pg_query::Node();
     fbe_current_size += object.fbe_size();
 
     if ((fbe_current_size + newschema.fbe_size()) <= fbe_struct_size)
@@ -60768,10 +60768,10 @@ void FieldModel_pg_query_AlterOwnerStmt::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
         {
-            object.get(&fbe_value.object);
+            object.get(fbe_value.object);
         }
     else
-        fbe_value.object = nullptr;
+        fbe_value.object = ::pg_query::Node();
     fbe_current_size += object.fbe_size();
 
     if ((fbe_current_size + newowner.fbe_size()) <= fbe_struct_size)
@@ -68466,10 +68466,10 @@ void FieldModel_pg_query_SecLabelStmt::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
         {
-            object.get(&fbe_value.object);
+            object.get(fbe_value.object);
         }
     else
-        fbe_value.object = nullptr;
+        fbe_value.object = ::pg_query::Node();
     fbe_current_size += object.fbe_size();
 
     if ((fbe_current_size + provider.fbe_size()) <= fbe_struct_size)
@@ -70431,10 +70431,10 @@ void FieldModel_pg_query_AlterExtensionContentsStmt::get_fields(::FBE::Base& bas
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
         {
-            object.get(&fbe_value.object);
+            object.get(fbe_value.object);
         }
     else
-        fbe_value.object = nullptr;
+        fbe_value.object = ::pg_query::Node();
     fbe_current_size += object.fbe_size();
 }
 
@@ -72712,18 +72712,18 @@ void FieldModel_pg_query_CreatePolicyStmt::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + qual.fbe_size()) <= fbe_struct_size)
         {
-            qual.get(&fbe_value.qual);
+            qual.get(fbe_value.qual);
         }
     else
-        fbe_value.qual = nullptr;
+        fbe_value.qual = ::pg_query::Node();
     fbe_current_size += qual.fbe_size();
 
     if ((fbe_current_size + with_check.fbe_size()) <= fbe_struct_size)
         {
-            with_check.get(&fbe_value.with_check);
+            with_check.get(fbe_value.with_check);
         }
     else
-        fbe_value.with_check = nullptr;
+        fbe_value.with_check = ::pg_query::Node();
     fbe_current_size += with_check.fbe_size();
 }
 
@@ -73129,18 +73129,18 @@ void FieldModel_pg_query_AlterPolicyStmt::get_fields(::FBE::Base& base_fbe_value
 
     if ((fbe_current_size + qual.fbe_size()) <= fbe_struct_size)
         {
-            qual.get(&fbe_value.qual);
+            qual.get(fbe_value.qual);
         }
     else
-        fbe_value.qual = nullptr;
+        fbe_value.qual = ::pg_query::Node();
     fbe_current_size += qual.fbe_size();
 
     if ((fbe_current_size + with_check.fbe_size()) <= fbe_struct_size)
         {
-            with_check.get(&fbe_value.with_check);
+            with_check.get(fbe_value.with_check);
         }
     else
-        fbe_value.with_check = nullptr;
+        fbe_value.with_check = ::pg_query::Node();
     fbe_current_size += with_check.fbe_size();
 }
 
@@ -77849,18 +77849,18 @@ void FieldModel_pg_query_A_Expr::get_fields(::FBE::Base& base_fbe_value, size_t 
 
     if ((fbe_current_size + lexpr.fbe_size()) <= fbe_struct_size)
         {
-            lexpr.get(&fbe_value.lexpr);
+            lexpr.get(fbe_value.lexpr);
         }
     else
-        fbe_value.lexpr = nullptr;
+        fbe_value.lexpr = ::pg_query::Node();
     fbe_current_size += lexpr.fbe_size();
 
     if ((fbe_current_size + rexpr.fbe_size()) <= fbe_struct_size)
         {
-            rexpr.get(&fbe_value.rexpr);
+            rexpr.get(fbe_value.rexpr);
         }
     else
-        fbe_value.rexpr = nullptr;
+        fbe_value.rexpr = ::pg_query::Node();
     fbe_current_size += rexpr.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -79400,10 +79400,10 @@ void FieldModel_pg_query_FuncCall::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + agg_filter.fbe_size()) <= fbe_struct_size)
         {
-            agg_filter.get(&fbe_value.agg_filter);
+            agg_filter.get(fbe_value.agg_filter);
         }
     else
-        fbe_value.agg_filter = nullptr;
+        fbe_value.agg_filter = ::pg_query::Node();
     fbe_current_size += agg_filter.fbe_size();
 
     if ((fbe_current_size + agg_within_group.fbe_size()) <= fbe_struct_size)
@@ -80147,18 +80147,18 @@ void FieldModel_pg_query_A_Indices::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + lidx.fbe_size()) <= fbe_struct_size)
         {
-            lidx.get(&fbe_value.lidx);
+            lidx.get(fbe_value.lidx);
         }
     else
-        fbe_value.lidx = nullptr;
+        fbe_value.lidx = ::pg_query::Node();
     fbe_current_size += lidx.fbe_size();
 
     if ((fbe_current_size + uidx.fbe_size()) <= fbe_struct_size)
         {
-            uidx.get(&fbe_value.uidx);
+            uidx.get(fbe_value.uidx);
         }
     else
-        fbe_value.uidx = nullptr;
+        fbe_value.uidx = ::pg_query::Node();
     fbe_current_size += uidx.fbe_size();
 }
 
@@ -80509,10 +80509,10 @@ void FieldModel_pg_query_A_Indirection::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + indirection.fbe_size()) <= fbe_struct_size)
@@ -81265,10 +81265,10 @@ void FieldModel_pg_query_ResTarget::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + val.fbe_size()) <= fbe_struct_size)
         {
-            val.get(&fbe_value.val);
+            val.get(fbe_value.val);
         }
     else
-        fbe_value.val = nullptr;
+        fbe_value.val = ::pg_query::Node();
     fbe_current_size += val.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -81637,10 +81637,10 @@ void FieldModel_pg_query_MultiAssignRef::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + source.fbe_size()) <= fbe_struct_size)
         {
-            source.get(&fbe_value.source);
+            source.get(fbe_value.source);
         }
     else
-        fbe_value.source = nullptr;
+        fbe_value.source = ::pg_query::Node();
     fbe_current_size += source.fbe_size();
 
     if ((fbe_current_size + colno.fbe_size()) <= fbe_struct_size)
@@ -82016,10 +82016,10 @@ void FieldModel_pg_query_TypeCast::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + type_name.fbe_size()) <= fbe_struct_size)
@@ -82395,10 +82395,10 @@ void FieldModel_pg_query_CollateClause::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + collname.fbe_size()) <= fbe_struct_size)
@@ -82792,10 +82792,10 @@ void FieldModel_pg_query_SortBy::get_fields(::FBE::Base& base_fbe_value, size_t 
 
     if ((fbe_current_size + node.fbe_size()) <= fbe_struct_size)
         {
-            node.get(&fbe_value.node);
+            node.get(fbe_value.node);
         }
     else
-        fbe_value.node = nullptr;
+        fbe_value.node = ::pg_query::Node();
     fbe_current_size += node.fbe_size();
 
     if ((fbe_current_size + sortby_dir.fbe_size()) <= fbe_struct_size)
@@ -83274,18 +83274,18 @@ void FieldModel_pg_query_WindowDef::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + start_offset.fbe_size()) <= fbe_struct_size)
         {
-            start_offset.get(&fbe_value.start_offset);
+            start_offset.get(fbe_value.start_offset);
         }
     else
-        fbe_value.start_offset = nullptr;
+        fbe_value.start_offset = ::pg_query::Node();
     fbe_current_size += start_offset.fbe_size();
 
     if ((fbe_current_size + end_offset.fbe_size()) <= fbe_struct_size)
         {
-            end_offset.get(&fbe_value.end_offset);
+            end_offset.get(fbe_value.end_offset);
         }
     else
-        fbe_value.end_offset = nullptr;
+        fbe_value.end_offset = ::pg_query::Node();
     fbe_current_size += end_offset.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -83666,10 +83666,10 @@ void FieldModel_pg_query_RangeSubselect::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + subquery.fbe_size()) <= fbe_struct_size)
         {
-            subquery.get(&fbe_value.subquery);
+            subquery.get(fbe_value.subquery);
         }
     else
-        fbe_value.subquery = nullptr;
+        fbe_value.subquery = ::pg_query::Node();
     fbe_current_size += subquery.fbe_size();
 
     if ((fbe_current_size + alias.fbe_size()) <= fbe_struct_size)
@@ -84488,10 +84488,10 @@ void FieldModel_pg_query_RangeTableSample::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(&fbe_value.relation);
+            relation.get(fbe_value.relation);
         }
     else
-        fbe_value.relation = nullptr;
+        fbe_value.relation = ::pg_query::Node();
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + method.fbe_size()) <= fbe_struct_size)
@@ -84512,10 +84512,10 @@ void FieldModel_pg_query_RangeTableSample::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + repeatable.fbe_size()) <= fbe_struct_size)
         {
-            repeatable.get(&fbe_value.repeatable);
+            repeatable.get(fbe_value.repeatable);
         }
     else
-        fbe_value.repeatable = nullptr;
+        fbe_value.repeatable = ::pg_query::Node();
     fbe_current_size += repeatable.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -84929,18 +84929,18 @@ void FieldModel_pg_query_RangeTableFunc::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + docexpr.fbe_size()) <= fbe_struct_size)
         {
-            docexpr.get(&fbe_value.docexpr);
+            docexpr.get(fbe_value.docexpr);
         }
     else
-        fbe_value.docexpr = nullptr;
+        fbe_value.docexpr = ::pg_query::Node();
     fbe_current_size += docexpr.fbe_size();
 
     if ((fbe_current_size + rowexpr.fbe_size()) <= fbe_struct_size)
         {
-            rowexpr.get(&fbe_value.rowexpr);
+            rowexpr.get(fbe_value.rowexpr);
         }
     else
-        fbe_value.rowexpr = nullptr;
+        fbe_value.rowexpr = ::pg_query::Node();
     fbe_current_size += rowexpr.fbe_size();
 
     if ((fbe_current_size + namespaces.fbe_size()) <= fbe_struct_size)
@@ -85404,18 +85404,18 @@ void FieldModel_pg_query_RangeTableFuncCol::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + colexpr.fbe_size()) <= fbe_struct_size)
         {
-            colexpr.get(&fbe_value.colexpr);
+            colexpr.get(fbe_value.colexpr);
         }
     else
-        fbe_value.colexpr = nullptr;
+        fbe_value.colexpr = ::pg_query::Node();
     fbe_current_size += colexpr.fbe_size();
 
     if ((fbe_current_size + coldefexpr.fbe_size()) <= fbe_struct_size)
         {
-            coldefexpr.get(&fbe_value.coldefexpr);
+            coldefexpr.get(fbe_value.coldefexpr);
         }
     else
-        fbe_value.coldefexpr = nullptr;
+        fbe_value.coldefexpr = ::pg_query::Node();
     fbe_current_size += coldefexpr.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -86438,18 +86438,18 @@ void FieldModel_pg_query_ColumnDef::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + raw_default.fbe_size()) <= fbe_struct_size)
         {
-            raw_default.get(&fbe_value.raw_default);
+            raw_default.get(fbe_value.raw_default);
         }
     else
-        fbe_value.raw_default = nullptr;
+        fbe_value.raw_default = ::pg_query::Node();
     fbe_current_size += raw_default.fbe_size();
 
     if ((fbe_current_size + cooked_default.fbe_size()) <= fbe_struct_size)
         {
-            cooked_default.get(&fbe_value.cooked_default);
+            cooked_default.get(fbe_value.cooked_default);
         }
     else
-        fbe_value.cooked_default = nullptr;
+        fbe_value.cooked_default = ::pg_query::Node();
     fbe_current_size += cooked_default.fbe_size();
 
     if ((fbe_current_size + identity.fbe_size()) <= fbe_struct_size)
@@ -86940,10 +86940,10 @@ void FieldModel_pg_query_IndexElem::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + expr.fbe_size()) <= fbe_struct_size)
         {
-            expr.get(&fbe_value.expr);
+            expr.get(fbe_value.expr);
         }
     else
-        fbe_value.expr = nullptr;
+        fbe_value.expr = ::pg_query::Node();
     fbe_current_size += expr.fbe_size();
 
     if ((fbe_current_size + indexcolname.fbe_size()) <= fbe_struct_size)
@@ -87629,10 +87629,10 @@ void FieldModel_pg_query_Constraint::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + raw_expr.fbe_size()) <= fbe_struct_size)
         {
-            raw_expr.get(&fbe_value.raw_expr);
+            raw_expr.get(fbe_value.raw_expr);
         }
     else
-        fbe_value.raw_expr = nullptr;
+        fbe_value.raw_expr = ::pg_query::Node();
     fbe_current_size += raw_expr.fbe_size();
 
     if ((fbe_current_size + cooked_expr.fbe_size()) <= fbe_struct_size)
@@ -87717,10 +87717,10 @@ void FieldModel_pg_query_Constraint::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + where_clause.fbe_size()) <= fbe_struct_size)
         {
-            where_clause.get(&fbe_value.where_clause);
+            where_clause.get(fbe_value.where_clause);
         }
     else
-        fbe_value.where_clause = nullptr;
+        fbe_value.where_clause = ::pg_query::Node();
     fbe_current_size += where_clause.fbe_size();
 
     if ((fbe_current_size + pktable.fbe_size()) <= fbe_struct_size)
@@ -88219,10 +88219,10 @@ void FieldModel_pg_query_DefElem::get_fields(::FBE::Base& base_fbe_value, size_t
 
     if ((fbe_current_size + arg.fbe_size()) <= fbe_struct_size)
         {
-            arg.get(&fbe_value.arg);
+            arg.get(fbe_value.arg);
         }
     else
-        fbe_value.arg = nullptr;
+        fbe_value.arg = ::pg_query::Node();
     fbe_current_size += arg.fbe_size();
 
     if ((fbe_current_size + defaction.fbe_size()) <= fbe_struct_size)
@@ -89609,10 +89609,10 @@ void FieldModel_pg_query_RangeTblFunction::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + funcexpr.fbe_size()) <= fbe_struct_size)
         {
-            funcexpr.get(&fbe_value.funcexpr);
+            funcexpr.get(fbe_value.funcexpr);
         }
     else
-        fbe_value.funcexpr = nullptr;
+        fbe_value.funcexpr = ::pg_query::Node();
     fbe_current_size += funcexpr.fbe_size();
 
     if ((fbe_current_size + funccolcount.fbe_size()) <= fbe_struct_size)
@@ -90040,10 +90040,10 @@ void FieldModel_pg_query_TableSampleClause::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + repeatable.fbe_size()) <= fbe_struct_size)
         {
-            repeatable.get(&fbe_value.repeatable);
+            repeatable.get(fbe_value.repeatable);
         }
     else
-        fbe_value.repeatable = nullptr;
+        fbe_value.repeatable = ::pg_query::Node();
     fbe_current_size += repeatable.fbe_size();
 }
 
@@ -90445,10 +90445,10 @@ void FieldModel_pg_query_WithCheckOption::get_fields(::FBE::Base& base_fbe_value
 
     if ((fbe_current_size + qual.fbe_size()) <= fbe_struct_size)
         {
-            qual.get(&fbe_value.qual);
+            qual.get(fbe_value.qual);
         }
     else
-        fbe_value.qual = nullptr;
+        fbe_value.qual = ::pg_query::Node();
     fbe_current_size += qual.fbe_size();
 
     if ((fbe_current_size + cascaded.fbe_size()) <= fbe_struct_size)
@@ -91751,18 +91751,18 @@ void FieldModel_pg_query_WindowClause::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + start_offset.fbe_size()) <= fbe_struct_size)
         {
-            start_offset.get(&fbe_value.start_offset);
+            start_offset.get(fbe_value.start_offset);
         }
     else
-        fbe_value.start_offset = nullptr;
+        fbe_value.start_offset = ::pg_query::Node();
     fbe_current_size += start_offset.fbe_size();
 
     if ((fbe_current_size + end_offset.fbe_size()) <= fbe_struct_size)
         {
-            end_offset.get(&fbe_value.end_offset);
+            end_offset.get(fbe_value.end_offset);
         }
     else
-        fbe_value.end_offset = nullptr;
+        fbe_value.end_offset = ::pg_query::Node();
     fbe_current_size += end_offset.fbe_size();
 
     if ((fbe_current_size + start_in_range_func.fbe_size()) <= fbe_struct_size)
@@ -93774,10 +93774,10 @@ void FieldModel_pg_query_FunctionParameter::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + defexpr.fbe_size()) <= fbe_struct_size)
         {
-            defexpr.get(&fbe_value.defexpr);
+            defexpr.get(fbe_value.defexpr);
         }
     else
-        fbe_value.defexpr = nullptr;
+        fbe_value.defexpr = ::pg_query::Node();
     fbe_current_size += defexpr.fbe_size();
 }
 
@@ -94931,10 +94931,10 @@ void FieldModel_pg_query_XmlSerialize::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + expr.fbe_size()) <= fbe_struct_size)
         {
-            expr.get(&fbe_value.expr);
+            expr.get(fbe_value.expr);
         }
     else
-        fbe_value.expr = nullptr;
+        fbe_value.expr = ::pg_query::Node();
     fbe_current_size += expr.fbe_size();
 
     if ((fbe_current_size + type_name.fbe_size()) <= fbe_struct_size)
@@ -95707,10 +95707,10 @@ void FieldModel_pg_query_InferClause::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + where_clause.fbe_size()) <= fbe_struct_size)
         {
-            where_clause.get(&fbe_value.where_clause);
+            where_clause.get(fbe_value.where_clause);
         }
     else
-        fbe_value.where_clause = nullptr;
+        fbe_value.where_clause = ::pg_query::Node();
     fbe_current_size += where_clause.fbe_size();
 
     if ((fbe_current_size + conname.fbe_size()) <= fbe_struct_size)
@@ -96129,10 +96129,10 @@ void FieldModel_pg_query_OnConflictClause::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + where_clause.fbe_size()) <= fbe_struct_size)
         {
-            where_clause.get(&fbe_value.where_clause);
+            where_clause.get(fbe_value.where_clause);
         }
     else
-        fbe_value.where_clause = nullptr;
+        fbe_value.where_clause = ::pg_query::Node();
     fbe_current_size += where_clause.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -96598,10 +96598,10 @@ void FieldModel_pg_query_CommonTableExpr::get_fields(::FBE::Base& base_fbe_value
 
     if ((fbe_current_size + ctequery.fbe_size()) <= fbe_struct_size)
         {
-            ctequery.get(&fbe_value.ctequery);
+            ctequery.get(fbe_value.ctequery);
         }
     else
-        fbe_value.ctequery = nullptr;
+        fbe_value.ctequery = ::pg_query::Node();
     fbe_current_size += ctequery.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -97809,10 +97809,10 @@ void FieldModel_pg_query_PartitionElem::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + expr.fbe_size()) <= fbe_struct_size)
         {
-            expr.get(&fbe_value.expr);
+            expr.get(fbe_value.expr);
         }
     else
-        fbe_value.expr = nullptr;
+        fbe_value.expr = ::pg_query::Node();
     fbe_current_size += expr.fbe_size();
 
     if ((fbe_current_size + collation.fbe_size()) <= fbe_struct_size)
@@ -99054,10 +99054,10 @@ void FieldModel_pg_query_PartitionRangeDatum::get_fields(::FBE::Base& base_fbe_v
 
     if ((fbe_current_size + value.fbe_size()) <= fbe_struct_size)
         {
-            value.get(&fbe_value.value);
+            value.get(fbe_value.value);
         }
     else
-        fbe_value.value = nullptr;
+        fbe_value.value = ::pg_query::Node();
     fbe_current_size += value.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)

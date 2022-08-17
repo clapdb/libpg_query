@@ -270,23 +270,23 @@ struct Null
 
 struct List
 {
-  Node*[] items;
+  Node[] items;
 }
 
 struct OidList
 {
-  Node*[] items;
+  Node[] items;
 }
 
 struct IntList
 {
-  Node*[] items;
+  Node[] items;
 }
 
 struct Alias
 {
   string aliasname;
-  Node*[] colnames;
+  Node[] colnames;
 }
 
 struct RangeVar
@@ -302,16 +302,16 @@ struct RangeVar
 
 struct TableFunc
 {
-  Node*[] ns_uris;
-  Node*[] ns_names;
-  Node* docexpr;
-  Node* rowexpr;
-  Node*[] colnames;
-  Node*[] coltypes;
-  Node*[] coltypmods;
-  Node*[] colcollations;
-  Node*[] colexprs;
-  Node*[] coldefexprs;
+  Node[] ns_uris;
+  Node[] ns_names;
+  Node docexpr;
+  Node rowexpr;
+  Node[] colnames;
+  Node[] coltypes;
+  Node[] coltypmods;
+  Node[] colcollations;
+  Node[] colexprs;
+  Node[] coldefexprs;
   uint64[] notnulls;
   int32 ordinalitycol;
   int32 location;
@@ -323,7 +323,7 @@ struct Expr
 
 struct Var
 {
-  Node* xpr;
+  Node xpr;
   uint32 varno;
   int32 varattno;
   uint32 vartype;
@@ -337,7 +337,7 @@ struct Var
 
 struct Param
 {
-  Node* xpr;
+  Node xpr;
   ParamKind paramkind;
   int32 paramid;
   uint32 paramtype;
@@ -348,18 +348,18 @@ struct Param
 
 struct Aggref
 {
-  Node* xpr;
+  Node xpr;
   uint32 aggfnoid;
   uint32 aggtype;
   uint32 aggcollid;
   uint32 inputcollid;
   uint32 aggtranstype;
-  Node*[] aggargtypes;
-  Node*[] aggdirectargs;
-  Node*[] args;
-  Node*[] aggorder;
-  Node*[] aggdistinct;
-  Node* aggfilter;
+  Node[] aggargtypes;
+  Node[] aggdirectargs;
+  Node[] args;
+  Node[] aggorder;
+  Node[] aggdistinct;
+  Node aggfilter;
   bool aggstar;
   bool aggvariadic;
   string aggkind;
@@ -370,23 +370,23 @@ struct Aggref
 
 struct GroupingFunc
 {
-  Node* xpr;
-  Node*[] args;
-  Node*[] refs;
-  Node*[] cols;
+  Node xpr;
+  Node[] args;
+  Node[] refs;
+  Node[] cols;
   uint32 agglevelsup;
   int32 location;
 }
 
 struct WindowFunc
 {
-  Node* xpr;
+  Node xpr;
   uint32 winfnoid;
   uint32 wintype;
   uint32 wincollid;
   uint32 inputcollid;
-  Node*[] args;
-  Node* aggfilter;
+  Node[] args;
+  Node aggfilter;
   uint32 winref;
   bool winstar;
   bool winagg;
@@ -395,20 +395,20 @@ struct WindowFunc
 
 struct SubscriptingRef
 {
-  Node* xpr;
+  Node xpr;
   uint32 refcontainertype;
   uint32 refelemtype;
   int32 reftypmod;
   uint32 refcollid;
-  Node*[] refupperindexpr;
-  Node*[] reflowerindexpr;
-  Node* refexpr;
-  Node* refassgnexpr;
+  Node[] refupperindexpr;
+  Node[] reflowerindexpr;
+  Node refexpr;
+  Node refassgnexpr;
 }
 
 struct FuncExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 funcid;
   uint32 funcresulttype;
   bool funcretset;
@@ -416,14 +416,14 @@ struct FuncExpr
   CoercionForm funcformat;
   uint32 funccollid;
   uint32 inputcollid;
-  Node*[] args;
+  Node[] args;
   int32 location;
 }
 
 struct NamedArgExpr
 {
-  Node* xpr;
-  Node* arg;
+  Node xpr;
+  Node arg;
   string name;
   int32 argnumber;
   int32 location;
@@ -431,79 +431,79 @@ struct NamedArgExpr
 
 struct OpExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 opno;
   uint32 opfuncid;
   uint32 opresulttype;
   bool opretset;
   uint32 opcollid;
   uint32 inputcollid;
-  Node*[] args;
+  Node[] args;
   int32 location;
 }
 
 struct DistinctExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 opno;
   uint32 opfuncid;
   uint32 opresulttype;
   bool opretset;
   uint32 opcollid;
   uint32 inputcollid;
-  Node*[] args;
+  Node[] args;
   int32 location;
 }
 
 struct NullIfExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 opno;
   uint32 opfuncid;
   uint32 opresulttype;
   bool opretset;
   uint32 opcollid;
   uint32 inputcollid;
-  Node*[] args;
+  Node[] args;
   int32 location;
 }
 
 struct ScalarArrayOpExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 opno;
   uint32 opfuncid;
   bool use_or;
   uint32 inputcollid;
-  Node*[] args;
+  Node[] args;
   int32 location;
 }
 
 struct BoolExpr
 {
-  Node* xpr;
+  Node xpr;
   BoolExprType boolop;
-  Node*[] args;
+  Node[] args;
   int32 location;
 }
 
 struct SubLink
 {
-  Node* xpr;
+  Node xpr;
   SubLinkType sub_link_type;
   int32 sub_link_id;
-  Node* testexpr;
-  Node*[] oper_name;
-  Node* subselect;
+  Node testexpr;
+  Node[] oper_name;
+  Node subselect;
   int32 location;
 }
 
 struct SubPlan
 {
-  Node* xpr;
+  Node xpr;
   SubLinkType sub_link_type;
-  Node* testexpr;
-  Node*[] param_ids;
+  Node testexpr;
+  Node[] param_ids;
   int32 plan_id;
   string plan_name;
   uint32 first_col_type;
@@ -512,23 +512,23 @@ struct SubPlan
   bool use_hash_table;
   bool unknown_eq_false;
   bool parallel_safe;
-  Node*[] set_param;
-  Node*[] par_param;
-  Node*[] args;
+  Node[] set_param;
+  Node[] par_param;
+  Node[] args;
   double startup_cost;
   double per_call_cost;
 }
 
 struct AlternativeSubPlan
 {
-  Node* xpr;
-  Node*[] subplans;
+  Node xpr;
+  Node[] subplans;
 }
 
 struct FieldSelect
 {
-  Node* xpr;
-  Node* arg;
+  Node xpr;
+  Node arg;
   int32 fieldnum;
   uint32 resulttype;
   int32 resulttypmod;
@@ -537,17 +537,17 @@ struct FieldSelect
 
 struct FieldStore
 {
-  Node* xpr;
-  Node* arg;
-  Node*[] newvals;
-  Node*[] fieldnums;
+  Node xpr;
+  Node arg;
+  Node[] newvals;
+  Node[] fieldnums;
   uint32 resulttype;
 }
 
 struct RelabelType
 {
-  Node* xpr;
-  Node* arg;
+  Node xpr;
+  Node arg;
   uint32 resulttype;
   int32 resulttypmod;
   uint32 resultcollid;
@@ -557,8 +557,8 @@ struct RelabelType
 
 struct CoerceViaIO
 {
-  Node* xpr;
-  Node* arg;
+  Node xpr;
+  Node arg;
   uint32 resulttype;
   uint32 resultcollid;
   CoercionForm coerceformat;
@@ -567,9 +567,9 @@ struct CoerceViaIO
 
 struct ArrayCoerceExpr
 {
-  Node* xpr;
-  Node* arg;
-  Node* elemexpr;
+  Node xpr;
+  Node arg;
+  Node elemexpr;
   uint32 resulttype;
   int32 resulttypmod;
   uint32 resultcollid;
@@ -579,8 +579,8 @@ struct ArrayCoerceExpr
 
 struct ConvertRowtypeExpr
 {
-  Node* xpr;
-  Node* arg;
+  Node xpr;
+  Node arg;
   uint32 resulttype;
   CoercionForm convertformat;
   int32 location;
@@ -588,34 +588,34 @@ struct ConvertRowtypeExpr
 
 struct CollateExpr
 {
-  Node* xpr;
-  Node* arg;
+  Node xpr;
+  Node arg;
   uint32 coll_oid;
   int32 location;
 }
 
 struct CaseExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 casetype;
   uint32 casecollid;
-  Node* arg;
-  Node*[] args;
-  Node* defresult;
+  Node arg;
+  Node[] args;
+  Node defresult;
   int32 location;
 }
 
 struct CaseWhen
 {
-  Node* xpr;
-  Node* expr;
-  Node* result;
+  Node xpr;
+  Node expr;
+  Node result;
   int32 location;
 }
 
 struct CaseTestExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 type_id;
   int32 type_mod;
   uint32 collation;
@@ -623,59 +623,59 @@ struct CaseTestExpr
 
 struct ArrayExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 array_typeid;
   uint32 array_collid;
   uint32 element_typeid;
-  Node*[] elements;
+  Node[] elements;
   bool multidims;
   int32 location;
 }
 
 struct RowExpr
 {
-  Node* xpr;
-  Node*[] args;
+  Node xpr;
+  Node[] args;
   uint32 row_typeid;
   CoercionForm row_format;
-  Node*[] colnames;
+  Node[] colnames;
   int32 location;
 }
 
 struct RowCompareExpr
 {
-  Node* xpr;
+  Node xpr;
   RowCompareType rctype;
-  Node*[] opnos;
-  Node*[] opfamilies;
-  Node*[] inputcollids;
-  Node*[] largs;
-  Node*[] rargs;
+  Node[] opnos;
+  Node[] opfamilies;
+  Node[] inputcollids;
+  Node[] largs;
+  Node[] rargs;
 }
 
 struct CoalesceExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 coalescetype;
   uint32 coalescecollid;
-  Node*[] args;
+  Node[] args;
   int32 location;
 }
 
 struct MinMaxExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 minmaxtype;
   uint32 minmaxcollid;
   uint32 inputcollid;
   MinMaxOp op;
-  Node*[] args;
+  Node[] args;
   int32 location;
 }
 
 struct SQLValueFunction
 {
-  Node* xpr;
+  Node xpr;
   SQLValueFunctionOp op;
   uint32 type;
   int32 typmod;
@@ -684,12 +684,12 @@ struct SQLValueFunction
 
 struct XmlExpr
 {
-  Node* xpr;
+  Node xpr;
   XmlExprOp op;
   string name;
-  Node*[] named_args;
-  Node*[] arg_names;
-  Node*[] args;
+  Node[] named_args;
+  Node[] arg_names;
+  Node[] args;
   XmlOptionType xmloption;
   uint32 type;
   int32 typmod;
@@ -698,8 +698,8 @@ struct XmlExpr
 
 struct NullTest
 {
-  Node* xpr;
-  Node* arg;
+  Node xpr;
+  Node arg;
   NullTestType nulltesttype;
   bool argisrow;
   int32 location;
@@ -707,16 +707,16 @@ struct NullTest
 
 struct BooleanTest
 {
-  Node* xpr;
-  Node* arg;
+  Node xpr;
+  Node arg;
   BoolTestType booltesttype;
   int32 location;
 }
 
 struct CoerceToDomain
 {
-  Node* xpr;
-  Node* arg;
+  Node xpr;
+  Node arg;
   uint32 resulttype;
   int32 resulttypmod;
   uint32 resultcollid;
@@ -726,7 +726,7 @@ struct CoerceToDomain
 
 struct CoerceToDomainValue
 {
-  Node* xpr;
+  Node xpr;
   uint32 type_id;
   int32 type_mod;
   uint32 collation;
@@ -735,7 +735,7 @@ struct CoerceToDomainValue
 
 struct SetToDefault
 {
-  Node* xpr;
+  Node xpr;
   uint32 type_id;
   int32 type_mod;
   uint32 collation;
@@ -744,7 +744,7 @@ struct SetToDefault
 
 struct CurrentOfExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 cvarno;
   string cursor_name;
   int32 cursor_param;
@@ -752,23 +752,23 @@ struct CurrentOfExpr
 
 struct NextValueExpr
 {
-  Node* xpr;
+  Node xpr;
   uint32 seqid;
   uint32 type_id;
 }
 
 struct InferenceElem
 {
-  Node* xpr;
-  Node* expr;
+  Node xpr;
+  Node expr;
   uint32 infercollid;
   uint32 inferopclass;
 }
 
 struct TargetEntry
 {
-  Node* xpr;
-  Node* expr;
+  Node xpr;
+  Node expr;
   int32 resno;
   string resname;
   uint32 ressortgroupref;
@@ -786,47 +786,47 @@ struct JoinExpr
 {
   JoinType jointype;
   bool is_natural;
-  Node* larg;
-  Node* rarg;
-  Node*[] using_clause;
-  Node* quals;
+  Node larg;
+  Node rarg;
+  Node[] using_clause;
+  Node quals;
   Alias alias;
   int32 rtindex;
 }
 
 struct FromExpr
 {
-  Node*[] fromlist;
-  Node* quals;
+  Node[] fromlist;
+  Node quals;
 }
 
 struct OnConflictExpr
 {
   OnConflictAction action;
-  Node*[] arbiter_elems;
-  Node* arbiter_where;
+  Node[] arbiter_elems;
+  Node arbiter_where;
   uint32 constraint;
-  Node*[] on_conflict_set;
-  Node* on_conflict_where;
+  Node[] on_conflict_set;
+  Node on_conflict_where;
   int32 excl_rel_index;
-  Node*[] excl_rel_tlist;
+  Node[] excl_rel_tlist;
 }
 
 struct IntoClause
 {
   RangeVar rel;
-  Node*[] col_names;
+  Node[] col_names;
   string access_method;
-  Node*[] options;
+  Node[] options;
   OnCommitAction on_commit;
   string table_space_name;
-  Node* view_query;
+  Node view_query;
   bool skip_data;
 }
 
 struct RawStmt
 {
-  Node* stmt;
+  Node stmt;
   int32 stmt_location;
   int32 stmt_len;
 }
@@ -836,7 +836,7 @@ struct Query
   CmdType command_type;
   QuerySource query_source;
   bool can_set_tag;
-  Node* utility_stmt;
+  Node utility_stmt;
   int32 result_relation;
   bool has_aggs;
   bool has_window_funcs;
@@ -847,26 +847,26 @@ struct Query
   bool has_modifying_cte;
   bool has_for_update;
   bool has_row_security;
-  Node*[] cte_list;
-  Node*[] rtable;
+  Node[] cte_list;
+  Node[] rtable;
   FromExpr jointree;
-  Node*[] target_list;
+  Node[] target_list;
   OverridingKind override;
   OnConflictExpr on_conflict;
-  Node*[] returning_list;
-  Node*[] group_clause;
-  Node*[] grouping_sets;
-  Node* having_qual;
-  Node*[] window_clause;
-  Node*[] distinct_clause;
-  Node*[] sort_clause;
-  Node* limit_offset;
-  Node* limit_count;
+  Node[] returning_list;
+  Node[] group_clause;
+  Node[] grouping_sets;
+  Node having_qual;
+  Node[] window_clause;
+  Node[] distinct_clause;
+  Node[] sort_clause;
+  Node limit_offset;
+  Node limit_count;
   LimitOption limit_option;
-  Node*[] row_marks;
-  Node* set_operations;
-  Node*[] constraint_deps;
-  Node*[] with_check_options;
+  Node[] row_marks;
+  Node set_operations;
+  Node[] constraint_deps;
+  Node[] with_check_options;
   int32 stmt_location;
   int32 stmt_len;
 }
@@ -874,10 +874,10 @@ struct Query
 struct InsertStmt
 {
   RangeVar relation;
-  Node*[] cols;
-  Node* select_stmt;
+  Node[] cols;
+  Node select_stmt;
   OnConflictClause on_conflict_clause;
-  Node*[] returning_list;
+  Node[] returning_list;
   WithClause with_clause;
   OverridingKind override;
 }
@@ -885,38 +885,38 @@ struct InsertStmt
 struct DeleteStmt
 {
   RangeVar relation;
-  Node*[] using_clause;
-  Node* where_clause;
-  Node*[] returning_list;
+  Node[] using_clause;
+  Node where_clause;
+  Node[] returning_list;
   WithClause with_clause;
 }
 
 struct UpdateStmt
 {
   RangeVar relation;
-  Node*[] target_list;
-  Node* where_clause;
-  Node*[] from_clause;
-  Node*[] returning_list;
+  Node[] target_list;
+  Node where_clause;
+  Node[] from_clause;
+  Node[] returning_list;
   WithClause with_clause;
 }
 
 struct SelectStmt
 {
-  Node*[] distinct_clause;
+  Node[] distinct_clause;
   IntoClause into_clause;
-  Node*[] target_list;
-  Node*[] from_clause;
-  Node* where_clause;
-  Node*[] group_clause;
-  Node* having_clause;
-  Node*[] window_clause;
-  Node*[] values_lists;
-  Node*[] sort_clause;
-  Node* limit_offset;
-  Node* limit_count;
+  Node[] target_list;
+  Node[] from_clause;
+  Node where_clause;
+  Node[] group_clause;
+  Node having_clause;
+  Node[] window_clause;
+  Node[] values_lists;
+  Node[] sort_clause;
+  Node limit_offset;
+  Node limit_count;
   LimitOption limit_option;
-  Node*[] locking_clause;
+  Node[] locking_clause;
   WithClause with_clause;
   SetOperation op;
   bool all;
@@ -927,7 +927,7 @@ struct SelectStmt
 struct AlterTableStmt
 {
   RangeVar relation;
-  Node*[] cmds;
+  Node[] cmds;
   ObjectType relkind;
   bool missing_ok;
 }
@@ -938,7 +938,7 @@ struct AlterTableCmd
   string name;
   int32 num;
   RoleSpec newowner;
-  Node* def;
+  Node def;
   DropBehavior behavior;
   bool missing_ok;
 }
@@ -946,9 +946,9 @@ struct AlterTableCmd
 struct AlterDomainStmt
 {
   string subtype;
-  Node*[] type_name;
+  Node[] type_name;
   string name;
-  Node* def;
+  Node def;
   DropBehavior behavior;
   bool missing_ok;
 }
@@ -957,12 +957,12 @@ struct SetOperationStmt
 {
   SetOperation op;
   bool all;
-  Node* larg;
-  Node* rarg;
-  Node*[] col_types;
-  Node*[] col_typmods;
-  Node*[] col_collations;
-  Node*[] group_clauses;
+  Node larg;
+  Node rarg;
+  Node[] col_types;
+  Node[] col_typmods;
+  Node[] col_collations;
+  Node[] group_clauses;
 }
 
 struct GrantStmt
@@ -970,17 +970,17 @@ struct GrantStmt
   bool is_grant;
   GrantTargetType targtype;
   ObjectType objtype;
-  Node*[] objects;
-  Node*[] privileges;
-  Node*[] grantees;
+  Node[] objects;
+  Node[] privileges;
+  Node[] grantees;
   bool grant_option;
   DropBehavior behavior;
 }
 
 struct GrantRoleStmt
 {
-  Node*[] granted_roles;
-  Node*[] grantee_roles;
+  Node[] granted_roles;
+  Node[] grantee_roles;
   bool is_grant;
   bool admin_opt;
   RoleSpec grantor;
@@ -989,7 +989,7 @@ struct GrantRoleStmt
 
 struct AlterDefaultPrivilegesStmt
 {
-  Node*[] options;
+  Node[] options;
   GrantStmt action;
 }
 
@@ -1008,25 +1008,25 @@ struct ClusterStmt
 struct CopyStmt
 {
   RangeVar relation;
-  Node* query;
-  Node*[] attlist;
+  Node query;
+  Node[] attlist;
   bool is_from;
   bool is_program;
   string filename;
-  Node*[] options;
-  Node* where_clause;
+  Node[] options;
+  Node where_clause;
 }
 
 struct CreateStmt
 {
   RangeVar relation;
-  Node*[] table_elts;
-  Node*[] inh_relations;
+  Node[] table_elts;
+  Node[] inh_relations;
   PartitionBoundSpec partbound;
   PartitionSpec partspec;
   TypeName of_typename;
-  Node*[] constraints;
-  Node*[] options;
+  Node[] constraints;
+  Node[] options;
   OnCommitAction oncommit;
   string tablespacename;
   string access_method;
@@ -1037,16 +1037,16 @@ struct DefineStmt
 {
   ObjectType kind;
   bool oldstyle;
-  Node*[] defnames;
-  Node*[] args;
-  Node*[] definition;
+  Node[] defnames;
+  Node[] args;
+  Node[] definition;
   bool if_not_exists;
   bool replace;
 }
 
 struct DropStmt
 {
-  Node*[] objects;
+  Node[] objects;
   ObjectType remove_type;
   DropBehavior behavior;
   bool missing_ok;
@@ -1055,7 +1055,7 @@ struct DropStmt
 
 struct TruncateStmt
 {
-  Node*[] relations;
+  Node[] relations;
   bool restart_seqs;
   DropBehavior behavior;
 }
@@ -1063,7 +1063,7 @@ struct TruncateStmt
 struct CommentStmt
 {
   ObjectType objtype;
-  Node* object;
+  Node object;
   string comment;
 }
 
@@ -1081,11 +1081,11 @@ struct IndexStmt
   RangeVar relation;
   string access_method;
   string table_space;
-  Node*[] index_params;
-  Node*[] index_including_params;
-  Node*[] options;
-  Node* where_clause;
-  Node*[] exclude_op_names;
+  Node[] index_params;
+  Node[] index_including_params;
+  Node[] options;
+  Node where_clause;
+  Node[] exclude_op_names;
   string idxcomment;
   uint32 index_oid;
   uint32 old_node;
@@ -1106,22 +1106,22 @@ struct CreateFunctionStmt
 {
   bool is_procedure;
   bool replace;
-  Node*[] funcname;
-  Node*[] parameters;
+  Node[] funcname;
+  Node[] parameters;
   TypeName return_type;
-  Node*[] options;
+  Node[] options;
 }
 
 struct AlterFunctionStmt
 {
   ObjectType objtype;
   ObjectWithArgs func;
-  Node*[] actions;
+  Node[] actions;
 }
 
 struct DoStmt
 {
-  Node*[] args;
+  Node[] args;
 }
 
 struct RenameStmt
@@ -1129,7 +1129,7 @@ struct RenameStmt
   ObjectType rename_type;
   ObjectType relation_type;
   RangeVar relation;
-  Node* object;
+  Node object;
   string subname;
   string newname;
   DropBehavior behavior;
@@ -1140,10 +1140,10 @@ struct RuleStmt
 {
   RangeVar relation;
   string rulename;
-  Node* where_clause;
+  Node where_clause;
   CmdType event;
   bool instead;
-  Node*[] actions;
+  Node[] actions;
   bool replace;
 }
 
@@ -1166,7 +1166,7 @@ struct UnlistenStmt
 struct TransactionStmt
 {
   TransactionStmtKind kind;
-  Node*[] options;
+  Node[] options;
   string savepoint_name;
   string gid;
   bool chain;
@@ -1175,10 +1175,10 @@ struct TransactionStmt
 struct ViewStmt
 {
   RangeVar view;
-  Node*[] aliases;
-  Node* query;
+  Node[] aliases;
+  Node query;
   bool replace;
-  Node*[] options;
+  Node[] options;
   ViewCheckOption with_check_option;
 }
 
@@ -1189,41 +1189,41 @@ struct LoadStmt
 
 struct CreateDomainStmt
 {
-  Node*[] domainname;
+  Node[] domainname;
   TypeName type_name;
   CollateClause coll_clause;
-  Node*[] constraints;
+  Node[] constraints;
 }
 
 struct CreatedbStmt
 {
   string dbname;
-  Node*[] options;
+  Node[] options;
 }
 
 struct DropdbStmt
 {
   string dbname;
   bool missing_ok;
-  Node*[] options;
+  Node[] options;
 }
 
 struct VacuumStmt
 {
-  Node*[] options;
-  Node*[] rels;
+  Node[] options;
+  Node[] rels;
   bool is_vacuumcmd;
 }
 
 struct ExplainStmt
 {
-  Node* query;
-  Node*[] options;
+  Node query;
+  Node[] options;
 }
 
 struct CreateTableAsStmt
 {
-  Node* query;
+  Node query;
   IntoClause into;
   ObjectType relkind;
   bool is_select_into;
@@ -1233,7 +1233,7 @@ struct CreateTableAsStmt
 struct CreateSeqStmt
 {
   RangeVar sequence;
-  Node*[] options;
+  Node[] options;
   uint32 owner_id;
   bool for_identity;
   bool if_not_exists;
@@ -1242,7 +1242,7 @@ struct CreateSeqStmt
 struct AlterSeqStmt
 {
   RangeVar sequence;
-  Node*[] options;
+  Node[] options;
   bool for_identity;
   bool missing_ok;
 }
@@ -1251,7 +1251,7 @@ struct VariableSetStmt
 {
   VariableSetKind kind;
   string name;
-  Node*[] args;
+  Node[] args;
   bool is_local;
 }
 
@@ -1269,15 +1269,15 @@ struct CreateTrigStmt
 {
   string trigname;
   RangeVar relation;
-  Node*[] funcname;
-  Node*[] args;
+  Node[] funcname;
+  Node[] args;
   bool row;
   int32 timing;
   int32 events;
-  Node*[] columns;
-  Node* when_clause;
+  Node[] columns;
+  Node when_clause;
   bool isconstraint;
-  Node*[] transition_rels;
+  Node[] transition_rels;
   bool deferrable;
   bool initdeferred;
   RangeVar constrrel;
@@ -1287,9 +1287,9 @@ struct CreatePLangStmt
 {
   bool replace;
   string plname;
-  Node*[] plhandler;
-  Node*[] plinline;
-  Node*[] plvalidator;
+  Node[] plhandler;
+  Node[] plinline;
+  Node[] plvalidator;
   bool pltrusted;
 }
 
@@ -1297,32 +1297,32 @@ struct CreateRoleStmt
 {
   RoleStmtType stmt_type;
   string role;
-  Node*[] options;
+  Node[] options;
 }
 
 struct AlterRoleStmt
 {
   RoleSpec role;
-  Node*[] options;
+  Node[] options;
   int32 action;
 }
 
 struct DropRoleStmt
 {
-  Node*[] roles;
+  Node[] roles;
   bool missing_ok;
 }
 
 struct LockStmt
 {
-  Node*[] relations;
+  Node[] relations;
   int32 mode;
   bool nowait;
 }
 
 struct ConstraintsSetStmt
 {
-  Node*[] constraints;
+  Node[] constraints;
   bool deferred;
 }
 
@@ -1343,14 +1343,14 @@ struct CreateSchemaStmt
 {
   string schemaname;
   RoleSpec authrole;
-  Node*[] schema_elts;
+  Node[] schema_elts;
   bool if_not_exists;
 }
 
 struct AlterDatabaseStmt
 {
   string dbname;
-  Node*[] options;
+  Node[] options;
 }
 
 struct AlterDatabaseSetStmt
@@ -1368,10 +1368,10 @@ struct AlterRoleSetStmt
 
 struct CreateConversionStmt
 {
-  Node*[] conversion_name;
+  Node[] conversion_name;
   string for_encoding_name;
   string to_encoding_name;
-  Node*[] func_name;
+  Node[] func_name;
   bool def;
 }
 
@@ -1386,39 +1386,39 @@ struct CreateCastStmt
 
 struct CreateOpClassStmt
 {
-  Node*[] opclassname;
-  Node*[] opfamilyname;
+  Node[] opclassname;
+  Node[] opfamilyname;
   string amname;
   TypeName datatype;
-  Node*[] items;
+  Node[] items;
   bool is_default;
 }
 
 struct CreateOpFamilyStmt
 {
-  Node*[] opfamilyname;
+  Node[] opfamilyname;
   string amname;
 }
 
 struct AlterOpFamilyStmt
 {
-  Node*[] opfamilyname;
+  Node[] opfamilyname;
   string amname;
   bool is_drop;
-  Node*[] items;
+  Node[] items;
 }
 
 struct PrepareStmt
 {
   string name;
-  Node*[] argtypes;
-  Node* query;
+  Node[] argtypes;
+  Node query;
 }
 
 struct ExecuteStmt
 {
   string name;
-  Node*[] params;
+  Node[] params;
 }
 
 struct DeallocateStmt
@@ -1430,7 +1430,7 @@ struct DeclareCursorStmt
 {
   string portalname;
   int32 options;
-  Node* query;
+  Node query;
 }
 
 struct CreateTableSpaceStmt
@@ -1438,7 +1438,7 @@ struct CreateTableSpaceStmt
   string tablespacename;
   RoleSpec owner;
   string location;
-  Node*[] options;
+  Node[] options;
 }
 
 struct DropTableSpaceStmt
@@ -1451,7 +1451,7 @@ struct AlterObjectDependsStmt
 {
   ObjectType object_type;
   RangeVar relation;
-  Node* object;
+  Node object;
   Node extname;
   bool remove;
 }
@@ -1460,7 +1460,7 @@ struct AlterObjectSchemaStmt
 {
   ObjectType object_type;
   RangeVar relation;
-  Node* object;
+  Node object;
   string newschema;
   bool missing_ok;
 }
@@ -1469,55 +1469,55 @@ struct AlterOwnerStmt
 {
   ObjectType object_type;
   RangeVar relation;
-  Node* object;
+  Node object;
   RoleSpec newowner;
 }
 
 struct AlterOperatorStmt
 {
   ObjectWithArgs opername;
-  Node*[] options;
+  Node[] options;
 }
 
 struct AlterTypeStmt
 {
-  Node*[] type_name;
-  Node*[] options;
+  Node[] type_name;
+  Node[] options;
 }
 
 struct DropOwnedStmt
 {
-  Node*[] roles;
+  Node[] roles;
   DropBehavior behavior;
 }
 
 struct ReassignOwnedStmt
 {
-  Node*[] roles;
+  Node[] roles;
   RoleSpec newrole;
 }
 
 struct CompositeTypeStmt
 {
   RangeVar typevar;
-  Node*[] coldeflist;
+  Node[] coldeflist;
 }
 
 struct CreateEnumStmt
 {
-  Node*[] type_name;
-  Node*[] vals;
+  Node[] type_name;
+  Node[] vals;
 }
 
 struct CreateRangeStmt
 {
-  Node*[] type_name;
-  Node*[] params;
+  Node[] type_name;
+  Node[] params;
 }
 
 struct AlterEnumStmt
 {
-  Node*[] type_name;
+  Node[] type_name;
   string old_val;
   string new_val;
   string new_val_neighbor;
@@ -1527,16 +1527,16 @@ struct AlterEnumStmt
 
 struct AlterTSDictionaryStmt
 {
-  Node*[] dictname;
-  Node*[] options;
+  Node[] dictname;
+  Node[] options;
 }
 
 struct AlterTSConfigurationStmt
 {
   AlterTSConfigType kind;
-  Node*[] cfgname;
-  Node*[] tokentype;
-  Node*[] dicts;
+  Node[] cfgname;
+  Node[] tokentype;
+  Node[] dicts;
   bool override;
   bool replace;
   bool missing_ok;
@@ -1545,15 +1545,15 @@ struct AlterTSConfigurationStmt
 struct CreateFdwStmt
 {
   string fdwname;
-  Node*[] func_options;
-  Node*[] options;
+  Node[] func_options;
+  Node[] options;
 }
 
 struct AlterFdwStmt
 {
   string fdwname;
-  Node*[] func_options;
-  Node*[] options;
+  Node[] func_options;
+  Node[] options;
 }
 
 struct CreateForeignServerStmt
@@ -1563,14 +1563,14 @@ struct CreateForeignServerStmt
   string version;
   string fdwname;
   bool if_not_exists;
-  Node*[] options;
+  Node[] options;
 }
 
 struct AlterForeignServerStmt
 {
   string servername;
   string version;
-  Node*[] options;
+  Node[] options;
   bool has_version;
 }
 
@@ -1579,14 +1579,14 @@ struct CreateUserMappingStmt
   RoleSpec user;
   string servername;
   bool if_not_exists;
-  Node*[] options;
+  Node[] options;
 }
 
 struct AlterUserMappingStmt
 {
   RoleSpec user;
   string servername;
-  Node*[] options;
+  Node[] options;
 }
 
 struct DropUserMappingStmt
@@ -1599,7 +1599,7 @@ struct DropUserMappingStmt
 struct AlterTableSpaceOptionsStmt
 {
   string tablespacename;
-  Node*[] options;
+  Node[] options;
   bool is_reset;
 }
 
@@ -1607,7 +1607,7 @@ struct AlterTableMoveAllStmt
 {
   string orig_tablespacename;
   ObjectType objtype;
-  Node*[] roles;
+  Node[] roles;
   string new_tablespacename;
   bool nowait;
 }
@@ -1615,7 +1615,7 @@ struct AlterTableMoveAllStmt
 struct SecLabelStmt
 {
   ObjectType objtype;
-  Node* object;
+  Node object;
   string provider;
   string label;
 }
@@ -1624,7 +1624,7 @@ struct CreateForeignTableStmt
 {
   CreateStmt base_stmt;
   string servername;
-  Node*[] options;
+  Node[] options;
 }
 
 struct ImportForeignSchemaStmt
@@ -1633,21 +1633,21 @@ struct ImportForeignSchemaStmt
   string remote_schema;
   string local_schema;
   ImportForeignSchemaType list_type;
-  Node*[] table_list;
-  Node*[] options;
+  Node[] table_list;
+  Node[] options;
 }
 
 struct CreateExtensionStmt
 {
   string extname;
   bool if_not_exists;
-  Node*[] options;
+  Node[] options;
 }
 
 struct AlterExtensionStmt
 {
   string extname;
-  Node*[] options;
+  Node[] options;
 }
 
 struct AlterExtensionContentsStmt
@@ -1655,15 +1655,15 @@ struct AlterExtensionContentsStmt
   string extname;
   int32 action;
   ObjectType objtype;
-  Node* object;
+  Node object;
 }
 
 struct CreateEventTrigStmt
 {
   string trigname;
   string eventname;
-  Node*[] whenclause;
-  Node*[] funcname;
+  Node[] whenclause;
+  Node[] funcname;
 }
 
 struct AlterEventTrigStmt
@@ -1696,18 +1696,18 @@ struct CreatePolicyStmt
   RangeVar table;
   string cmd_name;
   bool permissive;
-  Node*[] roles;
-  Node* qual;
-  Node* with_check;
+  Node[] roles;
+  Node qual;
+  Node with_check;
 }
 
 struct AlterPolicyStmt
 {
   string policy_name;
   RangeVar table;
-  Node*[] roles;
-  Node* qual;
-  Node* with_check;
+  Node[] roles;
+  Node qual;
+  Node with_check;
 }
 
 struct CreateTransformStmt
@@ -1722,23 +1722,23 @@ struct CreateTransformStmt
 struct CreateAmStmt
 {
   string amname;
-  Node*[] handler_name;
+  Node[] handler_name;
   string amtype;
 }
 
 struct CreatePublicationStmt
 {
   string pubname;
-  Node*[] options;
-  Node*[] tables;
+  Node[] options;
+  Node[] tables;
   bool for_all_tables;
 }
 
 struct AlterPublicationStmt
 {
   string pubname;
-  Node*[] options;
-  Node*[] tables;
+  Node[] options;
+  Node[] tables;
   bool for_all_tables;
   DefElemAction table_action;
 }
@@ -1747,8 +1747,8 @@ struct CreateSubscriptionStmt
 {
   string subname;
   string conninfo;
-  Node*[] publication;
-  Node*[] options;
+  Node[] publication;
+  Node[] options;
 }
 
 struct AlterSubscriptionStmt
@@ -1756,8 +1756,8 @@ struct AlterSubscriptionStmt
   AlterSubscriptionType kind;
   string subname;
   string conninfo;
-  Node*[] publication;
-  Node*[] options;
+  Node[] publication;
+  Node[] options;
 }
 
 struct DropSubscriptionStmt
@@ -1769,17 +1769,17 @@ struct DropSubscriptionStmt
 
 struct CreateStatsStmt
 {
-  Node*[] defnames;
-  Node*[] stat_types;
-  Node*[] exprs;
-  Node*[] relations;
+  Node[] defnames;
+  Node[] stat_types;
+  Node[] exprs;
+  Node[] relations;
   string stxcomment;
   bool if_not_exists;
 }
 
 struct AlterCollationStmt
 {
-  Node*[] collname;
+  Node[] collname;
 }
 
 struct CallStmt
@@ -1790,7 +1790,7 @@ struct CallStmt
 
 struct AlterStatsStmt
 {
-  Node*[] defnames;
+  Node[] defnames;
   int32 stxstattarget;
   bool missing_ok;
 }
@@ -1798,15 +1798,15 @@ struct AlterStatsStmt
 struct A_Expr
 {
   A_Expr_Kind kind;
-  Node*[] name;
-  Node* lexpr;
-  Node* rexpr;
+  Node[] name;
+  Node lexpr;
+  Node rexpr;
   int32 location;
 }
 
 struct ColumnRef
 {
-  Node*[] fields;
+  Node[] fields;
   int32 location;
 }
 
@@ -1824,10 +1824,10 @@ struct A_Const
 
 struct FuncCall
 {
-  Node*[] funcname;
-  Node*[] args;
-  Node*[] agg_order;
-  Node* agg_filter;
+  Node[] funcname;
+  Node[] args;
+  Node[] agg_order;
+  Node agg_filter;
   bool agg_within_group;
   bool agg_star;
   bool agg_distinct;
@@ -1843,57 +1843,57 @@ struct A_Star
 struct A_Indices
 {
   bool is_slice;
-  Node* lidx;
-  Node* uidx;
+  Node lidx;
+  Node uidx;
 }
 
 struct A_Indirection
 {
-  Node* arg;
-  Node*[] indirection;
+  Node arg;
+  Node[] indirection;
 }
 
 struct A_ArrayExpr
 {
-  Node*[] elements;
+  Node[] elements;
   int32 location;
 }
 
 struct ResTarget
 {
   string name;
-  Node*[] indirection;
-  Node* val;
+  Node[] indirection;
+  Node val;
   int32 location;
 }
 
 struct MultiAssignRef
 {
-  Node* source;
+  Node source;
   int32 colno;
   int32 ncolumns;
 }
 
 struct TypeCast
 {
-  Node* arg;
+  Node arg;
   TypeName type_name;
   int32 location;
 }
 
 struct CollateClause
 {
-  Node* arg;
-  Node*[] collname;
+  Node arg;
+  Node[] collname;
   int32 location;
 }
 
 struct SortBy
 {
-  Node* node;
+  Node node;
   SortByDir sortby_dir;
   SortByNulls sortby_nulls;
-  Node*[] use_op;
+  Node[] use_op;
   int32 location;
 }
 
@@ -1901,18 +1901,18 @@ struct WindowDef
 {
   string name;
   string refname;
-  Node*[] partition_clause;
-  Node*[] order_clause;
+  Node[] partition_clause;
+  Node[] order_clause;
   int32 frame_options;
-  Node* start_offset;
-  Node* end_offset;
+  Node start_offset;
+  Node end_offset;
   int32 location;
 }
 
 struct RangeSubselect
 {
   bool lateral;
-  Node* subquery;
+  Node subquery;
   Alias alias;
 }
 
@@ -1921,27 +1921,27 @@ struct RangeFunction
   bool lateral;
   bool ordinality;
   bool is_rowsfrom;
-  Node*[] functions;
+  Node[] functions;
   Alias alias;
-  Node*[] coldeflist;
+  Node[] coldeflist;
 }
 
 struct RangeTableSample
 {
-  Node* relation;
-  Node*[] method;
-  Node*[] args;
-  Node* repeatable;
+  Node relation;
+  Node[] method;
+  Node[] args;
+  Node repeatable;
   int32 location;
 }
 
 struct RangeTableFunc
 {
   bool lateral;
-  Node* docexpr;
-  Node* rowexpr;
-  Node*[] namespaces;
-  Node*[] columns;
+  Node docexpr;
+  Node rowexpr;
+  Node[] namespaces;
+  Node[] columns;
   Alias alias;
   int32 location;
 }
@@ -1952,20 +1952,20 @@ struct RangeTableFuncCol
   TypeName type_name;
   bool for_ordinality;
   bool is_not_null;
-  Node* colexpr;
-  Node* coldefexpr;
+  Node colexpr;
+  Node coldefexpr;
   int32 location;
 }
 
 struct TypeName
 {
-  Node*[] names;
+  Node[] names;
   uint32 type_oid;
   bool setof;
   bool pct_type;
-  Node*[] typmods;
+  Node[] typmods;
   int32 typemod;
-  Node*[] array_bounds;
+  Node[] array_bounds;
   int32 location;
 }
 
@@ -1978,26 +1978,26 @@ struct ColumnDef
   bool is_not_null;
   bool is_from_type;
   string storage;
-  Node* raw_default;
-  Node* cooked_default;
+  Node raw_default;
+  Node cooked_default;
   string identity;
   RangeVar identity_sequence;
   string generated;
   CollateClause coll_clause;
   uint32 coll_oid;
-  Node*[] constraints;
-  Node*[] fdwoptions;
+  Node[] constraints;
+  Node[] fdwoptions;
   int32 location;
 }
 
 struct IndexElem
 {
   string name;
-  Node* expr;
+  Node expr;
   string indexcolname;
-  Node*[] collation;
-  Node*[] opclass;
-  Node*[] opclassopts;
+  Node[] collation;
+  Node[] opclass;
+  Node[] opclassopts;
   SortByDir ordering;
   SortByNulls nulls_ordering;
 }
@@ -2010,25 +2010,25 @@ struct Constraint
   bool initdeferred;
   int32 location;
   bool is_no_inherit;
-  Node* raw_expr;
+  Node raw_expr;
   string cooked_expr;
   string generated_when;
-  Node*[] keys;
-  Node*[] including;
-  Node*[] exclusions;
-  Node*[] options;
+  Node[] keys;
+  Node[] including;
+  Node[] exclusions;
+  Node[] options;
   string indexname;
   string indexspace;
   bool reset_default_tblspc;
   string access_method;
-  Node* where_clause;
+  Node where_clause;
   RangeVar pktable;
-  Node*[] fk_attrs;
-  Node*[] pk_attrs;
+  Node[] fk_attrs;
+  Node[] pk_attrs;
   string fk_matchtype;
   string fk_upd_action;
   string fk_del_action;
-  Node*[] old_conpfeqop;
+  Node[] old_conpfeqop;
   uint32 old_pktable_oid;
   bool skip_validation;
   bool initially_valid;
@@ -2038,7 +2038,7 @@ struct DefElem
 {
   string defnamespace;
   string defname;
-  Node* arg;
+  Node arg;
   DefElemAction defaction;
   int32 location;
 }
@@ -2054,19 +2054,19 @@ struct RangeTblEntry
   bool security_barrier;
   JoinType jointype;
   int32 joinmergedcols;
-  Node*[] joinaliasvars;
-  Node*[] joinleftcols;
-  Node*[] joinrightcols;
-  Node*[] functions;
+  Node[] joinaliasvars;
+  Node[] joinleftcols;
+  Node[] joinrightcols;
+  Node[] functions;
   bool funcordinality;
   TableFunc tablefunc;
-  Node*[] values_lists;
+  Node[] values_lists;
   string ctename;
   uint32 ctelevelsup;
   bool self_reference;
-  Node*[] coltypes;
-  Node*[] coltypmods;
-  Node*[] colcollations;
+  Node[] coltypes;
+  Node[] coltypmods;
+  Node[] colcollations;
   string enrname;
   double enrtuples;
   Alias alias;
@@ -2080,25 +2080,25 @@ struct RangeTblEntry
   uint64[] inserted_cols;
   uint64[] updated_cols;
   uint64[] extra_updated_cols;
-  Node*[] security_quals;
+  Node[] security_quals;
 }
 
 struct RangeTblFunction
 {
-  Node* funcexpr;
+  Node funcexpr;
   int32 funccolcount;
-  Node*[] funccolnames;
-  Node*[] funccoltypes;
-  Node*[] funccoltypmods;
-  Node*[] funccolcollations;
+  Node[] funccolnames;
+  Node[] funccoltypes;
+  Node[] funccoltypmods;
+  Node[] funccolcollations;
   uint64[] funcparams;
 }
 
 struct TableSampleClause
 {
   uint32 tsmhandler;
-  Node*[] args;
-  Node* repeatable;
+  Node[] args;
+  Node repeatable;
 }
 
 struct WithCheckOption
@@ -2106,7 +2106,7 @@ struct WithCheckOption
   WCOKind kind;
   string relname;
   string polname;
-  Node* qual;
+  Node qual;
   bool cascaded;
 }
 
@@ -2122,7 +2122,7 @@ struct SortGroupClause
 struct GroupingSet
 {
   GroupingSetKind kind;
-  Node*[] content;
+  Node[] content;
   int32 location;
 }
 
@@ -2130,11 +2130,11 @@ struct WindowClause
 {
   string name;
   string refname;
-  Node*[] partition_clause;
-  Node*[] order_clause;
+  Node[] partition_clause;
+  Node[] order_clause;
   int32 frame_options;
-  Node* start_offset;
-  Node* end_offset;
+  Node start_offset;
+  Node end_offset;
   uint32 start_in_range_func;
   uint32 end_in_range_func;
   uint32 in_range_coll;
@@ -2146,15 +2146,15 @@ struct WindowClause
 
 struct ObjectWithArgs
 {
-  Node*[] objname;
-  Node*[] objargs;
+  Node[] objname;
+  Node[] objargs;
   bool args_unspecified;
 }
 
 struct AccessPriv
 {
   string priv_name;
-  Node*[] cols;
+  Node[] cols;
 }
 
 struct CreateOpClassItem
@@ -2162,8 +2162,8 @@ struct CreateOpClassItem
   int32 itemtype;
   ObjectWithArgs name;
   int32 number;
-  Node*[] order_family;
-  Node*[] class_args;
+  Node[] order_family;
+  Node[] class_args;
   TypeName storedtype;
 }
 
@@ -2179,12 +2179,12 @@ struct FunctionParameter
   string name;
   TypeName arg_type;
   FunctionParameterMode mode;
-  Node* defexpr;
+  Node defexpr;
 }
 
 struct LockingClause
 {
-  Node*[] locked_rels;
+  Node[] locked_rels;
   LockClauseStrength strength;
   LockWaitPolicy wait_policy;
 }
@@ -2200,22 +2200,22 @@ struct RowMarkClause
 struct XmlSerialize
 {
   XmlOptionType xmloption;
-  Node* expr;
+  Node expr;
   TypeName type_name;
   int32 location;
 }
 
 struct WithClause
 {
-  Node*[] ctes;
+  Node[] ctes;
   bool recursive;
   int32 location;
 }
 
 struct InferClause
 {
-  Node*[] index_elems;
-  Node* where_clause;
+  Node[] index_elems;
+  Node where_clause;
   string conname;
   int32 location;
 }
@@ -2224,24 +2224,24 @@ struct OnConflictClause
 {
   OnConflictAction action;
   InferClause infer;
-  Node*[] target_list;
-  Node* where_clause;
+  Node[] target_list;
+  Node where_clause;
   int32 location;
 }
 
 struct CommonTableExpr
 {
   string ctename;
-  Node*[] aliascolnames;
+  Node[] aliascolnames;
   CTEMaterialize ctematerialized;
-  Node* ctequery;
+  Node ctequery;
   int32 location;
   bool cterecursive;
   int32 cterefcount;
-  Node*[] ctecolnames;
-  Node*[] ctecoltypes;
-  Node*[] ctecoltypmods;
-  Node*[] ctecolcollations;
+  Node[] ctecolnames;
+  Node[] ctecoltypes;
+  Node[] ctecoltypmods;
+  Node[] ctecolcollations;
 }
 
 struct RoleSpec
@@ -2261,16 +2261,16 @@ struct TriggerTransition
 struct PartitionElem
 {
   string name;
-  Node* expr;
-  Node*[] collation;
-  Node*[] opclass;
+  Node expr;
+  Node[] collation;
+  Node[] opclass;
   int32 location;
 }
 
 struct PartitionSpec
 {
   string strategy;
-  Node*[] part_params;
+  Node[] part_params;
   int32 location;
 }
 
@@ -2280,16 +2280,16 @@ struct PartitionBoundSpec
   bool is_default;
   int32 modulus;
   int32 remainder;
-  Node*[] listdatums;
-  Node*[] lowerdatums;
-  Node*[] upperdatums;
+  Node[] listdatums;
+  Node[] lowerdatums;
+  Node[] upperdatums;
   int32 location;
 }
 
 struct PartitionRangeDatum
 {
   PartitionRangeDatumKind kind;
-  Node* value;
+  Node value;
   int32 location;
 }
 
@@ -2303,7 +2303,7 @@ struct VacuumRelation
 {
   RangeVar relation;
   uint32 oid;
-  Node*[] va_cols;
+  Node[] va_cols;
 }
 
 struct InlineCodeBlock
