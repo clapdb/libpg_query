@@ -2125,16 +2125,14 @@ struct hash<pg_query::Null>
 
 namespace pg_query {
 
-struct Node;
-
 struct List : FBE::Base
 {
-    std::vector<::pg_query::Node*> items;
+    std::vector<::pg_query::Node> items;
 
     size_t fbe_type() const noexcept { return 8; }
 
     List();
-    explicit List(std::vector<std::unique_ptr<::pg_query::Node>> arg_items);
+    explicit List(std::vector<::pg_query::Node> arg_items);
     List(const List& other) = delete;
     List(List&& other) noexcept;
     ~List() override;
@@ -2178,16 +2176,14 @@ struct hash<pg_query::List>
 
 namespace pg_query {
 
-struct Node;
-
 struct OidList : FBE::Base
 {
-    std::vector<::pg_query::Node*> items;
+    std::vector<::pg_query::Node> items;
 
     size_t fbe_type() const noexcept { return 9; }
 
     OidList();
-    explicit OidList(std::vector<std::unique_ptr<::pg_query::Node>> arg_items);
+    explicit OidList(std::vector<::pg_query::Node> arg_items);
     OidList(const OidList& other) = delete;
     OidList(OidList&& other) noexcept;
     ~OidList() override;
@@ -2231,16 +2227,14 @@ struct hash<pg_query::OidList>
 
 namespace pg_query {
 
-struct Node;
-
 struct IntList : FBE::Base
 {
-    std::vector<::pg_query::Node*> items;
+    std::vector<::pg_query::Node> items;
 
     size_t fbe_type() const noexcept { return 10; }
 
     IntList();
-    explicit IntList(std::vector<std::unique_ptr<::pg_query::Node>> arg_items);
+    explicit IntList(std::vector<::pg_query::Node> arg_items);
     IntList(const IntList& other) = delete;
     IntList(IntList&& other) noexcept;
     ~IntList() override;
@@ -2284,17 +2278,15 @@ struct hash<pg_query::IntList>
 
 namespace pg_query {
 
-struct Node;
-
 struct Alias : FBE::Base
 {
     std::string aliasname;
-    std::vector<::pg_query::Node*> colnames;
+    std::vector<::pg_query::Node> colnames;
 
     size_t fbe_type() const noexcept { return 11; }
 
     Alias();
-    Alias(const std::string& arg_aliasname, std::vector<std::unique_ptr<::pg_query::Node>> arg_colnames);
+    Alias(const std::string& arg_aliasname, std::vector<::pg_query::Node> arg_colnames);
     Alias(const Alias& other) = delete;
     Alias(Alias&& other) noexcept;
     ~Alias() override;
@@ -2395,20 +2387,18 @@ struct hash<pg_query::RangeVar>
 
 namespace pg_query {
 
-struct Node;
-
 struct TableFunc : FBE::Base
 {
-    std::vector<::pg_query::Node*> ns_uris;
-    std::vector<::pg_query::Node*> ns_names;
-    ::pg_query::Node* docexpr;
-    ::pg_query::Node* rowexpr;
-    std::vector<::pg_query::Node*> colnames;
-    std::vector<::pg_query::Node*> coltypes;
-    std::vector<::pg_query::Node*> coltypmods;
-    std::vector<::pg_query::Node*> colcollations;
-    std::vector<::pg_query::Node*> colexprs;
-    std::vector<::pg_query::Node*> coldefexprs;
+    std::vector<::pg_query::Node> ns_uris;
+    std::vector<::pg_query::Node> ns_names;
+    ::pg_query::Node docexpr;
+    ::pg_query::Node rowexpr;
+    std::vector<::pg_query::Node> colnames;
+    std::vector<::pg_query::Node> coltypes;
+    std::vector<::pg_query::Node> coltypmods;
+    std::vector<::pg_query::Node> colcollations;
+    std::vector<::pg_query::Node> colexprs;
+    std::vector<::pg_query::Node> coldefexprs;
     std::vector<uint64_t> notnulls;
     int32_t ordinalitycol;
     int32_t location;
@@ -2416,7 +2406,7 @@ struct TableFunc : FBE::Base
     size_t fbe_type() const noexcept { return 13; }
 
     TableFunc();
-    TableFunc(std::vector<std::unique_ptr<::pg_query::Node>> arg_ns_uris, std::vector<std::unique_ptr<::pg_query::Node>> arg_ns_names, std::unique_ptr<::pg_query::Node> arg_docexpr, std::unique_ptr<::pg_query::Node> arg_rowexpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_colnames, std::vector<std::unique_ptr<::pg_query::Node>> arg_coltypes, std::vector<std::unique_ptr<::pg_query::Node>> arg_coltypmods, std::vector<std::unique_ptr<::pg_query::Node>> arg_colcollations, std::vector<std::unique_ptr<::pg_query::Node>> arg_colexprs, std::vector<std::unique_ptr<::pg_query::Node>> arg_coldefexprs, std::vector<uint64_t> arg_notnulls, int32_t arg_ordinalitycol, int32_t arg_location);
+    TableFunc(std::vector<::pg_query::Node> arg_ns_uris, std::vector<::pg_query::Node> arg_ns_names, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::vector<::pg_query::Node> arg_colnames, std::vector<::pg_query::Node> arg_coltypes, std::vector<::pg_query::Node> arg_coltypmods, std::vector<::pg_query::Node> arg_colcollations, std::vector<::pg_query::Node> arg_colexprs, std::vector<::pg_query::Node> arg_coldefexprs, std::vector<uint64_t> arg_notnulls, int32_t arg_ordinalitycol, int32_t arg_location);
     TableFunc(const TableFunc& other) = delete;
     TableFunc(TableFunc&& other) noexcept;
     ~TableFunc() override;
@@ -2508,11 +2498,9 @@ struct hash<pg_query::Expr>
 
 namespace pg_query {
 
-struct Node;
-
 struct Var : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t varno;
     int32_t varattno;
     uint32_t vartype;
@@ -2526,7 +2514,7 @@ struct Var : FBE::Base
     size_t fbe_type() const noexcept { return 15; }
 
     Var();
-    Var(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_varno, int32_t arg_varattno, uint32_t arg_vartype, int32_t arg_vartypmod, uint32_t arg_varcollid, uint32_t arg_varlevelsup, uint32_t arg_varnosyn, int32_t arg_varattnosyn, int32_t arg_location);
+    Var(::pg_query::Node&& arg_xpr, uint32_t arg_varno, int32_t arg_varattno, uint32_t arg_vartype, int32_t arg_vartypmod, uint32_t arg_varcollid, uint32_t arg_varlevelsup, uint32_t arg_varnosyn, int32_t arg_varattnosyn, int32_t arg_location);
     Var(const Var& other) = delete;
     Var(Var&& other) noexcept;
     ~Var() override;
@@ -2570,11 +2558,9 @@ struct hash<pg_query::Var>
 
 namespace pg_query {
 
-struct Node;
-
 struct Param : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     ::pg_query::ParamKind paramkind;
     int32_t paramid;
     uint32_t paramtype;
@@ -2585,7 +2571,7 @@ struct Param : FBE::Base
     size_t fbe_type() const noexcept { return 16; }
 
     Param();
-    Param(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::ParamKind&& arg_paramkind, int32_t arg_paramid, uint32_t arg_paramtype, int32_t arg_paramtypmod, uint32_t arg_paramcollid, int32_t arg_location);
+    Param(::pg_query::Node&& arg_xpr, ::pg_query::ParamKind&& arg_paramkind, int32_t arg_paramid, uint32_t arg_paramtype, int32_t arg_paramtypmod, uint32_t arg_paramcollid, int32_t arg_location);
     Param(const Param& other) = delete;
     Param(Param&& other) noexcept;
     ~Param() override;
@@ -2629,22 +2615,20 @@ struct hash<pg_query::Param>
 
 namespace pg_query {
 
-struct Node;
-
 struct Aggref : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t aggfnoid;
     uint32_t aggtype;
     uint32_t aggcollid;
     uint32_t inputcollid;
     uint32_t aggtranstype;
-    std::vector<::pg_query::Node*> aggargtypes;
-    std::vector<::pg_query::Node*> aggdirectargs;
-    std::vector<::pg_query::Node*> args;
-    std::vector<::pg_query::Node*> aggorder;
-    std::vector<::pg_query::Node*> aggdistinct;
-    ::pg_query::Node* aggfilter;
+    std::vector<::pg_query::Node> aggargtypes;
+    std::vector<::pg_query::Node> aggdirectargs;
+    std::vector<::pg_query::Node> args;
+    std::vector<::pg_query::Node> aggorder;
+    std::vector<::pg_query::Node> aggdistinct;
+    ::pg_query::Node aggfilter;
     bool aggstar;
     bool aggvariadic;
     std::string aggkind;
@@ -2655,7 +2639,7 @@ struct Aggref : FBE::Base
     size_t fbe_type() const noexcept { return 17; }
 
     Aggref();
-    Aggref(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_aggfnoid, uint32_t arg_aggtype, uint32_t arg_aggcollid, uint32_t arg_inputcollid, uint32_t arg_aggtranstype, std::vector<std::unique_ptr<::pg_query::Node>> arg_aggargtypes, std::vector<std::unique_ptr<::pg_query::Node>> arg_aggdirectargs, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::vector<std::unique_ptr<::pg_query::Node>> arg_aggorder, std::vector<std::unique_ptr<::pg_query::Node>> arg_aggdistinct, std::unique_ptr<::pg_query::Node> arg_aggfilter, bool arg_aggstar, bool arg_aggvariadic, const std::string& arg_aggkind, uint32_t arg_agglevelsup, ::pg_query::AggSplit&& arg_aggsplit, int32_t arg_location);
+    Aggref(::pg_query::Node&& arg_xpr, uint32_t arg_aggfnoid, uint32_t arg_aggtype, uint32_t arg_aggcollid, uint32_t arg_inputcollid, uint32_t arg_aggtranstype, std::vector<::pg_query::Node> arg_aggargtypes, std::vector<::pg_query::Node> arg_aggdirectargs, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_aggorder, std::vector<::pg_query::Node> arg_aggdistinct, ::pg_query::Node&& arg_aggfilter, bool arg_aggstar, bool arg_aggvariadic, const std::string& arg_aggkind, uint32_t arg_agglevelsup, ::pg_query::AggSplit&& arg_aggsplit, int32_t arg_location);
     Aggref(const Aggref& other) = delete;
     Aggref(Aggref&& other) noexcept;
     ~Aggref() override;
@@ -2699,21 +2683,19 @@ struct hash<pg_query::Aggref>
 
 namespace pg_query {
 
-struct Node;
-
 struct GroupingFunc : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    std::vector<::pg_query::Node*> args;
-    std::vector<::pg_query::Node*> refs;
-    std::vector<::pg_query::Node*> cols;
+    ::pg_query::Node xpr;
+    std::vector<::pg_query::Node> args;
+    std::vector<::pg_query::Node> refs;
+    std::vector<::pg_query::Node> cols;
     uint32_t agglevelsup;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 18; }
 
     GroupingFunc();
-    GroupingFunc(std::unique_ptr<::pg_query::Node> arg_xpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::vector<std::unique_ptr<::pg_query::Node>> arg_refs, std::vector<std::unique_ptr<::pg_query::Node>> arg_cols, uint32_t arg_agglevelsup, int32_t arg_location);
+    GroupingFunc(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_refs, std::vector<::pg_query::Node> arg_cols, uint32_t arg_agglevelsup, int32_t arg_location);
     GroupingFunc(const GroupingFunc& other) = delete;
     GroupingFunc(GroupingFunc&& other) noexcept;
     ~GroupingFunc() override;
@@ -2757,17 +2739,15 @@ struct hash<pg_query::GroupingFunc>
 
 namespace pg_query {
 
-struct Node;
-
 struct WindowFunc : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t winfnoid;
     uint32_t wintype;
     uint32_t wincollid;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node*> args;
-    ::pg_query::Node* aggfilter;
+    std::vector<::pg_query::Node> args;
+    ::pg_query::Node aggfilter;
     uint32_t winref;
     bool winstar;
     bool winagg;
@@ -2776,7 +2756,7 @@ struct WindowFunc : FBE::Base
     size_t fbe_type() const noexcept { return 19; }
 
     WindowFunc();
-    WindowFunc(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_winfnoid, uint32_t arg_wintype, uint32_t arg_wincollid, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::unique_ptr<::pg_query::Node> arg_aggfilter, uint32_t arg_winref, bool arg_winstar, bool arg_winagg, int32_t arg_location);
+    WindowFunc(::pg_query::Node&& arg_xpr, uint32_t arg_winfnoid, uint32_t arg_wintype, uint32_t arg_wincollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_aggfilter, uint32_t arg_winref, bool arg_winstar, bool arg_winagg, int32_t arg_location);
     WindowFunc(const WindowFunc& other) = delete;
     WindowFunc(WindowFunc&& other) noexcept;
     ~WindowFunc() override;
@@ -2820,24 +2800,22 @@ struct hash<pg_query::WindowFunc>
 
 namespace pg_query {
 
-struct Node;
-
 struct SubscriptingRef : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t refcontainertype;
     uint32_t refelemtype;
     int32_t reftypmod;
     uint32_t refcollid;
-    std::vector<::pg_query::Node*> refupperindexpr;
-    std::vector<::pg_query::Node*> reflowerindexpr;
-    ::pg_query::Node* refexpr;
-    ::pg_query::Node* refassgnexpr;
+    std::vector<::pg_query::Node> refupperindexpr;
+    std::vector<::pg_query::Node> reflowerindexpr;
+    ::pg_query::Node refexpr;
+    ::pg_query::Node refassgnexpr;
 
     size_t fbe_type() const noexcept { return 20; }
 
     SubscriptingRef();
-    SubscriptingRef(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_refcontainertype, uint32_t arg_refelemtype, int32_t arg_reftypmod, uint32_t arg_refcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_refupperindexpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_reflowerindexpr, std::unique_ptr<::pg_query::Node> arg_refexpr, std::unique_ptr<::pg_query::Node> arg_refassgnexpr);
+    SubscriptingRef(::pg_query::Node&& arg_xpr, uint32_t arg_refcontainertype, uint32_t arg_refelemtype, int32_t arg_reftypmod, uint32_t arg_refcollid, std::vector<::pg_query::Node> arg_refupperindexpr, std::vector<::pg_query::Node> arg_reflowerindexpr, ::pg_query::Node&& arg_refexpr, ::pg_query::Node&& arg_refassgnexpr);
     SubscriptingRef(const SubscriptingRef& other) = delete;
     SubscriptingRef(SubscriptingRef&& other) noexcept;
     ~SubscriptingRef() override;
@@ -2881,11 +2859,9 @@ struct hash<pg_query::SubscriptingRef>
 
 namespace pg_query {
 
-struct Node;
-
 struct FuncExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t funcid;
     uint32_t funcresulttype;
     bool funcretset;
@@ -2893,13 +2869,13 @@ struct FuncExpr : FBE::Base
     ::pg_query::CoercionForm funcformat;
     uint32_t funccollid;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 21; }
 
     FuncExpr();
-    FuncExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_funcid, uint32_t arg_funcresulttype, bool arg_funcretset, bool arg_funcvariadic, ::pg_query::CoercionForm&& arg_funcformat, uint32_t arg_funccollid, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location);
+    FuncExpr(::pg_query::Node&& arg_xpr, uint32_t arg_funcid, uint32_t arg_funcresulttype, bool arg_funcretset, bool arg_funcvariadic, ::pg_query::CoercionForm&& arg_funcformat, uint32_t arg_funccollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
     FuncExpr(const FuncExpr& other) = delete;
     FuncExpr(FuncExpr&& other) noexcept;
     ~FuncExpr() override;
@@ -2943,12 +2919,10 @@ struct hash<pg_query::FuncExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct NamedArgExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
     std::string name;
     int32_t argnumber;
     int32_t location;
@@ -2956,7 +2930,7 @@ struct NamedArgExpr : FBE::Base
     size_t fbe_type() const noexcept { return 22; }
 
     NamedArgExpr();
-    NamedArgExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, const std::string& arg_name, int32_t arg_argnumber, int32_t arg_location);
+    NamedArgExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, const std::string& arg_name, int32_t arg_argnumber, int32_t arg_location);
     NamedArgExpr(const NamedArgExpr& other) = delete;
     NamedArgExpr(NamedArgExpr&& other) noexcept;
     ~NamedArgExpr() override;
@@ -3000,24 +2974,22 @@ struct hash<pg_query::NamedArgExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct OpExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t opno;
     uint32_t opfuncid;
     uint32_t opresulttype;
     bool opretset;
     uint32_t opcollid;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 23; }
 
     OpExpr();
-    OpExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location);
+    OpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
     OpExpr(const OpExpr& other) = delete;
     OpExpr(OpExpr&& other) noexcept;
     ~OpExpr() override;
@@ -3061,24 +3033,22 @@ struct hash<pg_query::OpExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct DistinctExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t opno;
     uint32_t opfuncid;
     uint32_t opresulttype;
     bool opretset;
     uint32_t opcollid;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 24; }
 
     DistinctExpr();
-    DistinctExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location);
+    DistinctExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
     DistinctExpr(const DistinctExpr& other) = delete;
     DistinctExpr(DistinctExpr&& other) noexcept;
     ~DistinctExpr() override;
@@ -3122,24 +3092,22 @@ struct hash<pg_query::DistinctExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct NullIfExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t opno;
     uint32_t opfuncid;
     uint32_t opresulttype;
     bool opretset;
     uint32_t opcollid;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 25; }
 
     NullIfExpr();
-    NullIfExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location);
+    NullIfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
     NullIfExpr(const NullIfExpr& other) = delete;
     NullIfExpr(NullIfExpr&& other) noexcept;
     ~NullIfExpr() override;
@@ -3183,22 +3151,20 @@ struct hash<pg_query::NullIfExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct ScalarArrayOpExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t opno;
     uint32_t opfuncid;
     bool use_or;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 26; }
 
     ScalarArrayOpExpr();
-    ScalarArrayOpExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, bool arg_use_or, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location);
+    ScalarArrayOpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, bool arg_use_or, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
     ScalarArrayOpExpr(const ScalarArrayOpExpr& other) = delete;
     ScalarArrayOpExpr(ScalarArrayOpExpr&& other) noexcept;
     ~ScalarArrayOpExpr() override;
@@ -3242,19 +3208,17 @@ struct hash<pg_query::ScalarArrayOpExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct BoolExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     ::pg_query::BoolExprType boolop;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 27; }
 
     BoolExpr();
-    BoolExpr(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::BoolExprType&& arg_boolop, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location);
+    BoolExpr(::pg_query::Node&& arg_xpr, ::pg_query::BoolExprType&& arg_boolop, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
     BoolExpr(const BoolExpr& other) = delete;
     BoolExpr(BoolExpr&& other) noexcept;
     ~BoolExpr() override;
@@ -3298,22 +3262,20 @@ struct hash<pg_query::BoolExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct SubLink : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     ::pg_query::SubLinkType sub_link_type;
     int32_t sub_link_id;
-    ::pg_query::Node* testexpr;
-    std::vector<::pg_query::Node*> oper_name;
-    ::pg_query::Node* subselect;
+    ::pg_query::Node testexpr;
+    std::vector<::pg_query::Node> oper_name;
+    ::pg_query::Node subselect;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 28; }
 
     SubLink();
-    SubLink(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, int32_t arg_sub_link_id, std::unique_ptr<::pg_query::Node> arg_testexpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_oper_name, std::unique_ptr<::pg_query::Node> arg_subselect, int32_t arg_location);
+    SubLink(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, int32_t arg_sub_link_id, ::pg_query::Node&& arg_testexpr, std::vector<::pg_query::Node> arg_oper_name, ::pg_query::Node&& arg_subselect, int32_t arg_location);
     SubLink(const SubLink& other) = delete;
     SubLink(SubLink&& other) noexcept;
     ~SubLink() override;
@@ -3357,14 +3319,12 @@ struct hash<pg_query::SubLink>
 
 namespace pg_query {
 
-struct Node;
-
 struct SubPlan : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     ::pg_query::SubLinkType sub_link_type;
-    ::pg_query::Node* testexpr;
-    std::vector<::pg_query::Node*> param_ids;
+    ::pg_query::Node testexpr;
+    std::vector<::pg_query::Node> param_ids;
     int32_t plan_id;
     std::string plan_name;
     uint32_t first_col_type;
@@ -3373,16 +3333,16 @@ struct SubPlan : FBE::Base
     bool use_hash_table;
     bool unknown_eq_false;
     bool parallel_safe;
-    std::vector<::pg_query::Node*> set_param;
-    std::vector<::pg_query::Node*> par_param;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> set_param;
+    std::vector<::pg_query::Node> par_param;
+    std::vector<::pg_query::Node> args;
     double startup_cost;
     double per_call_cost;
 
     size_t fbe_type() const noexcept { return 29; }
 
     SubPlan();
-    SubPlan(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, std::unique_ptr<::pg_query::Node> arg_testexpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_param_ids, int32_t arg_plan_id, const std::string& arg_plan_name, uint32_t arg_first_col_type, int32_t arg_first_col_typmod, uint32_t arg_first_col_collation, bool arg_use_hash_table, bool arg_unknown_eq_false, bool arg_parallel_safe, std::vector<std::unique_ptr<::pg_query::Node>> arg_set_param, std::vector<std::unique_ptr<::pg_query::Node>> arg_par_param, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, double arg_startup_cost, double arg_per_call_cost);
+    SubPlan(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, ::pg_query::Node&& arg_testexpr, std::vector<::pg_query::Node> arg_param_ids, int32_t arg_plan_id, const std::string& arg_plan_name, uint32_t arg_first_col_type, int32_t arg_first_col_typmod, uint32_t arg_first_col_collation, bool arg_use_hash_table, bool arg_unknown_eq_false, bool arg_parallel_safe, std::vector<::pg_query::Node> arg_set_param, std::vector<::pg_query::Node> arg_par_param, std::vector<::pg_query::Node> arg_args, double arg_startup_cost, double arg_per_call_cost);
     SubPlan(const SubPlan& other) = delete;
     SubPlan(SubPlan&& other) noexcept;
     ~SubPlan() override;
@@ -3426,17 +3386,15 @@ struct hash<pg_query::SubPlan>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlternativeSubPlan : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    std::vector<::pg_query::Node*> subplans;
+    ::pg_query::Node xpr;
+    std::vector<::pg_query::Node> subplans;
 
     size_t fbe_type() const noexcept { return 30; }
 
     AlternativeSubPlan();
-    AlternativeSubPlan(std::unique_ptr<::pg_query::Node> arg_xpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_subplans);
+    AlternativeSubPlan(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_subplans);
     AlternativeSubPlan(const AlternativeSubPlan& other) = delete;
     AlternativeSubPlan(AlternativeSubPlan&& other) noexcept;
     ~AlternativeSubPlan() override;
@@ -3480,12 +3438,10 @@ struct hash<pg_query::AlternativeSubPlan>
 
 namespace pg_query {
 
-struct Node;
-
 struct FieldSelect : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
     int32_t fieldnum;
     uint32_t resulttype;
     int32_t resulttypmod;
@@ -3494,7 +3450,7 @@ struct FieldSelect : FBE::Base
     size_t fbe_type() const noexcept { return 31; }
 
     FieldSelect();
-    FieldSelect(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, int32_t arg_fieldnum, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid);
+    FieldSelect(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, int32_t arg_fieldnum, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid);
     FieldSelect(const FieldSelect& other) = delete;
     FieldSelect(FieldSelect&& other) noexcept;
     ~FieldSelect() override;
@@ -3538,20 +3494,18 @@ struct hash<pg_query::FieldSelect>
 
 namespace pg_query {
 
-struct Node;
-
 struct FieldStore : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
-    std::vector<::pg_query::Node*> newvals;
-    std::vector<::pg_query::Node*> fieldnums;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
+    std::vector<::pg_query::Node> newvals;
+    std::vector<::pg_query::Node> fieldnums;
     uint32_t resulttype;
 
     size_t fbe_type() const noexcept { return 32; }
 
     FieldStore();
-    FieldStore(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, std::vector<std::unique_ptr<::pg_query::Node>> arg_newvals, std::vector<std::unique_ptr<::pg_query::Node>> arg_fieldnums, uint32_t arg_resulttype);
+    FieldStore(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_newvals, std::vector<::pg_query::Node> arg_fieldnums, uint32_t arg_resulttype);
     FieldStore(const FieldStore& other) = delete;
     FieldStore(FieldStore&& other) noexcept;
     ~FieldStore() override;
@@ -3595,12 +3549,10 @@ struct hash<pg_query::FieldStore>
 
 namespace pg_query {
 
-struct Node;
-
 struct RelabelType : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
     uint32_t resulttype;
     int32_t resulttypmod;
     uint32_t resultcollid;
@@ -3610,7 +3562,7 @@ struct RelabelType : FBE::Base
     size_t fbe_type() const noexcept { return 33; }
 
     RelabelType();
-    RelabelType(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_relabelformat, int32_t arg_location);
+    RelabelType(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_relabelformat, int32_t arg_location);
     RelabelType(const RelabelType& other) = delete;
     RelabelType(RelabelType&& other) noexcept;
     ~RelabelType() override;
@@ -3654,12 +3606,10 @@ struct hash<pg_query::RelabelType>
 
 namespace pg_query {
 
-struct Node;
-
 struct CoerceViaIO : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
     uint32_t resulttype;
     uint32_t resultcollid;
     ::pg_query::CoercionForm coerceformat;
@@ -3668,7 +3618,7 @@ struct CoerceViaIO : FBE::Base
     size_t fbe_type() const noexcept { return 34; }
 
     CoerceViaIO();
-    CoerceViaIO(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, uint32_t arg_resulttype, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location);
+    CoerceViaIO(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location);
     CoerceViaIO(const CoerceViaIO& other) = delete;
     CoerceViaIO(CoerceViaIO&& other) noexcept;
     ~CoerceViaIO() override;
@@ -3712,13 +3662,11 @@ struct hash<pg_query::CoerceViaIO>
 
 namespace pg_query {
 
-struct Node;
-
 struct ArrayCoerceExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
-    ::pg_query::Node* elemexpr;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
+    ::pg_query::Node elemexpr;
     uint32_t resulttype;
     int32_t resulttypmod;
     uint32_t resultcollid;
@@ -3728,7 +3676,7 @@ struct ArrayCoerceExpr : FBE::Base
     size_t fbe_type() const noexcept { return 35; }
 
     ArrayCoerceExpr();
-    ArrayCoerceExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, std::unique_ptr<::pg_query::Node> arg_elemexpr, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location);
+    ArrayCoerceExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::Node&& arg_elemexpr, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location);
     ArrayCoerceExpr(const ArrayCoerceExpr& other) = delete;
     ArrayCoerceExpr(ArrayCoerceExpr&& other) noexcept;
     ~ArrayCoerceExpr() override;
@@ -3772,12 +3720,10 @@ struct hash<pg_query::ArrayCoerceExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct ConvertRowtypeExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
     uint32_t resulttype;
     ::pg_query::CoercionForm convertformat;
     int32_t location;
@@ -3785,7 +3731,7 @@ struct ConvertRowtypeExpr : FBE::Base
     size_t fbe_type() const noexcept { return 36; }
 
     ConvertRowtypeExpr();
-    ConvertRowtypeExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, uint32_t arg_resulttype, ::pg_query::CoercionForm&& arg_convertformat, int32_t arg_location);
+    ConvertRowtypeExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, ::pg_query::CoercionForm&& arg_convertformat, int32_t arg_location);
     ConvertRowtypeExpr(const ConvertRowtypeExpr& other) = delete;
     ConvertRowtypeExpr(ConvertRowtypeExpr&& other) noexcept;
     ~ConvertRowtypeExpr() override;
@@ -3829,19 +3775,17 @@ struct hash<pg_query::ConvertRowtypeExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct CollateExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
     uint32_t coll_oid;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 37; }
 
     CollateExpr();
-    CollateExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, uint32_t arg_coll_oid, int32_t arg_location);
+    CollateExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_coll_oid, int32_t arg_location);
     CollateExpr(const CollateExpr& other) = delete;
     CollateExpr(CollateExpr&& other) noexcept;
     ~CollateExpr() override;
@@ -3885,22 +3829,20 @@ struct hash<pg_query::CollateExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct CaseExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t casetype;
     uint32_t casecollid;
-    ::pg_query::Node* arg;
-    std::vector<::pg_query::Node*> args;
-    ::pg_query::Node* defresult;
+    ::pg_query::Node arg;
+    std::vector<::pg_query::Node> args;
+    ::pg_query::Node defresult;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 38; }
 
     CaseExpr();
-    CaseExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_casetype, uint32_t arg_casecollid, std::unique_ptr<::pg_query::Node> arg_arg, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::unique_ptr<::pg_query::Node> arg_defresult, int32_t arg_location);
+    CaseExpr(::pg_query::Node&& arg_xpr, uint32_t arg_casetype, uint32_t arg_casecollid, ::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_defresult, int32_t arg_location);
     CaseExpr(const CaseExpr& other) = delete;
     CaseExpr(CaseExpr&& other) noexcept;
     ~CaseExpr() override;
@@ -3944,19 +3886,17 @@ struct hash<pg_query::CaseExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct CaseWhen : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* expr;
-    ::pg_query::Node* result;
+    ::pg_query::Node xpr;
+    ::pg_query::Node expr;
+    ::pg_query::Node result;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 39; }
 
     CaseWhen();
-    CaseWhen(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_expr, std::unique_ptr<::pg_query::Node> arg_result, int32_t arg_location);
+    CaseWhen(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, ::pg_query::Node&& arg_result, int32_t arg_location);
     CaseWhen(const CaseWhen& other) = delete;
     CaseWhen(CaseWhen&& other) noexcept;
     ~CaseWhen() override;
@@ -4000,11 +3940,9 @@ struct hash<pg_query::CaseWhen>
 
 namespace pg_query {
 
-struct Node;
-
 struct CaseTestExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t type_id;
     int32_t type_mod;
     uint32_t collation;
@@ -4012,7 +3950,7 @@ struct CaseTestExpr : FBE::Base
     size_t fbe_type() const noexcept { return 40; }
 
     CaseTestExpr();
-    CaseTestExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation);
+    CaseTestExpr(::pg_query::Node&& arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation);
     CaseTestExpr(const CaseTestExpr& other) = delete;
     CaseTestExpr(CaseTestExpr&& other) noexcept;
     ~CaseTestExpr() override;
@@ -4056,22 +3994,20 @@ struct hash<pg_query::CaseTestExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct ArrayExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t array_typeid;
     uint32_t array_collid;
     uint32_t element_typeid;
-    std::vector<::pg_query::Node*> elements;
+    std::vector<::pg_query::Node> elements;
     bool multidims;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 41; }
 
     ArrayExpr();
-    ArrayExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_array_typeid, uint32_t arg_array_collid, uint32_t arg_element_typeid, std::vector<std::unique_ptr<::pg_query::Node>> arg_elements, bool arg_multidims, int32_t arg_location);
+    ArrayExpr(::pg_query::Node&& arg_xpr, uint32_t arg_array_typeid, uint32_t arg_array_collid, uint32_t arg_element_typeid, std::vector<::pg_query::Node> arg_elements, bool arg_multidims, int32_t arg_location);
     ArrayExpr(const ArrayExpr& other) = delete;
     ArrayExpr(ArrayExpr&& other) noexcept;
     ~ArrayExpr() override;
@@ -4115,21 +4051,19 @@ struct hash<pg_query::ArrayExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct RowExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    std::vector<::pg_query::Node*> args;
+    ::pg_query::Node xpr;
+    std::vector<::pg_query::Node> args;
     uint32_t row_typeid;
     ::pg_query::CoercionForm row_format;
-    std::vector<::pg_query::Node*> colnames;
+    std::vector<::pg_query::Node> colnames;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 42; }
 
     RowExpr();
-    RowExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, uint32_t arg_row_typeid, ::pg_query::CoercionForm&& arg_row_format, std::vector<std::unique_ptr<::pg_query::Node>> arg_colnames, int32_t arg_location);
+    RowExpr(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_args, uint32_t arg_row_typeid, ::pg_query::CoercionForm&& arg_row_format, std::vector<::pg_query::Node> arg_colnames, int32_t arg_location);
     RowExpr(const RowExpr& other) = delete;
     RowExpr(RowExpr&& other) noexcept;
     ~RowExpr() override;
@@ -4173,22 +4107,20 @@ struct hash<pg_query::RowExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct RowCompareExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     ::pg_query::RowCompareType rctype;
-    std::vector<::pg_query::Node*> opnos;
-    std::vector<::pg_query::Node*> opfamilies;
-    std::vector<::pg_query::Node*> inputcollids;
-    std::vector<::pg_query::Node*> largs;
-    std::vector<::pg_query::Node*> rargs;
+    std::vector<::pg_query::Node> opnos;
+    std::vector<::pg_query::Node> opfamilies;
+    std::vector<::pg_query::Node> inputcollids;
+    std::vector<::pg_query::Node> largs;
+    std::vector<::pg_query::Node> rargs;
 
     size_t fbe_type() const noexcept { return 43; }
 
     RowCompareExpr();
-    RowCompareExpr(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::RowCompareType&& arg_rctype, std::vector<std::unique_ptr<::pg_query::Node>> arg_opnos, std::vector<std::unique_ptr<::pg_query::Node>> arg_opfamilies, std::vector<std::unique_ptr<::pg_query::Node>> arg_inputcollids, std::vector<std::unique_ptr<::pg_query::Node>> arg_largs, std::vector<std::unique_ptr<::pg_query::Node>> arg_rargs);
+    RowCompareExpr(::pg_query::Node&& arg_xpr, ::pg_query::RowCompareType&& arg_rctype, std::vector<::pg_query::Node> arg_opnos, std::vector<::pg_query::Node> arg_opfamilies, std::vector<::pg_query::Node> arg_inputcollids, std::vector<::pg_query::Node> arg_largs, std::vector<::pg_query::Node> arg_rargs);
     RowCompareExpr(const RowCompareExpr& other) = delete;
     RowCompareExpr(RowCompareExpr&& other) noexcept;
     ~RowCompareExpr() override;
@@ -4232,20 +4164,18 @@ struct hash<pg_query::RowCompareExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct CoalesceExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t coalescetype;
     uint32_t coalescecollid;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 44; }
 
     CoalesceExpr();
-    CoalesceExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_coalescetype, uint32_t arg_coalescecollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location);
+    CoalesceExpr(::pg_query::Node&& arg_xpr, uint32_t arg_coalescetype, uint32_t arg_coalescecollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
     CoalesceExpr(const CoalesceExpr& other) = delete;
     CoalesceExpr(CoalesceExpr&& other) noexcept;
     ~CoalesceExpr() override;
@@ -4289,22 +4219,20 @@ struct hash<pg_query::CoalesceExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct MinMaxExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t minmaxtype;
     uint32_t minmaxcollid;
     uint32_t inputcollid;
     ::pg_query::MinMaxOp op;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 45; }
 
     MinMaxExpr();
-    MinMaxExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_minmaxtype, uint32_t arg_minmaxcollid, uint32_t arg_inputcollid, ::pg_query::MinMaxOp&& arg_op, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location);
+    MinMaxExpr(::pg_query::Node&& arg_xpr, uint32_t arg_minmaxtype, uint32_t arg_minmaxcollid, uint32_t arg_inputcollid, ::pg_query::MinMaxOp&& arg_op, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
     MinMaxExpr(const MinMaxExpr& other) = delete;
     MinMaxExpr(MinMaxExpr&& other) noexcept;
     ~MinMaxExpr() override;
@@ -4348,11 +4276,9 @@ struct hash<pg_query::MinMaxExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct SQLValueFunction : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     ::pg_query::SQLValueFunctionOp op;
     uint32_t type;
     int32_t typmod;
@@ -4361,7 +4287,7 @@ struct SQLValueFunction : FBE::Base
     size_t fbe_type() const noexcept { return 46; }
 
     SQLValueFunction();
-    SQLValueFunction(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::SQLValueFunctionOp&& arg_op, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location);
+    SQLValueFunction(::pg_query::Node&& arg_xpr, ::pg_query::SQLValueFunctionOp&& arg_op, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location);
     SQLValueFunction(const SQLValueFunction& other) = delete;
     SQLValueFunction(SQLValueFunction&& other) noexcept;
     ~SQLValueFunction() override;
@@ -4405,16 +4331,14 @@ struct hash<pg_query::SQLValueFunction>
 
 namespace pg_query {
 
-struct Node;
-
 struct XmlExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     ::pg_query::XmlExprOp op;
     std::string name;
-    std::vector<::pg_query::Node*> named_args;
-    std::vector<::pg_query::Node*> arg_names;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> named_args;
+    std::vector<::pg_query::Node> arg_names;
+    std::vector<::pg_query::Node> args;
     ::pg_query::XmlOptionType xmloption;
     uint32_t type;
     int32_t typmod;
@@ -4423,7 +4347,7 @@ struct XmlExpr : FBE::Base
     size_t fbe_type() const noexcept { return 47; }
 
     XmlExpr();
-    XmlExpr(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::XmlExprOp&& arg_op, const std::string& arg_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_named_args, std::vector<std::unique_ptr<::pg_query::Node>> arg_arg_names, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, ::pg_query::XmlOptionType&& arg_xmloption, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location);
+    XmlExpr(::pg_query::Node&& arg_xpr, ::pg_query::XmlExprOp&& arg_op, const std::string& arg_name, std::vector<::pg_query::Node> arg_named_args, std::vector<::pg_query::Node> arg_arg_names, std::vector<::pg_query::Node> arg_args, ::pg_query::XmlOptionType&& arg_xmloption, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location);
     XmlExpr(const XmlExpr& other) = delete;
     XmlExpr(XmlExpr&& other) noexcept;
     ~XmlExpr() override;
@@ -4467,12 +4391,10 @@ struct hash<pg_query::XmlExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct NullTest : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
     ::pg_query::NullTestType nulltesttype;
     bool argisrow;
     int32_t location;
@@ -4480,7 +4402,7 @@ struct NullTest : FBE::Base
     size_t fbe_type() const noexcept { return 48; }
 
     NullTest();
-    NullTest(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, ::pg_query::NullTestType&& arg_nulltesttype, bool arg_argisrow, int32_t arg_location);
+    NullTest(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::NullTestType&& arg_nulltesttype, bool arg_argisrow, int32_t arg_location);
     NullTest(const NullTest& other) = delete;
     NullTest(NullTest&& other) noexcept;
     ~NullTest() override;
@@ -4524,19 +4446,17 @@ struct hash<pg_query::NullTest>
 
 namespace pg_query {
 
-struct Node;
-
 struct BooleanTest : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
     ::pg_query::BoolTestType booltesttype;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 49; }
 
     BooleanTest();
-    BooleanTest(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, ::pg_query::BoolTestType&& arg_booltesttype, int32_t arg_location);
+    BooleanTest(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::BoolTestType&& arg_booltesttype, int32_t arg_location);
     BooleanTest(const BooleanTest& other) = delete;
     BooleanTest(BooleanTest&& other) noexcept;
     ~BooleanTest() override;
@@ -4580,12 +4500,10 @@ struct hash<pg_query::BooleanTest>
 
 namespace pg_query {
 
-struct Node;
-
 struct CoerceToDomain : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* arg;
+    ::pg_query::Node xpr;
+    ::pg_query::Node arg;
     uint32_t resulttype;
     int32_t resulttypmod;
     uint32_t resultcollid;
@@ -4595,7 +4513,7 @@ struct CoerceToDomain : FBE::Base
     size_t fbe_type() const noexcept { return 50; }
 
     CoerceToDomain();
-    CoerceToDomain(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coercionformat, int32_t arg_location);
+    CoerceToDomain(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coercionformat, int32_t arg_location);
     CoerceToDomain(const CoerceToDomain& other) = delete;
     CoerceToDomain(CoerceToDomain&& other) noexcept;
     ~CoerceToDomain() override;
@@ -4639,11 +4557,9 @@ struct hash<pg_query::CoerceToDomain>
 
 namespace pg_query {
 
-struct Node;
-
 struct CoerceToDomainValue : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t type_id;
     int32_t type_mod;
     uint32_t collation;
@@ -4652,7 +4568,7 @@ struct CoerceToDomainValue : FBE::Base
     size_t fbe_type() const noexcept { return 51; }
 
     CoerceToDomainValue();
-    CoerceToDomainValue(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location);
+    CoerceToDomainValue(::pg_query::Node&& arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location);
     CoerceToDomainValue(const CoerceToDomainValue& other) = delete;
     CoerceToDomainValue(CoerceToDomainValue&& other) noexcept;
     ~CoerceToDomainValue() override;
@@ -4696,11 +4612,9 @@ struct hash<pg_query::CoerceToDomainValue>
 
 namespace pg_query {
 
-struct Node;
-
 struct SetToDefault : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t type_id;
     int32_t type_mod;
     uint32_t collation;
@@ -4709,7 +4623,7 @@ struct SetToDefault : FBE::Base
     size_t fbe_type() const noexcept { return 52; }
 
     SetToDefault();
-    SetToDefault(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location);
+    SetToDefault(::pg_query::Node&& arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location);
     SetToDefault(const SetToDefault& other) = delete;
     SetToDefault(SetToDefault&& other) noexcept;
     ~SetToDefault() override;
@@ -4753,11 +4667,9 @@ struct hash<pg_query::SetToDefault>
 
 namespace pg_query {
 
-struct Node;
-
 struct CurrentOfExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t cvarno;
     std::string cursor_name;
     int32_t cursor_param;
@@ -4765,7 +4677,7 @@ struct CurrentOfExpr : FBE::Base
     size_t fbe_type() const noexcept { return 53; }
 
     CurrentOfExpr();
-    CurrentOfExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_cvarno, const std::string& arg_cursor_name, int32_t arg_cursor_param);
+    CurrentOfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_cvarno, const std::string& arg_cursor_name, int32_t arg_cursor_param);
     CurrentOfExpr(const CurrentOfExpr& other) = delete;
     CurrentOfExpr(CurrentOfExpr&& other) noexcept;
     ~CurrentOfExpr() override;
@@ -4809,18 +4721,16 @@ struct hash<pg_query::CurrentOfExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct NextValueExpr : FBE::Base
 {
-    ::pg_query::Node* xpr;
+    ::pg_query::Node xpr;
     uint32_t seqid;
     uint32_t type_id;
 
     size_t fbe_type() const noexcept { return 54; }
 
     NextValueExpr();
-    NextValueExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_seqid, uint32_t arg_type_id);
+    NextValueExpr(::pg_query::Node&& arg_xpr, uint32_t arg_seqid, uint32_t arg_type_id);
     NextValueExpr(const NextValueExpr& other) = delete;
     NextValueExpr(NextValueExpr&& other) noexcept;
     ~NextValueExpr() override;
@@ -4864,19 +4774,17 @@ struct hash<pg_query::NextValueExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct InferenceElem : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* expr;
+    ::pg_query::Node xpr;
+    ::pg_query::Node expr;
     uint32_t infercollid;
     uint32_t inferopclass;
 
     size_t fbe_type() const noexcept { return 55; }
 
     InferenceElem();
-    InferenceElem(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_expr, uint32_t arg_infercollid, uint32_t arg_inferopclass);
+    InferenceElem(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, uint32_t arg_infercollid, uint32_t arg_inferopclass);
     InferenceElem(const InferenceElem& other) = delete;
     InferenceElem(InferenceElem&& other) noexcept;
     ~InferenceElem() override;
@@ -4920,12 +4828,10 @@ struct hash<pg_query::InferenceElem>
 
 namespace pg_query {
 
-struct Node;
-
 struct TargetEntry : FBE::Base
 {
-    ::pg_query::Node* xpr;
-    ::pg_query::Node* expr;
+    ::pg_query::Node xpr;
+    ::pg_query::Node expr;
     int32_t resno;
     std::string resname;
     uint32_t ressortgroupref;
@@ -4936,7 +4842,7 @@ struct TargetEntry : FBE::Base
     size_t fbe_type() const noexcept { return 56; }
 
     TargetEntry();
-    TargetEntry(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_expr, int32_t arg_resno, const std::string& arg_resname, uint32_t arg_ressortgroupref, uint32_t arg_resorigtbl, int32_t arg_resorigcol, bool arg_resjunk);
+    TargetEntry(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, int32_t arg_resno, const std::string& arg_resname, uint32_t arg_ressortgroupref, uint32_t arg_resorigtbl, int32_t arg_resorigcol, bool arg_resjunk);
     TargetEntry(const TargetEntry& other) = delete;
     TargetEntry(TargetEntry&& other) noexcept;
     ~TargetEntry() override;
@@ -5031,23 +4937,21 @@ struct hash<pg_query::RangeTblRef>
 
 namespace pg_query {
 
-struct Node;
-
 struct JoinExpr : FBE::Base
 {
     ::pg_query::JoinType jointype;
     bool is_natural;
-    ::pg_query::Node* larg;
-    ::pg_query::Node* rarg;
-    std::vector<::pg_query::Node*> using_clause;
-    ::pg_query::Node* quals;
+    ::pg_query::Node larg;
+    ::pg_query::Node rarg;
+    std::vector<::pg_query::Node> using_clause;
+    ::pg_query::Node quals;
     ::pg_query::Alias alias;
     int32_t rtindex;
 
     size_t fbe_type() const noexcept { return 58; }
 
     JoinExpr();
-    JoinExpr(::pg_query::JoinType&& arg_jointype, bool arg_is_natural, std::unique_ptr<::pg_query::Node> arg_larg, std::unique_ptr<::pg_query::Node> arg_rarg, std::vector<std::unique_ptr<::pg_query::Node>> arg_using_clause, std::unique_ptr<::pg_query::Node> arg_quals, ::pg_query::Alias&& arg_alias, int32_t arg_rtindex);
+    JoinExpr(::pg_query::JoinType&& arg_jointype, bool arg_is_natural, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_quals, ::pg_query::Alias&& arg_alias, int32_t arg_rtindex);
     JoinExpr(const JoinExpr& other) = delete;
     JoinExpr(JoinExpr&& other) noexcept;
     ~JoinExpr() override;
@@ -5091,17 +4995,15 @@ struct hash<pg_query::JoinExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct FromExpr : FBE::Base
 {
-    std::vector<::pg_query::Node*> fromlist;
-    ::pg_query::Node* quals;
+    std::vector<::pg_query::Node> fromlist;
+    ::pg_query::Node quals;
 
     size_t fbe_type() const noexcept { return 59; }
 
     FromExpr();
-    FromExpr(std::vector<std::unique_ptr<::pg_query::Node>> arg_fromlist, std::unique_ptr<::pg_query::Node> arg_quals);
+    FromExpr(std::vector<::pg_query::Node> arg_fromlist, ::pg_query::Node&& arg_quals);
     FromExpr(const FromExpr& other) = delete;
     FromExpr(FromExpr&& other) noexcept;
     ~FromExpr() override;
@@ -5145,23 +5047,21 @@ struct hash<pg_query::FromExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct OnConflictExpr : FBE::Base
 {
     ::pg_query::OnConflictAction action;
-    std::vector<::pg_query::Node*> arbiter_elems;
-    ::pg_query::Node* arbiter_where;
+    std::vector<::pg_query::Node> arbiter_elems;
+    ::pg_query::Node arbiter_where;
     uint32_t constraint;
-    std::vector<::pg_query::Node*> on_conflict_set;
-    ::pg_query::Node* on_conflict_where;
+    std::vector<::pg_query::Node> on_conflict_set;
+    ::pg_query::Node on_conflict_where;
     int32_t excl_rel_index;
-    std::vector<::pg_query::Node*> excl_rel_tlist;
+    std::vector<::pg_query::Node> excl_rel_tlist;
 
     size_t fbe_type() const noexcept { return 60; }
 
     OnConflictExpr();
-    OnConflictExpr(::pg_query::OnConflictAction&& arg_action, std::vector<std::unique_ptr<::pg_query::Node>> arg_arbiter_elems, std::unique_ptr<::pg_query::Node> arg_arbiter_where, uint32_t arg_constraint, std::vector<std::unique_ptr<::pg_query::Node>> arg_on_conflict_set, std::unique_ptr<::pg_query::Node> arg_on_conflict_where, int32_t arg_excl_rel_index, std::vector<std::unique_ptr<::pg_query::Node>> arg_excl_rel_tlist);
+    OnConflictExpr(::pg_query::OnConflictAction&& arg_action, std::vector<::pg_query::Node> arg_arbiter_elems, ::pg_query::Node&& arg_arbiter_where, uint32_t arg_constraint, std::vector<::pg_query::Node> arg_on_conflict_set, ::pg_query::Node&& arg_on_conflict_where, int32_t arg_excl_rel_index, std::vector<::pg_query::Node> arg_excl_rel_tlist);
     OnConflictExpr(const OnConflictExpr& other) = delete;
     OnConflictExpr(OnConflictExpr&& other) noexcept;
     ~OnConflictExpr() override;
@@ -5205,23 +5105,21 @@ struct hash<pg_query::OnConflictExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct IntoClause : FBE::Base
 {
     ::pg_query::RangeVar rel;
-    std::vector<::pg_query::Node*> col_names;
+    std::vector<::pg_query::Node> col_names;
     std::string access_method;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
     ::pg_query::OnCommitAction on_commit;
     std::string table_space_name;
-    ::pg_query::Node* view_query;
+    ::pg_query::Node view_query;
     bool skip_data;
 
     size_t fbe_type() const noexcept { return 61; }
 
     IntoClause();
-    IntoClause(::pg_query::RangeVar&& arg_rel, std::vector<std::unique_ptr<::pg_query::Node>> arg_col_names, const std::string& arg_access_method, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, ::pg_query::OnCommitAction&& arg_on_commit, const std::string& arg_table_space_name, std::unique_ptr<::pg_query::Node> arg_view_query, bool arg_skip_data);
+    IntoClause(::pg_query::RangeVar&& arg_rel, std::vector<::pg_query::Node> arg_col_names, const std::string& arg_access_method, std::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_on_commit, const std::string& arg_table_space_name, ::pg_query::Node&& arg_view_query, bool arg_skip_data);
     IntoClause(const IntoClause& other) = delete;
     IntoClause(IntoClause&& other) noexcept;
     ~IntoClause() override;
@@ -5265,18 +5163,16 @@ struct hash<pg_query::IntoClause>
 
 namespace pg_query {
 
-struct Node;
-
 struct RawStmt : FBE::Base
 {
-    ::pg_query::Node* stmt;
+    ::pg_query::Node stmt;
     int32_t stmt_location;
     int32_t stmt_len;
 
     size_t fbe_type() const noexcept { return 62; }
 
     RawStmt();
-    RawStmt(std::unique_ptr<::pg_query::Node> arg_stmt, int32_t arg_stmt_location, int32_t arg_stmt_len);
+    RawStmt(::pg_query::Node&& arg_stmt, int32_t arg_stmt_location, int32_t arg_stmt_len);
     RawStmt(const RawStmt& other) = delete;
     RawStmt(RawStmt&& other) noexcept;
     ~RawStmt() override;
@@ -5320,14 +5216,12 @@ struct hash<pg_query::RawStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct Query : FBE::Base
 {
     ::pg_query::CmdType command_type;
     ::pg_query::QuerySource query_source;
     bool can_set_tag;
-    ::pg_query::Node* utility_stmt;
+    ::pg_query::Node utility_stmt;
     int32_t result_relation;
     bool has_aggs;
     bool has_window_funcs;
@@ -5338,33 +5232,33 @@ struct Query : FBE::Base
     bool has_modifying_cte;
     bool has_for_update;
     bool has_row_security;
-    std::vector<::pg_query::Node*> cte_list;
-    std::vector<::pg_query::Node*> rtable;
+    std::vector<::pg_query::Node> cte_list;
+    std::vector<::pg_query::Node> rtable;
     ::pg_query::FromExpr jointree;
-    std::vector<::pg_query::Node*> target_list;
+    std::vector<::pg_query::Node> target_list;
     ::pg_query::OverridingKind override;
     ::pg_query::OnConflictExpr on_conflict;
-    std::vector<::pg_query::Node*> returning_list;
-    std::vector<::pg_query::Node*> group_clause;
-    std::vector<::pg_query::Node*> grouping_sets;
-    ::pg_query::Node* having_qual;
-    std::vector<::pg_query::Node*> window_clause;
-    std::vector<::pg_query::Node*> distinct_clause;
-    std::vector<::pg_query::Node*> sort_clause;
-    ::pg_query::Node* limit_offset;
-    ::pg_query::Node* limit_count;
+    std::vector<::pg_query::Node> returning_list;
+    std::vector<::pg_query::Node> group_clause;
+    std::vector<::pg_query::Node> grouping_sets;
+    ::pg_query::Node having_qual;
+    std::vector<::pg_query::Node> window_clause;
+    std::vector<::pg_query::Node> distinct_clause;
+    std::vector<::pg_query::Node> sort_clause;
+    ::pg_query::Node limit_offset;
+    ::pg_query::Node limit_count;
     ::pg_query::LimitOption limit_option;
-    std::vector<::pg_query::Node*> row_marks;
-    ::pg_query::Node* set_operations;
-    std::vector<::pg_query::Node*> constraint_deps;
-    std::vector<::pg_query::Node*> with_check_options;
+    std::vector<::pg_query::Node> row_marks;
+    ::pg_query::Node set_operations;
+    std::vector<::pg_query::Node> constraint_deps;
+    std::vector<::pg_query::Node> with_check_options;
     int32_t stmt_location;
     int32_t stmt_len;
 
     size_t fbe_type() const noexcept { return 63; }
 
     Query();
-    Query(::pg_query::CmdType&& arg_command_type, ::pg_query::QuerySource&& arg_query_source, bool arg_can_set_tag, std::unique_ptr<::pg_query::Node> arg_utility_stmt, int32_t arg_result_relation, bool arg_has_aggs, bool arg_has_window_funcs, bool arg_has_target_srfs, bool arg_has_sub_links, bool arg_has_distinct_on, bool arg_has_recursive, bool arg_has_modifying_cte, bool arg_has_for_update, bool arg_has_row_security, std::vector<std::unique_ptr<::pg_query::Node>> arg_cte_list, std::vector<std::unique_ptr<::pg_query::Node>> arg_rtable, ::pg_query::FromExpr&& arg_jointree, std::vector<std::unique_ptr<::pg_query::Node>> arg_target_list, ::pg_query::OverridingKind&& arg_override, ::pg_query::OnConflictExpr&& arg_on_conflict, std::vector<std::unique_ptr<::pg_query::Node>> arg_returning_list, std::vector<std::unique_ptr<::pg_query::Node>> arg_group_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_grouping_sets, std::unique_ptr<::pg_query::Node> arg_having_qual, std::vector<std::unique_ptr<::pg_query::Node>> arg_window_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_distinct_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_sort_clause, std::unique_ptr<::pg_query::Node> arg_limit_offset, std::unique_ptr<::pg_query::Node> arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<std::unique_ptr<::pg_query::Node>> arg_row_marks, std::unique_ptr<::pg_query::Node> arg_set_operations, std::vector<std::unique_ptr<::pg_query::Node>> arg_constraint_deps, std::vector<std::unique_ptr<::pg_query::Node>> arg_with_check_options, int32_t arg_stmt_location, int32_t arg_stmt_len);
+    Query(::pg_query::CmdType&& arg_command_type, ::pg_query::QuerySource&& arg_query_source, bool arg_can_set_tag, ::pg_query::Node&& arg_utility_stmt, int32_t arg_result_relation, bool arg_has_aggs, bool arg_has_window_funcs, bool arg_has_target_srfs, bool arg_has_sub_links, bool arg_has_distinct_on, bool arg_has_recursive, bool arg_has_modifying_cte, bool arg_has_for_update, bool arg_has_row_security, std::vector<::pg_query::Node> arg_cte_list, std::vector<::pg_query::Node> arg_rtable, ::pg_query::FromExpr&& arg_jointree, std::vector<::pg_query::Node> arg_target_list, ::pg_query::OverridingKind&& arg_override, ::pg_query::OnConflictExpr&& arg_on_conflict, std::vector<::pg_query::Node> arg_returning_list, std::vector<::pg_query::Node> arg_group_clause, std::vector<::pg_query::Node> arg_grouping_sets, ::pg_query::Node&& arg_having_qual, std::vector<::pg_query::Node> arg_window_clause, std::vector<::pg_query::Node> arg_distinct_clause, std::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<::pg_query::Node> arg_row_marks, ::pg_query::Node&& arg_set_operations, std::vector<::pg_query::Node> arg_constraint_deps, std::vector<::pg_query::Node> arg_with_check_options, int32_t arg_stmt_location, int32_t arg_stmt_len);
     Query(const Query& other) = delete;
     Query(Query&& other) noexcept;
     ~Query() override;
@@ -5408,22 +5302,20 @@ struct hash<pg_query::Query>
 
 namespace pg_query {
 
-struct Node;
-
 struct InsertStmt : FBE::Base
 {
     ::pg_query::RangeVar relation;
-    std::vector<::pg_query::Node*> cols;
-    ::pg_query::Node* select_stmt;
+    std::vector<::pg_query::Node> cols;
+    ::pg_query::Node select_stmt;
     ::pg_query::OnConflictClause on_conflict_clause;
-    std::vector<::pg_query::Node*> returning_list;
+    std::vector<::pg_query::Node> returning_list;
     ::pg_query::WithClause with_clause;
     ::pg_query::OverridingKind override;
 
     size_t fbe_type() const noexcept { return 64; }
 
     InsertStmt();
-    InsertStmt(::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_cols, std::unique_ptr<::pg_query::Node> arg_select_stmt, ::pg_query::OnConflictClause&& arg_on_conflict_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_returning_list, ::pg_query::WithClause&& arg_with_clause, ::pg_query::OverridingKind&& arg_override);
+    InsertStmt(::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_cols, ::pg_query::Node&& arg_select_stmt, ::pg_query::OnConflictClause&& arg_on_conflict_clause, std::vector<::pg_query::Node> arg_returning_list, ::pg_query::WithClause&& arg_with_clause, ::pg_query::OverridingKind&& arg_override);
     InsertStmt(const InsertStmt& other) = delete;
     InsertStmt(InsertStmt&& other) noexcept;
     ~InsertStmt() override;
@@ -5467,20 +5359,18 @@ struct hash<pg_query::InsertStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct DeleteStmt : FBE::Base
 {
     ::pg_query::RangeVar relation;
-    std::vector<::pg_query::Node*> using_clause;
-    ::pg_query::Node* where_clause;
-    std::vector<::pg_query::Node*> returning_list;
+    std::vector<::pg_query::Node> using_clause;
+    ::pg_query::Node where_clause;
+    std::vector<::pg_query::Node> returning_list;
     ::pg_query::WithClause with_clause;
 
     size_t fbe_type() const noexcept { return 65; }
 
     DeleteStmt();
-    DeleteStmt(::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_using_clause, std::unique_ptr<::pg_query::Node> arg_where_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_returning_list, ::pg_query::WithClause&& arg_with_clause);
+    DeleteStmt(::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_returning_list, ::pg_query::WithClause&& arg_with_clause);
     DeleteStmt(const DeleteStmt& other) = delete;
     DeleteStmt(DeleteStmt&& other) noexcept;
     ~DeleteStmt() override;
@@ -5524,21 +5414,19 @@ struct hash<pg_query::DeleteStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct UpdateStmt : FBE::Base
 {
     ::pg_query::RangeVar relation;
-    std::vector<::pg_query::Node*> target_list;
-    ::pg_query::Node* where_clause;
-    std::vector<::pg_query::Node*> from_clause;
-    std::vector<::pg_query::Node*> returning_list;
+    std::vector<::pg_query::Node> target_list;
+    ::pg_query::Node where_clause;
+    std::vector<::pg_query::Node> from_clause;
+    std::vector<::pg_query::Node> returning_list;
     ::pg_query::WithClause with_clause;
 
     size_t fbe_type() const noexcept { return 66; }
 
     UpdateStmt();
-    UpdateStmt(::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_target_list, std::unique_ptr<::pg_query::Node> arg_where_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_from_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_returning_list, ::pg_query::WithClause&& arg_with_clause);
+    UpdateStmt(::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_from_clause, std::vector<::pg_query::Node> arg_returning_list, ::pg_query::WithClause&& arg_with_clause);
     UpdateStmt(const UpdateStmt& other) = delete;
     UpdateStmt(UpdateStmt&& other) noexcept;
     ~UpdateStmt() override;
@@ -5582,24 +5470,22 @@ struct hash<pg_query::UpdateStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct SelectStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> distinct_clause;
+    std::vector<::pg_query::Node> distinct_clause;
     ::pg_query::IntoClause into_clause;
-    std::vector<::pg_query::Node*> target_list;
-    std::vector<::pg_query::Node*> from_clause;
-    ::pg_query::Node* where_clause;
-    std::vector<::pg_query::Node*> group_clause;
-    ::pg_query::Node* having_clause;
-    std::vector<::pg_query::Node*> window_clause;
-    std::vector<::pg_query::Node*> values_lists;
-    std::vector<::pg_query::Node*> sort_clause;
-    ::pg_query::Node* limit_offset;
-    ::pg_query::Node* limit_count;
+    std::vector<::pg_query::Node> target_list;
+    std::vector<::pg_query::Node> from_clause;
+    ::pg_query::Node where_clause;
+    std::vector<::pg_query::Node> group_clause;
+    ::pg_query::Node having_clause;
+    std::vector<::pg_query::Node> window_clause;
+    std::vector<::pg_query::Node> values_lists;
+    std::vector<::pg_query::Node> sort_clause;
+    ::pg_query::Node limit_offset;
+    ::pg_query::Node limit_count;
     ::pg_query::LimitOption limit_option;
-    std::vector<::pg_query::Node*> locking_clause;
+    std::vector<::pg_query::Node> locking_clause;
     ::pg_query::WithClause with_clause;
     ::pg_query::SetOperation op;
     bool all;
@@ -5609,7 +5495,7 @@ struct SelectStmt : FBE::Base
     size_t fbe_type() const noexcept { return 67; }
 
     SelectStmt();
-    SelectStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_distinct_clause, ::pg_query::IntoClause&& arg_into_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_target_list, std::vector<std::unique_ptr<::pg_query::Node>> arg_from_clause, std::unique_ptr<::pg_query::Node> arg_where_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_group_clause, std::unique_ptr<::pg_query::Node> arg_having_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_window_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_values_lists, std::vector<std::unique_ptr<::pg_query::Node>> arg_sort_clause, std::unique_ptr<::pg_query::Node> arg_limit_offset, std::unique_ptr<::pg_query::Node> arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<std::unique_ptr<::pg_query::Node>> arg_locking_clause, ::pg_query::WithClause&& arg_with_clause, ::pg_query::SetOperation&& arg_op, bool arg_all, ::pg_query::SelectStmt&& arg_larg, ::pg_query::SelectStmt&& arg_rarg);
+    SelectStmt(std::vector<::pg_query::Node> arg_distinct_clause, ::pg_query::IntoClause&& arg_into_clause, std::vector<::pg_query::Node> arg_target_list, std::vector<::pg_query::Node> arg_from_clause, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_group_clause, ::pg_query::Node&& arg_having_clause, std::vector<::pg_query::Node> arg_window_clause, std::vector<::pg_query::Node> arg_values_lists, std::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<::pg_query::Node> arg_locking_clause, ::pg_query::WithClause&& arg_with_clause, ::pg_query::SetOperation&& arg_op, bool arg_all, ::pg_query::SelectStmt&& arg_larg, ::pg_query::SelectStmt&& arg_rarg);
     SelectStmt(const SelectStmt& other) = delete;
     SelectStmt(SelectStmt&& other) noexcept;
     ~SelectStmt() override;
@@ -5653,19 +5539,17 @@ struct hash<pg_query::SelectStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterTableStmt : FBE::Base
 {
     ::pg_query::RangeVar relation;
-    std::vector<::pg_query::Node*> cmds;
+    std::vector<::pg_query::Node> cmds;
     ::pg_query::ObjectType relkind;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 68; }
 
     AlterTableStmt();
-    AlterTableStmt(::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_cmds, ::pg_query::ObjectType&& arg_relkind, bool arg_missing_ok);
+    AlterTableStmt(::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_cmds, ::pg_query::ObjectType&& arg_relkind, bool arg_missing_ok);
     AlterTableStmt(const AlterTableStmt& other) = delete;
     AlterTableStmt(AlterTableStmt&& other) noexcept;
     ~AlterTableStmt() override;
@@ -5709,22 +5593,20 @@ struct hash<pg_query::AlterTableStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterTableCmd : FBE::Base
 {
     ::pg_query::AlterTableType subtype;
     std::string name;
     int32_t num;
     ::pg_query::RoleSpec newowner;
-    ::pg_query::Node* def;
+    ::pg_query::Node def;
     ::pg_query::DropBehavior behavior;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 69; }
 
     AlterTableCmd();
-    AlterTableCmd(::pg_query::AlterTableType&& arg_subtype, const std::string& arg_name, int32_t arg_num, ::pg_query::RoleSpec&& arg_newowner, std::unique_ptr<::pg_query::Node> arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
+    AlterTableCmd(::pg_query::AlterTableType&& arg_subtype, const std::string& arg_name, int32_t arg_num, ::pg_query::RoleSpec&& arg_newowner, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
     AlterTableCmd(const AlterTableCmd& other) = delete;
     AlterTableCmd(AlterTableCmd&& other) noexcept;
     ~AlterTableCmd() override;
@@ -5768,21 +5650,19 @@ struct hash<pg_query::AlterTableCmd>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterDomainStmt : FBE::Base
 {
     std::string subtype;
-    std::vector<::pg_query::Node*> type_name;
+    std::vector<::pg_query::Node> type_name;
     std::string name;
-    ::pg_query::Node* def;
+    ::pg_query::Node def;
     ::pg_query::DropBehavior behavior;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 70; }
 
     AlterDomainStmt();
-    AlterDomainStmt(const std::string& arg_subtype, std::vector<std::unique_ptr<::pg_query::Node>> arg_type_name, const std::string& arg_name, std::unique_ptr<::pg_query::Node> arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
+    AlterDomainStmt(const std::string& arg_subtype, std::vector<::pg_query::Node> arg_type_name, const std::string& arg_name, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
     AlterDomainStmt(const AlterDomainStmt& other) = delete;
     AlterDomainStmt(AlterDomainStmt&& other) noexcept;
     ~AlterDomainStmt() override;
@@ -5826,23 +5706,21 @@ struct hash<pg_query::AlterDomainStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct SetOperationStmt : FBE::Base
 {
     ::pg_query::SetOperation op;
     bool all;
-    ::pg_query::Node* larg;
-    ::pg_query::Node* rarg;
-    std::vector<::pg_query::Node*> col_types;
-    std::vector<::pg_query::Node*> col_typmods;
-    std::vector<::pg_query::Node*> col_collations;
-    std::vector<::pg_query::Node*> group_clauses;
+    ::pg_query::Node larg;
+    ::pg_query::Node rarg;
+    std::vector<::pg_query::Node> col_types;
+    std::vector<::pg_query::Node> col_typmods;
+    std::vector<::pg_query::Node> col_collations;
+    std::vector<::pg_query::Node> group_clauses;
 
     size_t fbe_type() const noexcept { return 71; }
 
     SetOperationStmt();
-    SetOperationStmt(::pg_query::SetOperation&& arg_op, bool arg_all, std::unique_ptr<::pg_query::Node> arg_larg, std::unique_ptr<::pg_query::Node> arg_rarg, std::vector<std::unique_ptr<::pg_query::Node>> arg_col_types, std::vector<std::unique_ptr<::pg_query::Node>> arg_col_typmods, std::vector<std::unique_ptr<::pg_query::Node>> arg_col_collations, std::vector<std::unique_ptr<::pg_query::Node>> arg_group_clauses);
+    SetOperationStmt(::pg_query::SetOperation&& arg_op, bool arg_all, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::vector<::pg_query::Node> arg_col_types, std::vector<::pg_query::Node> arg_col_typmods, std::vector<::pg_query::Node> arg_col_collations, std::vector<::pg_query::Node> arg_group_clauses);
     SetOperationStmt(const SetOperationStmt& other) = delete;
     SetOperationStmt(SetOperationStmt&& other) noexcept;
     ~SetOperationStmt() override;
@@ -5886,23 +5764,21 @@ struct hash<pg_query::SetOperationStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct GrantStmt : FBE::Base
 {
     bool is_grant;
     ::pg_query::GrantTargetType targtype;
     ::pg_query::ObjectType objtype;
-    std::vector<::pg_query::Node*> objects;
-    std::vector<::pg_query::Node*> privileges;
-    std::vector<::pg_query::Node*> grantees;
+    std::vector<::pg_query::Node> objects;
+    std::vector<::pg_query::Node> privileges;
+    std::vector<::pg_query::Node> grantees;
     bool grant_option;
     ::pg_query::DropBehavior behavior;
 
     size_t fbe_type() const noexcept { return 72; }
 
     GrantStmt();
-    GrantStmt(bool arg_is_grant, ::pg_query::GrantTargetType&& arg_targtype, ::pg_query::ObjectType&& arg_objtype, std::vector<std::unique_ptr<::pg_query::Node>> arg_objects, std::vector<std::unique_ptr<::pg_query::Node>> arg_privileges, std::vector<std::unique_ptr<::pg_query::Node>> arg_grantees, bool arg_grant_option, ::pg_query::DropBehavior&& arg_behavior);
+    GrantStmt(bool arg_is_grant, ::pg_query::GrantTargetType&& arg_targtype, ::pg_query::ObjectType&& arg_objtype, std::vector<::pg_query::Node> arg_objects, std::vector<::pg_query::Node> arg_privileges, std::vector<::pg_query::Node> arg_grantees, bool arg_grant_option, ::pg_query::DropBehavior&& arg_behavior);
     GrantStmt(const GrantStmt& other) = delete;
     GrantStmt(GrantStmt&& other) noexcept;
     ~GrantStmt() override;
@@ -5946,12 +5822,10 @@ struct hash<pg_query::GrantStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct GrantRoleStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> granted_roles;
-    std::vector<::pg_query::Node*> grantee_roles;
+    std::vector<::pg_query::Node> granted_roles;
+    std::vector<::pg_query::Node> grantee_roles;
     bool is_grant;
     bool admin_opt;
     ::pg_query::RoleSpec grantor;
@@ -5960,7 +5834,7 @@ struct GrantRoleStmt : FBE::Base
     size_t fbe_type() const noexcept { return 73; }
 
     GrantRoleStmt();
-    GrantRoleStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_granted_roles, std::vector<std::unique_ptr<::pg_query::Node>> arg_grantee_roles, bool arg_is_grant, bool arg_admin_opt, ::pg_query::RoleSpec&& arg_grantor, ::pg_query::DropBehavior&& arg_behavior);
+    GrantRoleStmt(std::vector<::pg_query::Node> arg_granted_roles, std::vector<::pg_query::Node> arg_grantee_roles, bool arg_is_grant, bool arg_admin_opt, ::pg_query::RoleSpec&& arg_grantor, ::pg_query::DropBehavior&& arg_behavior);
     GrantRoleStmt(const GrantRoleStmt& other) = delete;
     GrantRoleStmt(GrantRoleStmt&& other) noexcept;
     ~GrantRoleStmt() override;
@@ -6004,17 +5878,15 @@ struct hash<pg_query::GrantRoleStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterDefaultPrivilegesStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
     ::pg_query::GrantStmt action;
 
     size_t fbe_type() const noexcept { return 74; }
 
     AlterDefaultPrivilegesStmt();
-    AlterDefaultPrivilegesStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_options, ::pg_query::GrantStmt&& arg_action);
+    AlterDefaultPrivilegesStmt(std::vector<::pg_query::Node> arg_options, ::pg_query::GrantStmt&& arg_action);
     AlterDefaultPrivilegesStmt(const AlterDefaultPrivilegesStmt& other) = delete;
     AlterDefaultPrivilegesStmt(AlterDefaultPrivilegesStmt&& other) noexcept;
     ~AlterDefaultPrivilegesStmt() override;
@@ -6162,23 +6034,21 @@ struct hash<pg_query::ClusterStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CopyStmt : FBE::Base
 {
     ::pg_query::RangeVar relation;
-    ::pg_query::Node* query;
-    std::vector<::pg_query::Node*> attlist;
+    ::pg_query::Node query;
+    std::vector<::pg_query::Node> attlist;
     bool is_from;
     bool is_program;
     std::string filename;
-    std::vector<::pg_query::Node*> options;
-    ::pg_query::Node* where_clause;
+    std::vector<::pg_query::Node> options;
+    ::pg_query::Node where_clause;
 
     size_t fbe_type() const noexcept { return 77; }
 
     CopyStmt();
-    CopyStmt(::pg_query::RangeVar&& arg_relation, std::unique_ptr<::pg_query::Node> arg_query, std::vector<std::unique_ptr<::pg_query::Node>> arg_attlist, bool arg_is_from, bool arg_is_program, const std::string& arg_filename, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, std::unique_ptr<::pg_query::Node> arg_where_clause);
+    CopyStmt(::pg_query::RangeVar&& arg_relation, ::pg_query::Node&& arg_query, std::vector<::pg_query::Node> arg_attlist, bool arg_is_from, bool arg_is_program, const std::string& arg_filename, std::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause);
     CopyStmt(const CopyStmt& other) = delete;
     CopyStmt(CopyStmt&& other) noexcept;
     ~CopyStmt() override;
@@ -6222,18 +6092,16 @@ struct hash<pg_query::CopyStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateStmt : FBE::Base
 {
     ::pg_query::RangeVar relation;
-    std::vector<::pg_query::Node*> table_elts;
-    std::vector<::pg_query::Node*> inh_relations;
+    std::vector<::pg_query::Node> table_elts;
+    std::vector<::pg_query::Node> inh_relations;
     ::pg_query::PartitionBoundSpec partbound;
     ::pg_query::PartitionSpec partspec;
     ::pg_query::TypeName of_typename;
-    std::vector<::pg_query::Node*> constraints;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> constraints;
+    std::vector<::pg_query::Node> options;
     ::pg_query::OnCommitAction oncommit;
     std::string tablespacename;
     std::string access_method;
@@ -6242,7 +6110,7 @@ struct CreateStmt : FBE::Base
     size_t fbe_type() const noexcept { return 78; }
 
     CreateStmt();
-    CreateStmt(::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_table_elts, std::vector<std::unique_ptr<::pg_query::Node>> arg_inh_relations, ::pg_query::PartitionBoundSpec&& arg_partbound, ::pg_query::PartitionSpec&& arg_partspec, ::pg_query::TypeName&& arg_of_typename, std::vector<std::unique_ptr<::pg_query::Node>> arg_constraints, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, ::pg_query::OnCommitAction&& arg_oncommit, const std::string& arg_tablespacename, const std::string& arg_access_method, bool arg_if_not_exists);
+    CreateStmt(::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_table_elts, std::vector<::pg_query::Node> arg_inh_relations, ::pg_query::PartitionBoundSpec&& arg_partbound, ::pg_query::PartitionSpec&& arg_partspec, ::pg_query::TypeName&& arg_of_typename, std::vector<::pg_query::Node> arg_constraints, std::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_oncommit, const std::string& arg_tablespacename, const std::string& arg_access_method, bool arg_if_not_exists);
     CreateStmt(const CreateStmt& other) = delete;
     CreateStmt(CreateStmt&& other) noexcept;
     ~CreateStmt() override;
@@ -6286,22 +6154,20 @@ struct hash<pg_query::CreateStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct DefineStmt : FBE::Base
 {
     ::pg_query::ObjectType kind;
     bool oldstyle;
-    std::vector<::pg_query::Node*> defnames;
-    std::vector<::pg_query::Node*> args;
-    std::vector<::pg_query::Node*> definition;
+    std::vector<::pg_query::Node> defnames;
+    std::vector<::pg_query::Node> args;
+    std::vector<::pg_query::Node> definition;
     bool if_not_exists;
     bool replace;
 
     size_t fbe_type() const noexcept { return 79; }
 
     DefineStmt();
-    DefineStmt(::pg_query::ObjectType&& arg_kind, bool arg_oldstyle, std::vector<std::unique_ptr<::pg_query::Node>> arg_defnames, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::vector<std::unique_ptr<::pg_query::Node>> arg_definition, bool arg_if_not_exists, bool arg_replace);
+    DefineStmt(::pg_query::ObjectType&& arg_kind, bool arg_oldstyle, std::vector<::pg_query::Node> arg_defnames, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_definition, bool arg_if_not_exists, bool arg_replace);
     DefineStmt(const DefineStmt& other) = delete;
     DefineStmt(DefineStmt&& other) noexcept;
     ~DefineStmt() override;
@@ -6345,11 +6211,9 @@ struct hash<pg_query::DefineStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct DropStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> objects;
+    std::vector<::pg_query::Node> objects;
     ::pg_query::ObjectType remove_type;
     ::pg_query::DropBehavior behavior;
     bool missing_ok;
@@ -6358,7 +6222,7 @@ struct DropStmt : FBE::Base
     size_t fbe_type() const noexcept { return 80; }
 
     DropStmt();
-    DropStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_objects, ::pg_query::ObjectType&& arg_remove_type, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok, bool arg_concurrent);
+    DropStmt(std::vector<::pg_query::Node> arg_objects, ::pg_query::ObjectType&& arg_remove_type, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok, bool arg_concurrent);
     DropStmt(const DropStmt& other) = delete;
     DropStmt(DropStmt&& other) noexcept;
     ~DropStmt() override;
@@ -6402,18 +6266,16 @@ struct hash<pg_query::DropStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct TruncateStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> relations;
+    std::vector<::pg_query::Node> relations;
     bool restart_seqs;
     ::pg_query::DropBehavior behavior;
 
     size_t fbe_type() const noexcept { return 81; }
 
     TruncateStmt();
-    TruncateStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_relations, bool arg_restart_seqs, ::pg_query::DropBehavior&& arg_behavior);
+    TruncateStmt(std::vector<::pg_query::Node> arg_relations, bool arg_restart_seqs, ::pg_query::DropBehavior&& arg_behavior);
     TruncateStmt(const TruncateStmt& other) = delete;
     TruncateStmt(TruncateStmt&& other) noexcept;
     ~TruncateStmt() override;
@@ -6457,18 +6319,16 @@ struct hash<pg_query::TruncateStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CommentStmt : FBE::Base
 {
     ::pg_query::ObjectType objtype;
-    ::pg_query::Node* object;
+    ::pg_query::Node object;
     std::string comment;
 
     size_t fbe_type() const noexcept { return 82; }
 
     CommentStmt();
-    CommentStmt(::pg_query::ObjectType&& arg_objtype, std::unique_ptr<::pg_query::Node> arg_object, const std::string& arg_comment);
+    CommentStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::string& arg_comment);
     CommentStmt(const CommentStmt& other) = delete;
     CommentStmt(CommentStmt&& other) noexcept;
     ~CommentStmt() override;
@@ -6566,19 +6426,17 @@ struct hash<pg_query::FetchStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct IndexStmt : FBE::Base
 {
     std::string idxname;
     ::pg_query::RangeVar relation;
     std::string access_method;
     std::string table_space;
-    std::vector<::pg_query::Node*> index_params;
-    std::vector<::pg_query::Node*> index_including_params;
-    std::vector<::pg_query::Node*> options;
-    ::pg_query::Node* where_clause;
-    std::vector<::pg_query::Node*> exclude_op_names;
+    std::vector<::pg_query::Node> index_params;
+    std::vector<::pg_query::Node> index_including_params;
+    std::vector<::pg_query::Node> options;
+    ::pg_query::Node where_clause;
+    std::vector<::pg_query::Node> exclude_op_names;
     std::string idxcomment;
     uint32_t index_oid;
     uint32_t old_node;
@@ -6597,7 +6455,7 @@ struct IndexStmt : FBE::Base
     size_t fbe_type() const noexcept { return 84; }
 
     IndexStmt();
-    IndexStmt(const std::string& arg_idxname, ::pg_query::RangeVar&& arg_relation, const std::string& arg_access_method, const std::string& arg_table_space, std::vector<std::unique_ptr<::pg_query::Node>> arg_index_params, std::vector<std::unique_ptr<::pg_query::Node>> arg_index_including_params, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, std::unique_ptr<::pg_query::Node> arg_where_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_exclude_op_names, const std::string& arg_idxcomment, uint32_t arg_index_oid, uint32_t arg_old_node, uint32_t arg_old_create_subid, uint32_t arg_old_first_relfilenode_subid, bool arg_unique, bool arg_primary, bool arg_isconstraint, bool arg_deferrable, bool arg_initdeferred, bool arg_transformed, bool arg_concurrent, bool arg_if_not_exists, bool arg_reset_default_tblspc);
+    IndexStmt(const std::string& arg_idxname, ::pg_query::RangeVar&& arg_relation, const std::string& arg_access_method, const std::string& arg_table_space, std::vector<::pg_query::Node> arg_index_params, std::vector<::pg_query::Node> arg_index_including_params, std::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_exclude_op_names, const std::string& arg_idxcomment, uint32_t arg_index_oid, uint32_t arg_old_node, uint32_t arg_old_create_subid, uint32_t arg_old_first_relfilenode_subid, bool arg_unique, bool arg_primary, bool arg_isconstraint, bool arg_deferrable, bool arg_initdeferred, bool arg_transformed, bool arg_concurrent, bool arg_if_not_exists, bool arg_reset_default_tblspc);
     IndexStmt(const IndexStmt& other) = delete;
     IndexStmt(IndexStmt&& other) noexcept;
     ~IndexStmt() override;
@@ -6641,21 +6499,19 @@ struct hash<pg_query::IndexStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateFunctionStmt : FBE::Base
 {
     bool is_procedure;
     bool replace;
-    std::vector<::pg_query::Node*> funcname;
-    std::vector<::pg_query::Node*> parameters;
+    std::vector<::pg_query::Node> funcname;
+    std::vector<::pg_query::Node> parameters;
     ::pg_query::TypeName return_type;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 85; }
 
     CreateFunctionStmt();
-    CreateFunctionStmt(bool arg_is_procedure, bool arg_replace, std::vector<std::unique_ptr<::pg_query::Node>> arg_funcname, std::vector<std::unique_ptr<::pg_query::Node>> arg_parameters, ::pg_query::TypeName&& arg_return_type, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    CreateFunctionStmt(bool arg_is_procedure, bool arg_replace, std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_parameters, ::pg_query::TypeName&& arg_return_type, std::vector<::pg_query::Node> arg_options);
     CreateFunctionStmt(const CreateFunctionStmt& other) = delete;
     CreateFunctionStmt(CreateFunctionStmt&& other) noexcept;
     ~CreateFunctionStmt() override;
@@ -6699,18 +6555,16 @@ struct hash<pg_query::CreateFunctionStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterFunctionStmt : FBE::Base
 {
     ::pg_query::ObjectType objtype;
     ::pg_query::ObjectWithArgs func;
-    std::vector<::pg_query::Node*> actions;
+    std::vector<::pg_query::Node> actions;
 
     size_t fbe_type() const noexcept { return 86; }
 
     AlterFunctionStmt();
-    AlterFunctionStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::ObjectWithArgs&& arg_func, std::vector<std::unique_ptr<::pg_query::Node>> arg_actions);
+    AlterFunctionStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::ObjectWithArgs&& arg_func, std::vector<::pg_query::Node> arg_actions);
     AlterFunctionStmt(const AlterFunctionStmt& other) = delete;
     AlterFunctionStmt(AlterFunctionStmt&& other) noexcept;
     ~AlterFunctionStmt() override;
@@ -6754,16 +6608,14 @@ struct hash<pg_query::AlterFunctionStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct DoStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> args;
 
     size_t fbe_type() const noexcept { return 87; }
 
     DoStmt();
-    explicit DoStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_args);
+    explicit DoStmt(std::vector<::pg_query::Node> arg_args);
     DoStmt(const DoStmt& other) = delete;
     DoStmt(DoStmt&& other) noexcept;
     ~DoStmt() override;
@@ -6807,14 +6659,12 @@ struct hash<pg_query::DoStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct RenameStmt : FBE::Base
 {
     ::pg_query::ObjectType rename_type;
     ::pg_query::ObjectType relation_type;
     ::pg_query::RangeVar relation;
-    ::pg_query::Node* object;
+    ::pg_query::Node object;
     std::string subname;
     std::string newname;
     ::pg_query::DropBehavior behavior;
@@ -6823,7 +6673,7 @@ struct RenameStmt : FBE::Base
     size_t fbe_type() const noexcept { return 88; }
 
     RenameStmt();
-    RenameStmt(::pg_query::ObjectType&& arg_rename_type, ::pg_query::ObjectType&& arg_relation_type, ::pg_query::RangeVar&& arg_relation, std::unique_ptr<::pg_query::Node> arg_object, const std::string& arg_subname, const std::string& arg_newname, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
+    RenameStmt(::pg_query::ObjectType&& arg_rename_type, ::pg_query::ObjectType&& arg_relation_type, ::pg_query::RangeVar&& arg_relation, ::pg_query::Node&& arg_object, const std::string& arg_subname, const std::string& arg_newname, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
     RenameStmt(const RenameStmt& other) = delete;
     RenameStmt(RenameStmt&& other) noexcept;
     ~RenameStmt() override;
@@ -6867,22 +6717,20 @@ struct hash<pg_query::RenameStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct RuleStmt : FBE::Base
 {
     ::pg_query::RangeVar relation;
     std::string rulename;
-    ::pg_query::Node* where_clause;
+    ::pg_query::Node where_clause;
     ::pg_query::CmdType event;
     bool instead;
-    std::vector<::pg_query::Node*> actions;
+    std::vector<::pg_query::Node> actions;
     bool replace;
 
     size_t fbe_type() const noexcept { return 89; }
 
     RuleStmt();
-    RuleStmt(::pg_query::RangeVar&& arg_relation, const std::string& arg_rulename, std::unique_ptr<::pg_query::Node> arg_where_clause, ::pg_query::CmdType&& arg_event, bool arg_instead, std::vector<std::unique_ptr<::pg_query::Node>> arg_actions, bool arg_replace);
+    RuleStmt(::pg_query::RangeVar&& arg_relation, const std::string& arg_rulename, ::pg_query::Node&& arg_where_clause, ::pg_query::CmdType&& arg_event, bool arg_instead, std::vector<::pg_query::Node> arg_actions, bool arg_replace);
     RuleStmt(const RuleStmt& other) = delete;
     RuleStmt(RuleStmt&& other) noexcept;
     ~RuleStmt() override;
@@ -7080,12 +6928,10 @@ struct hash<pg_query::UnlistenStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct TransactionStmt : FBE::Base
 {
     ::pg_query::TransactionStmtKind kind;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
     std::string savepoint_name;
     std::string gid;
     bool chain;
@@ -7093,7 +6939,7 @@ struct TransactionStmt : FBE::Base
     size_t fbe_type() const noexcept { return 93; }
 
     TransactionStmt();
-    TransactionStmt(::pg_query::TransactionStmtKind&& arg_kind, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, const std::string& arg_savepoint_name, const std::string& arg_gid, bool arg_chain);
+    TransactionStmt(::pg_query::TransactionStmtKind&& arg_kind, std::vector<::pg_query::Node> arg_options, const std::string& arg_savepoint_name, const std::string& arg_gid, bool arg_chain);
     TransactionStmt(const TransactionStmt& other) = delete;
     TransactionStmt(TransactionStmt&& other) noexcept;
     ~TransactionStmt() override;
@@ -7137,21 +6983,19 @@ struct hash<pg_query::TransactionStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct ViewStmt : FBE::Base
 {
     ::pg_query::RangeVar view;
-    std::vector<::pg_query::Node*> aliases;
-    ::pg_query::Node* query;
+    std::vector<::pg_query::Node> aliases;
+    ::pg_query::Node query;
     bool replace;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
     ::pg_query::ViewCheckOption with_check_option;
 
     size_t fbe_type() const noexcept { return 94; }
 
     ViewStmt();
-    ViewStmt(::pg_query::RangeVar&& arg_view, std::vector<std::unique_ptr<::pg_query::Node>> arg_aliases, std::unique_ptr<::pg_query::Node> arg_query, bool arg_replace, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, ::pg_query::ViewCheckOption&& arg_with_check_option);
+    ViewStmt(::pg_query::RangeVar&& arg_view, std::vector<::pg_query::Node> arg_aliases, ::pg_query::Node&& arg_query, bool arg_replace, std::vector<::pg_query::Node> arg_options, ::pg_query::ViewCheckOption&& arg_with_check_option);
     ViewStmt(const ViewStmt& other) = delete;
     ViewStmt(ViewStmt&& other) noexcept;
     ~ViewStmt() override;
@@ -7246,19 +7090,17 @@ struct hash<pg_query::LoadStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateDomainStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> domainname;
+    std::vector<::pg_query::Node> domainname;
     ::pg_query::TypeName type_name;
     ::pg_query::CollateClause coll_clause;
-    std::vector<::pg_query::Node*> constraints;
+    std::vector<::pg_query::Node> constraints;
 
     size_t fbe_type() const noexcept { return 96; }
 
     CreateDomainStmt();
-    CreateDomainStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_domainname, ::pg_query::TypeName&& arg_type_name, ::pg_query::CollateClause&& arg_coll_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_constraints);
+    CreateDomainStmt(std::vector<::pg_query::Node> arg_domainname, ::pg_query::TypeName&& arg_type_name, ::pg_query::CollateClause&& arg_coll_clause, std::vector<::pg_query::Node> arg_constraints);
     CreateDomainStmt(const CreateDomainStmt& other) = delete;
     CreateDomainStmt(CreateDomainStmt&& other) noexcept;
     ~CreateDomainStmt() override;
@@ -7302,17 +7144,15 @@ struct hash<pg_query::CreateDomainStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreatedbStmt : FBE::Base
 {
     std::string dbname;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 97; }
 
     CreatedbStmt();
-    CreatedbStmt(const std::string& arg_dbname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    CreatedbStmt(const std::string& arg_dbname, std::vector<::pg_query::Node> arg_options);
     CreatedbStmt(const CreatedbStmt& other) = delete;
     CreatedbStmt(CreatedbStmt&& other) noexcept;
     ~CreatedbStmt() override;
@@ -7356,18 +7196,16 @@ struct hash<pg_query::CreatedbStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct DropdbStmt : FBE::Base
 {
     std::string dbname;
     bool missing_ok;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 98; }
 
     DropdbStmt();
-    DropdbStmt(const std::string& arg_dbname, bool arg_missing_ok, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    DropdbStmt(const std::string& arg_dbname, bool arg_missing_ok, std::vector<::pg_query::Node> arg_options);
     DropdbStmt(const DropdbStmt& other) = delete;
     DropdbStmt(DropdbStmt&& other) noexcept;
     ~DropdbStmt() override;
@@ -7411,18 +7249,16 @@ struct hash<pg_query::DropdbStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct VacuumStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> options;
-    std::vector<::pg_query::Node*> rels;
+    std::vector<::pg_query::Node> options;
+    std::vector<::pg_query::Node> rels;
     bool is_vacuumcmd;
 
     size_t fbe_type() const noexcept { return 99; }
 
     VacuumStmt();
-    VacuumStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_options, std::vector<std::unique_ptr<::pg_query::Node>> arg_rels, bool arg_is_vacuumcmd);
+    VacuumStmt(std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_rels, bool arg_is_vacuumcmd);
     VacuumStmt(const VacuumStmt& other) = delete;
     VacuumStmt(VacuumStmt&& other) noexcept;
     ~VacuumStmt() override;
@@ -7466,17 +7302,15 @@ struct hash<pg_query::VacuumStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct ExplainStmt : FBE::Base
 {
-    ::pg_query::Node* query;
-    std::vector<::pg_query::Node*> options;
+    ::pg_query::Node query;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 100; }
 
     ExplainStmt();
-    ExplainStmt(std::unique_ptr<::pg_query::Node> arg_query, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    ExplainStmt(::pg_query::Node&& arg_query, std::vector<::pg_query::Node> arg_options);
     ExplainStmt(const ExplainStmt& other) = delete;
     ExplainStmt(ExplainStmt&& other) noexcept;
     ~ExplainStmt() override;
@@ -7520,11 +7354,9 @@ struct hash<pg_query::ExplainStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateTableAsStmt : FBE::Base
 {
-    ::pg_query::Node* query;
+    ::pg_query::Node query;
     ::pg_query::IntoClause into;
     ::pg_query::ObjectType relkind;
     bool is_select_into;
@@ -7533,7 +7365,7 @@ struct CreateTableAsStmt : FBE::Base
     size_t fbe_type() const noexcept { return 101; }
 
     CreateTableAsStmt();
-    CreateTableAsStmt(std::unique_ptr<::pg_query::Node> arg_query, ::pg_query::IntoClause&& arg_into, ::pg_query::ObjectType&& arg_relkind, bool arg_is_select_into, bool arg_if_not_exists);
+    CreateTableAsStmt(::pg_query::Node&& arg_query, ::pg_query::IntoClause&& arg_into, ::pg_query::ObjectType&& arg_relkind, bool arg_is_select_into, bool arg_if_not_exists);
     CreateTableAsStmt(const CreateTableAsStmt& other) = delete;
     CreateTableAsStmt(CreateTableAsStmt&& other) noexcept;
     ~CreateTableAsStmt() override;
@@ -7577,12 +7409,10 @@ struct hash<pg_query::CreateTableAsStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateSeqStmt : FBE::Base
 {
     ::pg_query::RangeVar sequence;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
     uint32_t owner_id;
     bool for_identity;
     bool if_not_exists;
@@ -7590,7 +7420,7 @@ struct CreateSeqStmt : FBE::Base
     size_t fbe_type() const noexcept { return 102; }
 
     CreateSeqStmt();
-    CreateSeqStmt(::pg_query::RangeVar&& arg_sequence, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, uint32_t arg_owner_id, bool arg_for_identity, bool arg_if_not_exists);
+    CreateSeqStmt(::pg_query::RangeVar&& arg_sequence, std::vector<::pg_query::Node> arg_options, uint32_t arg_owner_id, bool arg_for_identity, bool arg_if_not_exists);
     CreateSeqStmt(const CreateSeqStmt& other) = delete;
     CreateSeqStmt(CreateSeqStmt&& other) noexcept;
     ~CreateSeqStmt() override;
@@ -7634,19 +7464,17 @@ struct hash<pg_query::CreateSeqStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterSeqStmt : FBE::Base
 {
     ::pg_query::RangeVar sequence;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
     bool for_identity;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 103; }
 
     AlterSeqStmt();
-    AlterSeqStmt(::pg_query::RangeVar&& arg_sequence, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, bool arg_for_identity, bool arg_missing_ok);
+    AlterSeqStmt(::pg_query::RangeVar&& arg_sequence, std::vector<::pg_query::Node> arg_options, bool arg_for_identity, bool arg_missing_ok);
     AlterSeqStmt(const AlterSeqStmt& other) = delete;
     AlterSeqStmt(AlterSeqStmt&& other) noexcept;
     ~AlterSeqStmt() override;
@@ -7690,19 +7518,17 @@ struct hash<pg_query::AlterSeqStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct VariableSetStmt : FBE::Base
 {
     ::pg_query::VariableSetKind kind;
     std::string name;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> args;
     bool is_local;
 
     size_t fbe_type() const noexcept { return 104; }
 
     VariableSetStmt();
-    VariableSetStmt(::pg_query::VariableSetKind&& arg_kind, const std::string& arg_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, bool arg_is_local);
+    VariableSetStmt(::pg_query::VariableSetKind&& arg_kind, const std::string& arg_name, std::vector<::pg_query::Node> arg_args, bool arg_is_local);
     VariableSetStmt(const VariableSetStmt& other) = delete;
     VariableSetStmt(VariableSetStmt&& other) noexcept;
     ~VariableSetStmt() override;
@@ -7848,21 +7674,19 @@ struct hash<pg_query::DiscardStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateTrigStmt : FBE::Base
 {
     std::string trigname;
     ::pg_query::RangeVar relation;
-    std::vector<::pg_query::Node*> funcname;
-    std::vector<::pg_query::Node*> args;
+    std::vector<::pg_query::Node> funcname;
+    std::vector<::pg_query::Node> args;
     bool row;
     int32_t timing;
     int32_t events;
-    std::vector<::pg_query::Node*> columns;
-    ::pg_query::Node* when_clause;
+    std::vector<::pg_query::Node> columns;
+    ::pg_query::Node when_clause;
     bool isconstraint;
-    std::vector<::pg_query::Node*> transition_rels;
+    std::vector<::pg_query::Node> transition_rels;
     bool deferrable;
     bool initdeferred;
     ::pg_query::RangeVar constrrel;
@@ -7870,7 +7694,7 @@ struct CreateTrigStmt : FBE::Base
     size_t fbe_type() const noexcept { return 107; }
 
     CreateTrigStmt();
-    CreateTrigStmt(const std::string& arg_trigname, ::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_funcname, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, bool arg_row, int32_t arg_timing, int32_t arg_events, std::vector<std::unique_ptr<::pg_query::Node>> arg_columns, std::unique_ptr<::pg_query::Node> arg_when_clause, bool arg_isconstraint, std::vector<std::unique_ptr<::pg_query::Node>> arg_transition_rels, bool arg_deferrable, bool arg_initdeferred, ::pg_query::RangeVar&& arg_constrrel);
+    CreateTrigStmt(const std::string& arg_trigname, ::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_args, bool arg_row, int32_t arg_timing, int32_t arg_events, std::vector<::pg_query::Node> arg_columns, ::pg_query::Node&& arg_when_clause, bool arg_isconstraint, std::vector<::pg_query::Node> arg_transition_rels, bool arg_deferrable, bool arg_initdeferred, ::pg_query::RangeVar&& arg_constrrel);
     CreateTrigStmt(const CreateTrigStmt& other) = delete;
     CreateTrigStmt(CreateTrigStmt&& other) noexcept;
     ~CreateTrigStmt() override;
@@ -7914,21 +7738,19 @@ struct hash<pg_query::CreateTrigStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreatePLangStmt : FBE::Base
 {
     bool replace;
     std::string plname;
-    std::vector<::pg_query::Node*> plhandler;
-    std::vector<::pg_query::Node*> plinline;
-    std::vector<::pg_query::Node*> plvalidator;
+    std::vector<::pg_query::Node> plhandler;
+    std::vector<::pg_query::Node> plinline;
+    std::vector<::pg_query::Node> plvalidator;
     bool pltrusted;
 
     size_t fbe_type() const noexcept { return 108; }
 
     CreatePLangStmt();
-    CreatePLangStmt(bool arg_replace, const std::string& arg_plname, std::vector<std::unique_ptr<::pg_query::Node>> arg_plhandler, std::vector<std::unique_ptr<::pg_query::Node>> arg_plinline, std::vector<std::unique_ptr<::pg_query::Node>> arg_plvalidator, bool arg_pltrusted);
+    CreatePLangStmt(bool arg_replace, const std::string& arg_plname, std::vector<::pg_query::Node> arg_plhandler, std::vector<::pg_query::Node> arg_plinline, std::vector<::pg_query::Node> arg_plvalidator, bool arg_pltrusted);
     CreatePLangStmt(const CreatePLangStmt& other) = delete;
     CreatePLangStmt(CreatePLangStmt&& other) noexcept;
     ~CreatePLangStmt() override;
@@ -7972,18 +7794,16 @@ struct hash<pg_query::CreatePLangStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateRoleStmt : FBE::Base
 {
     ::pg_query::RoleStmtType stmt_type;
     std::string role;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 109; }
 
     CreateRoleStmt();
-    CreateRoleStmt(::pg_query::RoleStmtType&& arg_stmt_type, const std::string& arg_role, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    CreateRoleStmt(::pg_query::RoleStmtType&& arg_stmt_type, const std::string& arg_role, std::vector<::pg_query::Node> arg_options);
     CreateRoleStmt(const CreateRoleStmt& other) = delete;
     CreateRoleStmt(CreateRoleStmt&& other) noexcept;
     ~CreateRoleStmt() override;
@@ -8027,18 +7847,16 @@ struct hash<pg_query::CreateRoleStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterRoleStmt : FBE::Base
 {
     ::pg_query::RoleSpec role;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
     int32_t action;
 
     size_t fbe_type() const noexcept { return 110; }
 
     AlterRoleStmt();
-    AlterRoleStmt(::pg_query::RoleSpec&& arg_role, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, int32_t arg_action);
+    AlterRoleStmt(::pg_query::RoleSpec&& arg_role, std::vector<::pg_query::Node> arg_options, int32_t arg_action);
     AlterRoleStmt(const AlterRoleStmt& other) = delete;
     AlterRoleStmt(AlterRoleStmt&& other) noexcept;
     ~AlterRoleStmt() override;
@@ -8082,17 +7900,15 @@ struct hash<pg_query::AlterRoleStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct DropRoleStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> roles;
+    std::vector<::pg_query::Node> roles;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 111; }
 
     DropRoleStmt();
-    DropRoleStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, bool arg_missing_ok);
+    DropRoleStmt(std::vector<::pg_query::Node> arg_roles, bool arg_missing_ok);
     DropRoleStmt(const DropRoleStmt& other) = delete;
     DropRoleStmt(DropRoleStmt&& other) noexcept;
     ~DropRoleStmt() override;
@@ -8136,18 +7952,16 @@ struct hash<pg_query::DropRoleStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct LockStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> relations;
+    std::vector<::pg_query::Node> relations;
     int32_t mode;
     bool nowait;
 
     size_t fbe_type() const noexcept { return 112; }
 
     LockStmt();
-    LockStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_relations, int32_t arg_mode, bool arg_nowait);
+    LockStmt(std::vector<::pg_query::Node> arg_relations, int32_t arg_mode, bool arg_nowait);
     LockStmt(const LockStmt& other) = delete;
     LockStmt(LockStmt&& other) noexcept;
     ~LockStmt() override;
@@ -8191,17 +8005,15 @@ struct hash<pg_query::LockStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct ConstraintsSetStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> constraints;
+    std::vector<::pg_query::Node> constraints;
     bool deferred;
 
     size_t fbe_type() const noexcept { return 113; }
 
     ConstraintsSetStmt();
-    ConstraintsSetStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_constraints, bool arg_deferred);
+    ConstraintsSetStmt(std::vector<::pg_query::Node> arg_constraints, bool arg_deferred);
     ConstraintsSetStmt(const ConstraintsSetStmt& other) = delete;
     ConstraintsSetStmt(ConstraintsSetStmt&& other) noexcept;
     ~ConstraintsSetStmt() override;
@@ -8348,19 +8160,17 @@ struct hash<pg_query::CheckPointStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateSchemaStmt : FBE::Base
 {
     std::string schemaname;
     ::pg_query::RoleSpec authrole;
-    std::vector<::pg_query::Node*> schema_elts;
+    std::vector<::pg_query::Node> schema_elts;
     bool if_not_exists;
 
     size_t fbe_type() const noexcept { return 116; }
 
     CreateSchemaStmt();
-    CreateSchemaStmt(const std::string& arg_schemaname, ::pg_query::RoleSpec&& arg_authrole, std::vector<std::unique_ptr<::pg_query::Node>> arg_schema_elts, bool arg_if_not_exists);
+    CreateSchemaStmt(const std::string& arg_schemaname, ::pg_query::RoleSpec&& arg_authrole, std::vector<::pg_query::Node> arg_schema_elts, bool arg_if_not_exists);
     CreateSchemaStmt(const CreateSchemaStmt& other) = delete;
     CreateSchemaStmt(CreateSchemaStmt&& other) noexcept;
     ~CreateSchemaStmt() override;
@@ -8404,17 +8214,15 @@ struct hash<pg_query::CreateSchemaStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterDatabaseStmt : FBE::Base
 {
     std::string dbname;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 117; }
 
     AlterDatabaseStmt();
-    AlterDatabaseStmt(const std::string& arg_dbname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    AlterDatabaseStmt(const std::string& arg_dbname, std::vector<::pg_query::Node> arg_options);
     AlterDatabaseStmt(const AlterDatabaseStmt& other) = delete;
     AlterDatabaseStmt(AlterDatabaseStmt&& other) noexcept;
     ~AlterDatabaseStmt() override;
@@ -8563,20 +8371,18 @@ struct hash<pg_query::AlterRoleSetStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateConversionStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> conversion_name;
+    std::vector<::pg_query::Node> conversion_name;
     std::string for_encoding_name;
     std::string to_encoding_name;
-    std::vector<::pg_query::Node*> func_name;
+    std::vector<::pg_query::Node> func_name;
     bool def;
 
     size_t fbe_type() const noexcept { return 120; }
 
     CreateConversionStmt();
-    CreateConversionStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_conversion_name, const std::string& arg_for_encoding_name, const std::string& arg_to_encoding_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_func_name, bool arg_def);
+    CreateConversionStmt(std::vector<::pg_query::Node> arg_conversion_name, const std::string& arg_for_encoding_name, const std::string& arg_to_encoding_name, std::vector<::pg_query::Node> arg_func_name, bool arg_def);
     CreateConversionStmt(const CreateConversionStmt& other) = delete;
     CreateConversionStmt(CreateConversionStmt&& other) noexcept;
     ~CreateConversionStmt() override;
@@ -8675,21 +8481,19 @@ struct hash<pg_query::CreateCastStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateOpClassStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> opclassname;
-    std::vector<::pg_query::Node*> opfamilyname;
+    std::vector<::pg_query::Node> opclassname;
+    std::vector<::pg_query::Node> opfamilyname;
     std::string amname;
     ::pg_query::TypeName datatype;
-    std::vector<::pg_query::Node*> items;
+    std::vector<::pg_query::Node> items;
     bool is_default;
 
     size_t fbe_type() const noexcept { return 122; }
 
     CreateOpClassStmt();
-    CreateOpClassStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_opclassname, std::vector<std::unique_ptr<::pg_query::Node>> arg_opfamilyname, const std::string& arg_amname, ::pg_query::TypeName&& arg_datatype, std::vector<std::unique_ptr<::pg_query::Node>> arg_items, bool arg_is_default);
+    CreateOpClassStmt(std::vector<::pg_query::Node> arg_opclassname, std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname, ::pg_query::TypeName&& arg_datatype, std::vector<::pg_query::Node> arg_items, bool arg_is_default);
     CreateOpClassStmt(const CreateOpClassStmt& other) = delete;
     CreateOpClassStmt(CreateOpClassStmt&& other) noexcept;
     ~CreateOpClassStmt() override;
@@ -8733,17 +8537,15 @@ struct hash<pg_query::CreateOpClassStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateOpFamilyStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> opfamilyname;
+    std::vector<::pg_query::Node> opfamilyname;
     std::string amname;
 
     size_t fbe_type() const noexcept { return 123; }
 
     CreateOpFamilyStmt();
-    CreateOpFamilyStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_opfamilyname, const std::string& arg_amname);
+    CreateOpFamilyStmt(std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname);
     CreateOpFamilyStmt(const CreateOpFamilyStmt& other) = delete;
     CreateOpFamilyStmt(CreateOpFamilyStmt&& other) noexcept;
     ~CreateOpFamilyStmt() override;
@@ -8787,19 +8589,17 @@ struct hash<pg_query::CreateOpFamilyStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterOpFamilyStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> opfamilyname;
+    std::vector<::pg_query::Node> opfamilyname;
     std::string amname;
     bool is_drop;
-    std::vector<::pg_query::Node*> items;
+    std::vector<::pg_query::Node> items;
 
     size_t fbe_type() const noexcept { return 124; }
 
     AlterOpFamilyStmt();
-    AlterOpFamilyStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_opfamilyname, const std::string& arg_amname, bool arg_is_drop, std::vector<std::unique_ptr<::pg_query::Node>> arg_items);
+    AlterOpFamilyStmt(std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname, bool arg_is_drop, std::vector<::pg_query::Node> arg_items);
     AlterOpFamilyStmt(const AlterOpFamilyStmt& other) = delete;
     AlterOpFamilyStmt(AlterOpFamilyStmt&& other) noexcept;
     ~AlterOpFamilyStmt() override;
@@ -8843,18 +8643,16 @@ struct hash<pg_query::AlterOpFamilyStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct PrepareStmt : FBE::Base
 {
     std::string name;
-    std::vector<::pg_query::Node*> argtypes;
-    ::pg_query::Node* query;
+    std::vector<::pg_query::Node> argtypes;
+    ::pg_query::Node query;
 
     size_t fbe_type() const noexcept { return 125; }
 
     PrepareStmt();
-    PrepareStmt(const std::string& arg_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_argtypes, std::unique_ptr<::pg_query::Node> arg_query);
+    PrepareStmt(const std::string& arg_name, std::vector<::pg_query::Node> arg_argtypes, ::pg_query::Node&& arg_query);
     PrepareStmt(const PrepareStmt& other) = delete;
     PrepareStmt(PrepareStmt&& other) noexcept;
     ~PrepareStmt() override;
@@ -8898,17 +8696,15 @@ struct hash<pg_query::PrepareStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct ExecuteStmt : FBE::Base
 {
     std::string name;
-    std::vector<::pg_query::Node*> params;
+    std::vector<::pg_query::Node> params;
 
     size_t fbe_type() const noexcept { return 126; }
 
     ExecuteStmt();
-    ExecuteStmt(const std::string& arg_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_params);
+    ExecuteStmt(const std::string& arg_name, std::vector<::pg_query::Node> arg_params);
     ExecuteStmt(const ExecuteStmt& other) = delete;
     ExecuteStmt(ExecuteStmt&& other) noexcept;
     ~ExecuteStmt() override;
@@ -9003,18 +8799,16 @@ struct hash<pg_query::DeallocateStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct DeclareCursorStmt : FBE::Base
 {
     std::string portalname;
     int32_t options;
-    ::pg_query::Node* query;
+    ::pg_query::Node query;
 
     size_t fbe_type() const noexcept { return 128; }
 
     DeclareCursorStmt();
-    DeclareCursorStmt(const std::string& arg_portalname, int32_t arg_options, std::unique_ptr<::pg_query::Node> arg_query);
+    DeclareCursorStmt(const std::string& arg_portalname, int32_t arg_options, ::pg_query::Node&& arg_query);
     DeclareCursorStmt(const DeclareCursorStmt& other) = delete;
     DeclareCursorStmt(DeclareCursorStmt&& other) noexcept;
     ~DeclareCursorStmt() override;
@@ -9058,19 +8852,17 @@ struct hash<pg_query::DeclareCursorStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateTableSpaceStmt : FBE::Base
 {
     std::string tablespacename;
     ::pg_query::RoleSpec owner;
     std::string location;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 129; }
 
     CreateTableSpaceStmt();
-    CreateTableSpaceStmt(const std::string& arg_tablespacename, ::pg_query::RoleSpec&& arg_owner, const std::string& arg_location, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    CreateTableSpaceStmt(const std::string& arg_tablespacename, ::pg_query::RoleSpec&& arg_owner, const std::string& arg_location, std::vector<::pg_query::Node> arg_options);
     CreateTableSpaceStmt(const CreateTableSpaceStmt& other) = delete;
     CreateTableSpaceStmt(CreateTableSpaceStmt&& other) noexcept;
     ~CreateTableSpaceStmt() override;
@@ -9166,20 +8958,18 @@ struct hash<pg_query::DropTableSpaceStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterObjectDependsStmt : FBE::Base
 {
     ::pg_query::ObjectType object_type;
     ::pg_query::RangeVar relation;
-    ::pg_query::Node* object;
+    ::pg_query::Node object;
     ::pg_query::Node extname;
     bool remove;
 
     size_t fbe_type() const noexcept { return 131; }
 
     AlterObjectDependsStmt();
-    AlterObjectDependsStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, std::unique_ptr<::pg_query::Node> arg_object, ::pg_query::Node&& arg_extname, bool arg_remove);
+    AlterObjectDependsStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, ::pg_query::Node&& arg_object, ::pg_query::Node&& arg_extname, bool arg_remove);
     AlterObjectDependsStmt(const AlterObjectDependsStmt& other) = delete;
     AlterObjectDependsStmt(AlterObjectDependsStmt&& other) noexcept;
     ~AlterObjectDependsStmt() override;
@@ -9223,20 +9013,18 @@ struct hash<pg_query::AlterObjectDependsStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterObjectSchemaStmt : FBE::Base
 {
     ::pg_query::ObjectType object_type;
     ::pg_query::RangeVar relation;
-    ::pg_query::Node* object;
+    ::pg_query::Node object;
     std::string newschema;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 132; }
 
     AlterObjectSchemaStmt();
-    AlterObjectSchemaStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, std::unique_ptr<::pg_query::Node> arg_object, const std::string& arg_newschema, bool arg_missing_ok);
+    AlterObjectSchemaStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, ::pg_query::Node&& arg_object, const std::string& arg_newschema, bool arg_missing_ok);
     AlterObjectSchemaStmt(const AlterObjectSchemaStmt& other) = delete;
     AlterObjectSchemaStmt(AlterObjectSchemaStmt&& other) noexcept;
     ~AlterObjectSchemaStmt() override;
@@ -9280,19 +9068,17 @@ struct hash<pg_query::AlterObjectSchemaStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterOwnerStmt : FBE::Base
 {
     ::pg_query::ObjectType object_type;
     ::pg_query::RangeVar relation;
-    ::pg_query::Node* object;
+    ::pg_query::Node object;
     ::pg_query::RoleSpec newowner;
 
     size_t fbe_type() const noexcept { return 133; }
 
     AlterOwnerStmt();
-    AlterOwnerStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, std::unique_ptr<::pg_query::Node> arg_object, ::pg_query::RoleSpec&& arg_newowner);
+    AlterOwnerStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, ::pg_query::Node&& arg_object, ::pg_query::RoleSpec&& arg_newowner);
     AlterOwnerStmt(const AlterOwnerStmt& other) = delete;
     AlterOwnerStmt(AlterOwnerStmt&& other) noexcept;
     ~AlterOwnerStmt() override;
@@ -9336,17 +9122,15 @@ struct hash<pg_query::AlterOwnerStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterOperatorStmt : FBE::Base
 {
     ::pg_query::ObjectWithArgs opername;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 134; }
 
     AlterOperatorStmt();
-    AlterOperatorStmt(::pg_query::ObjectWithArgs&& arg_opername, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    AlterOperatorStmt(::pg_query::ObjectWithArgs&& arg_opername, std::vector<::pg_query::Node> arg_options);
     AlterOperatorStmt(const AlterOperatorStmt& other) = delete;
     AlterOperatorStmt(AlterOperatorStmt&& other) noexcept;
     ~AlterOperatorStmt() override;
@@ -9390,17 +9174,15 @@ struct hash<pg_query::AlterOperatorStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterTypeStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> type_name;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> type_name;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 135; }
 
     AlterTypeStmt();
-    AlterTypeStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_type_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    AlterTypeStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_options);
     AlterTypeStmt(const AlterTypeStmt& other) = delete;
     AlterTypeStmt(AlterTypeStmt&& other) noexcept;
     ~AlterTypeStmt() override;
@@ -9444,17 +9226,15 @@ struct hash<pg_query::AlterTypeStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct DropOwnedStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> roles;
+    std::vector<::pg_query::Node> roles;
     ::pg_query::DropBehavior behavior;
 
     size_t fbe_type() const noexcept { return 136; }
 
     DropOwnedStmt();
-    DropOwnedStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, ::pg_query::DropBehavior&& arg_behavior);
+    DropOwnedStmt(std::vector<::pg_query::Node> arg_roles, ::pg_query::DropBehavior&& arg_behavior);
     DropOwnedStmt(const DropOwnedStmt& other) = delete;
     DropOwnedStmt(DropOwnedStmt&& other) noexcept;
     ~DropOwnedStmt() override;
@@ -9498,17 +9278,15 @@ struct hash<pg_query::DropOwnedStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct ReassignOwnedStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> roles;
+    std::vector<::pg_query::Node> roles;
     ::pg_query::RoleSpec newrole;
 
     size_t fbe_type() const noexcept { return 137; }
 
     ReassignOwnedStmt();
-    ReassignOwnedStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, ::pg_query::RoleSpec&& arg_newrole);
+    ReassignOwnedStmt(std::vector<::pg_query::Node> arg_roles, ::pg_query::RoleSpec&& arg_newrole);
     ReassignOwnedStmt(const ReassignOwnedStmt& other) = delete;
     ReassignOwnedStmt(ReassignOwnedStmt&& other) noexcept;
     ~ReassignOwnedStmt() override;
@@ -9552,17 +9330,15 @@ struct hash<pg_query::ReassignOwnedStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CompositeTypeStmt : FBE::Base
 {
     ::pg_query::RangeVar typevar;
-    std::vector<::pg_query::Node*> coldeflist;
+    std::vector<::pg_query::Node> coldeflist;
 
     size_t fbe_type() const noexcept { return 138; }
 
     CompositeTypeStmt();
-    CompositeTypeStmt(::pg_query::RangeVar&& arg_typevar, std::vector<std::unique_ptr<::pg_query::Node>> arg_coldeflist);
+    CompositeTypeStmt(::pg_query::RangeVar&& arg_typevar, std::vector<::pg_query::Node> arg_coldeflist);
     CompositeTypeStmt(const CompositeTypeStmt& other) = delete;
     CompositeTypeStmt(CompositeTypeStmt&& other) noexcept;
     ~CompositeTypeStmt() override;
@@ -9606,17 +9382,15 @@ struct hash<pg_query::CompositeTypeStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateEnumStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> type_name;
-    std::vector<::pg_query::Node*> vals;
+    std::vector<::pg_query::Node> type_name;
+    std::vector<::pg_query::Node> vals;
 
     size_t fbe_type() const noexcept { return 139; }
 
     CreateEnumStmt();
-    CreateEnumStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_type_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_vals);
+    CreateEnumStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_vals);
     CreateEnumStmt(const CreateEnumStmt& other) = delete;
     CreateEnumStmt(CreateEnumStmt&& other) noexcept;
     ~CreateEnumStmt() override;
@@ -9660,17 +9434,15 @@ struct hash<pg_query::CreateEnumStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateRangeStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> type_name;
-    std::vector<::pg_query::Node*> params;
+    std::vector<::pg_query::Node> type_name;
+    std::vector<::pg_query::Node> params;
 
     size_t fbe_type() const noexcept { return 140; }
 
     CreateRangeStmt();
-    CreateRangeStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_type_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_params);
+    CreateRangeStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_params);
     CreateRangeStmt(const CreateRangeStmt& other) = delete;
     CreateRangeStmt(CreateRangeStmt&& other) noexcept;
     ~CreateRangeStmt() override;
@@ -9714,11 +9486,9 @@ struct hash<pg_query::CreateRangeStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterEnumStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> type_name;
+    std::vector<::pg_query::Node> type_name;
     std::string old_val;
     std::string new_val;
     std::string new_val_neighbor;
@@ -9728,7 +9498,7 @@ struct AlterEnumStmt : FBE::Base
     size_t fbe_type() const noexcept { return 141; }
 
     AlterEnumStmt();
-    AlterEnumStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_type_name, const std::string& arg_old_val, const std::string& arg_new_val, const std::string& arg_new_val_neighbor, bool arg_new_val_is_after, bool arg_skip_if_new_val_exists);
+    AlterEnumStmt(std::vector<::pg_query::Node> arg_type_name, const std::string& arg_old_val, const std::string& arg_new_val, const std::string& arg_new_val_neighbor, bool arg_new_val_is_after, bool arg_skip_if_new_val_exists);
     AlterEnumStmt(const AlterEnumStmt& other) = delete;
     AlterEnumStmt(AlterEnumStmt&& other) noexcept;
     ~AlterEnumStmt() override;
@@ -9772,17 +9542,15 @@ struct hash<pg_query::AlterEnumStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterTSDictionaryStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> dictname;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> dictname;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 142; }
 
     AlterTSDictionaryStmt();
-    AlterTSDictionaryStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_dictname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    AlterTSDictionaryStmt(std::vector<::pg_query::Node> arg_dictname, std::vector<::pg_query::Node> arg_options);
     AlterTSDictionaryStmt(const AlterTSDictionaryStmt& other) = delete;
     AlterTSDictionaryStmt(AlterTSDictionaryStmt&& other) noexcept;
     ~AlterTSDictionaryStmt() override;
@@ -9826,14 +9594,12 @@ struct hash<pg_query::AlterTSDictionaryStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterTSConfigurationStmt : FBE::Base
 {
     ::pg_query::AlterTSConfigType kind;
-    std::vector<::pg_query::Node*> cfgname;
-    std::vector<::pg_query::Node*> tokentype;
-    std::vector<::pg_query::Node*> dicts;
+    std::vector<::pg_query::Node> cfgname;
+    std::vector<::pg_query::Node> tokentype;
+    std::vector<::pg_query::Node> dicts;
     bool override;
     bool replace;
     bool missing_ok;
@@ -9841,7 +9607,7 @@ struct AlterTSConfigurationStmt : FBE::Base
     size_t fbe_type() const noexcept { return 143; }
 
     AlterTSConfigurationStmt();
-    AlterTSConfigurationStmt(::pg_query::AlterTSConfigType&& arg_kind, std::vector<std::unique_ptr<::pg_query::Node>> arg_cfgname, std::vector<std::unique_ptr<::pg_query::Node>> arg_tokentype, std::vector<std::unique_ptr<::pg_query::Node>> arg_dicts, bool arg_override, bool arg_replace, bool arg_missing_ok);
+    AlterTSConfigurationStmt(::pg_query::AlterTSConfigType&& arg_kind, std::vector<::pg_query::Node> arg_cfgname, std::vector<::pg_query::Node> arg_tokentype, std::vector<::pg_query::Node> arg_dicts, bool arg_override, bool arg_replace, bool arg_missing_ok);
     AlterTSConfigurationStmt(const AlterTSConfigurationStmt& other) = delete;
     AlterTSConfigurationStmt(AlterTSConfigurationStmt&& other) noexcept;
     ~AlterTSConfigurationStmt() override;
@@ -9885,18 +9651,16 @@ struct hash<pg_query::AlterTSConfigurationStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateFdwStmt : FBE::Base
 {
     std::string fdwname;
-    std::vector<::pg_query::Node*> func_options;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> func_options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 144; }
 
     CreateFdwStmt();
-    CreateFdwStmt(const std::string& arg_fdwname, std::vector<std::unique_ptr<::pg_query::Node>> arg_func_options, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    CreateFdwStmt(const std::string& arg_fdwname, std::vector<::pg_query::Node> arg_func_options, std::vector<::pg_query::Node> arg_options);
     CreateFdwStmt(const CreateFdwStmt& other) = delete;
     CreateFdwStmt(CreateFdwStmt&& other) noexcept;
     ~CreateFdwStmt() override;
@@ -9940,18 +9704,16 @@ struct hash<pg_query::CreateFdwStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterFdwStmt : FBE::Base
 {
     std::string fdwname;
-    std::vector<::pg_query::Node*> func_options;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> func_options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 145; }
 
     AlterFdwStmt();
-    AlterFdwStmt(const std::string& arg_fdwname, std::vector<std::unique_ptr<::pg_query::Node>> arg_func_options, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    AlterFdwStmt(const std::string& arg_fdwname, std::vector<::pg_query::Node> arg_func_options, std::vector<::pg_query::Node> arg_options);
     AlterFdwStmt(const AlterFdwStmt& other) = delete;
     AlterFdwStmt(AlterFdwStmt&& other) noexcept;
     ~AlterFdwStmt() override;
@@ -9995,8 +9757,6 @@ struct hash<pg_query::AlterFdwStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateForeignServerStmt : FBE::Base
 {
     std::string servername;
@@ -10004,12 +9764,12 @@ struct CreateForeignServerStmt : FBE::Base
     std::string version;
     std::string fdwname;
     bool if_not_exists;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 146; }
 
     CreateForeignServerStmt();
-    CreateForeignServerStmt(const std::string& arg_servername, const std::string& arg_servertype, const std::string& arg_version, const std::string& arg_fdwname, bool arg_if_not_exists, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    CreateForeignServerStmt(const std::string& arg_servername, const std::string& arg_servertype, const std::string& arg_version, const std::string& arg_fdwname, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options);
     CreateForeignServerStmt(const CreateForeignServerStmt& other) = delete;
     CreateForeignServerStmt(CreateForeignServerStmt&& other) noexcept;
     ~CreateForeignServerStmt() override;
@@ -10053,19 +9813,17 @@ struct hash<pg_query::CreateForeignServerStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterForeignServerStmt : FBE::Base
 {
     std::string servername;
     std::string version;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
     bool has_version;
 
     size_t fbe_type() const noexcept { return 147; }
 
     AlterForeignServerStmt();
-    AlterForeignServerStmt(const std::string& arg_servername, const std::string& arg_version, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, bool arg_has_version);
+    AlterForeignServerStmt(const std::string& arg_servername, const std::string& arg_version, std::vector<::pg_query::Node> arg_options, bool arg_has_version);
     AlterForeignServerStmt(const AlterForeignServerStmt& other) = delete;
     AlterForeignServerStmt(AlterForeignServerStmt&& other) noexcept;
     ~AlterForeignServerStmt() override;
@@ -10109,19 +9867,17 @@ struct hash<pg_query::AlterForeignServerStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateUserMappingStmt : FBE::Base
 {
     ::pg_query::RoleSpec user;
     std::string servername;
     bool if_not_exists;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 148; }
 
     CreateUserMappingStmt();
-    CreateUserMappingStmt(::pg_query::RoleSpec&& arg_user, const std::string& arg_servername, bool arg_if_not_exists, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    CreateUserMappingStmt(::pg_query::RoleSpec&& arg_user, const std::string& arg_servername, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options);
     CreateUserMappingStmt(const CreateUserMappingStmt& other) = delete;
     CreateUserMappingStmt(CreateUserMappingStmt&& other) noexcept;
     ~CreateUserMappingStmt() override;
@@ -10165,18 +9921,16 @@ struct hash<pg_query::CreateUserMappingStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterUserMappingStmt : FBE::Base
 {
     ::pg_query::RoleSpec user;
     std::string servername;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 149; }
 
     AlterUserMappingStmt();
-    AlterUserMappingStmt(::pg_query::RoleSpec&& arg_user, const std::string& arg_servername, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    AlterUserMappingStmt(::pg_query::RoleSpec&& arg_user, const std::string& arg_servername, std::vector<::pg_query::Node> arg_options);
     AlterUserMappingStmt(const AlterUserMappingStmt& other) = delete;
     AlterUserMappingStmt(AlterUserMappingStmt&& other) noexcept;
     ~AlterUserMappingStmt() override;
@@ -10273,18 +10027,16 @@ struct hash<pg_query::DropUserMappingStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterTableSpaceOptionsStmt : FBE::Base
 {
     std::string tablespacename;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
     bool is_reset;
 
     size_t fbe_type() const noexcept { return 151; }
 
     AlterTableSpaceOptionsStmt();
-    AlterTableSpaceOptionsStmt(const std::string& arg_tablespacename, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, bool arg_is_reset);
+    AlterTableSpaceOptionsStmt(const std::string& arg_tablespacename, std::vector<::pg_query::Node> arg_options, bool arg_is_reset);
     AlterTableSpaceOptionsStmt(const AlterTableSpaceOptionsStmt& other) = delete;
     AlterTableSpaceOptionsStmt(AlterTableSpaceOptionsStmt&& other) noexcept;
     ~AlterTableSpaceOptionsStmt() override;
@@ -10328,20 +10080,18 @@ struct hash<pg_query::AlterTableSpaceOptionsStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterTableMoveAllStmt : FBE::Base
 {
     std::string orig_tablespacename;
     ::pg_query::ObjectType objtype;
-    std::vector<::pg_query::Node*> roles;
+    std::vector<::pg_query::Node> roles;
     std::string new_tablespacename;
     bool nowait;
 
     size_t fbe_type() const noexcept { return 152; }
 
     AlterTableMoveAllStmt();
-    AlterTableMoveAllStmt(const std::string& arg_orig_tablespacename, ::pg_query::ObjectType&& arg_objtype, std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, const std::string& arg_new_tablespacename, bool arg_nowait);
+    AlterTableMoveAllStmt(const std::string& arg_orig_tablespacename, ::pg_query::ObjectType&& arg_objtype, std::vector<::pg_query::Node> arg_roles, const std::string& arg_new_tablespacename, bool arg_nowait);
     AlterTableMoveAllStmt(const AlterTableMoveAllStmt& other) = delete;
     AlterTableMoveAllStmt(AlterTableMoveAllStmt&& other) noexcept;
     ~AlterTableMoveAllStmt() override;
@@ -10385,19 +10135,17 @@ struct hash<pg_query::AlterTableMoveAllStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct SecLabelStmt : FBE::Base
 {
     ::pg_query::ObjectType objtype;
-    ::pg_query::Node* object;
+    ::pg_query::Node object;
     std::string provider;
     std::string label;
 
     size_t fbe_type() const noexcept { return 153; }
 
     SecLabelStmt();
-    SecLabelStmt(::pg_query::ObjectType&& arg_objtype, std::unique_ptr<::pg_query::Node> arg_object, const std::string& arg_provider, const std::string& arg_label);
+    SecLabelStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::string& arg_provider, const std::string& arg_label);
     SecLabelStmt(const SecLabelStmt& other) = delete;
     SecLabelStmt(SecLabelStmt&& other) noexcept;
     ~SecLabelStmt() override;
@@ -10441,18 +10189,16 @@ struct hash<pg_query::SecLabelStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateForeignTableStmt : FBE::Base
 {
     ::pg_query::CreateStmt base_stmt;
     std::string servername;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 154; }
 
     CreateForeignTableStmt();
-    CreateForeignTableStmt(::pg_query::CreateStmt&& arg_base_stmt, const std::string& arg_servername, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    CreateForeignTableStmt(::pg_query::CreateStmt&& arg_base_stmt, const std::string& arg_servername, std::vector<::pg_query::Node> arg_options);
     CreateForeignTableStmt(const CreateForeignTableStmt& other) = delete;
     CreateForeignTableStmt(CreateForeignTableStmt&& other) noexcept;
     ~CreateForeignTableStmt() override;
@@ -10496,21 +10242,19 @@ struct hash<pg_query::CreateForeignTableStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct ImportForeignSchemaStmt : FBE::Base
 {
     std::string server_name;
     std::string remote_schema;
     std::string local_schema;
     ::pg_query::ImportForeignSchemaType list_type;
-    std::vector<::pg_query::Node*> table_list;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> table_list;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 155; }
 
     ImportForeignSchemaStmt();
-    ImportForeignSchemaStmt(const std::string& arg_server_name, const std::string& arg_remote_schema, const std::string& arg_local_schema, ::pg_query::ImportForeignSchemaType&& arg_list_type, std::vector<std::unique_ptr<::pg_query::Node>> arg_table_list, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    ImportForeignSchemaStmt(const std::string& arg_server_name, const std::string& arg_remote_schema, const std::string& arg_local_schema, ::pg_query::ImportForeignSchemaType&& arg_list_type, std::vector<::pg_query::Node> arg_table_list, std::vector<::pg_query::Node> arg_options);
     ImportForeignSchemaStmt(const ImportForeignSchemaStmt& other) = delete;
     ImportForeignSchemaStmt(ImportForeignSchemaStmt&& other) noexcept;
     ~ImportForeignSchemaStmt() override;
@@ -10554,18 +10298,16 @@ struct hash<pg_query::ImportForeignSchemaStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateExtensionStmt : FBE::Base
 {
     std::string extname;
     bool if_not_exists;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 156; }
 
     CreateExtensionStmt();
-    CreateExtensionStmt(const std::string& arg_extname, bool arg_if_not_exists, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    CreateExtensionStmt(const std::string& arg_extname, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options);
     CreateExtensionStmt(const CreateExtensionStmt& other) = delete;
     CreateExtensionStmt(CreateExtensionStmt&& other) noexcept;
     ~CreateExtensionStmt() override;
@@ -10609,17 +10351,15 @@ struct hash<pg_query::CreateExtensionStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterExtensionStmt : FBE::Base
 {
     std::string extname;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 157; }
 
     AlterExtensionStmt();
-    AlterExtensionStmt(const std::string& arg_extname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    AlterExtensionStmt(const std::string& arg_extname, std::vector<::pg_query::Node> arg_options);
     AlterExtensionStmt(const AlterExtensionStmt& other) = delete;
     AlterExtensionStmt(AlterExtensionStmt&& other) noexcept;
     ~AlterExtensionStmt() override;
@@ -10663,19 +10403,17 @@ struct hash<pg_query::AlterExtensionStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterExtensionContentsStmt : FBE::Base
 {
     std::string extname;
     int32_t action;
     ::pg_query::ObjectType objtype;
-    ::pg_query::Node* object;
+    ::pg_query::Node object;
 
     size_t fbe_type() const noexcept { return 158; }
 
     AlterExtensionContentsStmt();
-    AlterExtensionContentsStmt(const std::string& arg_extname, int32_t arg_action, ::pg_query::ObjectType&& arg_objtype, std::unique_ptr<::pg_query::Node> arg_object);
+    AlterExtensionContentsStmt(const std::string& arg_extname, int32_t arg_action, ::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object);
     AlterExtensionContentsStmt(const AlterExtensionContentsStmt& other) = delete;
     AlterExtensionContentsStmt(AlterExtensionContentsStmt&& other) noexcept;
     ~AlterExtensionContentsStmt() override;
@@ -10719,19 +10457,17 @@ struct hash<pg_query::AlterExtensionContentsStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateEventTrigStmt : FBE::Base
 {
     std::string trigname;
     std::string eventname;
-    std::vector<::pg_query::Node*> whenclause;
-    std::vector<::pg_query::Node*> funcname;
+    std::vector<::pg_query::Node> whenclause;
+    std::vector<::pg_query::Node> funcname;
 
     size_t fbe_type() const noexcept { return 159; }
 
     CreateEventTrigStmt();
-    CreateEventTrigStmt(const std::string& arg_trigname, const std::string& arg_eventname, std::vector<std::unique_ptr<::pg_query::Node>> arg_whenclause, std::vector<std::unique_ptr<::pg_query::Node>> arg_funcname);
+    CreateEventTrigStmt(const std::string& arg_trigname, const std::string& arg_eventname, std::vector<::pg_query::Node> arg_whenclause, std::vector<::pg_query::Node> arg_funcname);
     CreateEventTrigStmt(const CreateEventTrigStmt& other) = delete;
     CreateEventTrigStmt(CreateEventTrigStmt&& other) noexcept;
     ~CreateEventTrigStmt() override;
@@ -10983,22 +10719,20 @@ struct hash<pg_query::AlterSystemStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreatePolicyStmt : FBE::Base
 {
     std::string policy_name;
     ::pg_query::RangeVar table;
     std::string cmd_name;
     bool permissive;
-    std::vector<::pg_query::Node*> roles;
-    ::pg_query::Node* qual;
-    ::pg_query::Node* with_check;
+    std::vector<::pg_query::Node> roles;
+    ::pg_query::Node qual;
+    ::pg_query::Node with_check;
 
     size_t fbe_type() const noexcept { return 164; }
 
     CreatePolicyStmt();
-    CreatePolicyStmt(const std::string& arg_policy_name, ::pg_query::RangeVar&& arg_table, const std::string& arg_cmd_name, bool arg_permissive, std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, std::unique_ptr<::pg_query::Node> arg_qual, std::unique_ptr<::pg_query::Node> arg_with_check);
+    CreatePolicyStmt(const std::string& arg_policy_name, ::pg_query::RangeVar&& arg_table, const std::string& arg_cmd_name, bool arg_permissive, std::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check);
     CreatePolicyStmt(const CreatePolicyStmt& other) = delete;
     CreatePolicyStmt(CreatePolicyStmt&& other) noexcept;
     ~CreatePolicyStmt() override;
@@ -11042,20 +10776,18 @@ struct hash<pg_query::CreatePolicyStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterPolicyStmt : FBE::Base
 {
     std::string policy_name;
     ::pg_query::RangeVar table;
-    std::vector<::pg_query::Node*> roles;
-    ::pg_query::Node* qual;
-    ::pg_query::Node* with_check;
+    std::vector<::pg_query::Node> roles;
+    ::pg_query::Node qual;
+    ::pg_query::Node with_check;
 
     size_t fbe_type() const noexcept { return 165; }
 
     AlterPolicyStmt();
-    AlterPolicyStmt(const std::string& arg_policy_name, ::pg_query::RangeVar&& arg_table, std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, std::unique_ptr<::pg_query::Node> arg_qual, std::unique_ptr<::pg_query::Node> arg_with_check);
+    AlterPolicyStmt(const std::string& arg_policy_name, ::pg_query::RangeVar&& arg_table, std::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check);
     AlterPolicyStmt(const AlterPolicyStmt& other) = delete;
     AlterPolicyStmt(AlterPolicyStmt&& other) noexcept;
     ~AlterPolicyStmt() override;
@@ -11154,18 +10886,16 @@ struct hash<pg_query::CreateTransformStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateAmStmt : FBE::Base
 {
     std::string amname;
-    std::vector<::pg_query::Node*> handler_name;
+    std::vector<::pg_query::Node> handler_name;
     std::string amtype;
 
     size_t fbe_type() const noexcept { return 167; }
 
     CreateAmStmt();
-    CreateAmStmt(const std::string& arg_amname, std::vector<std::unique_ptr<::pg_query::Node>> arg_handler_name, const std::string& arg_amtype);
+    CreateAmStmt(const std::string& arg_amname, std::vector<::pg_query::Node> arg_handler_name, const std::string& arg_amtype);
     CreateAmStmt(const CreateAmStmt& other) = delete;
     CreateAmStmt(CreateAmStmt&& other) noexcept;
     ~CreateAmStmt() override;
@@ -11209,19 +10939,17 @@ struct hash<pg_query::CreateAmStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreatePublicationStmt : FBE::Base
 {
     std::string pubname;
-    std::vector<::pg_query::Node*> options;
-    std::vector<::pg_query::Node*> tables;
+    std::vector<::pg_query::Node> options;
+    std::vector<::pg_query::Node> tables;
     bool for_all_tables;
 
     size_t fbe_type() const noexcept { return 168; }
 
     CreatePublicationStmt();
-    CreatePublicationStmt(const std::string& arg_pubname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, std::vector<std::unique_ptr<::pg_query::Node>> arg_tables, bool arg_for_all_tables);
+    CreatePublicationStmt(const std::string& arg_pubname, std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables);
     CreatePublicationStmt(const CreatePublicationStmt& other) = delete;
     CreatePublicationStmt(CreatePublicationStmt&& other) noexcept;
     ~CreatePublicationStmt() override;
@@ -11265,20 +10993,18 @@ struct hash<pg_query::CreatePublicationStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterPublicationStmt : FBE::Base
 {
     std::string pubname;
-    std::vector<::pg_query::Node*> options;
-    std::vector<::pg_query::Node*> tables;
+    std::vector<::pg_query::Node> options;
+    std::vector<::pg_query::Node> tables;
     bool for_all_tables;
     ::pg_query::DefElemAction table_action;
 
     size_t fbe_type() const noexcept { return 169; }
 
     AlterPublicationStmt();
-    AlterPublicationStmt(const std::string& arg_pubname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, std::vector<std::unique_ptr<::pg_query::Node>> arg_tables, bool arg_for_all_tables, ::pg_query::DefElemAction&& arg_table_action);
+    AlterPublicationStmt(const std::string& arg_pubname, std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables, ::pg_query::DefElemAction&& arg_table_action);
     AlterPublicationStmt(const AlterPublicationStmt& other) = delete;
     AlterPublicationStmt(AlterPublicationStmt&& other) noexcept;
     ~AlterPublicationStmt() override;
@@ -11322,19 +11048,17 @@ struct hash<pg_query::AlterPublicationStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateSubscriptionStmt : FBE::Base
 {
     std::string subname;
     std::string conninfo;
-    std::vector<::pg_query::Node*> publication;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> publication;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 170; }
 
     CreateSubscriptionStmt();
-    CreateSubscriptionStmt(const std::string& arg_subname, const std::string& arg_conninfo, std::vector<std::unique_ptr<::pg_query::Node>> arg_publication, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    CreateSubscriptionStmt(const std::string& arg_subname, const std::string& arg_conninfo, std::vector<::pg_query::Node> arg_publication, std::vector<::pg_query::Node> arg_options);
     CreateSubscriptionStmt(const CreateSubscriptionStmt& other) = delete;
     CreateSubscriptionStmt(CreateSubscriptionStmt&& other) noexcept;
     ~CreateSubscriptionStmt() override;
@@ -11378,20 +11102,18 @@ struct hash<pg_query::CreateSubscriptionStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterSubscriptionStmt : FBE::Base
 {
     ::pg_query::AlterSubscriptionType kind;
     std::string subname;
     std::string conninfo;
-    std::vector<::pg_query::Node*> publication;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> publication;
+    std::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 171; }
 
     AlterSubscriptionStmt();
-    AlterSubscriptionStmt(::pg_query::AlterSubscriptionType&& arg_kind, const std::string& arg_subname, const std::string& arg_conninfo, std::vector<std::unique_ptr<::pg_query::Node>> arg_publication, std::vector<std::unique_ptr<::pg_query::Node>> arg_options);
+    AlterSubscriptionStmt(::pg_query::AlterSubscriptionType&& arg_kind, const std::string& arg_subname, const std::string& arg_conninfo, std::vector<::pg_query::Node> arg_publication, std::vector<::pg_query::Node> arg_options);
     AlterSubscriptionStmt(const AlterSubscriptionStmt& other) = delete;
     AlterSubscriptionStmt(AlterSubscriptionStmt&& other) noexcept;
     ~AlterSubscriptionStmt() override;
@@ -11488,21 +11210,19 @@ struct hash<pg_query::DropSubscriptionStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateStatsStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> defnames;
-    std::vector<::pg_query::Node*> stat_types;
-    std::vector<::pg_query::Node*> exprs;
-    std::vector<::pg_query::Node*> relations;
+    std::vector<::pg_query::Node> defnames;
+    std::vector<::pg_query::Node> stat_types;
+    std::vector<::pg_query::Node> exprs;
+    std::vector<::pg_query::Node> relations;
     std::string stxcomment;
     bool if_not_exists;
 
     size_t fbe_type() const noexcept { return 173; }
 
     CreateStatsStmt();
-    CreateStatsStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_defnames, std::vector<std::unique_ptr<::pg_query::Node>> arg_stat_types, std::vector<std::unique_ptr<::pg_query::Node>> arg_exprs, std::vector<std::unique_ptr<::pg_query::Node>> arg_relations, const std::string& arg_stxcomment, bool arg_if_not_exists);
+    CreateStatsStmt(std::vector<::pg_query::Node> arg_defnames, std::vector<::pg_query::Node> arg_stat_types, std::vector<::pg_query::Node> arg_exprs, std::vector<::pg_query::Node> arg_relations, const std::string& arg_stxcomment, bool arg_if_not_exists);
     CreateStatsStmt(const CreateStatsStmt& other) = delete;
     CreateStatsStmt(CreateStatsStmt&& other) noexcept;
     ~CreateStatsStmt() override;
@@ -11546,16 +11266,14 @@ struct hash<pg_query::CreateStatsStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterCollationStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> collname;
+    std::vector<::pg_query::Node> collname;
 
     size_t fbe_type() const noexcept { return 174; }
 
     AlterCollationStmt();
-    explicit AlterCollationStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_collname);
+    explicit AlterCollationStmt(std::vector<::pg_query::Node> arg_collname);
     AlterCollationStmt(const AlterCollationStmt& other) = delete;
     AlterCollationStmt(AlterCollationStmt&& other) noexcept;
     ~AlterCollationStmt() override;
@@ -11651,18 +11369,16 @@ struct hash<pg_query::CallStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct AlterStatsStmt : FBE::Base
 {
-    std::vector<::pg_query::Node*> defnames;
+    std::vector<::pg_query::Node> defnames;
     int32_t stxstattarget;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 176; }
 
     AlterStatsStmt();
-    AlterStatsStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_defnames, int32_t arg_stxstattarget, bool arg_missing_ok);
+    AlterStatsStmt(std::vector<::pg_query::Node> arg_defnames, int32_t arg_stxstattarget, bool arg_missing_ok);
     AlterStatsStmt(const AlterStatsStmt& other) = delete;
     AlterStatsStmt(AlterStatsStmt&& other) noexcept;
     ~AlterStatsStmt() override;
@@ -11706,20 +11422,18 @@ struct hash<pg_query::AlterStatsStmt>
 
 namespace pg_query {
 
-struct Node;
-
 struct A_Expr : FBE::Base
 {
     ::pg_query::A_Expr_Kind kind;
-    std::vector<::pg_query::Node*> name;
-    ::pg_query::Node* lexpr;
-    ::pg_query::Node* rexpr;
+    std::vector<::pg_query::Node> name;
+    ::pg_query::Node lexpr;
+    ::pg_query::Node rexpr;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 177; }
 
     A_Expr();
-    A_Expr(::pg_query::A_Expr_Kind&& arg_kind, std::vector<std::unique_ptr<::pg_query::Node>> arg_name, std::unique_ptr<::pg_query::Node> arg_lexpr, std::unique_ptr<::pg_query::Node> arg_rexpr, int32_t arg_location);
+    A_Expr(::pg_query::A_Expr_Kind&& arg_kind, std::vector<::pg_query::Node> arg_name, ::pg_query::Node&& arg_lexpr, ::pg_query::Node&& arg_rexpr, int32_t arg_location);
     A_Expr(const A_Expr& other) = delete;
     A_Expr(A_Expr&& other) noexcept;
     ~A_Expr() override;
@@ -11763,17 +11477,15 @@ struct hash<pg_query::A_Expr>
 
 namespace pg_query {
 
-struct Node;
-
 struct ColumnRef : FBE::Base
 {
-    std::vector<::pg_query::Node*> fields;
+    std::vector<::pg_query::Node> fields;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 178; }
 
     ColumnRef();
-    ColumnRef(std::vector<std::unique_ptr<::pg_query::Node>> arg_fields, int32_t arg_location);
+    ColumnRef(std::vector<::pg_query::Node> arg_fields, int32_t arg_location);
     ColumnRef(const ColumnRef& other) = delete;
     ColumnRef(ColumnRef&& other) noexcept;
     ~ColumnRef() override;
@@ -11921,14 +11633,12 @@ struct hash<pg_query::A_Const>
 
 namespace pg_query {
 
-struct Node;
-
 struct FuncCall : FBE::Base
 {
-    std::vector<::pg_query::Node*> funcname;
-    std::vector<::pg_query::Node*> args;
-    std::vector<::pg_query::Node*> agg_order;
-    ::pg_query::Node* agg_filter;
+    std::vector<::pg_query::Node> funcname;
+    std::vector<::pg_query::Node> args;
+    std::vector<::pg_query::Node> agg_order;
+    ::pg_query::Node agg_filter;
     bool agg_within_group;
     bool agg_star;
     bool agg_distinct;
@@ -11939,7 +11649,7 @@ struct FuncCall : FBE::Base
     size_t fbe_type() const noexcept { return 181; }
 
     FuncCall();
-    FuncCall(std::vector<std::unique_ptr<::pg_query::Node>> arg_funcname, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::vector<std::unique_ptr<::pg_query::Node>> arg_agg_order, std::unique_ptr<::pg_query::Node> arg_agg_filter, bool arg_agg_within_group, bool arg_agg_star, bool arg_agg_distinct, bool arg_func_variadic, ::pg_query::WindowDef&& arg_over, int32_t arg_location);
+    FuncCall(std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_agg_order, ::pg_query::Node&& arg_agg_filter, bool arg_agg_within_group, bool arg_agg_star, bool arg_agg_distinct, bool arg_func_variadic, ::pg_query::WindowDef&& arg_over, int32_t arg_location);
     FuncCall(const FuncCall& other) = delete;
     FuncCall(FuncCall&& other) noexcept;
     ~FuncCall() override;
@@ -12031,18 +11741,16 @@ struct hash<pg_query::A_Star>
 
 namespace pg_query {
 
-struct Node;
-
 struct A_Indices : FBE::Base
 {
     bool is_slice;
-    ::pg_query::Node* lidx;
-    ::pg_query::Node* uidx;
+    ::pg_query::Node lidx;
+    ::pg_query::Node uidx;
 
     size_t fbe_type() const noexcept { return 183; }
 
     A_Indices();
-    A_Indices(bool arg_is_slice, std::unique_ptr<::pg_query::Node> arg_lidx, std::unique_ptr<::pg_query::Node> arg_uidx);
+    A_Indices(bool arg_is_slice, ::pg_query::Node&& arg_lidx, ::pg_query::Node&& arg_uidx);
     A_Indices(const A_Indices& other) = delete;
     A_Indices(A_Indices&& other) noexcept;
     ~A_Indices() override;
@@ -12086,17 +11794,15 @@ struct hash<pg_query::A_Indices>
 
 namespace pg_query {
 
-struct Node;
-
 struct A_Indirection : FBE::Base
 {
-    ::pg_query::Node* arg;
-    std::vector<::pg_query::Node*> indirection;
+    ::pg_query::Node arg;
+    std::vector<::pg_query::Node> indirection;
 
     size_t fbe_type() const noexcept { return 184; }
 
     A_Indirection();
-    A_Indirection(std::unique_ptr<::pg_query::Node> arg_arg, std::vector<std::unique_ptr<::pg_query::Node>> arg_indirection);
+    A_Indirection(::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_indirection);
     A_Indirection(const A_Indirection& other) = delete;
     A_Indirection(A_Indirection&& other) noexcept;
     ~A_Indirection() override;
@@ -12140,17 +11846,15 @@ struct hash<pg_query::A_Indirection>
 
 namespace pg_query {
 
-struct Node;
-
 struct A_ArrayExpr : FBE::Base
 {
-    std::vector<::pg_query::Node*> elements;
+    std::vector<::pg_query::Node> elements;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 185; }
 
     A_ArrayExpr();
-    A_ArrayExpr(std::vector<std::unique_ptr<::pg_query::Node>> arg_elements, int32_t arg_location);
+    A_ArrayExpr(std::vector<::pg_query::Node> arg_elements, int32_t arg_location);
     A_ArrayExpr(const A_ArrayExpr& other) = delete;
     A_ArrayExpr(A_ArrayExpr&& other) noexcept;
     ~A_ArrayExpr() override;
@@ -12194,19 +11898,17 @@ struct hash<pg_query::A_ArrayExpr>
 
 namespace pg_query {
 
-struct Node;
-
 struct ResTarget : FBE::Base
 {
     std::string name;
-    std::vector<::pg_query::Node*> indirection;
-    ::pg_query::Node* val;
+    std::vector<::pg_query::Node> indirection;
+    ::pg_query::Node val;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 186; }
 
     ResTarget();
-    ResTarget(const std::string& arg_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_indirection, std::unique_ptr<::pg_query::Node> arg_val, int32_t arg_location);
+    ResTarget(const std::string& arg_name, std::vector<::pg_query::Node> arg_indirection, ::pg_query::Node&& arg_val, int32_t arg_location);
     ResTarget(const ResTarget& other) = delete;
     ResTarget(ResTarget&& other) noexcept;
     ~ResTarget() override;
@@ -12250,18 +11952,16 @@ struct hash<pg_query::ResTarget>
 
 namespace pg_query {
 
-struct Node;
-
 struct MultiAssignRef : FBE::Base
 {
-    ::pg_query::Node* source;
+    ::pg_query::Node source;
     int32_t colno;
     int32_t ncolumns;
 
     size_t fbe_type() const noexcept { return 187; }
 
     MultiAssignRef();
-    MultiAssignRef(std::unique_ptr<::pg_query::Node> arg_source, int32_t arg_colno, int32_t arg_ncolumns);
+    MultiAssignRef(::pg_query::Node&& arg_source, int32_t arg_colno, int32_t arg_ncolumns);
     MultiAssignRef(const MultiAssignRef& other) = delete;
     MultiAssignRef(MultiAssignRef&& other) noexcept;
     ~MultiAssignRef() override;
@@ -12305,18 +12005,16 @@ struct hash<pg_query::MultiAssignRef>
 
 namespace pg_query {
 
-struct Node;
-
 struct TypeCast : FBE::Base
 {
-    ::pg_query::Node* arg;
+    ::pg_query::Node arg;
     ::pg_query::TypeName type_name;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 188; }
 
     TypeCast();
-    TypeCast(std::unique_ptr<::pg_query::Node> arg_arg, ::pg_query::TypeName&& arg_type_name, int32_t arg_location);
+    TypeCast(::pg_query::Node&& arg_arg, ::pg_query::TypeName&& arg_type_name, int32_t arg_location);
     TypeCast(const TypeCast& other) = delete;
     TypeCast(TypeCast&& other) noexcept;
     ~TypeCast() override;
@@ -12360,18 +12058,16 @@ struct hash<pg_query::TypeCast>
 
 namespace pg_query {
 
-struct Node;
-
 struct CollateClause : FBE::Base
 {
-    ::pg_query::Node* arg;
-    std::vector<::pg_query::Node*> collname;
+    ::pg_query::Node arg;
+    std::vector<::pg_query::Node> collname;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 189; }
 
     CollateClause();
-    CollateClause(std::unique_ptr<::pg_query::Node> arg_arg, std::vector<std::unique_ptr<::pg_query::Node>> arg_collname, int32_t arg_location);
+    CollateClause(::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_collname, int32_t arg_location);
     CollateClause(const CollateClause& other) = delete;
     CollateClause(CollateClause&& other) noexcept;
     ~CollateClause() override;
@@ -12415,20 +12111,18 @@ struct hash<pg_query::CollateClause>
 
 namespace pg_query {
 
-struct Node;
-
 struct SortBy : FBE::Base
 {
-    ::pg_query::Node* node;
+    ::pg_query::Node node;
     ::pg_query::SortByDir sortby_dir;
     ::pg_query::SortByNulls sortby_nulls;
-    std::vector<::pg_query::Node*> use_op;
+    std::vector<::pg_query::Node> use_op;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 190; }
 
     SortBy();
-    SortBy(std::unique_ptr<::pg_query::Node> arg_node, ::pg_query::SortByDir&& arg_sortby_dir, ::pg_query::SortByNulls&& arg_sortby_nulls, std::vector<std::unique_ptr<::pg_query::Node>> arg_use_op, int32_t arg_location);
+    SortBy(::pg_query::Node&& arg_node, ::pg_query::SortByDir&& arg_sortby_dir, ::pg_query::SortByNulls&& arg_sortby_nulls, std::vector<::pg_query::Node> arg_use_op, int32_t arg_location);
     SortBy(const SortBy& other) = delete;
     SortBy(SortBy&& other) noexcept;
     ~SortBy() override;
@@ -12472,23 +12166,21 @@ struct hash<pg_query::SortBy>
 
 namespace pg_query {
 
-struct Node;
-
 struct WindowDef : FBE::Base
 {
     std::string name;
     std::string refname;
-    std::vector<::pg_query::Node*> partition_clause;
-    std::vector<::pg_query::Node*> order_clause;
+    std::vector<::pg_query::Node> partition_clause;
+    std::vector<::pg_query::Node> order_clause;
     int32_t frame_options;
-    ::pg_query::Node* start_offset;
-    ::pg_query::Node* end_offset;
+    ::pg_query::Node start_offset;
+    ::pg_query::Node end_offset;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 191; }
 
     WindowDef();
-    WindowDef(const std::string& arg_name, const std::string& arg_refname, std::vector<std::unique_ptr<::pg_query::Node>> arg_partition_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_order_clause, int32_t arg_frame_options, std::unique_ptr<::pg_query::Node> arg_start_offset, std::unique_ptr<::pg_query::Node> arg_end_offset, int32_t arg_location);
+    WindowDef(const std::string& arg_name, const std::string& arg_refname, std::vector<::pg_query::Node> arg_partition_clause, std::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, int32_t arg_location);
     WindowDef(const WindowDef& other) = delete;
     WindowDef(WindowDef&& other) noexcept;
     ~WindowDef() override;
@@ -12532,18 +12224,16 @@ struct hash<pg_query::WindowDef>
 
 namespace pg_query {
 
-struct Node;
-
 struct RangeSubselect : FBE::Base
 {
     bool lateral;
-    ::pg_query::Node* subquery;
+    ::pg_query::Node subquery;
     ::pg_query::Alias alias;
 
     size_t fbe_type() const noexcept { return 192; }
 
     RangeSubselect();
-    RangeSubselect(bool arg_lateral, std::unique_ptr<::pg_query::Node> arg_subquery, ::pg_query::Alias&& arg_alias);
+    RangeSubselect(bool arg_lateral, ::pg_query::Node&& arg_subquery, ::pg_query::Alias&& arg_alias);
     RangeSubselect(const RangeSubselect& other) = delete;
     RangeSubselect(RangeSubselect&& other) noexcept;
     ~RangeSubselect() override;
@@ -12587,21 +12277,19 @@ struct hash<pg_query::RangeSubselect>
 
 namespace pg_query {
 
-struct Node;
-
 struct RangeFunction : FBE::Base
 {
     bool lateral;
     bool ordinality;
     bool is_rowsfrom;
-    std::vector<::pg_query::Node*> functions;
+    std::vector<::pg_query::Node> functions;
     ::pg_query::Alias alias;
-    std::vector<::pg_query::Node*> coldeflist;
+    std::vector<::pg_query::Node> coldeflist;
 
     size_t fbe_type() const noexcept { return 193; }
 
     RangeFunction();
-    RangeFunction(bool arg_lateral, bool arg_ordinality, bool arg_is_rowsfrom, std::vector<std::unique_ptr<::pg_query::Node>> arg_functions, ::pg_query::Alias&& arg_alias, std::vector<std::unique_ptr<::pg_query::Node>> arg_coldeflist);
+    RangeFunction(bool arg_lateral, bool arg_ordinality, bool arg_is_rowsfrom, std::vector<::pg_query::Node> arg_functions, ::pg_query::Alias&& arg_alias, std::vector<::pg_query::Node> arg_coldeflist);
     RangeFunction(const RangeFunction& other) = delete;
     RangeFunction(RangeFunction&& other) noexcept;
     ~RangeFunction() override;
@@ -12645,20 +12333,18 @@ struct hash<pg_query::RangeFunction>
 
 namespace pg_query {
 
-struct Node;
-
 struct RangeTableSample : FBE::Base
 {
-    ::pg_query::Node* relation;
-    std::vector<::pg_query::Node*> method;
-    std::vector<::pg_query::Node*> args;
-    ::pg_query::Node* repeatable;
+    ::pg_query::Node relation;
+    std::vector<::pg_query::Node> method;
+    std::vector<::pg_query::Node> args;
+    ::pg_query::Node repeatable;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 194; }
 
     RangeTableSample();
-    RangeTableSample(std::unique_ptr<::pg_query::Node> arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_method, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::unique_ptr<::pg_query::Node> arg_repeatable, int32_t arg_location);
+    RangeTableSample(::pg_query::Node&& arg_relation, std::vector<::pg_query::Node> arg_method, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable, int32_t arg_location);
     RangeTableSample(const RangeTableSample& other) = delete;
     RangeTableSample(RangeTableSample&& other) noexcept;
     ~RangeTableSample() override;
@@ -12702,22 +12388,20 @@ struct hash<pg_query::RangeTableSample>
 
 namespace pg_query {
 
-struct Node;
-
 struct RangeTableFunc : FBE::Base
 {
     bool lateral;
-    ::pg_query::Node* docexpr;
-    ::pg_query::Node* rowexpr;
-    std::vector<::pg_query::Node*> namespaces;
-    std::vector<::pg_query::Node*> columns;
+    ::pg_query::Node docexpr;
+    ::pg_query::Node rowexpr;
+    std::vector<::pg_query::Node> namespaces;
+    std::vector<::pg_query::Node> columns;
     ::pg_query::Alias alias;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 195; }
 
     RangeTableFunc();
-    RangeTableFunc(bool arg_lateral, std::unique_ptr<::pg_query::Node> arg_docexpr, std::unique_ptr<::pg_query::Node> arg_rowexpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_namespaces, std::vector<std::unique_ptr<::pg_query::Node>> arg_columns, ::pg_query::Alias&& arg_alias, int32_t arg_location);
+    RangeTableFunc(bool arg_lateral, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::vector<::pg_query::Node> arg_namespaces, std::vector<::pg_query::Node> arg_columns, ::pg_query::Alias&& arg_alias, int32_t arg_location);
     RangeTableFunc(const RangeTableFunc& other) = delete;
     RangeTableFunc(RangeTableFunc&& other) noexcept;
     ~RangeTableFunc() override;
@@ -12761,22 +12445,20 @@ struct hash<pg_query::RangeTableFunc>
 
 namespace pg_query {
 
-struct Node;
-
 struct RangeTableFuncCol : FBE::Base
 {
     std::string colname;
     ::pg_query::TypeName type_name;
     bool for_ordinality;
     bool is_not_null;
-    ::pg_query::Node* colexpr;
-    ::pg_query::Node* coldefexpr;
+    ::pg_query::Node colexpr;
+    ::pg_query::Node coldefexpr;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 196; }
 
     RangeTableFuncCol();
-    RangeTableFuncCol(const std::string& arg_colname, ::pg_query::TypeName&& arg_type_name, bool arg_for_ordinality, bool arg_is_not_null, std::unique_ptr<::pg_query::Node> arg_colexpr, std::unique_ptr<::pg_query::Node> arg_coldefexpr, int32_t arg_location);
+    RangeTableFuncCol(const std::string& arg_colname, ::pg_query::TypeName&& arg_type_name, bool arg_for_ordinality, bool arg_is_not_null, ::pg_query::Node&& arg_colexpr, ::pg_query::Node&& arg_coldefexpr, int32_t arg_location);
     RangeTableFuncCol(const RangeTableFuncCol& other) = delete;
     RangeTableFuncCol(RangeTableFuncCol&& other) noexcept;
     ~RangeTableFuncCol() override;
@@ -12820,23 +12502,21 @@ struct hash<pg_query::RangeTableFuncCol>
 
 namespace pg_query {
 
-struct Node;
-
 struct TypeName : FBE::Base
 {
-    std::vector<::pg_query::Node*> names;
+    std::vector<::pg_query::Node> names;
     uint32_t type_oid;
     bool setof;
     bool pct_type;
-    std::vector<::pg_query::Node*> typmods;
+    std::vector<::pg_query::Node> typmods;
     int32_t typemod;
-    std::vector<::pg_query::Node*> array_bounds;
+    std::vector<::pg_query::Node> array_bounds;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 197; }
 
     TypeName();
-    TypeName(std::vector<std::unique_ptr<::pg_query::Node>> arg_names, uint32_t arg_type_oid, bool arg_setof, bool arg_pct_type, std::vector<std::unique_ptr<::pg_query::Node>> arg_typmods, int32_t arg_typemod, std::vector<std::unique_ptr<::pg_query::Node>> arg_array_bounds, int32_t arg_location);
+    TypeName(std::vector<::pg_query::Node> arg_names, uint32_t arg_type_oid, bool arg_setof, bool arg_pct_type, std::vector<::pg_query::Node> arg_typmods, int32_t arg_typemod, std::vector<::pg_query::Node> arg_array_bounds, int32_t arg_location);
     TypeName(const TypeName& other) = delete;
     TypeName(TypeName&& other) noexcept;
     ~TypeName() override;
@@ -12880,8 +12560,6 @@ struct hash<pg_query::TypeName>
 
 namespace pg_query {
 
-struct Node;
-
 struct ColumnDef : FBE::Base
 {
     std::string colname;
@@ -12891,21 +12569,21 @@ struct ColumnDef : FBE::Base
     bool is_not_null;
     bool is_from_type;
     std::string storage;
-    ::pg_query::Node* raw_default;
-    ::pg_query::Node* cooked_default;
+    ::pg_query::Node raw_default;
+    ::pg_query::Node cooked_default;
     std::string identity;
     ::pg_query::RangeVar identity_sequence;
     std::string generated;
     ::pg_query::CollateClause coll_clause;
     uint32_t coll_oid;
-    std::vector<::pg_query::Node*> constraints;
-    std::vector<::pg_query::Node*> fdwoptions;
+    std::vector<::pg_query::Node> constraints;
+    std::vector<::pg_query::Node> fdwoptions;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 198; }
 
     ColumnDef();
-    ColumnDef(const std::string& arg_colname, ::pg_query::TypeName&& arg_type_name, int32_t arg_inhcount, bool arg_is_local, bool arg_is_not_null, bool arg_is_from_type, const std::string& arg_storage, std::unique_ptr<::pg_query::Node> arg_raw_default, std::unique_ptr<::pg_query::Node> arg_cooked_default, const std::string& arg_identity, ::pg_query::RangeVar&& arg_identity_sequence, const std::string& arg_generated, ::pg_query::CollateClause&& arg_coll_clause, uint32_t arg_coll_oid, std::vector<std::unique_ptr<::pg_query::Node>> arg_constraints, std::vector<std::unique_ptr<::pg_query::Node>> arg_fdwoptions, int32_t arg_location);
+    ColumnDef(const std::string& arg_colname, ::pg_query::TypeName&& arg_type_name, int32_t arg_inhcount, bool arg_is_local, bool arg_is_not_null, bool arg_is_from_type, const std::string& arg_storage, ::pg_query::Node&& arg_raw_default, ::pg_query::Node&& arg_cooked_default, const std::string& arg_identity, ::pg_query::RangeVar&& arg_identity_sequence, const std::string& arg_generated, ::pg_query::CollateClause&& arg_coll_clause, uint32_t arg_coll_oid, std::vector<::pg_query::Node> arg_constraints, std::vector<::pg_query::Node> arg_fdwoptions, int32_t arg_location);
     ColumnDef(const ColumnDef& other) = delete;
     ColumnDef(ColumnDef&& other) noexcept;
     ~ColumnDef() override;
@@ -12949,23 +12627,21 @@ struct hash<pg_query::ColumnDef>
 
 namespace pg_query {
 
-struct Node;
-
 struct IndexElem : FBE::Base
 {
     std::string name;
-    ::pg_query::Node* expr;
+    ::pg_query::Node expr;
     std::string indexcolname;
-    std::vector<::pg_query::Node*> collation;
-    std::vector<::pg_query::Node*> opclass;
-    std::vector<::pg_query::Node*> opclassopts;
+    std::vector<::pg_query::Node> collation;
+    std::vector<::pg_query::Node> opclass;
+    std::vector<::pg_query::Node> opclassopts;
     ::pg_query::SortByDir ordering;
     ::pg_query::SortByNulls nulls_ordering;
 
     size_t fbe_type() const noexcept { return 199; }
 
     IndexElem();
-    IndexElem(const std::string& arg_name, std::unique_ptr<::pg_query::Node> arg_expr, const std::string& arg_indexcolname, std::vector<std::unique_ptr<::pg_query::Node>> arg_collation, std::vector<std::unique_ptr<::pg_query::Node>> arg_opclass, std::vector<std::unique_ptr<::pg_query::Node>> arg_opclassopts, ::pg_query::SortByDir&& arg_ordering, ::pg_query::SortByNulls&& arg_nulls_ordering);
+    IndexElem(const std::string& arg_name, ::pg_query::Node&& arg_expr, const std::string& arg_indexcolname, std::vector<::pg_query::Node> arg_collation, std::vector<::pg_query::Node> arg_opclass, std::vector<::pg_query::Node> arg_opclassopts, ::pg_query::SortByDir&& arg_ordering, ::pg_query::SortByNulls&& arg_nulls_ordering);
     IndexElem(const IndexElem& other) = delete;
     IndexElem(IndexElem&& other) noexcept;
     ~IndexElem() override;
@@ -13009,8 +12685,6 @@ struct hash<pg_query::IndexElem>
 
 namespace pg_query {
 
-struct Node;
-
 struct Constraint : FBE::Base
 {
     ::pg_query::ConstrType contype;
@@ -13019,25 +12693,25 @@ struct Constraint : FBE::Base
     bool initdeferred;
     int32_t location;
     bool is_no_inherit;
-    ::pg_query::Node* raw_expr;
+    ::pg_query::Node raw_expr;
     std::string cooked_expr;
     std::string generated_when;
-    std::vector<::pg_query::Node*> keys;
-    std::vector<::pg_query::Node*> including;
-    std::vector<::pg_query::Node*> exclusions;
-    std::vector<::pg_query::Node*> options;
+    std::vector<::pg_query::Node> keys;
+    std::vector<::pg_query::Node> including;
+    std::vector<::pg_query::Node> exclusions;
+    std::vector<::pg_query::Node> options;
     std::string indexname;
     std::string indexspace;
     bool reset_default_tblspc;
     std::string access_method;
-    ::pg_query::Node* where_clause;
+    ::pg_query::Node where_clause;
     ::pg_query::RangeVar pktable;
-    std::vector<::pg_query::Node*> fk_attrs;
-    std::vector<::pg_query::Node*> pk_attrs;
+    std::vector<::pg_query::Node> fk_attrs;
+    std::vector<::pg_query::Node> pk_attrs;
     std::string fk_matchtype;
     std::string fk_upd_action;
     std::string fk_del_action;
-    std::vector<::pg_query::Node*> old_conpfeqop;
+    std::vector<::pg_query::Node> old_conpfeqop;
     uint32_t old_pktable_oid;
     bool skip_validation;
     bool initially_valid;
@@ -13045,7 +12719,7 @@ struct Constraint : FBE::Base
     size_t fbe_type() const noexcept { return 200; }
 
     Constraint();
-    Constraint(::pg_query::ConstrType&& arg_contype, const std::string& arg_conname, bool arg_deferrable, bool arg_initdeferred, int32_t arg_location, bool arg_is_no_inherit, std::unique_ptr<::pg_query::Node> arg_raw_expr, const std::string& arg_cooked_expr, const std::string& arg_generated_when, std::vector<std::unique_ptr<::pg_query::Node>> arg_keys, std::vector<std::unique_ptr<::pg_query::Node>> arg_including, std::vector<std::unique_ptr<::pg_query::Node>> arg_exclusions, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, const std::string& arg_indexname, const std::string& arg_indexspace, bool arg_reset_default_tblspc, const std::string& arg_access_method, std::unique_ptr<::pg_query::Node> arg_where_clause, ::pg_query::RangeVar&& arg_pktable, std::vector<std::unique_ptr<::pg_query::Node>> arg_fk_attrs, std::vector<std::unique_ptr<::pg_query::Node>> arg_pk_attrs, const std::string& arg_fk_matchtype, const std::string& arg_fk_upd_action, const std::string& arg_fk_del_action, std::vector<std::unique_ptr<::pg_query::Node>> arg_old_conpfeqop, uint32_t arg_old_pktable_oid, bool arg_skip_validation, bool arg_initially_valid);
+    Constraint(::pg_query::ConstrType&& arg_contype, const std::string& arg_conname, bool arg_deferrable, bool arg_initdeferred, int32_t arg_location, bool arg_is_no_inherit, ::pg_query::Node&& arg_raw_expr, const std::string& arg_cooked_expr, const std::string& arg_generated_when, std::vector<::pg_query::Node> arg_keys, std::vector<::pg_query::Node> arg_including, std::vector<::pg_query::Node> arg_exclusions, std::vector<::pg_query::Node> arg_options, const std::string& arg_indexname, const std::string& arg_indexspace, bool arg_reset_default_tblspc, const std::string& arg_access_method, ::pg_query::Node&& arg_where_clause, ::pg_query::RangeVar&& arg_pktable, std::vector<::pg_query::Node> arg_fk_attrs, std::vector<::pg_query::Node> arg_pk_attrs, const std::string& arg_fk_matchtype, const std::string& arg_fk_upd_action, const std::string& arg_fk_del_action, std::vector<::pg_query::Node> arg_old_conpfeqop, uint32_t arg_old_pktable_oid, bool arg_skip_validation, bool arg_initially_valid);
     Constraint(const Constraint& other) = delete;
     Constraint(Constraint&& other) noexcept;
     ~Constraint() override;
@@ -13089,20 +12763,18 @@ struct hash<pg_query::Constraint>
 
 namespace pg_query {
 
-struct Node;
-
 struct DefElem : FBE::Base
 {
     std::string defnamespace;
     std::string defname;
-    ::pg_query::Node* arg;
+    ::pg_query::Node arg;
     ::pg_query::DefElemAction defaction;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 201; }
 
     DefElem();
-    DefElem(const std::string& arg_defnamespace, const std::string& arg_defname, std::unique_ptr<::pg_query::Node> arg_arg, ::pg_query::DefElemAction&& arg_defaction, int32_t arg_location);
+    DefElem(const std::string& arg_defnamespace, const std::string& arg_defname, ::pg_query::Node&& arg_arg, ::pg_query::DefElemAction&& arg_defaction, int32_t arg_location);
     DefElem(const DefElem& other) = delete;
     DefElem(DefElem&& other) noexcept;
     ~DefElem() override;
@@ -13146,8 +12818,6 @@ struct hash<pg_query::DefElem>
 
 namespace pg_query {
 
-struct Node;
-
 struct RangeTblEntry : FBE::Base
 {
     ::pg_query::RTEKind rtekind;
@@ -13159,19 +12829,19 @@ struct RangeTblEntry : FBE::Base
     bool security_barrier;
     ::pg_query::JoinType jointype;
     int32_t joinmergedcols;
-    std::vector<::pg_query::Node*> joinaliasvars;
-    std::vector<::pg_query::Node*> joinleftcols;
-    std::vector<::pg_query::Node*> joinrightcols;
-    std::vector<::pg_query::Node*> functions;
+    std::vector<::pg_query::Node> joinaliasvars;
+    std::vector<::pg_query::Node> joinleftcols;
+    std::vector<::pg_query::Node> joinrightcols;
+    std::vector<::pg_query::Node> functions;
     bool funcordinality;
     ::pg_query::TableFunc tablefunc;
-    std::vector<::pg_query::Node*> values_lists;
+    std::vector<::pg_query::Node> values_lists;
     std::string ctename;
     uint32_t ctelevelsup;
     bool self_reference;
-    std::vector<::pg_query::Node*> coltypes;
-    std::vector<::pg_query::Node*> coltypmods;
-    std::vector<::pg_query::Node*> colcollations;
+    std::vector<::pg_query::Node> coltypes;
+    std::vector<::pg_query::Node> coltypmods;
+    std::vector<::pg_query::Node> colcollations;
     std::string enrname;
     double enrtuples;
     ::pg_query::Alias alias;
@@ -13185,12 +12855,12 @@ struct RangeTblEntry : FBE::Base
     std::vector<uint64_t> inserted_cols;
     std::vector<uint64_t> updated_cols;
     std::vector<uint64_t> extra_updated_cols;
-    std::vector<::pg_query::Node*> security_quals;
+    std::vector<::pg_query::Node> security_quals;
 
     size_t fbe_type() const noexcept { return 202; }
 
     RangeTblEntry();
-    RangeTblEntry(::pg_query::RTEKind&& arg_rtekind, uint32_t arg_relid, const std::string& arg_relkind, int32_t arg_rellockmode, ::pg_query::TableSampleClause&& arg_tablesample, ::pg_query::Query&& arg_subquery, bool arg_security_barrier, ::pg_query::JoinType&& arg_jointype, int32_t arg_joinmergedcols, std::vector<std::unique_ptr<::pg_query::Node>> arg_joinaliasvars, std::vector<std::unique_ptr<::pg_query::Node>> arg_joinleftcols, std::vector<std::unique_ptr<::pg_query::Node>> arg_joinrightcols, std::vector<std::unique_ptr<::pg_query::Node>> arg_functions, bool arg_funcordinality, ::pg_query::TableFunc&& arg_tablefunc, std::vector<std::unique_ptr<::pg_query::Node>> arg_values_lists, const std::string& arg_ctename, uint32_t arg_ctelevelsup, bool arg_self_reference, std::vector<std::unique_ptr<::pg_query::Node>> arg_coltypes, std::vector<std::unique_ptr<::pg_query::Node>> arg_coltypmods, std::vector<std::unique_ptr<::pg_query::Node>> arg_colcollations, const std::string& arg_enrname, double arg_enrtuples, ::pg_query::Alias&& arg_alias, ::pg_query::Alias&& arg_eref, bool arg_lateral, bool arg_inh, bool arg_in_from_cl, uint32_t arg_required_perms, uint32_t arg_check_as_user, std::vector<uint64_t> arg_selected_cols, std::vector<uint64_t> arg_inserted_cols, std::vector<uint64_t> arg_updated_cols, std::vector<uint64_t> arg_extra_updated_cols, std::vector<std::unique_ptr<::pg_query::Node>> arg_security_quals);
+    RangeTblEntry(::pg_query::RTEKind&& arg_rtekind, uint32_t arg_relid, const std::string& arg_relkind, int32_t arg_rellockmode, ::pg_query::TableSampleClause&& arg_tablesample, ::pg_query::Query&& arg_subquery, bool arg_security_barrier, ::pg_query::JoinType&& arg_jointype, int32_t arg_joinmergedcols, std::vector<::pg_query::Node> arg_joinaliasvars, std::vector<::pg_query::Node> arg_joinleftcols, std::vector<::pg_query::Node> arg_joinrightcols, std::vector<::pg_query::Node> arg_functions, bool arg_funcordinality, ::pg_query::TableFunc&& arg_tablefunc, std::vector<::pg_query::Node> arg_values_lists, const std::string& arg_ctename, uint32_t arg_ctelevelsup, bool arg_self_reference, std::vector<::pg_query::Node> arg_coltypes, std::vector<::pg_query::Node> arg_coltypmods, std::vector<::pg_query::Node> arg_colcollations, const std::string& arg_enrname, double arg_enrtuples, ::pg_query::Alias&& arg_alias, ::pg_query::Alias&& arg_eref, bool arg_lateral, bool arg_inh, bool arg_in_from_cl, uint32_t arg_required_perms, uint32_t arg_check_as_user, std::vector<uint64_t> arg_selected_cols, std::vector<uint64_t> arg_inserted_cols, std::vector<uint64_t> arg_updated_cols, std::vector<uint64_t> arg_extra_updated_cols, std::vector<::pg_query::Node> arg_security_quals);
     RangeTblEntry(const RangeTblEntry& other) = delete;
     RangeTblEntry(RangeTblEntry&& other) noexcept;
     ~RangeTblEntry() override;
@@ -13234,22 +12904,20 @@ struct hash<pg_query::RangeTblEntry>
 
 namespace pg_query {
 
-struct Node;
-
 struct RangeTblFunction : FBE::Base
 {
-    ::pg_query::Node* funcexpr;
+    ::pg_query::Node funcexpr;
     int32_t funccolcount;
-    std::vector<::pg_query::Node*> funccolnames;
-    std::vector<::pg_query::Node*> funccoltypes;
-    std::vector<::pg_query::Node*> funccoltypmods;
-    std::vector<::pg_query::Node*> funccolcollations;
+    std::vector<::pg_query::Node> funccolnames;
+    std::vector<::pg_query::Node> funccoltypes;
+    std::vector<::pg_query::Node> funccoltypmods;
+    std::vector<::pg_query::Node> funccolcollations;
     std::vector<uint64_t> funcparams;
 
     size_t fbe_type() const noexcept { return 203; }
 
     RangeTblFunction();
-    RangeTblFunction(std::unique_ptr<::pg_query::Node> arg_funcexpr, int32_t arg_funccolcount, std::vector<std::unique_ptr<::pg_query::Node>> arg_funccolnames, std::vector<std::unique_ptr<::pg_query::Node>> arg_funccoltypes, std::vector<std::unique_ptr<::pg_query::Node>> arg_funccoltypmods, std::vector<std::unique_ptr<::pg_query::Node>> arg_funccolcollations, std::vector<uint64_t> arg_funcparams);
+    RangeTblFunction(::pg_query::Node&& arg_funcexpr, int32_t arg_funccolcount, std::vector<::pg_query::Node> arg_funccolnames, std::vector<::pg_query::Node> arg_funccoltypes, std::vector<::pg_query::Node> arg_funccoltypmods, std::vector<::pg_query::Node> arg_funccolcollations, std::vector<uint64_t> arg_funcparams);
     RangeTblFunction(const RangeTblFunction& other) = delete;
     RangeTblFunction(RangeTblFunction&& other) noexcept;
     ~RangeTblFunction() override;
@@ -13293,18 +12961,16 @@ struct hash<pg_query::RangeTblFunction>
 
 namespace pg_query {
 
-struct Node;
-
 struct TableSampleClause : FBE::Base
 {
     uint32_t tsmhandler;
-    std::vector<::pg_query::Node*> args;
-    ::pg_query::Node* repeatable;
+    std::vector<::pg_query::Node> args;
+    ::pg_query::Node repeatable;
 
     size_t fbe_type() const noexcept { return 204; }
 
     TableSampleClause();
-    TableSampleClause(uint32_t arg_tsmhandler, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::unique_ptr<::pg_query::Node> arg_repeatable);
+    TableSampleClause(uint32_t arg_tsmhandler, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable);
     TableSampleClause(const TableSampleClause& other) = delete;
     TableSampleClause(TableSampleClause&& other) noexcept;
     ~TableSampleClause() override;
@@ -13348,20 +13014,18 @@ struct hash<pg_query::TableSampleClause>
 
 namespace pg_query {
 
-struct Node;
-
 struct WithCheckOption : FBE::Base
 {
     ::pg_query::WCOKind kind;
     std::string relname;
     std::string polname;
-    ::pg_query::Node* qual;
+    ::pg_query::Node qual;
     bool cascaded;
 
     size_t fbe_type() const noexcept { return 205; }
 
     WithCheckOption();
-    WithCheckOption(::pg_query::WCOKind&& arg_kind, const std::string& arg_relname, const std::string& arg_polname, std::unique_ptr<::pg_query::Node> arg_qual, bool arg_cascaded);
+    WithCheckOption(::pg_query::WCOKind&& arg_kind, const std::string& arg_relname, const std::string& arg_polname, ::pg_query::Node&& arg_qual, bool arg_cascaded);
     WithCheckOption(const WithCheckOption& other) = delete;
     WithCheckOption(WithCheckOption&& other) noexcept;
     ~WithCheckOption() override;
@@ -13460,18 +13124,16 @@ struct hash<pg_query::SortGroupClause>
 
 namespace pg_query {
 
-struct Node;
-
 struct GroupingSet : FBE::Base
 {
     ::pg_query::GroupingSetKind kind;
-    std::vector<::pg_query::Node*> content;
+    std::vector<::pg_query::Node> content;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 207; }
 
     GroupingSet();
-    GroupingSet(::pg_query::GroupingSetKind&& arg_kind, std::vector<std::unique_ptr<::pg_query::Node>> arg_content, int32_t arg_location);
+    GroupingSet(::pg_query::GroupingSetKind&& arg_kind, std::vector<::pg_query::Node> arg_content, int32_t arg_location);
     GroupingSet(const GroupingSet& other) = delete;
     GroupingSet(GroupingSet&& other) noexcept;
     ~GroupingSet() override;
@@ -13515,17 +13177,15 @@ struct hash<pg_query::GroupingSet>
 
 namespace pg_query {
 
-struct Node;
-
 struct WindowClause : FBE::Base
 {
     std::string name;
     std::string refname;
-    std::vector<::pg_query::Node*> partition_clause;
-    std::vector<::pg_query::Node*> order_clause;
+    std::vector<::pg_query::Node> partition_clause;
+    std::vector<::pg_query::Node> order_clause;
     int32_t frame_options;
-    ::pg_query::Node* start_offset;
-    ::pg_query::Node* end_offset;
+    ::pg_query::Node start_offset;
+    ::pg_query::Node end_offset;
     uint32_t start_in_range_func;
     uint32_t end_in_range_func;
     uint32_t in_range_coll;
@@ -13537,7 +13197,7 @@ struct WindowClause : FBE::Base
     size_t fbe_type() const noexcept { return 208; }
 
     WindowClause();
-    WindowClause(const std::string& arg_name, const std::string& arg_refname, std::vector<std::unique_ptr<::pg_query::Node>> arg_partition_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_order_clause, int32_t arg_frame_options, std::unique_ptr<::pg_query::Node> arg_start_offset, std::unique_ptr<::pg_query::Node> arg_end_offset, uint32_t arg_start_in_range_func, uint32_t arg_end_in_range_func, uint32_t arg_in_range_coll, bool arg_in_range_asc, bool arg_in_range_nulls_first, uint32_t arg_winref, bool arg_copied_order);
+    WindowClause(const std::string& arg_name, const std::string& arg_refname, std::vector<::pg_query::Node> arg_partition_clause, std::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, uint32_t arg_start_in_range_func, uint32_t arg_end_in_range_func, uint32_t arg_in_range_coll, bool arg_in_range_asc, bool arg_in_range_nulls_first, uint32_t arg_winref, bool arg_copied_order);
     WindowClause(const WindowClause& other) = delete;
     WindowClause(WindowClause&& other) noexcept;
     ~WindowClause() override;
@@ -13581,18 +13241,16 @@ struct hash<pg_query::WindowClause>
 
 namespace pg_query {
 
-struct Node;
-
 struct ObjectWithArgs : FBE::Base
 {
-    std::vector<::pg_query::Node*> objname;
-    std::vector<::pg_query::Node*> objargs;
+    std::vector<::pg_query::Node> objname;
+    std::vector<::pg_query::Node> objargs;
     bool args_unspecified;
 
     size_t fbe_type() const noexcept { return 209; }
 
     ObjectWithArgs();
-    ObjectWithArgs(std::vector<std::unique_ptr<::pg_query::Node>> arg_objname, std::vector<std::unique_ptr<::pg_query::Node>> arg_objargs, bool arg_args_unspecified);
+    ObjectWithArgs(std::vector<::pg_query::Node> arg_objname, std::vector<::pg_query::Node> arg_objargs, bool arg_args_unspecified);
     ObjectWithArgs(const ObjectWithArgs& other) = delete;
     ObjectWithArgs(ObjectWithArgs&& other) noexcept;
     ~ObjectWithArgs() override;
@@ -13636,17 +13294,15 @@ struct hash<pg_query::ObjectWithArgs>
 
 namespace pg_query {
 
-struct Node;
-
 struct AccessPriv : FBE::Base
 {
     std::string priv_name;
-    std::vector<::pg_query::Node*> cols;
+    std::vector<::pg_query::Node> cols;
 
     size_t fbe_type() const noexcept { return 210; }
 
     AccessPriv();
-    AccessPriv(const std::string& arg_priv_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_cols);
+    AccessPriv(const std::string& arg_priv_name, std::vector<::pg_query::Node> arg_cols);
     AccessPriv(const AccessPriv& other) = delete;
     AccessPriv(AccessPriv&& other) noexcept;
     ~AccessPriv() override;
@@ -13690,21 +13346,19 @@ struct hash<pg_query::AccessPriv>
 
 namespace pg_query {
 
-struct Node;
-
 struct CreateOpClassItem : FBE::Base
 {
     int32_t itemtype;
     ::pg_query::ObjectWithArgs name;
     int32_t number;
-    std::vector<::pg_query::Node*> order_family;
-    std::vector<::pg_query::Node*> class_args;
+    std::vector<::pg_query::Node> order_family;
+    std::vector<::pg_query::Node> class_args;
     ::pg_query::TypeName storedtype;
 
     size_t fbe_type() const noexcept { return 211; }
 
     CreateOpClassItem();
-    CreateOpClassItem(int32_t arg_itemtype, ::pg_query::ObjectWithArgs&& arg_name, int32_t arg_number, std::vector<std::unique_ptr<::pg_query::Node>> arg_order_family, std::vector<std::unique_ptr<::pg_query::Node>> arg_class_args, ::pg_query::TypeName&& arg_storedtype);
+    CreateOpClassItem(int32_t arg_itemtype, ::pg_query::ObjectWithArgs&& arg_name, int32_t arg_number, std::vector<::pg_query::Node> arg_order_family, std::vector<::pg_query::Node> arg_class_args, ::pg_query::TypeName&& arg_storedtype);
     CreateOpClassItem(const CreateOpClassItem& other) = delete;
     CreateOpClassItem(CreateOpClassItem&& other) noexcept;
     ~CreateOpClassItem() override;
@@ -13801,19 +13455,17 @@ struct hash<pg_query::TableLikeClause>
 
 namespace pg_query {
 
-struct Node;
-
 struct FunctionParameter : FBE::Base
 {
     std::string name;
     ::pg_query::TypeName arg_type;
     ::pg_query::FunctionParameterMode mode;
-    ::pg_query::Node* defexpr;
+    ::pg_query::Node defexpr;
 
     size_t fbe_type() const noexcept { return 213; }
 
     FunctionParameter();
-    FunctionParameter(const std::string& arg_name, ::pg_query::TypeName&& arg_arg_type, ::pg_query::FunctionParameterMode&& arg_mode, std::unique_ptr<::pg_query::Node> arg_defexpr);
+    FunctionParameter(const std::string& arg_name, ::pg_query::TypeName&& arg_arg_type, ::pg_query::FunctionParameterMode&& arg_mode, ::pg_query::Node&& arg_defexpr);
     FunctionParameter(const FunctionParameter& other) = delete;
     FunctionParameter(FunctionParameter&& other) noexcept;
     ~FunctionParameter() override;
@@ -13857,18 +13509,16 @@ struct hash<pg_query::FunctionParameter>
 
 namespace pg_query {
 
-struct Node;
-
 struct LockingClause : FBE::Base
 {
-    std::vector<::pg_query::Node*> locked_rels;
+    std::vector<::pg_query::Node> locked_rels;
     ::pg_query::LockClauseStrength strength;
     ::pg_query::LockWaitPolicy wait_policy;
 
     size_t fbe_type() const noexcept { return 214; }
 
     LockingClause();
-    LockingClause(std::vector<std::unique_ptr<::pg_query::Node>> arg_locked_rels, ::pg_query::LockClauseStrength&& arg_strength, ::pg_query::LockWaitPolicy&& arg_wait_policy);
+    LockingClause(std::vector<::pg_query::Node> arg_locked_rels, ::pg_query::LockClauseStrength&& arg_strength, ::pg_query::LockWaitPolicy&& arg_wait_policy);
     LockingClause(const LockingClause& other) = delete;
     LockingClause(LockingClause&& other) noexcept;
     ~LockingClause() override;
@@ -13966,19 +13616,17 @@ struct hash<pg_query::RowMarkClause>
 
 namespace pg_query {
 
-struct Node;
-
 struct XmlSerialize : FBE::Base
 {
     ::pg_query::XmlOptionType xmloption;
-    ::pg_query::Node* expr;
+    ::pg_query::Node expr;
     ::pg_query::TypeName type_name;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 216; }
 
     XmlSerialize();
-    XmlSerialize(::pg_query::XmlOptionType&& arg_xmloption, std::unique_ptr<::pg_query::Node> arg_expr, ::pg_query::TypeName&& arg_type_name, int32_t arg_location);
+    XmlSerialize(::pg_query::XmlOptionType&& arg_xmloption, ::pg_query::Node&& arg_expr, ::pg_query::TypeName&& arg_type_name, int32_t arg_location);
     XmlSerialize(const XmlSerialize& other) = delete;
     XmlSerialize(XmlSerialize&& other) noexcept;
     ~XmlSerialize() override;
@@ -14022,18 +13670,16 @@ struct hash<pg_query::XmlSerialize>
 
 namespace pg_query {
 
-struct Node;
-
 struct WithClause : FBE::Base
 {
-    std::vector<::pg_query::Node*> ctes;
+    std::vector<::pg_query::Node> ctes;
     bool recursive;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 217; }
 
     WithClause();
-    WithClause(std::vector<std::unique_ptr<::pg_query::Node>> arg_ctes, bool arg_recursive, int32_t arg_location);
+    WithClause(std::vector<::pg_query::Node> arg_ctes, bool arg_recursive, int32_t arg_location);
     WithClause(const WithClause& other) = delete;
     WithClause(WithClause&& other) noexcept;
     ~WithClause() override;
@@ -14077,19 +13723,17 @@ struct hash<pg_query::WithClause>
 
 namespace pg_query {
 
-struct Node;
-
 struct InferClause : FBE::Base
 {
-    std::vector<::pg_query::Node*> index_elems;
-    ::pg_query::Node* where_clause;
+    std::vector<::pg_query::Node> index_elems;
+    ::pg_query::Node where_clause;
     std::string conname;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 218; }
 
     InferClause();
-    InferClause(std::vector<std::unique_ptr<::pg_query::Node>> arg_index_elems, std::unique_ptr<::pg_query::Node> arg_where_clause, const std::string& arg_conname, int32_t arg_location);
+    InferClause(std::vector<::pg_query::Node> arg_index_elems, ::pg_query::Node&& arg_where_clause, const std::string& arg_conname, int32_t arg_location);
     InferClause(const InferClause& other) = delete;
     InferClause(InferClause&& other) noexcept;
     ~InferClause() override;
@@ -14133,20 +13777,18 @@ struct hash<pg_query::InferClause>
 
 namespace pg_query {
 
-struct Node;
-
 struct OnConflictClause : FBE::Base
 {
     ::pg_query::OnConflictAction action;
     ::pg_query::InferClause infer;
-    std::vector<::pg_query::Node*> target_list;
-    ::pg_query::Node* where_clause;
+    std::vector<::pg_query::Node> target_list;
+    ::pg_query::Node where_clause;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 219; }
 
     OnConflictClause();
-    OnConflictClause(::pg_query::OnConflictAction&& arg_action, ::pg_query::InferClause&& arg_infer, std::vector<std::unique_ptr<::pg_query::Node>> arg_target_list, std::unique_ptr<::pg_query::Node> arg_where_clause, int32_t arg_location);
+    OnConflictClause(::pg_query::OnConflictAction&& arg_action, ::pg_query::InferClause&& arg_infer, std::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, int32_t arg_location);
     OnConflictClause(const OnConflictClause& other) = delete;
     OnConflictClause(OnConflictClause&& other) noexcept;
     ~OnConflictClause() override;
@@ -14190,26 +13832,24 @@ struct hash<pg_query::OnConflictClause>
 
 namespace pg_query {
 
-struct Node;
-
 struct CommonTableExpr : FBE::Base
 {
     std::string ctename;
-    std::vector<::pg_query::Node*> aliascolnames;
+    std::vector<::pg_query::Node> aliascolnames;
     ::pg_query::CTEMaterialize ctematerialized;
-    ::pg_query::Node* ctequery;
+    ::pg_query::Node ctequery;
     int32_t location;
     bool cterecursive;
     int32_t cterefcount;
-    std::vector<::pg_query::Node*> ctecolnames;
-    std::vector<::pg_query::Node*> ctecoltypes;
-    std::vector<::pg_query::Node*> ctecoltypmods;
-    std::vector<::pg_query::Node*> ctecolcollations;
+    std::vector<::pg_query::Node> ctecolnames;
+    std::vector<::pg_query::Node> ctecoltypes;
+    std::vector<::pg_query::Node> ctecoltypmods;
+    std::vector<::pg_query::Node> ctecolcollations;
 
     size_t fbe_type() const noexcept { return 220; }
 
     CommonTableExpr();
-    CommonTableExpr(const std::string& arg_ctename, std::vector<std::unique_ptr<::pg_query::Node>> arg_aliascolnames, ::pg_query::CTEMaterialize&& arg_ctematerialized, std::unique_ptr<::pg_query::Node> arg_ctequery, int32_t arg_location, bool arg_cterecursive, int32_t arg_cterefcount, std::vector<std::unique_ptr<::pg_query::Node>> arg_ctecolnames, std::vector<std::unique_ptr<::pg_query::Node>> arg_ctecoltypes, std::vector<std::unique_ptr<::pg_query::Node>> arg_ctecoltypmods, std::vector<std::unique_ptr<::pg_query::Node>> arg_ctecolcollations);
+    CommonTableExpr(const std::string& arg_ctename, std::vector<::pg_query::Node> arg_aliascolnames, ::pg_query::CTEMaterialize&& arg_ctematerialized, ::pg_query::Node&& arg_ctequery, int32_t arg_location, bool arg_cterecursive, int32_t arg_cterefcount, std::vector<::pg_query::Node> arg_ctecolnames, std::vector<::pg_query::Node> arg_ctecoltypes, std::vector<::pg_query::Node> arg_ctecoltypmods, std::vector<::pg_query::Node> arg_ctecolcollations);
     CommonTableExpr(const CommonTableExpr& other) = delete;
     CommonTableExpr(CommonTableExpr&& other) noexcept;
     ~CommonTableExpr() override;
@@ -14359,20 +13999,18 @@ struct hash<pg_query::TriggerTransition>
 
 namespace pg_query {
 
-struct Node;
-
 struct PartitionElem : FBE::Base
 {
     std::string name;
-    ::pg_query::Node* expr;
-    std::vector<::pg_query::Node*> collation;
-    std::vector<::pg_query::Node*> opclass;
+    ::pg_query::Node expr;
+    std::vector<::pg_query::Node> collation;
+    std::vector<::pg_query::Node> opclass;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 223; }
 
     PartitionElem();
-    PartitionElem(const std::string& arg_name, std::unique_ptr<::pg_query::Node> arg_expr, std::vector<std::unique_ptr<::pg_query::Node>> arg_collation, std::vector<std::unique_ptr<::pg_query::Node>> arg_opclass, int32_t arg_location);
+    PartitionElem(const std::string& arg_name, ::pg_query::Node&& arg_expr, std::vector<::pg_query::Node> arg_collation, std::vector<::pg_query::Node> arg_opclass, int32_t arg_location);
     PartitionElem(const PartitionElem& other) = delete;
     PartitionElem(PartitionElem&& other) noexcept;
     ~PartitionElem() override;
@@ -14416,18 +14054,16 @@ struct hash<pg_query::PartitionElem>
 
 namespace pg_query {
 
-struct Node;
-
 struct PartitionSpec : FBE::Base
 {
     std::string strategy;
-    std::vector<::pg_query::Node*> part_params;
+    std::vector<::pg_query::Node> part_params;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 224; }
 
     PartitionSpec();
-    PartitionSpec(const std::string& arg_strategy, std::vector<std::unique_ptr<::pg_query::Node>> arg_part_params, int32_t arg_location);
+    PartitionSpec(const std::string& arg_strategy, std::vector<::pg_query::Node> arg_part_params, int32_t arg_location);
     PartitionSpec(const PartitionSpec& other) = delete;
     PartitionSpec(PartitionSpec&& other) noexcept;
     ~PartitionSpec() override;
@@ -14471,23 +14107,21 @@ struct hash<pg_query::PartitionSpec>
 
 namespace pg_query {
 
-struct Node;
-
 struct PartitionBoundSpec : FBE::Base
 {
     std::string strategy;
     bool is_default;
     int32_t modulus;
     int32_t remainder;
-    std::vector<::pg_query::Node*> listdatums;
-    std::vector<::pg_query::Node*> lowerdatums;
-    std::vector<::pg_query::Node*> upperdatums;
+    std::vector<::pg_query::Node> listdatums;
+    std::vector<::pg_query::Node> lowerdatums;
+    std::vector<::pg_query::Node> upperdatums;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 225; }
 
     PartitionBoundSpec();
-    PartitionBoundSpec(const std::string& arg_strategy, bool arg_is_default, int32_t arg_modulus, int32_t arg_remainder, std::vector<std::unique_ptr<::pg_query::Node>> arg_listdatums, std::vector<std::unique_ptr<::pg_query::Node>> arg_lowerdatums, std::vector<std::unique_ptr<::pg_query::Node>> arg_upperdatums, int32_t arg_location);
+    PartitionBoundSpec(const std::string& arg_strategy, bool arg_is_default, int32_t arg_modulus, int32_t arg_remainder, std::vector<::pg_query::Node> arg_listdatums, std::vector<::pg_query::Node> arg_lowerdatums, std::vector<::pg_query::Node> arg_upperdatums, int32_t arg_location);
     PartitionBoundSpec(const PartitionBoundSpec& other) = delete;
     PartitionBoundSpec(PartitionBoundSpec&& other) noexcept;
     ~PartitionBoundSpec() override;
@@ -14531,18 +14165,16 @@ struct hash<pg_query::PartitionBoundSpec>
 
 namespace pg_query {
 
-struct Node;
-
 struct PartitionRangeDatum : FBE::Base
 {
     ::pg_query::PartitionRangeDatumKind kind;
-    ::pg_query::Node* value;
+    ::pg_query::Node value;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 226; }
 
     PartitionRangeDatum();
-    PartitionRangeDatum(::pg_query::PartitionRangeDatumKind&& arg_kind, std::unique_ptr<::pg_query::Node> arg_value, int32_t arg_location);
+    PartitionRangeDatum(::pg_query::PartitionRangeDatumKind&& arg_kind, ::pg_query::Node&& arg_value, int32_t arg_location);
     PartitionRangeDatum(const PartitionRangeDatum& other) = delete;
     PartitionRangeDatum(PartitionRangeDatum&& other) noexcept;
     ~PartitionRangeDatum() override;
@@ -14638,18 +14270,16 @@ struct hash<pg_query::PartitionCmd>
 
 namespace pg_query {
 
-struct Node;
-
 struct VacuumRelation : FBE::Base
 {
     ::pg_query::RangeVar relation;
     uint32_t oid;
-    std::vector<::pg_query::Node*> va_cols;
+    std::vector<::pg_query::Node> va_cols;
 
     size_t fbe_type() const noexcept { return 228; }
 
     VacuumRelation();
-    VacuumRelation(::pg_query::RangeVar&& arg_relation, uint32_t arg_oid, std::vector<std::unique_ptr<::pg_query::Node>> arg_va_cols);
+    VacuumRelation(::pg_query::RangeVar&& arg_relation, uint32_t arg_oid, std::vector<::pg_query::Node> arg_va_cols);
     VacuumRelation(const VacuumRelation& other) = delete;
     VacuumRelation(VacuumRelation&& other) noexcept;
     ~VacuumRelation() override;
