@@ -131,24 +131,24 @@ class Generator
             @outmethods[node_type] += format("  WRITE_LIST_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_LIST_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  repeated Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  Node*[] %s;\n", outname)
+            @fbe_structs[node_type] += format("  Node[] %s;\n", outname)
             protobuf_field_count += 1
           elsif ['Node*'].include?(type)
             @outmethods[node_type] += format("  WRITE_NODE_PTR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_NODE_PTR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  Node* %s;\n", outname)
+            @fbe_structs[node_type] += format("  Node %s;\n", outname)
             protobuf_field_count += 1
           elsif ['Expr*'].include?(type)
             @outmethods[node_type] += format("  WRITE_NODE_PTR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_EXPR_PTR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  Node* %s;\n", outname)
+            @fbe_structs[node_type] += format("  Node %s;\n", outname)
             protobuf_field_count += 1
           elsif ['Expr'].include?(type)
             # FIXME
             @protobuf_messages[node_type] += format("  Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  Node* %s;\n", outname)
+            @fbe_structs[node_type] += format("  Node %s;\n", outname)
             protobuf_field_count += 1
           elsif ['CreateStmt'].include?(type)
             @outmethods[node_type] += format("  WRITE_SPECIFIC_NODE_FIELD(%s, %s, %s, %s, %s);\n", type.gsub('*', ''), underscore(type.gsub('*', '')).downcase, outname, outname_json, name)
@@ -494,17 +494,17 @@ struct Null
 
 struct List
 {
-  Node*[] items;
+  Node[] items;
 }
 
 struct OidList
 {
-  Node*[] items;
+  Node[] items;
 }
 
 struct IntList
 {
-  Node*[] items;
+  Node[] items;
 }
 
 #{fbe_structs}

@@ -1653,12 +1653,9 @@ List::List()
     : items()
 {}
 
-List::List(std::vector<std::unique_ptr<::pg_query::Node>> arg_items)
-    : items()
-{
-    for (auto& it : arg_items)
-        items.emplace_back(it.release());
-}
+List::List(std::vector<::pg_query::Node> arg_items)
+    : items(std::move(arg_items))
+{}
 
 List::List(List&& other) noexcept
     : items(std::move(other.items))
@@ -1666,8 +1663,6 @@ List::List(List&& other) noexcept
 
 List::~List()
 {
-    for (auto& it : items)
-        delete it;
 }
 
 bool List::operator==([[maybe_unused]] const List& other) const noexcept
@@ -1710,7 +1705,7 @@ std::ostream& operator<<(std::ostream& stream, const List& value)
         stream << "items=[" << value.items.size() << "][";
         for (const auto& it : value.items)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -1723,12 +1718,9 @@ OidList::OidList()
     : items()
 {}
 
-OidList::OidList(std::vector<std::unique_ptr<::pg_query::Node>> arg_items)
-    : items()
-{
-    for (auto& it : arg_items)
-        items.emplace_back(it.release());
-}
+OidList::OidList(std::vector<::pg_query::Node> arg_items)
+    : items(std::move(arg_items))
+{}
 
 OidList::OidList(OidList&& other) noexcept
     : items(std::move(other.items))
@@ -1736,8 +1728,6 @@ OidList::OidList(OidList&& other) noexcept
 
 OidList::~OidList()
 {
-    for (auto& it : items)
-        delete it;
 }
 
 bool OidList::operator==([[maybe_unused]] const OidList& other) const noexcept
@@ -1780,7 +1770,7 @@ std::ostream& operator<<(std::ostream& stream, const OidList& value)
         stream << "items=[" << value.items.size() << "][";
         for (const auto& it : value.items)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -1793,12 +1783,9 @@ IntList::IntList()
     : items()
 {}
 
-IntList::IntList(std::vector<std::unique_ptr<::pg_query::Node>> arg_items)
-    : items()
-{
-    for (auto& it : arg_items)
-        items.emplace_back(it.release());
-}
+IntList::IntList(std::vector<::pg_query::Node> arg_items)
+    : items(std::move(arg_items))
+{}
 
 IntList::IntList(IntList&& other) noexcept
     : items(std::move(other.items))
@@ -1806,8 +1793,6 @@ IntList::IntList(IntList&& other) noexcept
 
 IntList::~IntList()
 {
-    for (auto& it : items)
-        delete it;
 }
 
 bool IntList::operator==([[maybe_unused]] const IntList& other) const noexcept
@@ -1850,7 +1835,7 @@ std::ostream& operator<<(std::ostream& stream, const IntList& value)
         stream << "items=[" << value.items.size() << "][";
         for (const auto& it : value.items)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -1864,13 +1849,10 @@ Alias::Alias()
     , colnames()
 {}
 
-Alias::Alias(const std::string& arg_aliasname, std::vector<std::unique_ptr<::pg_query::Node>> arg_colnames)
+Alias::Alias(const std::string& arg_aliasname, std::vector<::pg_query::Node> arg_colnames)
     : aliasname(arg_aliasname)
-    , colnames()
-{
-    for (auto& it : arg_colnames)
-        colnames.emplace_back(it.release());
-}
+    , colnames(std::move(arg_colnames))
+{}
 
 Alias::Alias(Alias&& other) noexcept
     : aliasname(std::move(other.aliasname))
@@ -1879,8 +1861,6 @@ Alias::Alias(Alias&& other) noexcept
 
 Alias::~Alias()
 {
-    for (auto& it : colnames)
-        delete it;
 }
 
 bool Alias::operator==([[maybe_unused]] const Alias& other) const noexcept
@@ -1926,7 +1906,7 @@ std::ostream& operator<<(std::ostream& stream, const Alias& value)
         stream << ",colnames=[" << value.colnames.size() << "][";
         for (const auto& it : value.colnames)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2030,8 +2010,8 @@ std::ostream& operator<<(std::ostream& stream, const RangeVar& value)
 TableFunc::TableFunc()
     : ns_uris()
     , ns_names()
-    , docexpr(nullptr)
-    , rowexpr(nullptr)
+    , docexpr()
+    , rowexpr()
     , colnames()
     , coltypes()
     , coltypmods()
@@ -2043,44 +2023,27 @@ TableFunc::TableFunc()
     , location((int32_t)0ll)
 {}
 
-TableFunc::TableFunc(std::vector<std::unique_ptr<::pg_query::Node>> arg_ns_uris, std::vector<std::unique_ptr<::pg_query::Node>> arg_ns_names, std::unique_ptr<::pg_query::Node> arg_docexpr, std::unique_ptr<::pg_query::Node> arg_rowexpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_colnames, std::vector<std::unique_ptr<::pg_query::Node>> arg_coltypes, std::vector<std::unique_ptr<::pg_query::Node>> arg_coltypmods, std::vector<std::unique_ptr<::pg_query::Node>> arg_colcollations, std::vector<std::unique_ptr<::pg_query::Node>> arg_colexprs, std::vector<std::unique_ptr<::pg_query::Node>> arg_coldefexprs, std::vector<uint64_t> arg_notnulls, int32_t arg_ordinalitycol, int32_t arg_location)
-    : ns_uris()
-    , ns_names()
-    , docexpr(arg_docexpr.release())
-    , rowexpr(arg_rowexpr.release())
-    , colnames()
-    , coltypes()
-    , coltypmods()
-    , colcollations()
-    , colexprs()
-    , coldefexprs()
+TableFunc::TableFunc(std::vector<::pg_query::Node> arg_ns_uris, std::vector<::pg_query::Node> arg_ns_names, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::vector<::pg_query::Node> arg_colnames, std::vector<::pg_query::Node> arg_coltypes, std::vector<::pg_query::Node> arg_coltypmods, std::vector<::pg_query::Node> arg_colcollations, std::vector<::pg_query::Node> arg_colexprs, std::vector<::pg_query::Node> arg_coldefexprs, std::vector<uint64_t> arg_notnulls, int32_t arg_ordinalitycol, int32_t arg_location)
+    : ns_uris(std::move(arg_ns_uris))
+    , ns_names(std::move(arg_ns_names))
+    , docexpr(std::move(arg_docexpr))
+    , rowexpr(std::move(arg_rowexpr))
+    , colnames(std::move(arg_colnames))
+    , coltypes(std::move(arg_coltypes))
+    , coltypmods(std::move(arg_coltypmods))
+    , colcollations(std::move(arg_colcollations))
+    , colexprs(std::move(arg_colexprs))
+    , coldefexprs(std::move(arg_coldefexprs))
     , notnulls(arg_notnulls)
     , ordinalitycol(arg_ordinalitycol)
     , location(arg_location)
-{
-    for (auto& it : arg_ns_uris)
-        ns_uris.emplace_back(it.release());
-    for (auto& it : arg_ns_names)
-        ns_names.emplace_back(it.release());
-    for (auto& it : arg_colnames)
-        colnames.emplace_back(it.release());
-    for (auto& it : arg_coltypes)
-        coltypes.emplace_back(it.release());
-    for (auto& it : arg_coltypmods)
-        coltypmods.emplace_back(it.release());
-    for (auto& it : arg_colcollations)
-        colcollations.emplace_back(it.release());
-    for (auto& it : arg_colexprs)
-        colexprs.emplace_back(it.release());
-    for (auto& it : arg_coldefexprs)
-        coldefexprs.emplace_back(it.release());
-}
+{}
 
 TableFunc::TableFunc(TableFunc&& other) noexcept
     : ns_uris(std::move(other.ns_uris))
     , ns_names(std::move(other.ns_names))
-    , docexpr(std::exchange(other.docexpr, nullptr))
-    , rowexpr(std::exchange(other.rowexpr, nullptr))
+    , docexpr(std::move(other.docexpr))
+    , rowexpr(std::move(other.rowexpr))
     , colnames(std::move(other.colnames))
     , coltypes(std::move(other.coltypes))
     , coltypmods(std::move(other.coltypmods))
@@ -2094,24 +2057,6 @@ TableFunc::TableFunc(TableFunc&& other) noexcept
 
 TableFunc::~TableFunc()
 {
-    if (docexpr) delete docexpr;
-    if (rowexpr) delete rowexpr;
-    for (auto& it : ns_uris)
-        delete it;
-    for (auto& it : ns_names)
-        delete it;
-    for (auto& it : colnames)
-        delete it;
-    for (auto& it : coltypes)
-        delete it;
-    for (auto& it : coltypmods)
-        delete it;
-    for (auto& it : colcollations)
-        delete it;
-    for (auto& it : colexprs)
-        delete it;
-    for (auto& it : coldefexprs)
-        delete it;
 }
 
 bool TableFunc::operator==([[maybe_unused]] const TableFunc& other) const noexcept
@@ -2132,8 +2077,8 @@ TableFunc& TableFunc::operator=(TableFunc&& other) noexcept
     {
         ns_uris = std::move(other.ns_uris);
         ns_names = std::move(other.ns_names);
-        docexpr = std::exchange(other.docexpr, nullptr);
-        rowexpr = std::exchange(other.rowexpr, nullptr);
+        docexpr = std::move(other.docexpr);
+        rowexpr = std::move(other.rowexpr);
         colnames = std::move(other.colnames);
         coltypes = std::move(other.coltypes);
         coltypmods = std::move(other.coltypmods);
@@ -2178,7 +2123,7 @@ std::ostream& operator<<(std::ostream& stream, const TableFunc& value)
         stream << "ns_uris=[" << value.ns_uris.size() << "][";
         for (const auto& it : value.ns_uris)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2188,19 +2133,19 @@ std::ostream& operator<<(std::ostream& stream, const TableFunc& value)
         stream << ",ns_names=[" << value.ns_names.size() << "][";
         for (const auto& it : value.ns_names)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",docexpr="; stream << " ptr of other struct" << (value.docexpr == nullptr ? "true" : "false");
-    stream << ",rowexpr="; stream << " ptr of other struct" << (value.rowexpr == nullptr ? "true" : "false");
+    stream << ",docexpr="; stream << value.docexpr;
+    stream << ",rowexpr="; stream << value.rowexpr;
     {
         bool first = true;
         stream << ",colnames=[" << value.colnames.size() << "][";
         for (const auto& it : value.colnames)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2210,7 +2155,7 @@ std::ostream& operator<<(std::ostream& stream, const TableFunc& value)
         stream << ",coltypes=[" << value.coltypes.size() << "][";
         for (const auto& it : value.coltypes)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2220,7 +2165,7 @@ std::ostream& operator<<(std::ostream& stream, const TableFunc& value)
         stream << ",coltypmods=[" << value.coltypmods.size() << "][";
         for (const auto& it : value.coltypmods)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2230,7 +2175,7 @@ std::ostream& operator<<(std::ostream& stream, const TableFunc& value)
         stream << ",colcollations=[" << value.colcollations.size() << "][";
         for (const auto& it : value.colcollations)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2240,7 +2185,7 @@ std::ostream& operator<<(std::ostream& stream, const TableFunc& value)
         stream << ",colexprs=[" << value.colexprs.size() << "][";
         for (const auto& it : value.colexprs)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2250,7 +2195,7 @@ std::ostream& operator<<(std::ostream& stream, const TableFunc& value)
         stream << ",coldefexprs=[" << value.coldefexprs.size() << "][";
         for (const auto& it : value.coldefexprs)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2319,7 +2264,7 @@ std::ostream& operator<<(std::ostream& stream, const Expr& value)
 }
 
 Var::Var()
-    : xpr(nullptr)
+    : xpr()
     , varno((uint32_t)0ull)
     , varattno((int32_t)0ll)
     , vartype((uint32_t)0ull)
@@ -2331,8 +2276,8 @@ Var::Var()
     , location((int32_t)0ll)
 {}
 
-Var::Var(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_varno, int32_t arg_varattno, uint32_t arg_vartype, int32_t arg_vartypmod, uint32_t arg_varcollid, uint32_t arg_varlevelsup, uint32_t arg_varnosyn, int32_t arg_varattnosyn, int32_t arg_location)
-    : xpr(arg_xpr.release())
+Var::Var(::pg_query::Node&& arg_xpr, uint32_t arg_varno, int32_t arg_varattno, uint32_t arg_vartype, int32_t arg_vartypmod, uint32_t arg_varcollid, uint32_t arg_varlevelsup, uint32_t arg_varnosyn, int32_t arg_varattnosyn, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , varno(arg_varno)
     , varattno(arg_varattno)
     , vartype(arg_vartype)
@@ -2345,7 +2290,7 @@ Var::Var(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_varno, int32_t 
 {}
 
 Var::Var(Var&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , varno(std::exchange(other.varno, (uint32_t)0ull))
     , varattno(std::exchange(other.varattno, (int32_t)0ll))
     , vartype(std::exchange(other.vartype, (uint32_t)0ull))
@@ -2359,7 +2304,6 @@ Var::Var(Var&& other) noexcept
 
 Var::~Var()
 {
-    if (xpr) delete xpr;
 }
 
 bool Var::operator==([[maybe_unused]] const Var& other) const noexcept
@@ -2378,7 +2322,7 @@ Var& Var::operator=(Var&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         varno = std::exchange(other.varno, (uint32_t)0ull);
         varattno = std::exchange(other.varattno, (int32_t)0ll);
         vartype = std::exchange(other.vartype, (uint32_t)0ull);
@@ -2415,7 +2359,7 @@ void Var::swap(Var& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const Var& value)
 {
     stream << "Var(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",varno="; stream << value.varno;
     stream << ",varattno="; stream << value.varattno;
     stream << ",vartype="; stream << value.vartype;
@@ -2430,7 +2374,7 @@ std::ostream& operator<<(std::ostream& stream, const Var& value)
 }
 
 Param::Param()
-    : xpr(nullptr)
+    : xpr()
     , paramkind()
     , paramid((int32_t)0ll)
     , paramtype((uint32_t)0ull)
@@ -2439,8 +2383,8 @@ Param::Param()
     , location((int32_t)0ll)
 {}
 
-Param::Param(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::ParamKind&& arg_paramkind, int32_t arg_paramid, uint32_t arg_paramtype, int32_t arg_paramtypmod, uint32_t arg_paramcollid, int32_t arg_location)
-    : xpr(arg_xpr.release())
+Param::Param(::pg_query::Node&& arg_xpr, ::pg_query::ParamKind&& arg_paramkind, int32_t arg_paramid, uint32_t arg_paramtype, int32_t arg_paramtypmod, uint32_t arg_paramcollid, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , paramkind(std::move(arg_paramkind))
     , paramid(arg_paramid)
     , paramtype(arg_paramtype)
@@ -2450,7 +2394,7 @@ Param::Param(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::ParamKind&& 
 {}
 
 Param::Param(Param&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , paramkind(std::move(other.paramkind))
     , paramid(std::exchange(other.paramid, (int32_t)0ll))
     , paramtype(std::exchange(other.paramtype, (uint32_t)0ull))
@@ -2461,7 +2405,6 @@ Param::Param(Param&& other) noexcept
 
 Param::~Param()
 {
-    if (xpr) delete xpr;
 }
 
 bool Param::operator==([[maybe_unused]] const Param& other) const noexcept
@@ -2480,7 +2423,7 @@ Param& Param::operator=(Param&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         paramkind = std::move(other.paramkind);
         paramid = std::exchange(other.paramid, (int32_t)0ll);
         paramtype = std::exchange(other.paramtype, (uint32_t)0ull);
@@ -2511,7 +2454,7 @@ void Param::swap(Param& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const Param& value)
 {
     stream << "Param(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",paramkind="; stream << value.paramkind;
     stream << ",paramid="; stream << value.paramid;
     stream << ",paramtype="; stream << value.paramtype;
@@ -2523,7 +2466,7 @@ std::ostream& operator<<(std::ostream& stream, const Param& value)
 }
 
 Aggref::Aggref()
-    : xpr(nullptr)
+    : xpr()
     , aggfnoid((uint32_t)0ull)
     , aggtype((uint32_t)0ull)
     , aggcollid((uint32_t)0ull)
@@ -2534,7 +2477,7 @@ Aggref::Aggref()
     , args()
     , aggorder()
     , aggdistinct()
-    , aggfilter(nullptr)
+    , aggfilter()
     , aggstar(false)
     , aggvariadic(false)
     , aggkind()
@@ -2543,40 +2486,29 @@ Aggref::Aggref()
     , location((int32_t)0ll)
 {}
 
-Aggref::Aggref(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_aggfnoid, uint32_t arg_aggtype, uint32_t arg_aggcollid, uint32_t arg_inputcollid, uint32_t arg_aggtranstype, std::vector<std::unique_ptr<::pg_query::Node>> arg_aggargtypes, std::vector<std::unique_ptr<::pg_query::Node>> arg_aggdirectargs, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::vector<std::unique_ptr<::pg_query::Node>> arg_aggorder, std::vector<std::unique_ptr<::pg_query::Node>> arg_aggdistinct, std::unique_ptr<::pg_query::Node> arg_aggfilter, bool arg_aggstar, bool arg_aggvariadic, const std::string& arg_aggkind, uint32_t arg_agglevelsup, ::pg_query::AggSplit&& arg_aggsplit, int32_t arg_location)
-    : xpr(arg_xpr.release())
+Aggref::Aggref(::pg_query::Node&& arg_xpr, uint32_t arg_aggfnoid, uint32_t arg_aggtype, uint32_t arg_aggcollid, uint32_t arg_inputcollid, uint32_t arg_aggtranstype, std::vector<::pg_query::Node> arg_aggargtypes, std::vector<::pg_query::Node> arg_aggdirectargs, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_aggorder, std::vector<::pg_query::Node> arg_aggdistinct, ::pg_query::Node&& arg_aggfilter, bool arg_aggstar, bool arg_aggvariadic, const std::string& arg_aggkind, uint32_t arg_agglevelsup, ::pg_query::AggSplit&& arg_aggsplit, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , aggfnoid(arg_aggfnoid)
     , aggtype(arg_aggtype)
     , aggcollid(arg_aggcollid)
     , inputcollid(arg_inputcollid)
     , aggtranstype(arg_aggtranstype)
-    , aggargtypes()
-    , aggdirectargs()
-    , args()
-    , aggorder()
-    , aggdistinct()
-    , aggfilter(arg_aggfilter.release())
+    , aggargtypes(std::move(arg_aggargtypes))
+    , aggdirectargs(std::move(arg_aggdirectargs))
+    , args(std::move(arg_args))
+    , aggorder(std::move(arg_aggorder))
+    , aggdistinct(std::move(arg_aggdistinct))
+    , aggfilter(std::move(arg_aggfilter))
     , aggstar(arg_aggstar)
     , aggvariadic(arg_aggvariadic)
     , aggkind(arg_aggkind)
     , agglevelsup(arg_agglevelsup)
     , aggsplit(std::move(arg_aggsplit))
     , location(arg_location)
-{
-    for (auto& it : arg_aggargtypes)
-        aggargtypes.emplace_back(it.release());
-    for (auto& it : arg_aggdirectargs)
-        aggdirectargs.emplace_back(it.release());
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-    for (auto& it : arg_aggorder)
-        aggorder.emplace_back(it.release());
-    for (auto& it : arg_aggdistinct)
-        aggdistinct.emplace_back(it.release());
-}
+{}
 
 Aggref::Aggref(Aggref&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , aggfnoid(std::exchange(other.aggfnoid, (uint32_t)0ull))
     , aggtype(std::exchange(other.aggtype, (uint32_t)0ull))
     , aggcollid(std::exchange(other.aggcollid, (uint32_t)0ull))
@@ -2587,7 +2519,7 @@ Aggref::Aggref(Aggref&& other) noexcept
     , args(std::move(other.args))
     , aggorder(std::move(other.aggorder))
     , aggdistinct(std::move(other.aggdistinct))
-    , aggfilter(std::exchange(other.aggfilter, nullptr))
+    , aggfilter(std::move(other.aggfilter))
     , aggstar(std::exchange(other.aggstar, false))
     , aggvariadic(std::exchange(other.aggvariadic, false))
     , aggkind(std::move(other.aggkind))
@@ -2598,18 +2530,6 @@ Aggref::Aggref(Aggref&& other) noexcept
 
 Aggref::~Aggref()
 {
-    if (xpr) delete xpr;
-    if (aggfilter) delete aggfilter;
-    for (auto& it : aggargtypes)
-        delete it;
-    for (auto& it : aggdirectargs)
-        delete it;
-    for (auto& it : args)
-        delete it;
-    for (auto& it : aggorder)
-        delete it;
-    for (auto& it : aggdistinct)
-        delete it;
 }
 
 bool Aggref::operator==([[maybe_unused]] const Aggref& other) const noexcept
@@ -2628,7 +2548,7 @@ Aggref& Aggref::operator=(Aggref&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         aggfnoid = std::exchange(other.aggfnoid, (uint32_t)0ull);
         aggtype = std::exchange(other.aggtype, (uint32_t)0ull);
         aggcollid = std::exchange(other.aggcollid, (uint32_t)0ull);
@@ -2639,7 +2559,7 @@ Aggref& Aggref::operator=(Aggref&& other) noexcept
         args = std::move(other.args);
         aggorder = std::move(other.aggorder);
         aggdistinct = std::move(other.aggdistinct);
-        aggfilter = std::exchange(other.aggfilter, nullptr);
+        aggfilter = std::move(other.aggfilter);
         aggstar = std::exchange(other.aggstar, false);
         aggvariadic = std::exchange(other.aggvariadic, false);
         aggkind = std::move(other.aggkind);
@@ -2681,7 +2601,7 @@ void Aggref::swap(Aggref& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const Aggref& value)
 {
     stream << "Aggref(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",aggfnoid="; stream << value.aggfnoid;
     stream << ",aggtype="; stream << value.aggtype;
     stream << ",aggcollid="; stream << value.aggcollid;
@@ -2692,7 +2612,7 @@ std::ostream& operator<<(std::ostream& stream, const Aggref& value)
         stream << ",aggargtypes=[" << value.aggargtypes.size() << "][";
         for (const auto& it : value.aggargtypes)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2702,7 +2622,7 @@ std::ostream& operator<<(std::ostream& stream, const Aggref& value)
         stream << ",aggdirectargs=[" << value.aggdirectargs.size() << "][";
         for (const auto& it : value.aggdirectargs)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2712,7 +2632,7 @@ std::ostream& operator<<(std::ostream& stream, const Aggref& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2722,7 +2642,7 @@ std::ostream& operator<<(std::ostream& stream, const Aggref& value)
         stream << ",aggorder=[" << value.aggorder.size() << "][";
         for (const auto& it : value.aggorder)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2732,12 +2652,12 @@ std::ostream& operator<<(std::ostream& stream, const Aggref& value)
         stream << ",aggdistinct=[" << value.aggdistinct.size() << "][";
         for (const auto& it : value.aggdistinct)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",aggfilter="; stream << " ptr of other struct" << (value.aggfilter == nullptr ? "true" : "false");
+    stream << ",aggfilter="; stream << value.aggfilter;
     stream << ",aggstar="; stream << (value.aggstar ? "true" : "false");
     stream << ",aggvariadic="; stream << (value.aggvariadic ? "true" : "false");
     stream << ",aggkind="; stream << "\"" << value.aggkind << "\"";
@@ -2749,7 +2669,7 @@ std::ostream& operator<<(std::ostream& stream, const Aggref& value)
 }
 
 GroupingFunc::GroupingFunc()
-    : xpr(nullptr)
+    : xpr()
     , args()
     , refs()
     , cols()
@@ -2757,24 +2677,17 @@ GroupingFunc::GroupingFunc()
     , location((int32_t)0ll)
 {}
 
-GroupingFunc::GroupingFunc(std::unique_ptr<::pg_query::Node> arg_xpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::vector<std::unique_ptr<::pg_query::Node>> arg_refs, std::vector<std::unique_ptr<::pg_query::Node>> arg_cols, uint32_t arg_agglevelsup, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , args()
-    , refs()
-    , cols()
+GroupingFunc::GroupingFunc(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_refs, std::vector<::pg_query::Node> arg_cols, uint32_t arg_agglevelsup, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , args(std::move(arg_args))
+    , refs(std::move(arg_refs))
+    , cols(std::move(arg_cols))
     , agglevelsup(arg_agglevelsup)
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-    for (auto& it : arg_refs)
-        refs.emplace_back(it.release());
-    for (auto& it : arg_cols)
-        cols.emplace_back(it.release());
-}
+{}
 
 GroupingFunc::GroupingFunc(GroupingFunc&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , args(std::move(other.args))
     , refs(std::move(other.refs))
     , cols(std::move(other.cols))
@@ -2784,13 +2697,6 @@ GroupingFunc::GroupingFunc(GroupingFunc&& other) noexcept
 
 GroupingFunc::~GroupingFunc()
 {
-    if (xpr) delete xpr;
-    for (auto& it : args)
-        delete it;
-    for (auto& it : refs)
-        delete it;
-    for (auto& it : cols)
-        delete it;
 }
 
 bool GroupingFunc::operator==([[maybe_unused]] const GroupingFunc& other) const noexcept
@@ -2809,7 +2715,7 @@ GroupingFunc& GroupingFunc::operator=(GroupingFunc&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         args = std::move(other.args);
         refs = std::move(other.refs);
         cols = std::move(other.cols);
@@ -2838,13 +2744,13 @@ void GroupingFunc::swap(GroupingFunc& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const GroupingFunc& value)
 {
     stream << "GroupingFunc(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     {
         bool first = true;
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2854,7 +2760,7 @@ std::ostream& operator<<(std::ostream& stream, const GroupingFunc& value)
         stream << ",refs=[" << value.refs.size() << "][";
         for (const auto& it : value.refs)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2864,7 +2770,7 @@ std::ostream& operator<<(std::ostream& stream, const GroupingFunc& value)
         stream << ",cols=[" << value.cols.size() << "][";
         for (const auto& it : value.cols)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -2876,44 +2782,41 @@ std::ostream& operator<<(std::ostream& stream, const GroupingFunc& value)
 }
 
 WindowFunc::WindowFunc()
-    : xpr(nullptr)
+    : xpr()
     , winfnoid((uint32_t)0ull)
     , wintype((uint32_t)0ull)
     , wincollid((uint32_t)0ull)
     , inputcollid((uint32_t)0ull)
     , args()
-    , aggfilter(nullptr)
+    , aggfilter()
     , winref((uint32_t)0ull)
     , winstar(false)
     , winagg(false)
     , location((int32_t)0ll)
 {}
 
-WindowFunc::WindowFunc(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_winfnoid, uint32_t arg_wintype, uint32_t arg_wincollid, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::unique_ptr<::pg_query::Node> arg_aggfilter, uint32_t arg_winref, bool arg_winstar, bool arg_winagg, int32_t arg_location)
-    : xpr(arg_xpr.release())
+WindowFunc::WindowFunc(::pg_query::Node&& arg_xpr, uint32_t arg_winfnoid, uint32_t arg_wintype, uint32_t arg_wincollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_aggfilter, uint32_t arg_winref, bool arg_winstar, bool arg_winagg, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , winfnoid(arg_winfnoid)
     , wintype(arg_wintype)
     , wincollid(arg_wincollid)
     , inputcollid(arg_inputcollid)
-    , args()
-    , aggfilter(arg_aggfilter.release())
+    , args(std::move(arg_args))
+    , aggfilter(std::move(arg_aggfilter))
     , winref(arg_winref)
     , winstar(arg_winstar)
     , winagg(arg_winagg)
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 WindowFunc::WindowFunc(WindowFunc&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , winfnoid(std::exchange(other.winfnoid, (uint32_t)0ull))
     , wintype(std::exchange(other.wintype, (uint32_t)0ull))
     , wincollid(std::exchange(other.wincollid, (uint32_t)0ull))
     , inputcollid(std::exchange(other.inputcollid, (uint32_t)0ull))
     , args(std::move(other.args))
-    , aggfilter(std::exchange(other.aggfilter, nullptr))
+    , aggfilter(std::move(other.aggfilter))
     , winref(std::exchange(other.winref, (uint32_t)0ull))
     , winstar(std::exchange(other.winstar, false))
     , winagg(std::exchange(other.winagg, false))
@@ -2922,10 +2825,6 @@ WindowFunc::WindowFunc(WindowFunc&& other) noexcept
 
 WindowFunc::~WindowFunc()
 {
-    if (xpr) delete xpr;
-    if (aggfilter) delete aggfilter;
-    for (auto& it : args)
-        delete it;
 }
 
 bool WindowFunc::operator==([[maybe_unused]] const WindowFunc& other) const noexcept
@@ -2944,13 +2843,13 @@ WindowFunc& WindowFunc::operator=(WindowFunc&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         winfnoid = std::exchange(other.winfnoid, (uint32_t)0ull);
         wintype = std::exchange(other.wintype, (uint32_t)0ull);
         wincollid = std::exchange(other.wincollid, (uint32_t)0ull);
         inputcollid = std::exchange(other.inputcollid, (uint32_t)0ull);
         args = std::move(other.args);
-        aggfilter = std::exchange(other.aggfilter, nullptr);
+        aggfilter = std::move(other.aggfilter);
         winref = std::exchange(other.winref, (uint32_t)0ull);
         winstar = std::exchange(other.winstar, false);
         winagg = std::exchange(other.winagg, false);
@@ -2983,7 +2882,7 @@ void WindowFunc::swap(WindowFunc& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const WindowFunc& value)
 {
     stream << "WindowFunc(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",winfnoid="; stream << value.winfnoid;
     stream << ",wintype="; stream << value.wintype;
     stream << ",wincollid="; stream << value.wincollid;
@@ -2993,12 +2892,12 @@ std::ostream& operator<<(std::ostream& stream, const WindowFunc& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",aggfilter="; stream << " ptr of other struct" << (value.aggfilter == nullptr ? "true" : "false");
+    stream << ",aggfilter="; stream << value.aggfilter;
     stream << ",winref="; stream << value.winref;
     stream << ",winstar="; stream << (value.winstar ? "true" : "false");
     stream << ",winagg="; stream << (value.winagg ? "true" : "false");
@@ -3008,55 +2907,43 @@ std::ostream& operator<<(std::ostream& stream, const WindowFunc& value)
 }
 
 SubscriptingRef::SubscriptingRef()
-    : xpr(nullptr)
+    : xpr()
     , refcontainertype((uint32_t)0ull)
     , refelemtype((uint32_t)0ull)
     , reftypmod((int32_t)0ll)
     , refcollid((uint32_t)0ull)
     , refupperindexpr()
     , reflowerindexpr()
-    , refexpr(nullptr)
-    , refassgnexpr(nullptr)
+    , refexpr()
+    , refassgnexpr()
 {}
 
-SubscriptingRef::SubscriptingRef(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_refcontainertype, uint32_t arg_refelemtype, int32_t arg_reftypmod, uint32_t arg_refcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_refupperindexpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_reflowerindexpr, std::unique_ptr<::pg_query::Node> arg_refexpr, std::unique_ptr<::pg_query::Node> arg_refassgnexpr)
-    : xpr(arg_xpr.release())
+SubscriptingRef::SubscriptingRef(::pg_query::Node&& arg_xpr, uint32_t arg_refcontainertype, uint32_t arg_refelemtype, int32_t arg_reftypmod, uint32_t arg_refcollid, std::vector<::pg_query::Node> arg_refupperindexpr, std::vector<::pg_query::Node> arg_reflowerindexpr, ::pg_query::Node&& arg_refexpr, ::pg_query::Node&& arg_refassgnexpr)
+    : xpr(std::move(arg_xpr))
     , refcontainertype(arg_refcontainertype)
     , refelemtype(arg_refelemtype)
     , reftypmod(arg_reftypmod)
     , refcollid(arg_refcollid)
-    , refupperindexpr()
-    , reflowerindexpr()
-    , refexpr(arg_refexpr.release())
-    , refassgnexpr(arg_refassgnexpr.release())
-{
-    for (auto& it : arg_refupperindexpr)
-        refupperindexpr.emplace_back(it.release());
-    for (auto& it : arg_reflowerindexpr)
-        reflowerindexpr.emplace_back(it.release());
-}
+    , refupperindexpr(std::move(arg_refupperindexpr))
+    , reflowerindexpr(std::move(arg_reflowerindexpr))
+    , refexpr(std::move(arg_refexpr))
+    , refassgnexpr(std::move(arg_refassgnexpr))
+{}
 
 SubscriptingRef::SubscriptingRef(SubscriptingRef&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , refcontainertype(std::exchange(other.refcontainertype, (uint32_t)0ull))
     , refelemtype(std::exchange(other.refelemtype, (uint32_t)0ull))
     , reftypmod(std::exchange(other.reftypmod, (int32_t)0ll))
     , refcollid(std::exchange(other.refcollid, (uint32_t)0ull))
     , refupperindexpr(std::move(other.refupperindexpr))
     , reflowerindexpr(std::move(other.reflowerindexpr))
-    , refexpr(std::exchange(other.refexpr, nullptr))
-    , refassgnexpr(std::exchange(other.refassgnexpr, nullptr))
+    , refexpr(std::move(other.refexpr))
+    , refassgnexpr(std::move(other.refassgnexpr))
 {}
 
 SubscriptingRef::~SubscriptingRef()
 {
-    if (xpr) delete xpr;
-    if (refexpr) delete refexpr;
-    if (refassgnexpr) delete refassgnexpr;
-    for (auto& it : refupperindexpr)
-        delete it;
-    for (auto& it : reflowerindexpr)
-        delete it;
 }
 
 bool SubscriptingRef::operator==([[maybe_unused]] const SubscriptingRef& other) const noexcept
@@ -3075,15 +2962,15 @@ SubscriptingRef& SubscriptingRef::operator=(SubscriptingRef&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         refcontainertype = std::exchange(other.refcontainertype, (uint32_t)0ull);
         refelemtype = std::exchange(other.refelemtype, (uint32_t)0ull);
         reftypmod = std::exchange(other.reftypmod, (int32_t)0ll);
         refcollid = std::exchange(other.refcollid, (uint32_t)0ull);
         refupperindexpr = std::move(other.refupperindexpr);
         reflowerindexpr = std::move(other.reflowerindexpr);
-        refexpr = std::exchange(other.refexpr, nullptr);
-        refassgnexpr = std::exchange(other.refassgnexpr, nullptr);
+        refexpr = std::move(other.refexpr);
+        refassgnexpr = std::move(other.refassgnexpr);
     }
     return *this;
 }
@@ -3110,7 +2997,7 @@ void SubscriptingRef::swap(SubscriptingRef& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const SubscriptingRef& value)
 {
     stream << "SubscriptingRef(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",refcontainertype="; stream << value.refcontainertype;
     stream << ",refelemtype="; stream << value.refelemtype;
     stream << ",reftypmod="; stream << value.reftypmod;
@@ -3120,7 +3007,7 @@ std::ostream& operator<<(std::ostream& stream, const SubscriptingRef& value)
         stream << ",refupperindexpr=[" << value.refupperindexpr.size() << "][";
         for (const auto& it : value.refupperindexpr)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -3130,19 +3017,19 @@ std::ostream& operator<<(std::ostream& stream, const SubscriptingRef& value)
         stream << ",reflowerindexpr=[" << value.reflowerindexpr.size() << "][";
         for (const auto& it : value.reflowerindexpr)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",refexpr="; stream << " ptr of other struct" << (value.refexpr == nullptr ? "true" : "false");
-    stream << ",refassgnexpr="; stream << " ptr of other struct" << (value.refassgnexpr == nullptr ? "true" : "false");
+    stream << ",refexpr="; stream << value.refexpr;
+    stream << ",refassgnexpr="; stream << value.refassgnexpr;
     stream << ")";
     return stream;
 }
 
 FuncExpr::FuncExpr()
-    : xpr(nullptr)
+    : xpr()
     , funcid((uint32_t)0ull)
     , funcresulttype((uint32_t)0ull)
     , funcretset(false)
@@ -3154,8 +3041,8 @@ FuncExpr::FuncExpr()
     , location((int32_t)0ll)
 {}
 
-FuncExpr::FuncExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_funcid, uint32_t arg_funcresulttype, bool arg_funcretset, bool arg_funcvariadic, ::pg_query::CoercionForm&& arg_funcformat, uint32_t arg_funccollid, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location)
-    : xpr(arg_xpr.release())
+FuncExpr::FuncExpr(::pg_query::Node&& arg_xpr, uint32_t arg_funcid, uint32_t arg_funcresulttype, bool arg_funcretset, bool arg_funcvariadic, ::pg_query::CoercionForm&& arg_funcformat, uint32_t arg_funccollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , funcid(arg_funcid)
     , funcresulttype(arg_funcresulttype)
     , funcretset(arg_funcretset)
@@ -3163,15 +3050,12 @@ FuncExpr::FuncExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_funci
     , funcformat(std::move(arg_funcformat))
     , funccollid(arg_funccollid)
     , inputcollid(arg_inputcollid)
-    , args()
+    , args(std::move(arg_args))
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 FuncExpr::FuncExpr(FuncExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , funcid(std::exchange(other.funcid, (uint32_t)0ull))
     , funcresulttype(std::exchange(other.funcresulttype, (uint32_t)0ull))
     , funcretset(std::exchange(other.funcretset, false))
@@ -3185,9 +3069,6 @@ FuncExpr::FuncExpr(FuncExpr&& other) noexcept
 
 FuncExpr::~FuncExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : args)
-        delete it;
 }
 
 bool FuncExpr::operator==([[maybe_unused]] const FuncExpr& other) const noexcept
@@ -3206,7 +3087,7 @@ FuncExpr& FuncExpr::operator=(FuncExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         funcid = std::exchange(other.funcid, (uint32_t)0ull);
         funcresulttype = std::exchange(other.funcresulttype, (uint32_t)0ull);
         funcretset = std::exchange(other.funcretset, false);
@@ -3243,7 +3124,7 @@ void FuncExpr::swap(FuncExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const FuncExpr& value)
 {
     stream << "FuncExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",funcid="; stream << value.funcid;
     stream << ",funcresulttype="; stream << value.funcresulttype;
     stream << ",funcretset="; stream << (value.funcretset ? "true" : "false");
@@ -3256,7 +3137,7 @@ std::ostream& operator<<(std::ostream& stream, const FuncExpr& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -3267,24 +3148,24 @@ std::ostream& operator<<(std::ostream& stream, const FuncExpr& value)
 }
 
 NamedArgExpr::NamedArgExpr()
-    : xpr(nullptr)
-    , arg(nullptr)
+    : xpr()
+    , arg()
     , name()
     , argnumber((int32_t)0ll)
     , location((int32_t)0ll)
 {}
 
-NamedArgExpr::NamedArgExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, const std::string& arg_name, int32_t arg_argnumber, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
+NamedArgExpr::NamedArgExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, const std::string& arg_name, int32_t arg_argnumber, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
     , name(arg_name)
     , argnumber(arg_argnumber)
     , location(arg_location)
 {}
 
 NamedArgExpr::NamedArgExpr(NamedArgExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
     , name(std::move(other.name))
     , argnumber(std::exchange(other.argnumber, (int32_t)0ll))
     , location(std::exchange(other.location, (int32_t)0ll))
@@ -3292,8 +3173,6 @@ NamedArgExpr::NamedArgExpr(NamedArgExpr&& other) noexcept
 
 NamedArgExpr::~NamedArgExpr()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
 }
 
 bool NamedArgExpr::operator==([[maybe_unused]] const NamedArgExpr& other) const noexcept
@@ -3312,8 +3191,8 @@ NamedArgExpr& NamedArgExpr::operator=(NamedArgExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
         name = std::move(other.name);
         argnumber = std::exchange(other.argnumber, (int32_t)0ll);
         location = std::exchange(other.location, (int32_t)0ll);
@@ -3339,8 +3218,8 @@ void NamedArgExpr::swap(NamedArgExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const NamedArgExpr& value)
 {
     stream << "NamedArgExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
     stream << ",name="; stream << "\"" << value.name << "\"";
     stream << ",argnumber="; stream << value.argnumber;
     stream << ",location="; stream << value.location;
@@ -3349,7 +3228,7 @@ std::ostream& operator<<(std::ostream& stream, const NamedArgExpr& value)
 }
 
 OpExpr::OpExpr()
-    : xpr(nullptr)
+    : xpr()
     , opno((uint32_t)0ull)
     , opfuncid((uint32_t)0ull)
     , opresulttype((uint32_t)0ull)
@@ -3360,23 +3239,20 @@ OpExpr::OpExpr()
     , location((int32_t)0ll)
 {}
 
-OpExpr::OpExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location)
-    : xpr(arg_xpr.release())
+OpExpr::OpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , opno(arg_opno)
     , opfuncid(arg_opfuncid)
     , opresulttype(arg_opresulttype)
     , opretset(arg_opretset)
     , opcollid(arg_opcollid)
     , inputcollid(arg_inputcollid)
-    , args()
+    , args(std::move(arg_args))
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 OpExpr::OpExpr(OpExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , opno(std::exchange(other.opno, (uint32_t)0ull))
     , opfuncid(std::exchange(other.opfuncid, (uint32_t)0ull))
     , opresulttype(std::exchange(other.opresulttype, (uint32_t)0ull))
@@ -3389,9 +3265,6 @@ OpExpr::OpExpr(OpExpr&& other) noexcept
 
 OpExpr::~OpExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : args)
-        delete it;
 }
 
 bool OpExpr::operator==([[maybe_unused]] const OpExpr& other) const noexcept
@@ -3410,7 +3283,7 @@ OpExpr& OpExpr::operator=(OpExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         opno = std::exchange(other.opno, (uint32_t)0ull);
         opfuncid = std::exchange(other.opfuncid, (uint32_t)0ull);
         opresulttype = std::exchange(other.opresulttype, (uint32_t)0ull);
@@ -3445,7 +3318,7 @@ void OpExpr::swap(OpExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const OpExpr& value)
 {
     stream << "OpExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",opno="; stream << value.opno;
     stream << ",opfuncid="; stream << value.opfuncid;
     stream << ",opresulttype="; stream << value.opresulttype;
@@ -3457,7 +3330,7 @@ std::ostream& operator<<(std::ostream& stream, const OpExpr& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -3468,7 +3341,7 @@ std::ostream& operator<<(std::ostream& stream, const OpExpr& value)
 }
 
 DistinctExpr::DistinctExpr()
-    : xpr(nullptr)
+    : xpr()
     , opno((uint32_t)0ull)
     , opfuncid((uint32_t)0ull)
     , opresulttype((uint32_t)0ull)
@@ -3479,23 +3352,20 @@ DistinctExpr::DistinctExpr()
     , location((int32_t)0ll)
 {}
 
-DistinctExpr::DistinctExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location)
-    : xpr(arg_xpr.release())
+DistinctExpr::DistinctExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , opno(arg_opno)
     , opfuncid(arg_opfuncid)
     , opresulttype(arg_opresulttype)
     , opretset(arg_opretset)
     , opcollid(arg_opcollid)
     , inputcollid(arg_inputcollid)
-    , args()
+    , args(std::move(arg_args))
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 DistinctExpr::DistinctExpr(DistinctExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , opno(std::exchange(other.opno, (uint32_t)0ull))
     , opfuncid(std::exchange(other.opfuncid, (uint32_t)0ull))
     , opresulttype(std::exchange(other.opresulttype, (uint32_t)0ull))
@@ -3508,9 +3378,6 @@ DistinctExpr::DistinctExpr(DistinctExpr&& other) noexcept
 
 DistinctExpr::~DistinctExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : args)
-        delete it;
 }
 
 bool DistinctExpr::operator==([[maybe_unused]] const DistinctExpr& other) const noexcept
@@ -3529,7 +3396,7 @@ DistinctExpr& DistinctExpr::operator=(DistinctExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         opno = std::exchange(other.opno, (uint32_t)0ull);
         opfuncid = std::exchange(other.opfuncid, (uint32_t)0ull);
         opresulttype = std::exchange(other.opresulttype, (uint32_t)0ull);
@@ -3564,7 +3431,7 @@ void DistinctExpr::swap(DistinctExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const DistinctExpr& value)
 {
     stream << "DistinctExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",opno="; stream << value.opno;
     stream << ",opfuncid="; stream << value.opfuncid;
     stream << ",opresulttype="; stream << value.opresulttype;
@@ -3576,7 +3443,7 @@ std::ostream& operator<<(std::ostream& stream, const DistinctExpr& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -3587,7 +3454,7 @@ std::ostream& operator<<(std::ostream& stream, const DistinctExpr& value)
 }
 
 NullIfExpr::NullIfExpr()
-    : xpr(nullptr)
+    : xpr()
     , opno((uint32_t)0ull)
     , opfuncid((uint32_t)0ull)
     , opresulttype((uint32_t)0ull)
@@ -3598,23 +3465,20 @@ NullIfExpr::NullIfExpr()
     , location((int32_t)0ll)
 {}
 
-NullIfExpr::NullIfExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location)
-    : xpr(arg_xpr.release())
+NullIfExpr::NullIfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , opno(arg_opno)
     , opfuncid(arg_opfuncid)
     , opresulttype(arg_opresulttype)
     , opretset(arg_opretset)
     , opcollid(arg_opcollid)
     , inputcollid(arg_inputcollid)
-    , args()
+    , args(std::move(arg_args))
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 NullIfExpr::NullIfExpr(NullIfExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , opno(std::exchange(other.opno, (uint32_t)0ull))
     , opfuncid(std::exchange(other.opfuncid, (uint32_t)0ull))
     , opresulttype(std::exchange(other.opresulttype, (uint32_t)0ull))
@@ -3627,9 +3491,6 @@ NullIfExpr::NullIfExpr(NullIfExpr&& other) noexcept
 
 NullIfExpr::~NullIfExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : args)
-        delete it;
 }
 
 bool NullIfExpr::operator==([[maybe_unused]] const NullIfExpr& other) const noexcept
@@ -3648,7 +3509,7 @@ NullIfExpr& NullIfExpr::operator=(NullIfExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         opno = std::exchange(other.opno, (uint32_t)0ull);
         opfuncid = std::exchange(other.opfuncid, (uint32_t)0ull);
         opresulttype = std::exchange(other.opresulttype, (uint32_t)0ull);
@@ -3683,7 +3544,7 @@ void NullIfExpr::swap(NullIfExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const NullIfExpr& value)
 {
     stream << "NullIfExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",opno="; stream << value.opno;
     stream << ",opfuncid="; stream << value.opfuncid;
     stream << ",opresulttype="; stream << value.opresulttype;
@@ -3695,7 +3556,7 @@ std::ostream& operator<<(std::ostream& stream, const NullIfExpr& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -3706,7 +3567,7 @@ std::ostream& operator<<(std::ostream& stream, const NullIfExpr& value)
 }
 
 ScalarArrayOpExpr::ScalarArrayOpExpr()
-    : xpr(nullptr)
+    : xpr()
     , opno((uint32_t)0ull)
     , opfuncid((uint32_t)0ull)
     , use_or(false)
@@ -3715,21 +3576,18 @@ ScalarArrayOpExpr::ScalarArrayOpExpr()
     , location((int32_t)0ll)
 {}
 
-ScalarArrayOpExpr::ScalarArrayOpExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, bool arg_use_or, uint32_t arg_inputcollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location)
-    : xpr(arg_xpr.release())
+ScalarArrayOpExpr::ScalarArrayOpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, bool arg_use_or, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , opno(arg_opno)
     , opfuncid(arg_opfuncid)
     , use_or(arg_use_or)
     , inputcollid(arg_inputcollid)
-    , args()
+    , args(std::move(arg_args))
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 ScalarArrayOpExpr::ScalarArrayOpExpr(ScalarArrayOpExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , opno(std::exchange(other.opno, (uint32_t)0ull))
     , opfuncid(std::exchange(other.opfuncid, (uint32_t)0ull))
     , use_or(std::exchange(other.use_or, false))
@@ -3740,9 +3598,6 @@ ScalarArrayOpExpr::ScalarArrayOpExpr(ScalarArrayOpExpr&& other) noexcept
 
 ScalarArrayOpExpr::~ScalarArrayOpExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : args)
-        delete it;
 }
 
 bool ScalarArrayOpExpr::operator==([[maybe_unused]] const ScalarArrayOpExpr& other) const noexcept
@@ -3761,7 +3616,7 @@ ScalarArrayOpExpr& ScalarArrayOpExpr::operator=(ScalarArrayOpExpr&& other) noexc
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         opno = std::exchange(other.opno, (uint32_t)0ull);
         opfuncid = std::exchange(other.opfuncid, (uint32_t)0ull);
         use_or = std::exchange(other.use_or, false);
@@ -3792,7 +3647,7 @@ void ScalarArrayOpExpr::swap(ScalarArrayOpExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const ScalarArrayOpExpr& value)
 {
     stream << "ScalarArrayOpExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",opno="; stream << value.opno;
     stream << ",opfuncid="; stream << value.opfuncid;
     stream << ",use_or="; stream << (value.use_or ? "true" : "false");
@@ -3802,7 +3657,7 @@ std::ostream& operator<<(std::ostream& stream, const ScalarArrayOpExpr& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -3813,24 +3668,21 @@ std::ostream& operator<<(std::ostream& stream, const ScalarArrayOpExpr& value)
 }
 
 BoolExpr::BoolExpr()
-    : xpr(nullptr)
+    : xpr()
     , boolop()
     , args()
     , location((int32_t)0ll)
 {}
 
-BoolExpr::BoolExpr(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::BoolExprType&& arg_boolop, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location)
-    : xpr(arg_xpr.release())
+BoolExpr::BoolExpr(::pg_query::Node&& arg_xpr, ::pg_query::BoolExprType&& arg_boolop, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , boolop(std::move(arg_boolop))
-    , args()
+    , args(std::move(arg_args))
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 BoolExpr::BoolExpr(BoolExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , boolop(std::move(other.boolop))
     , args(std::move(other.args))
     , location(std::exchange(other.location, (int32_t)0ll))
@@ -3838,9 +3690,6 @@ BoolExpr::BoolExpr(BoolExpr&& other) noexcept
 
 BoolExpr::~BoolExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : args)
-        delete it;
 }
 
 bool BoolExpr::operator==([[maybe_unused]] const BoolExpr& other) const noexcept
@@ -3859,7 +3708,7 @@ BoolExpr& BoolExpr::operator=(BoolExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         boolop = std::move(other.boolop);
         args = std::move(other.args);
         location = std::exchange(other.location, (int32_t)0ll);
@@ -3884,14 +3733,14 @@ void BoolExpr::swap(BoolExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const BoolExpr& value)
 {
     stream << "BoolExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",boolop="; stream << value.boolop;
     {
         bool first = true;
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -3902,45 +3751,37 @@ std::ostream& operator<<(std::ostream& stream, const BoolExpr& value)
 }
 
 SubLink::SubLink()
-    : xpr(nullptr)
+    : xpr()
     , sub_link_type()
     , sub_link_id((int32_t)0ll)
-    , testexpr(nullptr)
+    , testexpr()
     , oper_name()
-    , subselect(nullptr)
+    , subselect()
     , location((int32_t)0ll)
 {}
 
-SubLink::SubLink(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, int32_t arg_sub_link_id, std::unique_ptr<::pg_query::Node> arg_testexpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_oper_name, std::unique_ptr<::pg_query::Node> arg_subselect, int32_t arg_location)
-    : xpr(arg_xpr.release())
+SubLink::SubLink(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, int32_t arg_sub_link_id, ::pg_query::Node&& arg_testexpr, std::vector<::pg_query::Node> arg_oper_name, ::pg_query::Node&& arg_subselect, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , sub_link_type(std::move(arg_sub_link_type))
     , sub_link_id(arg_sub_link_id)
-    , testexpr(arg_testexpr.release())
-    , oper_name()
-    , subselect(arg_subselect.release())
+    , testexpr(std::move(arg_testexpr))
+    , oper_name(std::move(arg_oper_name))
+    , subselect(std::move(arg_subselect))
     , location(arg_location)
-{
-    for (auto& it : arg_oper_name)
-        oper_name.emplace_back(it.release());
-}
+{}
 
 SubLink::SubLink(SubLink&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , sub_link_type(std::move(other.sub_link_type))
     , sub_link_id(std::exchange(other.sub_link_id, (int32_t)0ll))
-    , testexpr(std::exchange(other.testexpr, nullptr))
+    , testexpr(std::move(other.testexpr))
     , oper_name(std::move(other.oper_name))
-    , subselect(std::exchange(other.subselect, nullptr))
+    , subselect(std::move(other.subselect))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 SubLink::~SubLink()
 {
-    if (xpr) delete xpr;
-    if (testexpr) delete testexpr;
-    if (subselect) delete subselect;
-    for (auto& it : oper_name)
-        delete it;
 }
 
 bool SubLink::operator==([[maybe_unused]] const SubLink& other) const noexcept
@@ -3959,12 +3800,12 @@ SubLink& SubLink::operator=(SubLink&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         sub_link_type = std::move(other.sub_link_type);
         sub_link_id = std::exchange(other.sub_link_id, (int32_t)0ll);
-        testexpr = std::exchange(other.testexpr, nullptr);
+        testexpr = std::move(other.testexpr);
         oper_name = std::move(other.oper_name);
-        subselect = std::exchange(other.subselect, nullptr);
+        subselect = std::move(other.subselect);
         location = std::exchange(other.location, (int32_t)0ll);
     }
     return *this;
@@ -3990,30 +3831,30 @@ void SubLink::swap(SubLink& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const SubLink& value)
 {
     stream << "SubLink(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",sub_link_type="; stream << value.sub_link_type;
     stream << ",sub_link_id="; stream << value.sub_link_id;
-    stream << ",testexpr="; stream << " ptr of other struct" << (value.testexpr == nullptr ? "true" : "false");
+    stream << ",testexpr="; stream << value.testexpr;
     {
         bool first = true;
         stream << ",oper_name=[" << value.oper_name.size() << "][";
         for (const auto& it : value.oper_name)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",subselect="; stream << " ptr of other struct" << (value.subselect == nullptr ? "true" : "false");
+    stream << ",subselect="; stream << value.subselect;
     stream << ",location="; stream << value.location;
     stream << ")";
     return stream;
 }
 
 SubPlan::SubPlan()
-    : xpr(nullptr)
+    : xpr()
     , sub_link_type()
-    , testexpr(nullptr)
+    , testexpr()
     , param_ids()
     , plan_id((int32_t)0ll)
     , plan_name()
@@ -4030,11 +3871,11 @@ SubPlan::SubPlan()
     , per_call_cost(0.0)
 {}
 
-SubPlan::SubPlan(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, std::unique_ptr<::pg_query::Node> arg_testexpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_param_ids, int32_t arg_plan_id, const std::string& arg_plan_name, uint32_t arg_first_col_type, int32_t arg_first_col_typmod, uint32_t arg_first_col_collation, bool arg_use_hash_table, bool arg_unknown_eq_false, bool arg_parallel_safe, std::vector<std::unique_ptr<::pg_query::Node>> arg_set_param, std::vector<std::unique_ptr<::pg_query::Node>> arg_par_param, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, double arg_startup_cost, double arg_per_call_cost)
-    : xpr(arg_xpr.release())
+SubPlan::SubPlan(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, ::pg_query::Node&& arg_testexpr, std::vector<::pg_query::Node> arg_param_ids, int32_t arg_plan_id, const std::string& arg_plan_name, uint32_t arg_first_col_type, int32_t arg_first_col_typmod, uint32_t arg_first_col_collation, bool arg_use_hash_table, bool arg_unknown_eq_false, bool arg_parallel_safe, std::vector<::pg_query::Node> arg_set_param, std::vector<::pg_query::Node> arg_par_param, std::vector<::pg_query::Node> arg_args, double arg_startup_cost, double arg_per_call_cost)
+    : xpr(std::move(arg_xpr))
     , sub_link_type(std::move(arg_sub_link_type))
-    , testexpr(arg_testexpr.release())
-    , param_ids()
+    , testexpr(std::move(arg_testexpr))
+    , param_ids(std::move(arg_param_ids))
     , plan_id(arg_plan_id)
     , plan_name(arg_plan_name)
     , first_col_type(arg_first_col_type)
@@ -4043,26 +3884,17 @@ SubPlan::SubPlan(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::SubLinkT
     , use_hash_table(arg_use_hash_table)
     , unknown_eq_false(arg_unknown_eq_false)
     , parallel_safe(arg_parallel_safe)
-    , set_param()
-    , par_param()
-    , args()
+    , set_param(std::move(arg_set_param))
+    , par_param(std::move(arg_par_param))
+    , args(std::move(arg_args))
     , startup_cost(arg_startup_cost)
     , per_call_cost(arg_per_call_cost)
-{
-    for (auto& it : arg_param_ids)
-        param_ids.emplace_back(it.release());
-    for (auto& it : arg_set_param)
-        set_param.emplace_back(it.release());
-    for (auto& it : arg_par_param)
-        par_param.emplace_back(it.release());
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 SubPlan::SubPlan(SubPlan&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , sub_link_type(std::move(other.sub_link_type))
-    , testexpr(std::exchange(other.testexpr, nullptr))
+    , testexpr(std::move(other.testexpr))
     , param_ids(std::move(other.param_ids))
     , plan_id(std::exchange(other.plan_id, (int32_t)0ll))
     , plan_name(std::move(other.plan_name))
@@ -4081,16 +3913,6 @@ SubPlan::SubPlan(SubPlan&& other) noexcept
 
 SubPlan::~SubPlan()
 {
-    if (xpr) delete xpr;
-    if (testexpr) delete testexpr;
-    for (auto& it : param_ids)
-        delete it;
-    for (auto& it : set_param)
-        delete it;
-    for (auto& it : par_param)
-        delete it;
-    for (auto& it : args)
-        delete it;
 }
 
 bool SubPlan::operator==([[maybe_unused]] const SubPlan& other) const noexcept
@@ -4109,9 +3931,9 @@ SubPlan& SubPlan::operator=(SubPlan&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         sub_link_type = std::move(other.sub_link_type);
-        testexpr = std::exchange(other.testexpr, nullptr);
+        testexpr = std::move(other.testexpr);
         param_ids = std::move(other.param_ids);
         plan_id = std::exchange(other.plan_id, (int32_t)0ll);
         plan_name = std::move(other.plan_name);
@@ -4160,15 +3982,15 @@ void SubPlan::swap(SubPlan& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const SubPlan& value)
 {
     stream << "SubPlan(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",sub_link_type="; stream << value.sub_link_type;
-    stream << ",testexpr="; stream << " ptr of other struct" << (value.testexpr == nullptr ? "true" : "false");
+    stream << ",testexpr="; stream << value.testexpr;
     {
         bool first = true;
         stream << ",param_ids=[" << value.param_ids.size() << "][";
         for (const auto& it : value.param_ids)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -4186,7 +4008,7 @@ std::ostream& operator<<(std::ostream& stream, const SubPlan& value)
         stream << ",set_param=[" << value.set_param.size() << "][";
         for (const auto& it : value.set_param)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -4196,7 +4018,7 @@ std::ostream& operator<<(std::ostream& stream, const SubPlan& value)
         stream << ",par_param=[" << value.par_param.size() << "][";
         for (const auto& it : value.par_param)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -4206,7 +4028,7 @@ std::ostream& operator<<(std::ostream& stream, const SubPlan& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -4218,28 +4040,22 @@ std::ostream& operator<<(std::ostream& stream, const SubPlan& value)
 }
 
 AlternativeSubPlan::AlternativeSubPlan()
-    : xpr(nullptr)
+    : xpr()
     , subplans()
 {}
 
-AlternativeSubPlan::AlternativeSubPlan(std::unique_ptr<::pg_query::Node> arg_xpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_subplans)
-    : xpr(arg_xpr.release())
-    , subplans()
-{
-    for (auto& it : arg_subplans)
-        subplans.emplace_back(it.release());
-}
+AlternativeSubPlan::AlternativeSubPlan(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_subplans)
+    : xpr(std::move(arg_xpr))
+    , subplans(std::move(arg_subplans))
+{}
 
 AlternativeSubPlan::AlternativeSubPlan(AlternativeSubPlan&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , subplans(std::move(other.subplans))
 {}
 
 AlternativeSubPlan::~AlternativeSubPlan()
 {
-    if (xpr) delete xpr;
-    for (auto& it : subplans)
-        delete it;
 }
 
 bool AlternativeSubPlan::operator==([[maybe_unused]] const AlternativeSubPlan& other) const noexcept
@@ -4258,7 +4074,7 @@ AlternativeSubPlan& AlternativeSubPlan::operator=(AlternativeSubPlan&& other) no
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         subplans = std::move(other.subplans);
     }
     return *this;
@@ -4279,13 +4095,13 @@ void AlternativeSubPlan::swap(AlternativeSubPlan& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const AlternativeSubPlan& value)
 {
     stream << "AlternativeSubPlan(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     {
         bool first = true;
         stream << ",subplans=[" << value.subplans.size() << "][";
         for (const auto& it : value.subplans)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -4295,17 +4111,17 @@ std::ostream& operator<<(std::ostream& stream, const AlternativeSubPlan& value)
 }
 
 FieldSelect::FieldSelect()
-    : xpr(nullptr)
-    , arg(nullptr)
+    : xpr()
+    , arg()
     , fieldnum((int32_t)0ll)
     , resulttype((uint32_t)0ull)
     , resulttypmod((int32_t)0ll)
     , resultcollid((uint32_t)0ull)
 {}
 
-FieldSelect::FieldSelect(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, int32_t arg_fieldnum, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
+FieldSelect::FieldSelect(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, int32_t arg_fieldnum, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
     , fieldnum(arg_fieldnum)
     , resulttype(arg_resulttype)
     , resulttypmod(arg_resulttypmod)
@@ -4313,8 +4129,8 @@ FieldSelect::FieldSelect(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_
 {}
 
 FieldSelect::FieldSelect(FieldSelect&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
     , fieldnum(std::exchange(other.fieldnum, (int32_t)0ll))
     , resulttype(std::exchange(other.resulttype, (uint32_t)0ull))
     , resulttypmod(std::exchange(other.resulttypmod, (int32_t)0ll))
@@ -4323,8 +4139,6 @@ FieldSelect::FieldSelect(FieldSelect&& other) noexcept
 
 FieldSelect::~FieldSelect()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
 }
 
 bool FieldSelect::operator==([[maybe_unused]] const FieldSelect& other) const noexcept
@@ -4343,8 +4157,8 @@ FieldSelect& FieldSelect::operator=(FieldSelect&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
         fieldnum = std::exchange(other.fieldnum, (int32_t)0ll);
         resulttype = std::exchange(other.resulttype, (uint32_t)0ull);
         resulttypmod = std::exchange(other.resulttypmod, (int32_t)0ll);
@@ -4372,8 +4186,8 @@ void FieldSelect::swap(FieldSelect& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const FieldSelect& value)
 {
     stream << "FieldSelect(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
     stream << ",fieldnum="; stream << value.fieldnum;
     stream << ",resulttype="; stream << value.resulttype;
     stream << ",resulttypmod="; stream << value.resulttypmod;
@@ -4383,29 +4197,24 @@ std::ostream& operator<<(std::ostream& stream, const FieldSelect& value)
 }
 
 FieldStore::FieldStore()
-    : xpr(nullptr)
-    , arg(nullptr)
+    : xpr()
+    , arg()
     , newvals()
     , fieldnums()
     , resulttype((uint32_t)0ull)
 {}
 
-FieldStore::FieldStore(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, std::vector<std::unique_ptr<::pg_query::Node>> arg_newvals, std::vector<std::unique_ptr<::pg_query::Node>> arg_fieldnums, uint32_t arg_resulttype)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
-    , newvals()
-    , fieldnums()
+FieldStore::FieldStore(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_newvals, std::vector<::pg_query::Node> arg_fieldnums, uint32_t arg_resulttype)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
+    , newvals(std::move(arg_newvals))
+    , fieldnums(std::move(arg_fieldnums))
     , resulttype(arg_resulttype)
-{
-    for (auto& it : arg_newvals)
-        newvals.emplace_back(it.release());
-    for (auto& it : arg_fieldnums)
-        fieldnums.emplace_back(it.release());
-}
+{}
 
 FieldStore::FieldStore(FieldStore&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
     , newvals(std::move(other.newvals))
     , fieldnums(std::move(other.fieldnums))
     , resulttype(std::exchange(other.resulttype, (uint32_t)0ull))
@@ -4413,12 +4222,6 @@ FieldStore::FieldStore(FieldStore&& other) noexcept
 
 FieldStore::~FieldStore()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
-    for (auto& it : newvals)
-        delete it;
-    for (auto& it : fieldnums)
-        delete it;
 }
 
 bool FieldStore::operator==([[maybe_unused]] const FieldStore& other) const noexcept
@@ -4437,8 +4240,8 @@ FieldStore& FieldStore::operator=(FieldStore&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
         newvals = std::move(other.newvals);
         fieldnums = std::move(other.fieldnums);
         resulttype = std::exchange(other.resulttype, (uint32_t)0ull);
@@ -4464,14 +4267,14 @@ void FieldStore::swap(FieldStore& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const FieldStore& value)
 {
     stream << "FieldStore(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
     {
         bool first = true;
         stream << ",newvals=[" << value.newvals.size() << "][";
         for (const auto& it : value.newvals)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -4481,7 +4284,7 @@ std::ostream& operator<<(std::ostream& stream, const FieldStore& value)
         stream << ",fieldnums=[" << value.fieldnums.size() << "][";
         for (const auto& it : value.fieldnums)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -4492,8 +4295,8 @@ std::ostream& operator<<(std::ostream& stream, const FieldStore& value)
 }
 
 RelabelType::RelabelType()
-    : xpr(nullptr)
-    , arg(nullptr)
+    : xpr()
+    , arg()
     , resulttype((uint32_t)0ull)
     , resulttypmod((int32_t)0ll)
     , resultcollid((uint32_t)0ull)
@@ -4501,9 +4304,9 @@ RelabelType::RelabelType()
     , location((int32_t)0ll)
 {}
 
-RelabelType::RelabelType(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_relabelformat, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
+RelabelType::RelabelType(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_relabelformat, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
     , resulttype(arg_resulttype)
     , resulttypmod(arg_resulttypmod)
     , resultcollid(arg_resultcollid)
@@ -4512,8 +4315,8 @@ RelabelType::RelabelType(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_
 {}
 
 RelabelType::RelabelType(RelabelType&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
     , resulttype(std::exchange(other.resulttype, (uint32_t)0ull))
     , resulttypmod(std::exchange(other.resulttypmod, (int32_t)0ll))
     , resultcollid(std::exchange(other.resultcollid, (uint32_t)0ull))
@@ -4523,8 +4326,6 @@ RelabelType::RelabelType(RelabelType&& other) noexcept
 
 RelabelType::~RelabelType()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
 }
 
 bool RelabelType::operator==([[maybe_unused]] const RelabelType& other) const noexcept
@@ -4543,8 +4344,8 @@ RelabelType& RelabelType::operator=(RelabelType&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
         resulttype = std::exchange(other.resulttype, (uint32_t)0ull);
         resulttypmod = std::exchange(other.resulttypmod, (int32_t)0ll);
         resultcollid = std::exchange(other.resultcollid, (uint32_t)0ull);
@@ -4574,8 +4375,8 @@ void RelabelType::swap(RelabelType& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const RelabelType& value)
 {
     stream << "RelabelType(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
     stream << ",resulttype="; stream << value.resulttype;
     stream << ",resulttypmod="; stream << value.resulttypmod;
     stream << ",resultcollid="; stream << value.resultcollid;
@@ -4586,17 +4387,17 @@ std::ostream& operator<<(std::ostream& stream, const RelabelType& value)
 }
 
 CoerceViaIO::CoerceViaIO()
-    : xpr(nullptr)
-    , arg(nullptr)
+    : xpr()
+    , arg()
     , resulttype((uint32_t)0ull)
     , resultcollid((uint32_t)0ull)
     , coerceformat()
     , location((int32_t)0ll)
 {}
 
-CoerceViaIO::CoerceViaIO(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, uint32_t arg_resulttype, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
+CoerceViaIO::CoerceViaIO(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
     , resulttype(arg_resulttype)
     , resultcollid(arg_resultcollid)
     , coerceformat(std::move(arg_coerceformat))
@@ -4604,8 +4405,8 @@ CoerceViaIO::CoerceViaIO(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_
 {}
 
 CoerceViaIO::CoerceViaIO(CoerceViaIO&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
     , resulttype(std::exchange(other.resulttype, (uint32_t)0ull))
     , resultcollid(std::exchange(other.resultcollid, (uint32_t)0ull))
     , coerceformat(std::move(other.coerceformat))
@@ -4614,8 +4415,6 @@ CoerceViaIO::CoerceViaIO(CoerceViaIO&& other) noexcept
 
 CoerceViaIO::~CoerceViaIO()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
 }
 
 bool CoerceViaIO::operator==([[maybe_unused]] const CoerceViaIO& other) const noexcept
@@ -4634,8 +4433,8 @@ CoerceViaIO& CoerceViaIO::operator=(CoerceViaIO&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
         resulttype = std::exchange(other.resulttype, (uint32_t)0ull);
         resultcollid = std::exchange(other.resultcollid, (uint32_t)0ull);
         coerceformat = std::move(other.coerceformat);
@@ -4663,8 +4462,8 @@ void CoerceViaIO::swap(CoerceViaIO& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CoerceViaIO& value)
 {
     stream << "CoerceViaIO(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
     stream << ",resulttype="; stream << value.resulttype;
     stream << ",resultcollid="; stream << value.resultcollid;
     stream << ",coerceformat="; stream << value.coerceformat;
@@ -4674,9 +4473,9 @@ std::ostream& operator<<(std::ostream& stream, const CoerceViaIO& value)
 }
 
 ArrayCoerceExpr::ArrayCoerceExpr()
-    : xpr(nullptr)
-    , arg(nullptr)
-    , elemexpr(nullptr)
+    : xpr()
+    , arg()
+    , elemexpr()
     , resulttype((uint32_t)0ull)
     , resulttypmod((int32_t)0ll)
     , resultcollid((uint32_t)0ull)
@@ -4684,10 +4483,10 @@ ArrayCoerceExpr::ArrayCoerceExpr()
     , location((int32_t)0ll)
 {}
 
-ArrayCoerceExpr::ArrayCoerceExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, std::unique_ptr<::pg_query::Node> arg_elemexpr, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
-    , elemexpr(arg_elemexpr.release())
+ArrayCoerceExpr::ArrayCoerceExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::Node&& arg_elemexpr, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
+    , elemexpr(std::move(arg_elemexpr))
     , resulttype(arg_resulttype)
     , resulttypmod(arg_resulttypmod)
     , resultcollid(arg_resultcollid)
@@ -4696,9 +4495,9 @@ ArrayCoerceExpr::ArrayCoerceExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std:
 {}
 
 ArrayCoerceExpr::ArrayCoerceExpr(ArrayCoerceExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
-    , elemexpr(std::exchange(other.elemexpr, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
+    , elemexpr(std::move(other.elemexpr))
     , resulttype(std::exchange(other.resulttype, (uint32_t)0ull))
     , resulttypmod(std::exchange(other.resulttypmod, (int32_t)0ll))
     , resultcollid(std::exchange(other.resultcollid, (uint32_t)0ull))
@@ -4708,9 +4507,6 @@ ArrayCoerceExpr::ArrayCoerceExpr(ArrayCoerceExpr&& other) noexcept
 
 ArrayCoerceExpr::~ArrayCoerceExpr()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
-    if (elemexpr) delete elemexpr;
 }
 
 bool ArrayCoerceExpr::operator==([[maybe_unused]] const ArrayCoerceExpr& other) const noexcept
@@ -4729,9 +4525,9 @@ ArrayCoerceExpr& ArrayCoerceExpr::operator=(ArrayCoerceExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
-        elemexpr = std::exchange(other.elemexpr, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
+        elemexpr = std::move(other.elemexpr);
         resulttype = std::exchange(other.resulttype, (uint32_t)0ull);
         resulttypmod = std::exchange(other.resulttypmod, (int32_t)0ll);
         resultcollid = std::exchange(other.resultcollid, (uint32_t)0ull);
@@ -4762,9 +4558,9 @@ void ArrayCoerceExpr::swap(ArrayCoerceExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const ArrayCoerceExpr& value)
 {
     stream << "ArrayCoerceExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
-    stream << ",elemexpr="; stream << " ptr of other struct" << (value.elemexpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
+    stream << ",elemexpr="; stream << value.elemexpr;
     stream << ",resulttype="; stream << value.resulttype;
     stream << ",resulttypmod="; stream << value.resulttypmod;
     stream << ",resultcollid="; stream << value.resultcollid;
@@ -4775,24 +4571,24 @@ std::ostream& operator<<(std::ostream& stream, const ArrayCoerceExpr& value)
 }
 
 ConvertRowtypeExpr::ConvertRowtypeExpr()
-    : xpr(nullptr)
-    , arg(nullptr)
+    : xpr()
+    , arg()
     , resulttype((uint32_t)0ull)
     , convertformat()
     , location((int32_t)0ll)
 {}
 
-ConvertRowtypeExpr::ConvertRowtypeExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, uint32_t arg_resulttype, ::pg_query::CoercionForm&& arg_convertformat, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
+ConvertRowtypeExpr::ConvertRowtypeExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, ::pg_query::CoercionForm&& arg_convertformat, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
     , resulttype(arg_resulttype)
     , convertformat(std::move(arg_convertformat))
     , location(arg_location)
 {}
 
 ConvertRowtypeExpr::ConvertRowtypeExpr(ConvertRowtypeExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
     , resulttype(std::exchange(other.resulttype, (uint32_t)0ull))
     , convertformat(std::move(other.convertformat))
     , location(std::exchange(other.location, (int32_t)0ll))
@@ -4800,8 +4596,6 @@ ConvertRowtypeExpr::ConvertRowtypeExpr(ConvertRowtypeExpr&& other) noexcept
 
 ConvertRowtypeExpr::~ConvertRowtypeExpr()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
 }
 
 bool ConvertRowtypeExpr::operator==([[maybe_unused]] const ConvertRowtypeExpr& other) const noexcept
@@ -4820,8 +4614,8 @@ ConvertRowtypeExpr& ConvertRowtypeExpr::operator=(ConvertRowtypeExpr&& other) no
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
         resulttype = std::exchange(other.resulttype, (uint32_t)0ull);
         convertformat = std::move(other.convertformat);
         location = std::exchange(other.location, (int32_t)0ll);
@@ -4847,8 +4641,8 @@ void ConvertRowtypeExpr::swap(ConvertRowtypeExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const ConvertRowtypeExpr& value)
 {
     stream << "ConvertRowtypeExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
     stream << ",resulttype="; stream << value.resulttype;
     stream << ",convertformat="; stream << value.convertformat;
     stream << ",location="; stream << value.location;
@@ -4857,30 +4651,28 @@ std::ostream& operator<<(std::ostream& stream, const ConvertRowtypeExpr& value)
 }
 
 CollateExpr::CollateExpr()
-    : xpr(nullptr)
-    , arg(nullptr)
+    : xpr()
+    , arg()
     , coll_oid((uint32_t)0ull)
     , location((int32_t)0ll)
 {}
 
-CollateExpr::CollateExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, uint32_t arg_coll_oid, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
+CollateExpr::CollateExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_coll_oid, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
     , coll_oid(arg_coll_oid)
     , location(arg_location)
 {}
 
 CollateExpr::CollateExpr(CollateExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
     , coll_oid(std::exchange(other.coll_oid, (uint32_t)0ull))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 CollateExpr::~CollateExpr()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
 }
 
 bool CollateExpr::operator==([[maybe_unused]] const CollateExpr& other) const noexcept
@@ -4899,8 +4691,8 @@ CollateExpr& CollateExpr::operator=(CollateExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
         coll_oid = std::exchange(other.coll_oid, (uint32_t)0ull);
         location = std::exchange(other.location, (int32_t)0ll);
     }
@@ -4924,8 +4716,8 @@ void CollateExpr::swap(CollateExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CollateExpr& value)
 {
     stream << "CollateExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
     stream << ",coll_oid="; stream << value.coll_oid;
     stream << ",location="; stream << value.location;
     stream << ")";
@@ -4933,45 +4725,37 @@ std::ostream& operator<<(std::ostream& stream, const CollateExpr& value)
 }
 
 CaseExpr::CaseExpr()
-    : xpr(nullptr)
+    : xpr()
     , casetype((uint32_t)0ull)
     , casecollid((uint32_t)0ull)
-    , arg(nullptr)
+    , arg()
     , args()
-    , defresult(nullptr)
+    , defresult()
     , location((int32_t)0ll)
 {}
 
-CaseExpr::CaseExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_casetype, uint32_t arg_casecollid, std::unique_ptr<::pg_query::Node> arg_arg, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::unique_ptr<::pg_query::Node> arg_defresult, int32_t arg_location)
-    : xpr(arg_xpr.release())
+CaseExpr::CaseExpr(::pg_query::Node&& arg_xpr, uint32_t arg_casetype, uint32_t arg_casecollid, ::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_defresult, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , casetype(arg_casetype)
     , casecollid(arg_casecollid)
-    , arg(arg_arg.release())
-    , args()
-    , defresult(arg_defresult.release())
+    , arg(std::move(arg_arg))
+    , args(std::move(arg_args))
+    , defresult(std::move(arg_defresult))
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 CaseExpr::CaseExpr(CaseExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , casetype(std::exchange(other.casetype, (uint32_t)0ull))
     , casecollid(std::exchange(other.casecollid, (uint32_t)0ull))
-    , arg(std::exchange(other.arg, nullptr))
+    , arg(std::move(other.arg))
     , args(std::move(other.args))
-    , defresult(std::exchange(other.defresult, nullptr))
+    , defresult(std::move(other.defresult))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 CaseExpr::~CaseExpr()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
-    if (defresult) delete defresult;
-    for (auto& it : args)
-        delete it;
 }
 
 bool CaseExpr::operator==([[maybe_unused]] const CaseExpr& other) const noexcept
@@ -4990,12 +4774,12 @@ CaseExpr& CaseExpr::operator=(CaseExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         casetype = std::exchange(other.casetype, (uint32_t)0ull);
         casecollid = std::exchange(other.casecollid, (uint32_t)0ull);
-        arg = std::exchange(other.arg, nullptr);
+        arg = std::move(other.arg);
         args = std::move(other.args);
-        defresult = std::exchange(other.defresult, nullptr);
+        defresult = std::move(other.defresult);
         location = std::exchange(other.location, (int32_t)0ll);
     }
     return *this;
@@ -5021,52 +4805,49 @@ void CaseExpr::swap(CaseExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CaseExpr& value)
 {
     stream << "CaseExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",casetype="; stream << value.casetype;
     stream << ",casecollid="; stream << value.casecollid;
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << ",arg="; stream << value.arg;
     {
         bool first = true;
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",defresult="; stream << " ptr of other struct" << (value.defresult == nullptr ? "true" : "false");
+    stream << ",defresult="; stream << value.defresult;
     stream << ",location="; stream << value.location;
     stream << ")";
     return stream;
 }
 
 CaseWhen::CaseWhen()
-    : xpr(nullptr)
-    , expr(nullptr)
-    , result(nullptr)
+    : xpr()
+    , expr()
+    , result()
     , location((int32_t)0ll)
 {}
 
-CaseWhen::CaseWhen(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_expr, std::unique_ptr<::pg_query::Node> arg_result, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , expr(arg_expr.release())
-    , result(arg_result.release())
+CaseWhen::CaseWhen(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, ::pg_query::Node&& arg_result, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , expr(std::move(arg_expr))
+    , result(std::move(arg_result))
     , location(arg_location)
 {}
 
 CaseWhen::CaseWhen(CaseWhen&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , expr(std::exchange(other.expr, nullptr))
-    , result(std::exchange(other.result, nullptr))
+    : xpr(std::move(other.xpr))
+    , expr(std::move(other.expr))
+    , result(std::move(other.result))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 CaseWhen::~CaseWhen()
 {
-    if (xpr) delete xpr;
-    if (expr) delete expr;
-    if (result) delete result;
 }
 
 bool CaseWhen::operator==([[maybe_unused]] const CaseWhen& other) const noexcept
@@ -5085,9 +4866,9 @@ CaseWhen& CaseWhen::operator=(CaseWhen&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        expr = std::exchange(other.expr, nullptr);
-        result = std::exchange(other.result, nullptr);
+        xpr = std::move(other.xpr);
+        expr = std::move(other.expr);
+        result = std::move(other.result);
         location = std::exchange(other.location, (int32_t)0ll);
     }
     return *this;
@@ -5110,30 +4891,30 @@ void CaseWhen::swap(CaseWhen& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CaseWhen& value)
 {
     stream << "CaseWhen(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",expr="; stream << " ptr of other struct" << (value.expr == nullptr ? "true" : "false");
-    stream << ",result="; stream << " ptr of other struct" << (value.result == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",expr="; stream << value.expr;
+    stream << ",result="; stream << value.result;
     stream << ",location="; stream << value.location;
     stream << ")";
     return stream;
 }
 
 CaseTestExpr::CaseTestExpr()
-    : xpr(nullptr)
+    : xpr()
     , type_id((uint32_t)0ull)
     , type_mod((int32_t)0ll)
     , collation((uint32_t)0ull)
 {}
 
-CaseTestExpr::CaseTestExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation)
-    : xpr(arg_xpr.release())
+CaseTestExpr::CaseTestExpr(::pg_query::Node&& arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation)
+    : xpr(std::move(arg_xpr))
     , type_id(arg_type_id)
     , type_mod(arg_type_mod)
     , collation(arg_collation)
 {}
 
 CaseTestExpr::CaseTestExpr(CaseTestExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , type_id(std::exchange(other.type_id, (uint32_t)0ull))
     , type_mod(std::exchange(other.type_mod, (int32_t)0ll))
     , collation(std::exchange(other.collation, (uint32_t)0ull))
@@ -5141,7 +4922,6 @@ CaseTestExpr::CaseTestExpr(CaseTestExpr&& other) noexcept
 
 CaseTestExpr::~CaseTestExpr()
 {
-    if (xpr) delete xpr;
 }
 
 bool CaseTestExpr::operator==([[maybe_unused]] const CaseTestExpr& other) const noexcept
@@ -5160,7 +4940,7 @@ CaseTestExpr& CaseTestExpr::operator=(CaseTestExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         type_id = std::exchange(other.type_id, (uint32_t)0ull);
         type_mod = std::exchange(other.type_mod, (int32_t)0ll);
         collation = std::exchange(other.collation, (uint32_t)0ull);
@@ -5185,7 +4965,7 @@ void CaseTestExpr::swap(CaseTestExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CaseTestExpr& value)
 {
     stream << "CaseTestExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",type_id="; stream << value.type_id;
     stream << ",type_mod="; stream << value.type_mod;
     stream << ",collation="; stream << value.collation;
@@ -5194,7 +4974,7 @@ std::ostream& operator<<(std::ostream& stream, const CaseTestExpr& value)
 }
 
 ArrayExpr::ArrayExpr()
-    : xpr(nullptr)
+    : xpr()
     , array_typeid((uint32_t)0ull)
     , array_collid((uint32_t)0ull)
     , element_typeid((uint32_t)0ull)
@@ -5203,21 +4983,18 @@ ArrayExpr::ArrayExpr()
     , location((int32_t)0ll)
 {}
 
-ArrayExpr::ArrayExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_array_typeid, uint32_t arg_array_collid, uint32_t arg_element_typeid, std::vector<std::unique_ptr<::pg_query::Node>> arg_elements, bool arg_multidims, int32_t arg_location)
-    : xpr(arg_xpr.release())
+ArrayExpr::ArrayExpr(::pg_query::Node&& arg_xpr, uint32_t arg_array_typeid, uint32_t arg_array_collid, uint32_t arg_element_typeid, std::vector<::pg_query::Node> arg_elements, bool arg_multidims, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , array_typeid(arg_array_typeid)
     , array_collid(arg_array_collid)
     , element_typeid(arg_element_typeid)
-    , elements()
+    , elements(std::move(arg_elements))
     , multidims(arg_multidims)
     , location(arg_location)
-{
-    for (auto& it : arg_elements)
-        elements.emplace_back(it.release());
-}
+{}
 
 ArrayExpr::ArrayExpr(ArrayExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , array_typeid(std::exchange(other.array_typeid, (uint32_t)0ull))
     , array_collid(std::exchange(other.array_collid, (uint32_t)0ull))
     , element_typeid(std::exchange(other.element_typeid, (uint32_t)0ull))
@@ -5228,9 +5005,6 @@ ArrayExpr::ArrayExpr(ArrayExpr&& other) noexcept
 
 ArrayExpr::~ArrayExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : elements)
-        delete it;
 }
 
 bool ArrayExpr::operator==([[maybe_unused]] const ArrayExpr& other) const noexcept
@@ -5249,7 +5023,7 @@ ArrayExpr& ArrayExpr::operator=(ArrayExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         array_typeid = std::exchange(other.array_typeid, (uint32_t)0ull);
         array_collid = std::exchange(other.array_collid, (uint32_t)0ull);
         element_typeid = std::exchange(other.element_typeid, (uint32_t)0ull);
@@ -5280,7 +5054,7 @@ void ArrayExpr::swap(ArrayExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const ArrayExpr& value)
 {
     stream << "ArrayExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",array_typeid="; stream << value.array_typeid;
     stream << ",array_collid="; stream << value.array_collid;
     stream << ",element_typeid="; stream << value.element_typeid;
@@ -5289,7 +5063,7 @@ std::ostream& operator<<(std::ostream& stream, const ArrayExpr& value)
         stream << ",elements=[" << value.elements.size() << "][";
         for (const auto& it : value.elements)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5301,7 +5075,7 @@ std::ostream& operator<<(std::ostream& stream, const ArrayExpr& value)
 }
 
 RowExpr::RowExpr()
-    : xpr(nullptr)
+    : xpr()
     , args()
     , row_typeid((uint32_t)0ull)
     , row_format()
@@ -5309,22 +5083,17 @@ RowExpr::RowExpr()
     , location((int32_t)0ll)
 {}
 
-RowExpr::RowExpr(std::unique_ptr<::pg_query::Node> arg_xpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, uint32_t arg_row_typeid, ::pg_query::CoercionForm&& arg_row_format, std::vector<std::unique_ptr<::pg_query::Node>> arg_colnames, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , args()
+RowExpr::RowExpr(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_args, uint32_t arg_row_typeid, ::pg_query::CoercionForm&& arg_row_format, std::vector<::pg_query::Node> arg_colnames, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , args(std::move(arg_args))
     , row_typeid(arg_row_typeid)
     , row_format(std::move(arg_row_format))
-    , colnames()
+    , colnames(std::move(arg_colnames))
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-    for (auto& it : arg_colnames)
-        colnames.emplace_back(it.release());
-}
+{}
 
 RowExpr::RowExpr(RowExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , args(std::move(other.args))
     , row_typeid(std::exchange(other.row_typeid, (uint32_t)0ull))
     , row_format(std::move(other.row_format))
@@ -5334,11 +5103,6 @@ RowExpr::RowExpr(RowExpr&& other) noexcept
 
 RowExpr::~RowExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : args)
-        delete it;
-    for (auto& it : colnames)
-        delete it;
 }
 
 bool RowExpr::operator==([[maybe_unused]] const RowExpr& other) const noexcept
@@ -5357,7 +5121,7 @@ RowExpr& RowExpr::operator=(RowExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         args = std::move(other.args);
         row_typeid = std::exchange(other.row_typeid, (uint32_t)0ull);
         row_format = std::move(other.row_format);
@@ -5386,13 +5150,13 @@ void RowExpr::swap(RowExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const RowExpr& value)
 {
     stream << "RowExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     {
         bool first = true;
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5404,7 +5168,7 @@ std::ostream& operator<<(std::ostream& stream, const RowExpr& value)
         stream << ",colnames=[" << value.colnames.size() << "][";
         for (const auto& it : value.colnames)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5415,7 +5179,7 @@ std::ostream& operator<<(std::ostream& stream, const RowExpr& value)
 }
 
 RowCompareExpr::RowCompareExpr()
-    : xpr(nullptr)
+    : xpr()
     , rctype()
     , opnos()
     , opfamilies()
@@ -5424,29 +5188,18 @@ RowCompareExpr::RowCompareExpr()
     , rargs()
 {}
 
-RowCompareExpr::RowCompareExpr(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::RowCompareType&& arg_rctype, std::vector<std::unique_ptr<::pg_query::Node>> arg_opnos, std::vector<std::unique_ptr<::pg_query::Node>> arg_opfamilies, std::vector<std::unique_ptr<::pg_query::Node>> arg_inputcollids, std::vector<std::unique_ptr<::pg_query::Node>> arg_largs, std::vector<std::unique_ptr<::pg_query::Node>> arg_rargs)
-    : xpr(arg_xpr.release())
+RowCompareExpr::RowCompareExpr(::pg_query::Node&& arg_xpr, ::pg_query::RowCompareType&& arg_rctype, std::vector<::pg_query::Node> arg_opnos, std::vector<::pg_query::Node> arg_opfamilies, std::vector<::pg_query::Node> arg_inputcollids, std::vector<::pg_query::Node> arg_largs, std::vector<::pg_query::Node> arg_rargs)
+    : xpr(std::move(arg_xpr))
     , rctype(std::move(arg_rctype))
-    , opnos()
-    , opfamilies()
-    , inputcollids()
-    , largs()
-    , rargs()
-{
-    for (auto& it : arg_opnos)
-        opnos.emplace_back(it.release());
-    for (auto& it : arg_opfamilies)
-        opfamilies.emplace_back(it.release());
-    for (auto& it : arg_inputcollids)
-        inputcollids.emplace_back(it.release());
-    for (auto& it : arg_largs)
-        largs.emplace_back(it.release());
-    for (auto& it : arg_rargs)
-        rargs.emplace_back(it.release());
-}
+    , opnos(std::move(arg_opnos))
+    , opfamilies(std::move(arg_opfamilies))
+    , inputcollids(std::move(arg_inputcollids))
+    , largs(std::move(arg_largs))
+    , rargs(std::move(arg_rargs))
+{}
 
 RowCompareExpr::RowCompareExpr(RowCompareExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , rctype(std::move(other.rctype))
     , opnos(std::move(other.opnos))
     , opfamilies(std::move(other.opfamilies))
@@ -5457,17 +5210,6 @@ RowCompareExpr::RowCompareExpr(RowCompareExpr&& other) noexcept
 
 RowCompareExpr::~RowCompareExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : opnos)
-        delete it;
-    for (auto& it : opfamilies)
-        delete it;
-    for (auto& it : inputcollids)
-        delete it;
-    for (auto& it : largs)
-        delete it;
-    for (auto& it : rargs)
-        delete it;
 }
 
 bool RowCompareExpr::operator==([[maybe_unused]] const RowCompareExpr& other) const noexcept
@@ -5486,7 +5228,7 @@ RowCompareExpr& RowCompareExpr::operator=(RowCompareExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         rctype = std::move(other.rctype);
         opnos = std::move(other.opnos);
         opfamilies = std::move(other.opfamilies);
@@ -5517,14 +5259,14 @@ void RowCompareExpr::swap(RowCompareExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const RowCompareExpr& value)
 {
     stream << "RowCompareExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",rctype="; stream << value.rctype;
     {
         bool first = true;
         stream << ",opnos=[" << value.opnos.size() << "][";
         for (const auto& it : value.opnos)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5534,7 +5276,7 @@ std::ostream& operator<<(std::ostream& stream, const RowCompareExpr& value)
         stream << ",opfamilies=[" << value.opfamilies.size() << "][";
         for (const auto& it : value.opfamilies)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5544,7 +5286,7 @@ std::ostream& operator<<(std::ostream& stream, const RowCompareExpr& value)
         stream << ",inputcollids=[" << value.inputcollids.size() << "][";
         for (const auto& it : value.inputcollids)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5554,7 +5296,7 @@ std::ostream& operator<<(std::ostream& stream, const RowCompareExpr& value)
         stream << ",largs=[" << value.largs.size() << "][";
         for (const auto& it : value.largs)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5564,7 +5306,7 @@ std::ostream& operator<<(std::ostream& stream, const RowCompareExpr& value)
         stream << ",rargs=[" << value.rargs.size() << "][";
         for (const auto& it : value.rargs)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5574,26 +5316,23 @@ std::ostream& operator<<(std::ostream& stream, const RowCompareExpr& value)
 }
 
 CoalesceExpr::CoalesceExpr()
-    : xpr(nullptr)
+    : xpr()
     , coalescetype((uint32_t)0ull)
     , coalescecollid((uint32_t)0ull)
     , args()
     , location((int32_t)0ll)
 {}
 
-CoalesceExpr::CoalesceExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_coalescetype, uint32_t arg_coalescecollid, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location)
-    : xpr(arg_xpr.release())
+CoalesceExpr::CoalesceExpr(::pg_query::Node&& arg_xpr, uint32_t arg_coalescetype, uint32_t arg_coalescecollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , coalescetype(arg_coalescetype)
     , coalescecollid(arg_coalescecollid)
-    , args()
+    , args(std::move(arg_args))
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 CoalesceExpr::CoalesceExpr(CoalesceExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , coalescetype(std::exchange(other.coalescetype, (uint32_t)0ull))
     , coalescecollid(std::exchange(other.coalescecollid, (uint32_t)0ull))
     , args(std::move(other.args))
@@ -5602,9 +5341,6 @@ CoalesceExpr::CoalesceExpr(CoalesceExpr&& other) noexcept
 
 CoalesceExpr::~CoalesceExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : args)
-        delete it;
 }
 
 bool CoalesceExpr::operator==([[maybe_unused]] const CoalesceExpr& other) const noexcept
@@ -5623,7 +5359,7 @@ CoalesceExpr& CoalesceExpr::operator=(CoalesceExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         coalescetype = std::exchange(other.coalescetype, (uint32_t)0ull);
         coalescecollid = std::exchange(other.coalescecollid, (uint32_t)0ull);
         args = std::move(other.args);
@@ -5650,7 +5386,7 @@ void CoalesceExpr::swap(CoalesceExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CoalesceExpr& value)
 {
     stream << "CoalesceExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",coalescetype="; stream << value.coalescetype;
     stream << ",coalescecollid="; stream << value.coalescecollid;
     {
@@ -5658,7 +5394,7 @@ std::ostream& operator<<(std::ostream& stream, const CoalesceExpr& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5669,7 +5405,7 @@ std::ostream& operator<<(std::ostream& stream, const CoalesceExpr& value)
 }
 
 MinMaxExpr::MinMaxExpr()
-    : xpr(nullptr)
+    : xpr()
     , minmaxtype((uint32_t)0ull)
     , minmaxcollid((uint32_t)0ull)
     , inputcollid((uint32_t)0ull)
@@ -5678,21 +5414,18 @@ MinMaxExpr::MinMaxExpr()
     , location((int32_t)0ll)
 {}
 
-MinMaxExpr::MinMaxExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_minmaxtype, uint32_t arg_minmaxcollid, uint32_t arg_inputcollid, ::pg_query::MinMaxOp&& arg_op, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, int32_t arg_location)
-    : xpr(arg_xpr.release())
+MinMaxExpr::MinMaxExpr(::pg_query::Node&& arg_xpr, uint32_t arg_minmaxtype, uint32_t arg_minmaxcollid, uint32_t arg_inputcollid, ::pg_query::MinMaxOp&& arg_op, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , minmaxtype(arg_minmaxtype)
     , minmaxcollid(arg_minmaxcollid)
     , inputcollid(arg_inputcollid)
     , op(std::move(arg_op))
-    , args()
+    , args(std::move(arg_args))
     , location(arg_location)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 MinMaxExpr::MinMaxExpr(MinMaxExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , minmaxtype(std::exchange(other.minmaxtype, (uint32_t)0ull))
     , minmaxcollid(std::exchange(other.minmaxcollid, (uint32_t)0ull))
     , inputcollid(std::exchange(other.inputcollid, (uint32_t)0ull))
@@ -5703,9 +5436,6 @@ MinMaxExpr::MinMaxExpr(MinMaxExpr&& other) noexcept
 
 MinMaxExpr::~MinMaxExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : args)
-        delete it;
 }
 
 bool MinMaxExpr::operator==([[maybe_unused]] const MinMaxExpr& other) const noexcept
@@ -5724,7 +5454,7 @@ MinMaxExpr& MinMaxExpr::operator=(MinMaxExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         minmaxtype = std::exchange(other.minmaxtype, (uint32_t)0ull);
         minmaxcollid = std::exchange(other.minmaxcollid, (uint32_t)0ull);
         inputcollid = std::exchange(other.inputcollid, (uint32_t)0ull);
@@ -5755,7 +5485,7 @@ void MinMaxExpr::swap(MinMaxExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const MinMaxExpr& value)
 {
     stream << "MinMaxExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",minmaxtype="; stream << value.minmaxtype;
     stream << ",minmaxcollid="; stream << value.minmaxcollid;
     stream << ",inputcollid="; stream << value.inputcollid;
@@ -5765,7 +5495,7 @@ std::ostream& operator<<(std::ostream& stream, const MinMaxExpr& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5776,15 +5506,15 @@ std::ostream& operator<<(std::ostream& stream, const MinMaxExpr& value)
 }
 
 SQLValueFunction::SQLValueFunction()
-    : xpr(nullptr)
+    : xpr()
     , op()
     , type((uint32_t)0ull)
     , typmod((int32_t)0ll)
     , location((int32_t)0ll)
 {}
 
-SQLValueFunction::SQLValueFunction(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::SQLValueFunctionOp&& arg_op, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location)
-    : xpr(arg_xpr.release())
+SQLValueFunction::SQLValueFunction(::pg_query::Node&& arg_xpr, ::pg_query::SQLValueFunctionOp&& arg_op, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , op(std::move(arg_op))
     , type(arg_type)
     , typmod(arg_typmod)
@@ -5792,7 +5522,7 @@ SQLValueFunction::SQLValueFunction(std::unique_ptr<::pg_query::Node> arg_xpr, ::
 {}
 
 SQLValueFunction::SQLValueFunction(SQLValueFunction&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , op(std::move(other.op))
     , type(std::exchange(other.type, (uint32_t)0ull))
     , typmod(std::exchange(other.typmod, (int32_t)0ll))
@@ -5801,7 +5531,6 @@ SQLValueFunction::SQLValueFunction(SQLValueFunction&& other) noexcept
 
 SQLValueFunction::~SQLValueFunction()
 {
-    if (xpr) delete xpr;
 }
 
 bool SQLValueFunction::operator==([[maybe_unused]] const SQLValueFunction& other) const noexcept
@@ -5820,7 +5549,7 @@ SQLValueFunction& SQLValueFunction::operator=(SQLValueFunction&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         op = std::move(other.op);
         type = std::exchange(other.type, (uint32_t)0ull);
         typmod = std::exchange(other.typmod, (int32_t)0ll);
@@ -5847,7 +5576,7 @@ void SQLValueFunction::swap(SQLValueFunction& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const SQLValueFunction& value)
 {
     stream << "SQLValueFunction(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",op="; stream << value.op;
     stream << ",type="; stream << value.type;
     stream << ",typmod="; stream << value.typmod;
@@ -5857,7 +5586,7 @@ std::ostream& operator<<(std::ostream& stream, const SQLValueFunction& value)
 }
 
 XmlExpr::XmlExpr()
-    : xpr(nullptr)
+    : xpr()
     , op()
     , name()
     , named_args()
@@ -5869,28 +5598,21 @@ XmlExpr::XmlExpr()
     , location((int32_t)0ll)
 {}
 
-XmlExpr::XmlExpr(std::unique_ptr<::pg_query::Node> arg_xpr, ::pg_query::XmlExprOp&& arg_op, const std::string& arg_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_named_args, std::vector<std::unique_ptr<::pg_query::Node>> arg_arg_names, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, ::pg_query::XmlOptionType&& arg_xmloption, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location)
-    : xpr(arg_xpr.release())
+XmlExpr::XmlExpr(::pg_query::Node&& arg_xpr, ::pg_query::XmlExprOp&& arg_op, const std::string& arg_name, std::vector<::pg_query::Node> arg_named_args, std::vector<::pg_query::Node> arg_arg_names, std::vector<::pg_query::Node> arg_args, ::pg_query::XmlOptionType&& arg_xmloption, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , op(std::move(arg_op))
     , name(arg_name)
-    , named_args()
-    , arg_names()
-    , args()
+    , named_args(std::move(arg_named_args))
+    , arg_names(std::move(arg_arg_names))
+    , args(std::move(arg_args))
     , xmloption(std::move(arg_xmloption))
     , type(arg_type)
     , typmod(arg_typmod)
     , location(arg_location)
-{
-    for (auto& it : arg_named_args)
-        named_args.emplace_back(it.release());
-    for (auto& it : arg_arg_names)
-        arg_names.emplace_back(it.release());
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 XmlExpr::XmlExpr(XmlExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , op(std::move(other.op))
     , name(std::move(other.name))
     , named_args(std::move(other.named_args))
@@ -5904,13 +5626,6 @@ XmlExpr::XmlExpr(XmlExpr&& other) noexcept
 
 XmlExpr::~XmlExpr()
 {
-    if (xpr) delete xpr;
-    for (auto& it : named_args)
-        delete it;
-    for (auto& it : arg_names)
-        delete it;
-    for (auto& it : args)
-        delete it;
 }
 
 bool XmlExpr::operator==([[maybe_unused]] const XmlExpr& other) const noexcept
@@ -5929,7 +5644,7 @@ XmlExpr& XmlExpr::operator=(XmlExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         op = std::move(other.op);
         name = std::move(other.name);
         named_args = std::move(other.named_args);
@@ -5966,7 +5681,7 @@ void XmlExpr::swap(XmlExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const XmlExpr& value)
 {
     stream << "XmlExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",op="; stream << value.op;
     stream << ",name="; stream << "\"" << value.name << "\"";
     {
@@ -5974,7 +5689,7 @@ std::ostream& operator<<(std::ostream& stream, const XmlExpr& value)
         stream << ",named_args=[" << value.named_args.size() << "][";
         for (const auto& it : value.named_args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5984,7 +5699,7 @@ std::ostream& operator<<(std::ostream& stream, const XmlExpr& value)
         stream << ",arg_names=[" << value.arg_names.size() << "][";
         for (const auto& it : value.arg_names)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -5994,7 +5709,7 @@ std::ostream& operator<<(std::ostream& stream, const XmlExpr& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -6008,24 +5723,24 @@ std::ostream& operator<<(std::ostream& stream, const XmlExpr& value)
 }
 
 NullTest::NullTest()
-    : xpr(nullptr)
-    , arg(nullptr)
+    : xpr()
+    , arg()
     , nulltesttype()
     , argisrow(false)
     , location((int32_t)0ll)
 {}
 
-NullTest::NullTest(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, ::pg_query::NullTestType&& arg_nulltesttype, bool arg_argisrow, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
+NullTest::NullTest(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::NullTestType&& arg_nulltesttype, bool arg_argisrow, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
     , nulltesttype(std::move(arg_nulltesttype))
     , argisrow(arg_argisrow)
     , location(arg_location)
 {}
 
 NullTest::NullTest(NullTest&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
     , nulltesttype(std::move(other.nulltesttype))
     , argisrow(std::exchange(other.argisrow, false))
     , location(std::exchange(other.location, (int32_t)0ll))
@@ -6033,8 +5748,6 @@ NullTest::NullTest(NullTest&& other) noexcept
 
 NullTest::~NullTest()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
 }
 
 bool NullTest::operator==([[maybe_unused]] const NullTest& other) const noexcept
@@ -6053,8 +5766,8 @@ NullTest& NullTest::operator=(NullTest&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
         nulltesttype = std::move(other.nulltesttype);
         argisrow = std::exchange(other.argisrow, false);
         location = std::exchange(other.location, (int32_t)0ll);
@@ -6080,8 +5793,8 @@ void NullTest::swap(NullTest& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const NullTest& value)
 {
     stream << "NullTest(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
     stream << ",nulltesttype="; stream << value.nulltesttype;
     stream << ",argisrow="; stream << (value.argisrow ? "true" : "false");
     stream << ",location="; stream << value.location;
@@ -6090,30 +5803,28 @@ std::ostream& operator<<(std::ostream& stream, const NullTest& value)
 }
 
 BooleanTest::BooleanTest()
-    : xpr(nullptr)
-    , arg(nullptr)
+    : xpr()
+    , arg()
     , booltesttype()
     , location((int32_t)0ll)
 {}
 
-BooleanTest::BooleanTest(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, ::pg_query::BoolTestType&& arg_booltesttype, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
+BooleanTest::BooleanTest(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::BoolTestType&& arg_booltesttype, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
     , booltesttype(std::move(arg_booltesttype))
     , location(arg_location)
 {}
 
 BooleanTest::BooleanTest(BooleanTest&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
     , booltesttype(std::move(other.booltesttype))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 BooleanTest::~BooleanTest()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
 }
 
 bool BooleanTest::operator==([[maybe_unused]] const BooleanTest& other) const noexcept
@@ -6132,8 +5843,8 @@ BooleanTest& BooleanTest::operator=(BooleanTest&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
         booltesttype = std::move(other.booltesttype);
         location = std::exchange(other.location, (int32_t)0ll);
     }
@@ -6157,8 +5868,8 @@ void BooleanTest::swap(BooleanTest& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const BooleanTest& value)
 {
     stream << "BooleanTest(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
     stream << ",booltesttype="; stream << value.booltesttype;
     stream << ",location="; stream << value.location;
     stream << ")";
@@ -6166,8 +5877,8 @@ std::ostream& operator<<(std::ostream& stream, const BooleanTest& value)
 }
 
 CoerceToDomain::CoerceToDomain()
-    : xpr(nullptr)
-    , arg(nullptr)
+    : xpr()
+    , arg()
     , resulttype((uint32_t)0ull)
     , resulttypmod((int32_t)0ll)
     , resultcollid((uint32_t)0ull)
@@ -6175,9 +5886,9 @@ CoerceToDomain::CoerceToDomain()
     , location((int32_t)0ll)
 {}
 
-CoerceToDomain::CoerceToDomain(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_arg, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coercionformat, int32_t arg_location)
-    : xpr(arg_xpr.release())
-    , arg(arg_arg.release())
+CoerceToDomain::CoerceToDomain(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coercionformat, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
+    , arg(std::move(arg_arg))
     , resulttype(arg_resulttype)
     , resulttypmod(arg_resulttypmod)
     , resultcollid(arg_resultcollid)
@@ -6186,8 +5897,8 @@ CoerceToDomain::CoerceToDomain(std::unique_ptr<::pg_query::Node> arg_xpr, std::u
 {}
 
 CoerceToDomain::CoerceToDomain(CoerceToDomain&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , arg(std::exchange(other.arg, nullptr))
+    : xpr(std::move(other.xpr))
+    , arg(std::move(other.arg))
     , resulttype(std::exchange(other.resulttype, (uint32_t)0ull))
     , resulttypmod(std::exchange(other.resulttypmod, (int32_t)0ll))
     , resultcollid(std::exchange(other.resultcollid, (uint32_t)0ull))
@@ -6197,8 +5908,6 @@ CoerceToDomain::CoerceToDomain(CoerceToDomain&& other) noexcept
 
 CoerceToDomain::~CoerceToDomain()
 {
-    if (xpr) delete xpr;
-    if (arg) delete arg;
 }
 
 bool CoerceToDomain::operator==([[maybe_unused]] const CoerceToDomain& other) const noexcept
@@ -6217,8 +5926,8 @@ CoerceToDomain& CoerceToDomain::operator=(CoerceToDomain&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        arg = std::exchange(other.arg, nullptr);
+        xpr = std::move(other.xpr);
+        arg = std::move(other.arg);
         resulttype = std::exchange(other.resulttype, (uint32_t)0ull);
         resulttypmod = std::exchange(other.resulttypmod, (int32_t)0ll);
         resultcollid = std::exchange(other.resultcollid, (uint32_t)0ull);
@@ -6248,8 +5957,8 @@ void CoerceToDomain::swap(CoerceToDomain& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CoerceToDomain& value)
 {
     stream << "CoerceToDomain(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",arg="; stream << value.arg;
     stream << ",resulttype="; stream << value.resulttype;
     stream << ",resulttypmod="; stream << value.resulttypmod;
     stream << ",resultcollid="; stream << value.resultcollid;
@@ -6260,15 +5969,15 @@ std::ostream& operator<<(std::ostream& stream, const CoerceToDomain& value)
 }
 
 CoerceToDomainValue::CoerceToDomainValue()
-    : xpr(nullptr)
+    : xpr()
     , type_id((uint32_t)0ull)
     , type_mod((int32_t)0ll)
     , collation((uint32_t)0ull)
     , location((int32_t)0ll)
 {}
 
-CoerceToDomainValue::CoerceToDomainValue(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location)
-    : xpr(arg_xpr.release())
+CoerceToDomainValue::CoerceToDomainValue(::pg_query::Node&& arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , type_id(arg_type_id)
     , type_mod(arg_type_mod)
     , collation(arg_collation)
@@ -6276,7 +5985,7 @@ CoerceToDomainValue::CoerceToDomainValue(std::unique_ptr<::pg_query::Node> arg_x
 {}
 
 CoerceToDomainValue::CoerceToDomainValue(CoerceToDomainValue&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , type_id(std::exchange(other.type_id, (uint32_t)0ull))
     , type_mod(std::exchange(other.type_mod, (int32_t)0ll))
     , collation(std::exchange(other.collation, (uint32_t)0ull))
@@ -6285,7 +5994,6 @@ CoerceToDomainValue::CoerceToDomainValue(CoerceToDomainValue&& other) noexcept
 
 CoerceToDomainValue::~CoerceToDomainValue()
 {
-    if (xpr) delete xpr;
 }
 
 bool CoerceToDomainValue::operator==([[maybe_unused]] const CoerceToDomainValue& other) const noexcept
@@ -6304,7 +6012,7 @@ CoerceToDomainValue& CoerceToDomainValue::operator=(CoerceToDomainValue&& other)
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         type_id = std::exchange(other.type_id, (uint32_t)0ull);
         type_mod = std::exchange(other.type_mod, (int32_t)0ll);
         collation = std::exchange(other.collation, (uint32_t)0ull);
@@ -6331,7 +6039,7 @@ void CoerceToDomainValue::swap(CoerceToDomainValue& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CoerceToDomainValue& value)
 {
     stream << "CoerceToDomainValue(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",type_id="; stream << value.type_id;
     stream << ",type_mod="; stream << value.type_mod;
     stream << ",collation="; stream << value.collation;
@@ -6341,15 +6049,15 @@ std::ostream& operator<<(std::ostream& stream, const CoerceToDomainValue& value)
 }
 
 SetToDefault::SetToDefault()
-    : xpr(nullptr)
+    : xpr()
     , type_id((uint32_t)0ull)
     , type_mod((int32_t)0ll)
     , collation((uint32_t)0ull)
     , location((int32_t)0ll)
 {}
 
-SetToDefault::SetToDefault(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location)
-    : xpr(arg_xpr.release())
+SetToDefault::SetToDefault(::pg_query::Node&& arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location)
+    : xpr(std::move(arg_xpr))
     , type_id(arg_type_id)
     , type_mod(arg_type_mod)
     , collation(arg_collation)
@@ -6357,7 +6065,7 @@ SetToDefault::SetToDefault(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t a
 {}
 
 SetToDefault::SetToDefault(SetToDefault&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , type_id(std::exchange(other.type_id, (uint32_t)0ull))
     , type_mod(std::exchange(other.type_mod, (int32_t)0ll))
     , collation(std::exchange(other.collation, (uint32_t)0ull))
@@ -6366,7 +6074,6 @@ SetToDefault::SetToDefault(SetToDefault&& other) noexcept
 
 SetToDefault::~SetToDefault()
 {
-    if (xpr) delete xpr;
 }
 
 bool SetToDefault::operator==([[maybe_unused]] const SetToDefault& other) const noexcept
@@ -6385,7 +6092,7 @@ SetToDefault& SetToDefault::operator=(SetToDefault&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         type_id = std::exchange(other.type_id, (uint32_t)0ull);
         type_mod = std::exchange(other.type_mod, (int32_t)0ll);
         collation = std::exchange(other.collation, (uint32_t)0ull);
@@ -6412,7 +6119,7 @@ void SetToDefault::swap(SetToDefault& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const SetToDefault& value)
 {
     stream << "SetToDefault(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",type_id="; stream << value.type_id;
     stream << ",type_mod="; stream << value.type_mod;
     stream << ",collation="; stream << value.collation;
@@ -6422,21 +6129,21 @@ std::ostream& operator<<(std::ostream& stream, const SetToDefault& value)
 }
 
 CurrentOfExpr::CurrentOfExpr()
-    : xpr(nullptr)
+    : xpr()
     , cvarno((uint32_t)0ull)
     , cursor_name()
     , cursor_param((int32_t)0ll)
 {}
 
-CurrentOfExpr::CurrentOfExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_cvarno, const std::string& arg_cursor_name, int32_t arg_cursor_param)
-    : xpr(arg_xpr.release())
+CurrentOfExpr::CurrentOfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_cvarno, const std::string& arg_cursor_name, int32_t arg_cursor_param)
+    : xpr(std::move(arg_xpr))
     , cvarno(arg_cvarno)
     , cursor_name(arg_cursor_name)
     , cursor_param(arg_cursor_param)
 {}
 
 CurrentOfExpr::CurrentOfExpr(CurrentOfExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , cvarno(std::exchange(other.cvarno, (uint32_t)0ull))
     , cursor_name(std::move(other.cursor_name))
     , cursor_param(std::exchange(other.cursor_param, (int32_t)0ll))
@@ -6444,7 +6151,6 @@ CurrentOfExpr::CurrentOfExpr(CurrentOfExpr&& other) noexcept
 
 CurrentOfExpr::~CurrentOfExpr()
 {
-    if (xpr) delete xpr;
 }
 
 bool CurrentOfExpr::operator==([[maybe_unused]] const CurrentOfExpr& other) const noexcept
@@ -6463,7 +6169,7 @@ CurrentOfExpr& CurrentOfExpr::operator=(CurrentOfExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         cvarno = std::exchange(other.cvarno, (uint32_t)0ull);
         cursor_name = std::move(other.cursor_name);
         cursor_param = std::exchange(other.cursor_param, (int32_t)0ll);
@@ -6488,7 +6194,7 @@ void CurrentOfExpr::swap(CurrentOfExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CurrentOfExpr& value)
 {
     stream << "CurrentOfExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",cvarno="; stream << value.cvarno;
     stream << ",cursor_name="; stream << "\"" << value.cursor_name << "\"";
     stream << ",cursor_param="; stream << value.cursor_param;
@@ -6497,26 +6203,25 @@ std::ostream& operator<<(std::ostream& stream, const CurrentOfExpr& value)
 }
 
 NextValueExpr::NextValueExpr()
-    : xpr(nullptr)
+    : xpr()
     , seqid((uint32_t)0ull)
     , type_id((uint32_t)0ull)
 {}
 
-NextValueExpr::NextValueExpr(std::unique_ptr<::pg_query::Node> arg_xpr, uint32_t arg_seqid, uint32_t arg_type_id)
-    : xpr(arg_xpr.release())
+NextValueExpr::NextValueExpr(::pg_query::Node&& arg_xpr, uint32_t arg_seqid, uint32_t arg_type_id)
+    : xpr(std::move(arg_xpr))
     , seqid(arg_seqid)
     , type_id(arg_type_id)
 {}
 
 NextValueExpr::NextValueExpr(NextValueExpr&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
+    : xpr(std::move(other.xpr))
     , seqid(std::exchange(other.seqid, (uint32_t)0ull))
     , type_id(std::exchange(other.type_id, (uint32_t)0ull))
 {}
 
 NextValueExpr::~NextValueExpr()
 {
-    if (xpr) delete xpr;
 }
 
 bool NextValueExpr::operator==([[maybe_unused]] const NextValueExpr& other) const noexcept
@@ -6535,7 +6240,7 @@ NextValueExpr& NextValueExpr::operator=(NextValueExpr&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
+        xpr = std::move(other.xpr);
         seqid = std::exchange(other.seqid, (uint32_t)0ull);
         type_id = std::exchange(other.type_id, (uint32_t)0ull);
     }
@@ -6558,7 +6263,7 @@ void NextValueExpr::swap(NextValueExpr& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const NextValueExpr& value)
 {
     stream << "NextValueExpr(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
     stream << ",seqid="; stream << value.seqid;
     stream << ",type_id="; stream << value.type_id;
     stream << ")";
@@ -6566,30 +6271,28 @@ std::ostream& operator<<(std::ostream& stream, const NextValueExpr& value)
 }
 
 InferenceElem::InferenceElem()
-    : xpr(nullptr)
-    , expr(nullptr)
+    : xpr()
+    , expr()
     , infercollid((uint32_t)0ull)
     , inferopclass((uint32_t)0ull)
 {}
 
-InferenceElem::InferenceElem(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_expr, uint32_t arg_infercollid, uint32_t arg_inferopclass)
-    : xpr(arg_xpr.release())
-    , expr(arg_expr.release())
+InferenceElem::InferenceElem(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, uint32_t arg_infercollid, uint32_t arg_inferopclass)
+    : xpr(std::move(arg_xpr))
+    , expr(std::move(arg_expr))
     , infercollid(arg_infercollid)
     , inferopclass(arg_inferopclass)
 {}
 
 InferenceElem::InferenceElem(InferenceElem&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , expr(std::exchange(other.expr, nullptr))
+    : xpr(std::move(other.xpr))
+    , expr(std::move(other.expr))
     , infercollid(std::exchange(other.infercollid, (uint32_t)0ull))
     , inferopclass(std::exchange(other.inferopclass, (uint32_t)0ull))
 {}
 
 InferenceElem::~InferenceElem()
 {
-    if (xpr) delete xpr;
-    if (expr) delete expr;
 }
 
 bool InferenceElem::operator==([[maybe_unused]] const InferenceElem& other) const noexcept
@@ -6608,8 +6311,8 @@ InferenceElem& InferenceElem::operator=(InferenceElem&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        expr = std::exchange(other.expr, nullptr);
+        xpr = std::move(other.xpr);
+        expr = std::move(other.expr);
         infercollid = std::exchange(other.infercollid, (uint32_t)0ull);
         inferopclass = std::exchange(other.inferopclass, (uint32_t)0ull);
     }
@@ -6633,8 +6336,8 @@ void InferenceElem::swap(InferenceElem& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const InferenceElem& value)
 {
     stream << "InferenceElem(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",expr="; stream << " ptr of other struct" << (value.expr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",expr="; stream << value.expr;
     stream << ",infercollid="; stream << value.infercollid;
     stream << ",inferopclass="; stream << value.inferopclass;
     stream << ")";
@@ -6642,8 +6345,8 @@ std::ostream& operator<<(std::ostream& stream, const InferenceElem& value)
 }
 
 TargetEntry::TargetEntry()
-    : xpr(nullptr)
-    , expr(nullptr)
+    : xpr()
+    , expr()
     , resno((int32_t)0ll)
     , resname()
     , ressortgroupref((uint32_t)0ull)
@@ -6652,9 +6355,9 @@ TargetEntry::TargetEntry()
     , resjunk(false)
 {}
 
-TargetEntry::TargetEntry(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_ptr<::pg_query::Node> arg_expr, int32_t arg_resno, const std::string& arg_resname, uint32_t arg_ressortgroupref, uint32_t arg_resorigtbl, int32_t arg_resorigcol, bool arg_resjunk)
-    : xpr(arg_xpr.release())
-    , expr(arg_expr.release())
+TargetEntry::TargetEntry(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, int32_t arg_resno, const std::string& arg_resname, uint32_t arg_ressortgroupref, uint32_t arg_resorigtbl, int32_t arg_resorigcol, bool arg_resjunk)
+    : xpr(std::move(arg_xpr))
+    , expr(std::move(arg_expr))
     , resno(arg_resno)
     , resname(arg_resname)
     , ressortgroupref(arg_ressortgroupref)
@@ -6664,8 +6367,8 @@ TargetEntry::TargetEntry(std::unique_ptr<::pg_query::Node> arg_xpr, std::unique_
 {}
 
 TargetEntry::TargetEntry(TargetEntry&& other) noexcept
-    : xpr(std::exchange(other.xpr, nullptr))
-    , expr(std::exchange(other.expr, nullptr))
+    : xpr(std::move(other.xpr))
+    , expr(std::move(other.expr))
     , resno(std::exchange(other.resno, (int32_t)0ll))
     , resname(std::move(other.resname))
     , ressortgroupref(std::exchange(other.ressortgroupref, (uint32_t)0ull))
@@ -6676,8 +6379,6 @@ TargetEntry::TargetEntry(TargetEntry&& other) noexcept
 
 TargetEntry::~TargetEntry()
 {
-    if (xpr) delete xpr;
-    if (expr) delete expr;
 }
 
 bool TargetEntry::operator==([[maybe_unused]] const TargetEntry& other) const noexcept
@@ -6696,8 +6397,8 @@ TargetEntry& TargetEntry::operator=(TargetEntry&& other) noexcept
 {
     if (this != &other)
     {
-        xpr = std::exchange(other.xpr, nullptr);
-        expr = std::exchange(other.expr, nullptr);
+        xpr = std::move(other.xpr);
+        expr = std::move(other.expr);
         resno = std::exchange(other.resno, (int32_t)0ll);
         resname = std::move(other.resname);
         ressortgroupref = std::exchange(other.ressortgroupref, (uint32_t)0ull);
@@ -6729,8 +6430,8 @@ void TargetEntry::swap(TargetEntry& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const TargetEntry& value)
 {
     stream << "TargetEntry(";
-    stream << "xpr="; stream << " ptr of other struct" << (value.xpr == nullptr ? "true" : "false");
-    stream << ",expr="; stream << " ptr of other struct" << (value.expr == nullptr ? "true" : "false");
+    stream << "xpr="; stream << value.xpr;
+    stream << ",expr="; stream << value.expr;
     stream << ",resno="; stream << value.resno;
     stream << ",resname="; stream << "\"" << value.resname << "\"";
     stream << ",ressortgroupref="; stream << value.ressortgroupref;
@@ -6800,46 +6501,38 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblRef& value)
 JoinExpr::JoinExpr()
     : jointype()
     , is_natural(false)
-    , larg(nullptr)
-    , rarg(nullptr)
+    , larg()
+    , rarg()
     , using_clause()
-    , quals(nullptr)
+    , quals()
     , alias()
     , rtindex((int32_t)0ll)
 {}
 
-JoinExpr::JoinExpr(::pg_query::JoinType&& arg_jointype, bool arg_is_natural, std::unique_ptr<::pg_query::Node> arg_larg, std::unique_ptr<::pg_query::Node> arg_rarg, std::vector<std::unique_ptr<::pg_query::Node>> arg_using_clause, std::unique_ptr<::pg_query::Node> arg_quals, ::pg_query::Alias&& arg_alias, int32_t arg_rtindex)
+JoinExpr::JoinExpr(::pg_query::JoinType&& arg_jointype, bool arg_is_natural, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_quals, ::pg_query::Alias&& arg_alias, int32_t arg_rtindex)
     : jointype(std::move(arg_jointype))
     , is_natural(arg_is_natural)
-    , larg(arg_larg.release())
-    , rarg(arg_rarg.release())
-    , using_clause()
-    , quals(arg_quals.release())
+    , larg(std::move(arg_larg))
+    , rarg(std::move(arg_rarg))
+    , using_clause(std::move(arg_using_clause))
+    , quals(std::move(arg_quals))
     , alias(std::move(arg_alias))
     , rtindex(arg_rtindex)
-{
-    for (auto& it : arg_using_clause)
-        using_clause.emplace_back(it.release());
-}
+{}
 
 JoinExpr::JoinExpr(JoinExpr&& other) noexcept
     : jointype(std::move(other.jointype))
     , is_natural(std::exchange(other.is_natural, false))
-    , larg(std::exchange(other.larg, nullptr))
-    , rarg(std::exchange(other.rarg, nullptr))
+    , larg(std::move(other.larg))
+    , rarg(std::move(other.rarg))
     , using_clause(std::move(other.using_clause))
-    , quals(std::exchange(other.quals, nullptr))
+    , quals(std::move(other.quals))
     , alias(std::move(other.alias))
     , rtindex(std::exchange(other.rtindex, (int32_t)0ll))
 {}
 
 JoinExpr::~JoinExpr()
 {
-    if (larg) delete larg;
-    if (rarg) delete rarg;
-    if (quals) delete quals;
-    for (auto& it : using_clause)
-        delete it;
 }
 
 bool JoinExpr::operator==([[maybe_unused]] const JoinExpr& other) const noexcept
@@ -6860,10 +6553,10 @@ JoinExpr& JoinExpr::operator=(JoinExpr&& other) noexcept
     {
         jointype = std::move(other.jointype);
         is_natural = std::exchange(other.is_natural, false);
-        larg = std::exchange(other.larg, nullptr);
-        rarg = std::exchange(other.rarg, nullptr);
+        larg = std::move(other.larg);
+        rarg = std::move(other.rarg);
         using_clause = std::move(other.using_clause);
-        quals = std::exchange(other.quals, nullptr);
+        quals = std::move(other.quals);
         alias = std::move(other.alias);
         rtindex = std::exchange(other.rtindex, (int32_t)0ll);
     }
@@ -6893,19 +6586,19 @@ std::ostream& operator<<(std::ostream& stream, const JoinExpr& value)
     stream << "JoinExpr(";
     stream << "jointype="; stream << value.jointype;
     stream << ",is_natural="; stream << (value.is_natural ? "true" : "false");
-    stream << ",larg="; stream << " ptr of other struct" << (value.larg == nullptr ? "true" : "false");
-    stream << ",rarg="; stream << " ptr of other struct" << (value.rarg == nullptr ? "true" : "false");
+    stream << ",larg="; stream << value.larg;
+    stream << ",rarg="; stream << value.rarg;
     {
         bool first = true;
         stream << ",using_clause=[" << value.using_clause.size() << "][";
         for (const auto& it : value.using_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",quals="; stream << " ptr of other struct" << (value.quals == nullptr ? "true" : "false");
+    stream << ",quals="; stream << value.quals;
     stream << ",alias="; stream << value.alias;
     stream << ",rtindex="; stream << value.rtindex;
     stream << ")";
@@ -6914,27 +6607,21 @@ std::ostream& operator<<(std::ostream& stream, const JoinExpr& value)
 
 FromExpr::FromExpr()
     : fromlist()
-    , quals(nullptr)
+    , quals()
 {}
 
-FromExpr::FromExpr(std::vector<std::unique_ptr<::pg_query::Node>> arg_fromlist, std::unique_ptr<::pg_query::Node> arg_quals)
-    : fromlist()
-    , quals(arg_quals.release())
-{
-    for (auto& it : arg_fromlist)
-        fromlist.emplace_back(it.release());
-}
+FromExpr::FromExpr(std::vector<::pg_query::Node> arg_fromlist, ::pg_query::Node&& arg_quals)
+    : fromlist(std::move(arg_fromlist))
+    , quals(std::move(arg_quals))
+{}
 
 FromExpr::FromExpr(FromExpr&& other) noexcept
     : fromlist(std::move(other.fromlist))
-    , quals(std::exchange(other.quals, nullptr))
+    , quals(std::move(other.quals))
 {}
 
 FromExpr::~FromExpr()
 {
-    if (quals) delete quals;
-    for (auto& it : fromlist)
-        delete it;
 }
 
 bool FromExpr::operator==([[maybe_unused]] const FromExpr& other) const noexcept
@@ -6954,7 +6641,7 @@ FromExpr& FromExpr::operator=(FromExpr&& other) noexcept
     if (this != &other)
     {
         fromlist = std::move(other.fromlist);
-        quals = std::exchange(other.quals, nullptr);
+        quals = std::move(other.quals);
     }
     return *this;
 }
@@ -6979,12 +6666,12 @@ std::ostream& operator<<(std::ostream& stream, const FromExpr& value)
         stream << "fromlist=[" << value.fromlist.size() << "][";
         for (const auto& it : value.fromlist)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",quals="; stream << " ptr of other struct" << (value.quals == nullptr ? "true" : "false");
+    stream << ",quals="; stream << value.quals;
     stream << ")";
     return stream;
 }
@@ -6992,53 +6679,38 @@ std::ostream& operator<<(std::ostream& stream, const FromExpr& value)
 OnConflictExpr::OnConflictExpr()
     : action()
     , arbiter_elems()
-    , arbiter_where(nullptr)
+    , arbiter_where()
     , constraint((uint32_t)0ull)
     , on_conflict_set()
-    , on_conflict_where(nullptr)
+    , on_conflict_where()
     , excl_rel_index((int32_t)0ll)
     , excl_rel_tlist()
 {}
 
-OnConflictExpr::OnConflictExpr(::pg_query::OnConflictAction&& arg_action, std::vector<std::unique_ptr<::pg_query::Node>> arg_arbiter_elems, std::unique_ptr<::pg_query::Node> arg_arbiter_where, uint32_t arg_constraint, std::vector<std::unique_ptr<::pg_query::Node>> arg_on_conflict_set, std::unique_ptr<::pg_query::Node> arg_on_conflict_where, int32_t arg_excl_rel_index, std::vector<std::unique_ptr<::pg_query::Node>> arg_excl_rel_tlist)
+OnConflictExpr::OnConflictExpr(::pg_query::OnConflictAction&& arg_action, std::vector<::pg_query::Node> arg_arbiter_elems, ::pg_query::Node&& arg_arbiter_where, uint32_t arg_constraint, std::vector<::pg_query::Node> arg_on_conflict_set, ::pg_query::Node&& arg_on_conflict_where, int32_t arg_excl_rel_index, std::vector<::pg_query::Node> arg_excl_rel_tlist)
     : action(std::move(arg_action))
-    , arbiter_elems()
-    , arbiter_where(arg_arbiter_where.release())
+    , arbiter_elems(std::move(arg_arbiter_elems))
+    , arbiter_where(std::move(arg_arbiter_where))
     , constraint(arg_constraint)
-    , on_conflict_set()
-    , on_conflict_where(arg_on_conflict_where.release())
+    , on_conflict_set(std::move(arg_on_conflict_set))
+    , on_conflict_where(std::move(arg_on_conflict_where))
     , excl_rel_index(arg_excl_rel_index)
-    , excl_rel_tlist()
-{
-    for (auto& it : arg_arbiter_elems)
-        arbiter_elems.emplace_back(it.release());
-    for (auto& it : arg_on_conflict_set)
-        on_conflict_set.emplace_back(it.release());
-    for (auto& it : arg_excl_rel_tlist)
-        excl_rel_tlist.emplace_back(it.release());
-}
+    , excl_rel_tlist(std::move(arg_excl_rel_tlist))
+{}
 
 OnConflictExpr::OnConflictExpr(OnConflictExpr&& other) noexcept
     : action(std::move(other.action))
     , arbiter_elems(std::move(other.arbiter_elems))
-    , arbiter_where(std::exchange(other.arbiter_where, nullptr))
+    , arbiter_where(std::move(other.arbiter_where))
     , constraint(std::exchange(other.constraint, (uint32_t)0ull))
     , on_conflict_set(std::move(other.on_conflict_set))
-    , on_conflict_where(std::exchange(other.on_conflict_where, nullptr))
+    , on_conflict_where(std::move(other.on_conflict_where))
     , excl_rel_index(std::exchange(other.excl_rel_index, (int32_t)0ll))
     , excl_rel_tlist(std::move(other.excl_rel_tlist))
 {}
 
 OnConflictExpr::~OnConflictExpr()
 {
-    if (arbiter_where) delete arbiter_where;
-    if (on_conflict_where) delete on_conflict_where;
-    for (auto& it : arbiter_elems)
-        delete it;
-    for (auto& it : on_conflict_set)
-        delete it;
-    for (auto& it : excl_rel_tlist)
-        delete it;
 }
 
 bool OnConflictExpr::operator==([[maybe_unused]] const OnConflictExpr& other) const noexcept
@@ -7059,10 +6731,10 @@ OnConflictExpr& OnConflictExpr::operator=(OnConflictExpr&& other) noexcept
     {
         action = std::move(other.action);
         arbiter_elems = std::move(other.arbiter_elems);
-        arbiter_where = std::exchange(other.arbiter_where, nullptr);
+        arbiter_where = std::move(other.arbiter_where);
         constraint = std::exchange(other.constraint, (uint32_t)0ull);
         on_conflict_set = std::move(other.on_conflict_set);
-        on_conflict_where = std::exchange(other.on_conflict_where, nullptr);
+        on_conflict_where = std::move(other.on_conflict_where);
         excl_rel_index = std::exchange(other.excl_rel_index, (int32_t)0ll);
         excl_rel_tlist = std::move(other.excl_rel_tlist);
     }
@@ -7096,31 +6768,31 @@ std::ostream& operator<<(std::ostream& stream, const OnConflictExpr& value)
         stream << ",arbiter_elems=[" << value.arbiter_elems.size() << "][";
         for (const auto& it : value.arbiter_elems)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",arbiter_where="; stream << " ptr of other struct" << (value.arbiter_where == nullptr ? "true" : "false");
+    stream << ",arbiter_where="; stream << value.arbiter_where;
     stream << ",constraint="; stream << value.constraint;
     {
         bool first = true;
         stream << ",on_conflict_set=[" << value.on_conflict_set.size() << "][";
         for (const auto& it : value.on_conflict_set)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",on_conflict_where="; stream << " ptr of other struct" << (value.on_conflict_where == nullptr ? "true" : "false");
+    stream << ",on_conflict_where="; stream << value.on_conflict_where;
     stream << ",excl_rel_index="; stream << value.excl_rel_index;
     {
         bool first = true;
         stream << ",excl_rel_tlist=[" << value.excl_rel_tlist.size() << "][";
         for (const auto& it : value.excl_rel_tlist)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7136,25 +6808,20 @@ IntoClause::IntoClause()
     , options()
     , on_commit()
     , table_space_name()
-    , view_query(nullptr)
+    , view_query()
     , skip_data(false)
 {}
 
-IntoClause::IntoClause(::pg_query::RangeVar&& arg_rel, std::vector<std::unique_ptr<::pg_query::Node>> arg_col_names, const std::string& arg_access_method, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, ::pg_query::OnCommitAction&& arg_on_commit, const std::string& arg_table_space_name, std::unique_ptr<::pg_query::Node> arg_view_query, bool arg_skip_data)
+IntoClause::IntoClause(::pg_query::RangeVar&& arg_rel, std::vector<::pg_query::Node> arg_col_names, const std::string& arg_access_method, std::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_on_commit, const std::string& arg_table_space_name, ::pg_query::Node&& arg_view_query, bool arg_skip_data)
     : rel(std::move(arg_rel))
-    , col_names()
+    , col_names(std::move(arg_col_names))
     , access_method(arg_access_method)
-    , options()
+    , options(std::move(arg_options))
     , on_commit(std::move(arg_on_commit))
     , table_space_name(arg_table_space_name)
-    , view_query(arg_view_query.release())
+    , view_query(std::move(arg_view_query))
     , skip_data(arg_skip_data)
-{
-    for (auto& it : arg_col_names)
-        col_names.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+{}
 
 IntoClause::IntoClause(IntoClause&& other) noexcept
     : rel(std::move(other.rel))
@@ -7163,17 +6830,12 @@ IntoClause::IntoClause(IntoClause&& other) noexcept
     , options(std::move(other.options))
     , on_commit(std::move(other.on_commit))
     , table_space_name(std::move(other.table_space_name))
-    , view_query(std::exchange(other.view_query, nullptr))
+    , view_query(std::move(other.view_query))
     , skip_data(std::exchange(other.skip_data, false))
 {}
 
 IntoClause::~IntoClause()
 {
-    if (view_query) delete view_query;
-    for (auto& it : col_names)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool IntoClause::operator==([[maybe_unused]] const IntoClause& other) const noexcept
@@ -7198,7 +6860,7 @@ IntoClause& IntoClause::operator=(IntoClause&& other) noexcept
         options = std::move(other.options);
         on_commit = std::move(other.on_commit);
         table_space_name = std::move(other.table_space_name);
-        view_query = std::exchange(other.view_query, nullptr);
+        view_query = std::move(other.view_query);
         skip_data = std::exchange(other.skip_data, false);
     }
     return *this;
@@ -7231,7 +6893,7 @@ std::ostream& operator<<(std::ostream& stream, const IntoClause& value)
         stream << ",col_names=[" << value.col_names.size() << "][";
         for (const auto& it : value.col_names)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7242,40 +6904,39 @@ std::ostream& operator<<(std::ostream& stream, const IntoClause& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
     stream << ",on_commit="; stream << value.on_commit;
     stream << ",table_space_name="; stream << "\"" << value.table_space_name << "\"";
-    stream << ",view_query="; stream << " ptr of other struct" << (value.view_query == nullptr ? "true" : "false");
+    stream << ",view_query="; stream << value.view_query;
     stream << ",skip_data="; stream << (value.skip_data ? "true" : "false");
     stream << ")";
     return stream;
 }
 
 RawStmt::RawStmt()
-    : stmt(nullptr)
+    : stmt()
     , stmt_location((int32_t)0ll)
     , stmt_len((int32_t)0ll)
 {}
 
-RawStmt::RawStmt(std::unique_ptr<::pg_query::Node> arg_stmt, int32_t arg_stmt_location, int32_t arg_stmt_len)
-    : stmt(arg_stmt.release())
+RawStmt::RawStmt(::pg_query::Node&& arg_stmt, int32_t arg_stmt_location, int32_t arg_stmt_len)
+    : stmt(std::move(arg_stmt))
     , stmt_location(arg_stmt_location)
     , stmt_len(arg_stmt_len)
 {}
 
 RawStmt::RawStmt(RawStmt&& other) noexcept
-    : stmt(std::exchange(other.stmt, nullptr))
+    : stmt(std::move(other.stmt))
     , stmt_location(std::exchange(other.stmt_location, (int32_t)0ll))
     , stmt_len(std::exchange(other.stmt_len, (int32_t)0ll))
 {}
 
 RawStmt::~RawStmt()
 {
-    if (stmt) delete stmt;
 }
 
 bool RawStmt::operator==([[maybe_unused]] const RawStmt& other) const noexcept
@@ -7294,7 +6955,7 @@ RawStmt& RawStmt::operator=(RawStmt&& other) noexcept
 {
     if (this != &other)
     {
-        stmt = std::exchange(other.stmt, nullptr);
+        stmt = std::move(other.stmt);
         stmt_location = std::exchange(other.stmt_location, (int32_t)0ll);
         stmt_len = std::exchange(other.stmt_len, (int32_t)0ll);
     }
@@ -7317,7 +6978,7 @@ void RawStmt::swap(RawStmt& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const RawStmt& value)
 {
     stream << "RawStmt(";
-    stream << "stmt="; stream << " ptr of other struct" << (value.stmt == nullptr ? "true" : "false");
+    stream << "stmt="; stream << value.stmt;
     stream << ",stmt_location="; stream << value.stmt_location;
     stream << ",stmt_len="; stream << value.stmt_len;
     stream << ")";
@@ -7328,7 +6989,7 @@ Query::Query()
     : command_type()
     , query_source()
     , can_set_tag(false)
-    , utility_stmt(nullptr)
+    , utility_stmt()
     , result_relation((int32_t)0ll)
     , has_aggs(false)
     , has_window_funcs(false)
@@ -7348,26 +7009,26 @@ Query::Query()
     , returning_list()
     , group_clause()
     , grouping_sets()
-    , having_qual(nullptr)
+    , having_qual()
     , window_clause()
     , distinct_clause()
     , sort_clause()
-    , limit_offset(nullptr)
-    , limit_count(nullptr)
+    , limit_offset()
+    , limit_count()
     , limit_option()
     , row_marks()
-    , set_operations(nullptr)
+    , set_operations()
     , constraint_deps()
     , with_check_options()
     , stmt_location((int32_t)0ll)
     , stmt_len((int32_t)0ll)
 {}
 
-Query::Query(::pg_query::CmdType&& arg_command_type, ::pg_query::QuerySource&& arg_query_source, bool arg_can_set_tag, std::unique_ptr<::pg_query::Node> arg_utility_stmt, int32_t arg_result_relation, bool arg_has_aggs, bool arg_has_window_funcs, bool arg_has_target_srfs, bool arg_has_sub_links, bool arg_has_distinct_on, bool arg_has_recursive, bool arg_has_modifying_cte, bool arg_has_for_update, bool arg_has_row_security, std::vector<std::unique_ptr<::pg_query::Node>> arg_cte_list, std::vector<std::unique_ptr<::pg_query::Node>> arg_rtable, ::pg_query::FromExpr&& arg_jointree, std::vector<std::unique_ptr<::pg_query::Node>> arg_target_list, ::pg_query::OverridingKind&& arg_override, ::pg_query::OnConflictExpr&& arg_on_conflict, std::vector<std::unique_ptr<::pg_query::Node>> arg_returning_list, std::vector<std::unique_ptr<::pg_query::Node>> arg_group_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_grouping_sets, std::unique_ptr<::pg_query::Node> arg_having_qual, std::vector<std::unique_ptr<::pg_query::Node>> arg_window_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_distinct_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_sort_clause, std::unique_ptr<::pg_query::Node> arg_limit_offset, std::unique_ptr<::pg_query::Node> arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<std::unique_ptr<::pg_query::Node>> arg_row_marks, std::unique_ptr<::pg_query::Node> arg_set_operations, std::vector<std::unique_ptr<::pg_query::Node>> arg_constraint_deps, std::vector<std::unique_ptr<::pg_query::Node>> arg_with_check_options, int32_t arg_stmt_location, int32_t arg_stmt_len)
+Query::Query(::pg_query::CmdType&& arg_command_type, ::pg_query::QuerySource&& arg_query_source, bool arg_can_set_tag, ::pg_query::Node&& arg_utility_stmt, int32_t arg_result_relation, bool arg_has_aggs, bool arg_has_window_funcs, bool arg_has_target_srfs, bool arg_has_sub_links, bool arg_has_distinct_on, bool arg_has_recursive, bool arg_has_modifying_cte, bool arg_has_for_update, bool arg_has_row_security, std::vector<::pg_query::Node> arg_cte_list, std::vector<::pg_query::Node> arg_rtable, ::pg_query::FromExpr&& arg_jointree, std::vector<::pg_query::Node> arg_target_list, ::pg_query::OverridingKind&& arg_override, ::pg_query::OnConflictExpr&& arg_on_conflict, std::vector<::pg_query::Node> arg_returning_list, std::vector<::pg_query::Node> arg_group_clause, std::vector<::pg_query::Node> arg_grouping_sets, ::pg_query::Node&& arg_having_qual, std::vector<::pg_query::Node> arg_window_clause, std::vector<::pg_query::Node> arg_distinct_clause, std::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<::pg_query::Node> arg_row_marks, ::pg_query::Node&& arg_set_operations, std::vector<::pg_query::Node> arg_constraint_deps, std::vector<::pg_query::Node> arg_with_check_options, int32_t arg_stmt_location, int32_t arg_stmt_len)
     : command_type(std::move(arg_command_type))
     , query_source(std::move(arg_query_source))
     , can_set_tag(arg_can_set_tag)
-    , utility_stmt(arg_utility_stmt.release())
+    , utility_stmt(std::move(arg_utility_stmt))
     , result_relation(arg_result_relation)
     , has_aggs(arg_has_aggs)
     , has_window_funcs(arg_has_window_funcs)
@@ -7378,60 +7039,35 @@ Query::Query(::pg_query::CmdType&& arg_command_type, ::pg_query::QuerySource&& a
     , has_modifying_cte(arg_has_modifying_cte)
     , has_for_update(arg_has_for_update)
     , has_row_security(arg_has_row_security)
-    , cte_list()
-    , rtable()
+    , cte_list(std::move(arg_cte_list))
+    , rtable(std::move(arg_rtable))
     , jointree(std::move(arg_jointree))
-    , target_list()
+    , target_list(std::move(arg_target_list))
     , override(std::move(arg_override))
     , on_conflict(std::move(arg_on_conflict))
-    , returning_list()
-    , group_clause()
-    , grouping_sets()
-    , having_qual(arg_having_qual.release())
-    , window_clause()
-    , distinct_clause()
-    , sort_clause()
-    , limit_offset(arg_limit_offset.release())
-    , limit_count(arg_limit_count.release())
+    , returning_list(std::move(arg_returning_list))
+    , group_clause(std::move(arg_group_clause))
+    , grouping_sets(std::move(arg_grouping_sets))
+    , having_qual(std::move(arg_having_qual))
+    , window_clause(std::move(arg_window_clause))
+    , distinct_clause(std::move(arg_distinct_clause))
+    , sort_clause(std::move(arg_sort_clause))
+    , limit_offset(std::move(arg_limit_offset))
+    , limit_count(std::move(arg_limit_count))
     , limit_option(std::move(arg_limit_option))
-    , row_marks()
-    , set_operations(arg_set_operations.release())
-    , constraint_deps()
-    , with_check_options()
+    , row_marks(std::move(arg_row_marks))
+    , set_operations(std::move(arg_set_operations))
+    , constraint_deps(std::move(arg_constraint_deps))
+    , with_check_options(std::move(arg_with_check_options))
     , stmt_location(arg_stmt_location)
     , stmt_len(arg_stmt_len)
-{
-    for (auto& it : arg_cte_list)
-        cte_list.emplace_back(it.release());
-    for (auto& it : arg_rtable)
-        rtable.emplace_back(it.release());
-    for (auto& it : arg_target_list)
-        target_list.emplace_back(it.release());
-    for (auto& it : arg_returning_list)
-        returning_list.emplace_back(it.release());
-    for (auto& it : arg_group_clause)
-        group_clause.emplace_back(it.release());
-    for (auto& it : arg_grouping_sets)
-        grouping_sets.emplace_back(it.release());
-    for (auto& it : arg_window_clause)
-        window_clause.emplace_back(it.release());
-    for (auto& it : arg_distinct_clause)
-        distinct_clause.emplace_back(it.release());
-    for (auto& it : arg_sort_clause)
-        sort_clause.emplace_back(it.release());
-    for (auto& it : arg_row_marks)
-        row_marks.emplace_back(it.release());
-    for (auto& it : arg_constraint_deps)
-        constraint_deps.emplace_back(it.release());
-    for (auto& it : arg_with_check_options)
-        with_check_options.emplace_back(it.release());
-}
+{}
 
 Query::Query(Query&& other) noexcept
     : command_type(std::move(other.command_type))
     , query_source(std::move(other.query_source))
     , can_set_tag(std::exchange(other.can_set_tag, false))
-    , utility_stmt(std::exchange(other.utility_stmt, nullptr))
+    , utility_stmt(std::move(other.utility_stmt))
     , result_relation(std::exchange(other.result_relation, (int32_t)0ll))
     , has_aggs(std::exchange(other.has_aggs, false))
     , has_window_funcs(std::exchange(other.has_window_funcs, false))
@@ -7451,15 +7087,15 @@ Query::Query(Query&& other) noexcept
     , returning_list(std::move(other.returning_list))
     , group_clause(std::move(other.group_clause))
     , grouping_sets(std::move(other.grouping_sets))
-    , having_qual(std::exchange(other.having_qual, nullptr))
+    , having_qual(std::move(other.having_qual))
     , window_clause(std::move(other.window_clause))
     , distinct_clause(std::move(other.distinct_clause))
     , sort_clause(std::move(other.sort_clause))
-    , limit_offset(std::exchange(other.limit_offset, nullptr))
-    , limit_count(std::exchange(other.limit_count, nullptr))
+    , limit_offset(std::move(other.limit_offset))
+    , limit_count(std::move(other.limit_count))
     , limit_option(std::move(other.limit_option))
     , row_marks(std::move(other.row_marks))
-    , set_operations(std::exchange(other.set_operations, nullptr))
+    , set_operations(std::move(other.set_operations))
     , constraint_deps(std::move(other.constraint_deps))
     , with_check_options(std::move(other.with_check_options))
     , stmt_location(std::exchange(other.stmt_location, (int32_t)0ll))
@@ -7468,35 +7104,6 @@ Query::Query(Query&& other) noexcept
 
 Query::~Query()
 {
-    if (utility_stmt) delete utility_stmt;
-    if (having_qual) delete having_qual;
-    if (limit_offset) delete limit_offset;
-    if (limit_count) delete limit_count;
-    if (set_operations) delete set_operations;
-    for (auto& it : cte_list)
-        delete it;
-    for (auto& it : rtable)
-        delete it;
-    for (auto& it : target_list)
-        delete it;
-    for (auto& it : returning_list)
-        delete it;
-    for (auto& it : group_clause)
-        delete it;
-    for (auto& it : grouping_sets)
-        delete it;
-    for (auto& it : window_clause)
-        delete it;
-    for (auto& it : distinct_clause)
-        delete it;
-    for (auto& it : sort_clause)
-        delete it;
-    for (auto& it : row_marks)
-        delete it;
-    for (auto& it : constraint_deps)
-        delete it;
-    for (auto& it : with_check_options)
-        delete it;
 }
 
 bool Query::operator==([[maybe_unused]] const Query& other) const noexcept
@@ -7518,7 +7125,7 @@ Query& Query::operator=(Query&& other) noexcept
         command_type = std::move(other.command_type);
         query_source = std::move(other.query_source);
         can_set_tag = std::exchange(other.can_set_tag, false);
-        utility_stmt = std::exchange(other.utility_stmt, nullptr);
+        utility_stmt = std::move(other.utility_stmt);
         result_relation = std::exchange(other.result_relation, (int32_t)0ll);
         has_aggs = std::exchange(other.has_aggs, false);
         has_window_funcs = std::exchange(other.has_window_funcs, false);
@@ -7538,15 +7145,15 @@ Query& Query::operator=(Query&& other) noexcept
         returning_list = std::move(other.returning_list);
         group_clause = std::move(other.group_clause);
         grouping_sets = std::move(other.grouping_sets);
-        having_qual = std::exchange(other.having_qual, nullptr);
+        having_qual = std::move(other.having_qual);
         window_clause = std::move(other.window_clause);
         distinct_clause = std::move(other.distinct_clause);
         sort_clause = std::move(other.sort_clause);
-        limit_offset = std::exchange(other.limit_offset, nullptr);
-        limit_count = std::exchange(other.limit_count, nullptr);
+        limit_offset = std::move(other.limit_offset);
+        limit_count = std::move(other.limit_count);
         limit_option = std::move(other.limit_option);
         row_marks = std::move(other.row_marks);
-        set_operations = std::exchange(other.set_operations, nullptr);
+        set_operations = std::move(other.set_operations);
         constraint_deps = std::move(other.constraint_deps);
         with_check_options = std::move(other.with_check_options);
         stmt_location = std::exchange(other.stmt_location, (int32_t)0ll);
@@ -7607,7 +7214,7 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
     stream << "command_type="; stream << value.command_type;
     stream << ",query_source="; stream << value.query_source;
     stream << ",can_set_tag="; stream << (value.can_set_tag ? "true" : "false");
-    stream << ",utility_stmt="; stream << " ptr of other struct" << (value.utility_stmt == nullptr ? "true" : "false");
+    stream << ",utility_stmt="; stream << value.utility_stmt;
     stream << ",result_relation="; stream << value.result_relation;
     stream << ",has_aggs="; stream << (value.has_aggs ? "true" : "false");
     stream << ",has_window_funcs="; stream << (value.has_window_funcs ? "true" : "false");
@@ -7623,7 +7230,7 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
         stream << ",cte_list=[" << value.cte_list.size() << "][";
         for (const auto& it : value.cte_list)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7633,7 +7240,7 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
         stream << ",rtable=[" << value.rtable.size() << "][";
         for (const auto& it : value.rtable)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7644,7 +7251,7 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
         stream << ",target_list=[" << value.target_list.size() << "][";
         for (const auto& it : value.target_list)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7656,7 +7263,7 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
         stream << ",returning_list=[" << value.returning_list.size() << "][";
         for (const auto& it : value.returning_list)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7666,7 +7273,7 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
         stream << ",group_clause=[" << value.group_clause.size() << "][";
         for (const auto& it : value.group_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7676,18 +7283,18 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
         stream << ",grouping_sets=[" << value.grouping_sets.size() << "][";
         for (const auto& it : value.grouping_sets)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",having_qual="; stream << " ptr of other struct" << (value.having_qual == nullptr ? "true" : "false");
+    stream << ",having_qual="; stream << value.having_qual;
     {
         bool first = true;
         stream << ",window_clause=[" << value.window_clause.size() << "][";
         for (const auto& it : value.window_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7697,7 +7304,7 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
         stream << ",distinct_clause=[" << value.distinct_clause.size() << "][";
         for (const auto& it : value.distinct_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7707,31 +7314,31 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
         stream << ",sort_clause=[" << value.sort_clause.size() << "][";
         for (const auto& it : value.sort_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",limit_offset="; stream << " ptr of other struct" << (value.limit_offset == nullptr ? "true" : "false");
-    stream << ",limit_count="; stream << " ptr of other struct" << (value.limit_count == nullptr ? "true" : "false");
+    stream << ",limit_offset="; stream << value.limit_offset;
+    stream << ",limit_count="; stream << value.limit_count;
     stream << ",limit_option="; stream << value.limit_option;
     {
         bool first = true;
         stream << ",row_marks=[" << value.row_marks.size() << "][";
         for (const auto& it : value.row_marks)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",set_operations="; stream << " ptr of other struct" << (value.set_operations == nullptr ? "true" : "false");
+    stream << ",set_operations="; stream << value.set_operations;
     {
         bool first = true;
         stream << ",constraint_deps=[" << value.constraint_deps.size() << "][";
         for (const auto& it : value.constraint_deps)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7741,7 +7348,7 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
         stream << ",with_check_options=[" << value.with_check_options.size() << "][";
         for (const auto& it : value.with_check_options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7755,32 +7362,27 @@ std::ostream& operator<<(std::ostream& stream, const Query& value)
 InsertStmt::InsertStmt()
     : relation()
     , cols()
-    , select_stmt(nullptr)
+    , select_stmt()
     , on_conflict_clause()
     , returning_list()
     , with_clause()
     , override()
 {}
 
-InsertStmt::InsertStmt(::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_cols, std::unique_ptr<::pg_query::Node> arg_select_stmt, ::pg_query::OnConflictClause&& arg_on_conflict_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_returning_list, ::pg_query::WithClause&& arg_with_clause, ::pg_query::OverridingKind&& arg_override)
+InsertStmt::InsertStmt(::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_cols, ::pg_query::Node&& arg_select_stmt, ::pg_query::OnConflictClause&& arg_on_conflict_clause, std::vector<::pg_query::Node> arg_returning_list, ::pg_query::WithClause&& arg_with_clause, ::pg_query::OverridingKind&& arg_override)
     : relation(std::move(arg_relation))
-    , cols()
-    , select_stmt(arg_select_stmt.release())
+    , cols(std::move(arg_cols))
+    , select_stmt(std::move(arg_select_stmt))
     , on_conflict_clause(std::move(arg_on_conflict_clause))
-    , returning_list()
+    , returning_list(std::move(arg_returning_list))
     , with_clause(std::move(arg_with_clause))
     , override(std::move(arg_override))
-{
-    for (auto& it : arg_cols)
-        cols.emplace_back(it.release());
-    for (auto& it : arg_returning_list)
-        returning_list.emplace_back(it.release());
-}
+{}
 
 InsertStmt::InsertStmt(InsertStmt&& other) noexcept
     : relation(std::move(other.relation))
     , cols(std::move(other.cols))
-    , select_stmt(std::exchange(other.select_stmt, nullptr))
+    , select_stmt(std::move(other.select_stmt))
     , on_conflict_clause(std::move(other.on_conflict_clause))
     , returning_list(std::move(other.returning_list))
     , with_clause(std::move(other.with_clause))
@@ -7789,11 +7391,6 @@ InsertStmt::InsertStmt(InsertStmt&& other) noexcept
 
 InsertStmt::~InsertStmt()
 {
-    if (select_stmt) delete select_stmt;
-    for (auto& it : cols)
-        delete it;
-    for (auto& it : returning_list)
-        delete it;
 }
 
 bool InsertStmt::operator==([[maybe_unused]] const InsertStmt& other) const noexcept
@@ -7814,7 +7411,7 @@ InsertStmt& InsertStmt::operator=(InsertStmt&& other) noexcept
     {
         relation = std::move(other.relation);
         cols = std::move(other.cols);
-        select_stmt = std::exchange(other.select_stmt, nullptr);
+        select_stmt = std::move(other.select_stmt);
         on_conflict_clause = std::move(other.on_conflict_clause);
         returning_list = std::move(other.returning_list);
         with_clause = std::move(other.with_clause);
@@ -7849,19 +7446,19 @@ std::ostream& operator<<(std::ostream& stream, const InsertStmt& value)
         stream << ",cols=[" << value.cols.size() << "][";
         for (const auto& it : value.cols)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",select_stmt="; stream << " ptr of other struct" << (value.select_stmt == nullptr ? "true" : "false");
+    stream << ",select_stmt="; stream << value.select_stmt;
     stream << ",on_conflict_clause="; stream << value.on_conflict_clause;
     {
         bool first = true;
         stream << ",returning_list=[" << value.returning_list.size() << "][";
         for (const auto& it : value.returning_list)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7875,39 +7472,29 @@ std::ostream& operator<<(std::ostream& stream, const InsertStmt& value)
 DeleteStmt::DeleteStmt()
     : relation()
     , using_clause()
-    , where_clause(nullptr)
+    , where_clause()
     , returning_list()
     , with_clause()
 {}
 
-DeleteStmt::DeleteStmt(::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_using_clause, std::unique_ptr<::pg_query::Node> arg_where_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_returning_list, ::pg_query::WithClause&& arg_with_clause)
+DeleteStmt::DeleteStmt(::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_returning_list, ::pg_query::WithClause&& arg_with_clause)
     : relation(std::move(arg_relation))
-    , using_clause()
-    , where_clause(arg_where_clause.release())
-    , returning_list()
+    , using_clause(std::move(arg_using_clause))
+    , where_clause(std::move(arg_where_clause))
+    , returning_list(std::move(arg_returning_list))
     , with_clause(std::move(arg_with_clause))
-{
-    for (auto& it : arg_using_clause)
-        using_clause.emplace_back(it.release());
-    for (auto& it : arg_returning_list)
-        returning_list.emplace_back(it.release());
-}
+{}
 
 DeleteStmt::DeleteStmt(DeleteStmt&& other) noexcept
     : relation(std::move(other.relation))
     , using_clause(std::move(other.using_clause))
-    , where_clause(std::exchange(other.where_clause, nullptr))
+    , where_clause(std::move(other.where_clause))
     , returning_list(std::move(other.returning_list))
     , with_clause(std::move(other.with_clause))
 {}
 
 DeleteStmt::~DeleteStmt()
 {
-    if (where_clause) delete where_clause;
-    for (auto& it : using_clause)
-        delete it;
-    for (auto& it : returning_list)
-        delete it;
 }
 
 bool DeleteStmt::operator==([[maybe_unused]] const DeleteStmt& other) const noexcept
@@ -7928,7 +7515,7 @@ DeleteStmt& DeleteStmt::operator=(DeleteStmt&& other) noexcept
     {
         relation = std::move(other.relation);
         using_clause = std::move(other.using_clause);
-        where_clause = std::exchange(other.where_clause, nullptr);
+        where_clause = std::move(other.where_clause);
         returning_list = std::move(other.returning_list);
         with_clause = std::move(other.with_clause);
     }
@@ -7959,18 +7546,18 @@ std::ostream& operator<<(std::ostream& stream, const DeleteStmt& value)
         stream << ",using_clause=[" << value.using_clause.size() << "][";
         for (const auto& it : value.using_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",where_clause="; stream << " ptr of other struct" << (value.where_clause == nullptr ? "true" : "false");
+    stream << ",where_clause="; stream << value.where_clause;
     {
         bool first = true;
         stream << ",returning_list=[" << value.returning_list.size() << "][";
         for (const auto& it : value.returning_list)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -7983,32 +7570,25 @@ std::ostream& operator<<(std::ostream& stream, const DeleteStmt& value)
 UpdateStmt::UpdateStmt()
     : relation()
     , target_list()
-    , where_clause(nullptr)
+    , where_clause()
     , from_clause()
     , returning_list()
     , with_clause()
 {}
 
-UpdateStmt::UpdateStmt(::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_target_list, std::unique_ptr<::pg_query::Node> arg_where_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_from_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_returning_list, ::pg_query::WithClause&& arg_with_clause)
+UpdateStmt::UpdateStmt(::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_from_clause, std::vector<::pg_query::Node> arg_returning_list, ::pg_query::WithClause&& arg_with_clause)
     : relation(std::move(arg_relation))
-    , target_list()
-    , where_clause(arg_where_clause.release())
-    , from_clause()
-    , returning_list()
+    , target_list(std::move(arg_target_list))
+    , where_clause(std::move(arg_where_clause))
+    , from_clause(std::move(arg_from_clause))
+    , returning_list(std::move(arg_returning_list))
     , with_clause(std::move(arg_with_clause))
-{
-    for (auto& it : arg_target_list)
-        target_list.emplace_back(it.release());
-    for (auto& it : arg_from_clause)
-        from_clause.emplace_back(it.release());
-    for (auto& it : arg_returning_list)
-        returning_list.emplace_back(it.release());
-}
+{}
 
 UpdateStmt::UpdateStmt(UpdateStmt&& other) noexcept
     : relation(std::move(other.relation))
     , target_list(std::move(other.target_list))
-    , where_clause(std::exchange(other.where_clause, nullptr))
+    , where_clause(std::move(other.where_clause))
     , from_clause(std::move(other.from_clause))
     , returning_list(std::move(other.returning_list))
     , with_clause(std::move(other.with_clause))
@@ -8016,13 +7596,6 @@ UpdateStmt::UpdateStmt(UpdateStmt&& other) noexcept
 
 UpdateStmt::~UpdateStmt()
 {
-    if (where_clause) delete where_clause;
-    for (auto& it : target_list)
-        delete it;
-    for (auto& it : from_clause)
-        delete it;
-    for (auto& it : returning_list)
-        delete it;
 }
 
 bool UpdateStmt::operator==([[maybe_unused]] const UpdateStmt& other) const noexcept
@@ -8043,7 +7616,7 @@ UpdateStmt& UpdateStmt::operator=(UpdateStmt&& other) noexcept
     {
         relation = std::move(other.relation);
         target_list = std::move(other.target_list);
-        where_clause = std::exchange(other.where_clause, nullptr);
+        where_clause = std::move(other.where_clause);
         from_clause = std::move(other.from_clause);
         returning_list = std::move(other.returning_list);
         with_clause = std::move(other.with_clause);
@@ -8076,18 +7649,18 @@ std::ostream& operator<<(std::ostream& stream, const UpdateStmt& value)
         stream << ",target_list=[" << value.target_list.size() << "][";
         for (const auto& it : value.target_list)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",where_clause="; stream << " ptr of other struct" << (value.where_clause == nullptr ? "true" : "false");
+    stream << ",where_clause="; stream << value.where_clause;
     {
         bool first = true;
         stream << ",from_clause=[" << value.from_clause.size() << "][";
         for (const auto& it : value.from_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8097,7 +7670,7 @@ std::ostream& operator<<(std::ostream& stream, const UpdateStmt& value)
         stream << ",returning_list=[" << value.returning_list.size() << "][";
         for (const auto& it : value.returning_list)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8112,14 +7685,14 @@ SelectStmt::SelectStmt()
     , into_clause()
     , target_list()
     , from_clause()
-    , where_clause(nullptr)
+    , where_clause()
     , group_clause()
-    , having_clause(nullptr)
+    , having_clause()
     , window_clause()
     , values_lists()
     , sort_clause()
-    , limit_offset(nullptr)
-    , limit_count(nullptr)
+    , limit_offset()
+    , limit_count()
     , limit_option()
     , locking_clause()
     , with_clause()
@@ -8129,58 +7702,41 @@ SelectStmt::SelectStmt()
     , rarg()
 {}
 
-SelectStmt::SelectStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_distinct_clause, ::pg_query::IntoClause&& arg_into_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_target_list, std::vector<std::unique_ptr<::pg_query::Node>> arg_from_clause, std::unique_ptr<::pg_query::Node> arg_where_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_group_clause, std::unique_ptr<::pg_query::Node> arg_having_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_window_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_values_lists, std::vector<std::unique_ptr<::pg_query::Node>> arg_sort_clause, std::unique_ptr<::pg_query::Node> arg_limit_offset, std::unique_ptr<::pg_query::Node> arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<std::unique_ptr<::pg_query::Node>> arg_locking_clause, ::pg_query::WithClause&& arg_with_clause, ::pg_query::SetOperation&& arg_op, bool arg_all, ::pg_query::SelectStmt&& arg_larg, ::pg_query::SelectStmt&& arg_rarg)
-    : distinct_clause()
+SelectStmt::SelectStmt(std::vector<::pg_query::Node> arg_distinct_clause, ::pg_query::IntoClause&& arg_into_clause, std::vector<::pg_query::Node> arg_target_list, std::vector<::pg_query::Node> arg_from_clause, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_group_clause, ::pg_query::Node&& arg_having_clause, std::vector<::pg_query::Node> arg_window_clause, std::vector<::pg_query::Node> arg_values_lists, std::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<::pg_query::Node> arg_locking_clause, ::pg_query::WithClause&& arg_with_clause, ::pg_query::SetOperation&& arg_op, bool arg_all, ::pg_query::SelectStmt&& arg_larg, ::pg_query::SelectStmt&& arg_rarg)
+    : distinct_clause(std::move(arg_distinct_clause))
     , into_clause(std::move(arg_into_clause))
-    , target_list()
-    , from_clause()
-    , where_clause(arg_where_clause.release())
-    , group_clause()
-    , having_clause(arg_having_clause.release())
-    , window_clause()
-    , values_lists()
-    , sort_clause()
-    , limit_offset(arg_limit_offset.release())
-    , limit_count(arg_limit_count.release())
+    , target_list(std::move(arg_target_list))
+    , from_clause(std::move(arg_from_clause))
+    , where_clause(std::move(arg_where_clause))
+    , group_clause(std::move(arg_group_clause))
+    , having_clause(std::move(arg_having_clause))
+    , window_clause(std::move(arg_window_clause))
+    , values_lists(std::move(arg_values_lists))
+    , sort_clause(std::move(arg_sort_clause))
+    , limit_offset(std::move(arg_limit_offset))
+    , limit_count(std::move(arg_limit_count))
     , limit_option(std::move(arg_limit_option))
-    , locking_clause()
+    , locking_clause(std::move(arg_locking_clause))
     , with_clause(std::move(arg_with_clause))
     , op(std::move(arg_op))
     , all(arg_all)
     , larg(std::move(arg_larg))
     , rarg(std::move(arg_rarg))
-{
-    for (auto& it : arg_distinct_clause)
-        distinct_clause.emplace_back(it.release());
-    for (auto& it : arg_target_list)
-        target_list.emplace_back(it.release());
-    for (auto& it : arg_from_clause)
-        from_clause.emplace_back(it.release());
-    for (auto& it : arg_group_clause)
-        group_clause.emplace_back(it.release());
-    for (auto& it : arg_window_clause)
-        window_clause.emplace_back(it.release());
-    for (auto& it : arg_values_lists)
-        values_lists.emplace_back(it.release());
-    for (auto& it : arg_sort_clause)
-        sort_clause.emplace_back(it.release());
-    for (auto& it : arg_locking_clause)
-        locking_clause.emplace_back(it.release());
-}
+{}
 
 SelectStmt::SelectStmt(SelectStmt&& other) noexcept
     : distinct_clause(std::move(other.distinct_clause))
     , into_clause(std::move(other.into_clause))
     , target_list(std::move(other.target_list))
     , from_clause(std::move(other.from_clause))
-    , where_clause(std::exchange(other.where_clause, nullptr))
+    , where_clause(std::move(other.where_clause))
     , group_clause(std::move(other.group_clause))
-    , having_clause(std::exchange(other.having_clause, nullptr))
+    , having_clause(std::move(other.having_clause))
     , window_clause(std::move(other.window_clause))
     , values_lists(std::move(other.values_lists))
     , sort_clause(std::move(other.sort_clause))
-    , limit_offset(std::exchange(other.limit_offset, nullptr))
-    , limit_count(std::exchange(other.limit_count, nullptr))
+    , limit_offset(std::move(other.limit_offset))
+    , limit_count(std::move(other.limit_count))
     , limit_option(std::move(other.limit_option))
     , locking_clause(std::move(other.locking_clause))
     , with_clause(std::move(other.with_clause))
@@ -8192,26 +7748,6 @@ SelectStmt::SelectStmt(SelectStmt&& other) noexcept
 
 SelectStmt::~SelectStmt()
 {
-    if (where_clause) delete where_clause;
-    if (having_clause) delete having_clause;
-    if (limit_offset) delete limit_offset;
-    if (limit_count) delete limit_count;
-    for (auto& it : distinct_clause)
-        delete it;
-    for (auto& it : target_list)
-        delete it;
-    for (auto& it : from_clause)
-        delete it;
-    for (auto& it : group_clause)
-        delete it;
-    for (auto& it : window_clause)
-        delete it;
-    for (auto& it : values_lists)
-        delete it;
-    for (auto& it : sort_clause)
-        delete it;
-    for (auto& it : locking_clause)
-        delete it;
 }
 
 bool SelectStmt::operator==([[maybe_unused]] const SelectStmt& other) const noexcept
@@ -8234,14 +7770,14 @@ SelectStmt& SelectStmt::operator=(SelectStmt&& other) noexcept
         into_clause = std::move(other.into_clause);
         target_list = std::move(other.target_list);
         from_clause = std::move(other.from_clause);
-        where_clause = std::exchange(other.where_clause, nullptr);
+        where_clause = std::move(other.where_clause);
         group_clause = std::move(other.group_clause);
-        having_clause = std::exchange(other.having_clause, nullptr);
+        having_clause = std::move(other.having_clause);
         window_clause = std::move(other.window_clause);
         values_lists = std::move(other.values_lists);
         sort_clause = std::move(other.sort_clause);
-        limit_offset = std::exchange(other.limit_offset, nullptr);
-        limit_count = std::exchange(other.limit_count, nullptr);
+        limit_offset = std::move(other.limit_offset);
+        limit_count = std::move(other.limit_count);
         limit_option = std::move(other.limit_option);
         locking_clause = std::move(other.locking_clause);
         with_clause = std::move(other.with_clause);
@@ -8290,7 +7826,7 @@ std::ostream& operator<<(std::ostream& stream, const SelectStmt& value)
         stream << "distinct_clause=[" << value.distinct_clause.size() << "][";
         for (const auto& it : value.distinct_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8301,7 +7837,7 @@ std::ostream& operator<<(std::ostream& stream, const SelectStmt& value)
         stream << ",target_list=[" << value.target_list.size() << "][";
         for (const auto& it : value.target_list)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8311,29 +7847,29 @@ std::ostream& operator<<(std::ostream& stream, const SelectStmt& value)
         stream << ",from_clause=[" << value.from_clause.size() << "][";
         for (const auto& it : value.from_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",where_clause="; stream << " ptr of other struct" << (value.where_clause == nullptr ? "true" : "false");
+    stream << ",where_clause="; stream << value.where_clause;
     {
         bool first = true;
         stream << ",group_clause=[" << value.group_clause.size() << "][";
         for (const auto& it : value.group_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",having_clause="; stream << " ptr of other struct" << (value.having_clause == nullptr ? "true" : "false");
+    stream << ",having_clause="; stream << value.having_clause;
     {
         bool first = true;
         stream << ",window_clause=[" << value.window_clause.size() << "][";
         for (const auto& it : value.window_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8343,7 +7879,7 @@ std::ostream& operator<<(std::ostream& stream, const SelectStmt& value)
         stream << ",values_lists=[" << value.values_lists.size() << "][";
         for (const auto& it : value.values_lists)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8353,20 +7889,20 @@ std::ostream& operator<<(std::ostream& stream, const SelectStmt& value)
         stream << ",sort_clause=[" << value.sort_clause.size() << "][";
         for (const auto& it : value.sort_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",limit_offset="; stream << " ptr of other struct" << (value.limit_offset == nullptr ? "true" : "false");
-    stream << ",limit_count="; stream << " ptr of other struct" << (value.limit_count == nullptr ? "true" : "false");
+    stream << ",limit_offset="; stream << value.limit_offset;
+    stream << ",limit_count="; stream << value.limit_count;
     stream << ",limit_option="; stream << value.limit_option;
     {
         bool first = true;
         stream << ",locking_clause=[" << value.locking_clause.size() << "][";
         for (const auto& it : value.locking_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8387,15 +7923,12 @@ AlterTableStmt::AlterTableStmt()
     , missing_ok(false)
 {}
 
-AlterTableStmt::AlterTableStmt(::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_cmds, ::pg_query::ObjectType&& arg_relkind, bool arg_missing_ok)
+AlterTableStmt::AlterTableStmt(::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_cmds, ::pg_query::ObjectType&& arg_relkind, bool arg_missing_ok)
     : relation(std::move(arg_relation))
-    , cmds()
+    , cmds(std::move(arg_cmds))
     , relkind(std::move(arg_relkind))
     , missing_ok(arg_missing_ok)
-{
-    for (auto& it : arg_cmds)
-        cmds.emplace_back(it.release());
-}
+{}
 
 AlterTableStmt::AlterTableStmt(AlterTableStmt&& other) noexcept
     : relation(std::move(other.relation))
@@ -8406,8 +7939,6 @@ AlterTableStmt::AlterTableStmt(AlterTableStmt&& other) noexcept
 
 AlterTableStmt::~AlterTableStmt()
 {
-    for (auto& it : cmds)
-        delete it;
 }
 
 bool AlterTableStmt::operator==([[maybe_unused]] const AlterTableStmt& other) const noexcept
@@ -8457,7 +7988,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTableStmt& value)
         stream << ",cmds=[" << value.cmds.size() << "][";
         for (const auto& it : value.cmds)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8473,17 +8004,17 @@ AlterTableCmd::AlterTableCmd()
     , name()
     , num((int32_t)0ll)
     , newowner()
-    , def(nullptr)
+    , def()
     , behavior()
     , missing_ok(false)
 {}
 
-AlterTableCmd::AlterTableCmd(::pg_query::AlterTableType&& arg_subtype, const std::string& arg_name, int32_t arg_num, ::pg_query::RoleSpec&& arg_newowner, std::unique_ptr<::pg_query::Node> arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
+AlterTableCmd::AlterTableCmd(::pg_query::AlterTableType&& arg_subtype, const std::string& arg_name, int32_t arg_num, ::pg_query::RoleSpec&& arg_newowner, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
     : subtype(std::move(arg_subtype))
     , name(arg_name)
     , num(arg_num)
     , newowner(std::move(arg_newowner))
-    , def(arg_def.release())
+    , def(std::move(arg_def))
     , behavior(std::move(arg_behavior))
     , missing_ok(arg_missing_ok)
 {}
@@ -8493,14 +8024,13 @@ AlterTableCmd::AlterTableCmd(AlterTableCmd&& other) noexcept
     , name(std::move(other.name))
     , num(std::exchange(other.num, (int32_t)0ll))
     , newowner(std::move(other.newowner))
-    , def(std::exchange(other.def, nullptr))
+    , def(std::move(other.def))
     , behavior(std::move(other.behavior))
     , missing_ok(std::exchange(other.missing_ok, false))
 {}
 
 AlterTableCmd::~AlterTableCmd()
 {
-    if (def) delete def;
 }
 
 bool AlterTableCmd::operator==([[maybe_unused]] const AlterTableCmd& other) const noexcept
@@ -8523,7 +8053,7 @@ AlterTableCmd& AlterTableCmd::operator=(AlterTableCmd&& other) noexcept
         name = std::move(other.name);
         num = std::exchange(other.num, (int32_t)0ll);
         newowner = std::move(other.newowner);
-        def = std::exchange(other.def, nullptr);
+        def = std::move(other.def);
         behavior = std::move(other.behavior);
         missing_ok = std::exchange(other.missing_ok, false);
     }
@@ -8554,7 +8084,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTableCmd& value)
     stream << ",name="; stream << "\"" << value.name << "\"";
     stream << ",num="; stream << value.num;
     stream << ",newowner="; stream << value.newowner;
-    stream << ",def="; stream << " ptr of other struct" << (value.def == nullptr ? "true" : "false");
+    stream << ",def="; stream << value.def;
     stream << ",behavior="; stream << value.behavior;
     stream << ",missing_ok="; stream << (value.missing_ok ? "true" : "false");
     stream << ")";
@@ -8565,37 +8095,31 @@ AlterDomainStmt::AlterDomainStmt()
     : subtype()
     , type_name()
     , name()
-    , def(nullptr)
+    , def()
     , behavior()
     , missing_ok(false)
 {}
 
-AlterDomainStmt::AlterDomainStmt(const std::string& arg_subtype, std::vector<std::unique_ptr<::pg_query::Node>> arg_type_name, const std::string& arg_name, std::unique_ptr<::pg_query::Node> arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
+AlterDomainStmt::AlterDomainStmt(const std::string& arg_subtype, std::vector<::pg_query::Node> arg_type_name, const std::string& arg_name, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
     : subtype(arg_subtype)
-    , type_name()
+    , type_name(std::move(arg_type_name))
     , name(arg_name)
-    , def(arg_def.release())
+    , def(std::move(arg_def))
     , behavior(std::move(arg_behavior))
     , missing_ok(arg_missing_ok)
-{
-    for (auto& it : arg_type_name)
-        type_name.emplace_back(it.release());
-}
+{}
 
 AlterDomainStmt::AlterDomainStmt(AlterDomainStmt&& other) noexcept
     : subtype(std::move(other.subtype))
     , type_name(std::move(other.type_name))
     , name(std::move(other.name))
-    , def(std::exchange(other.def, nullptr))
+    , def(std::move(other.def))
     , behavior(std::move(other.behavior))
     , missing_ok(std::exchange(other.missing_ok, false))
 {}
 
 AlterDomainStmt::~AlterDomainStmt()
 {
-    if (def) delete def;
-    for (auto& it : type_name)
-        delete it;
 }
 
 bool AlterDomainStmt::operator==([[maybe_unused]] const AlterDomainStmt& other) const noexcept
@@ -8617,7 +8141,7 @@ AlterDomainStmt& AlterDomainStmt::operator=(AlterDomainStmt&& other) noexcept
         subtype = std::move(other.subtype);
         type_name = std::move(other.type_name);
         name = std::move(other.name);
-        def = std::exchange(other.def, nullptr);
+        def = std::move(other.def);
         behavior = std::move(other.behavior);
         missing_ok = std::exchange(other.missing_ok, false);
     }
@@ -8649,13 +8173,13 @@ std::ostream& operator<<(std::ostream& stream, const AlterDomainStmt& value)
         stream << ",type_name=[" << value.type_name.size() << "][";
         for (const auto& it : value.type_name)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
     stream << ",name="; stream << "\"" << value.name << "\"";
-    stream << ",def="; stream << " ptr of other struct" << (value.def == nullptr ? "true" : "false");
+    stream << ",def="; stream << value.def;
     stream << ",behavior="; stream << value.behavior;
     stream << ",missing_ok="; stream << (value.missing_ok ? "true" : "false");
     stream << ")";
@@ -8665,39 +8189,30 @@ std::ostream& operator<<(std::ostream& stream, const AlterDomainStmt& value)
 SetOperationStmt::SetOperationStmt()
     : op()
     , all(false)
-    , larg(nullptr)
-    , rarg(nullptr)
+    , larg()
+    , rarg()
     , col_types()
     , col_typmods()
     , col_collations()
     , group_clauses()
 {}
 
-SetOperationStmt::SetOperationStmt(::pg_query::SetOperation&& arg_op, bool arg_all, std::unique_ptr<::pg_query::Node> arg_larg, std::unique_ptr<::pg_query::Node> arg_rarg, std::vector<std::unique_ptr<::pg_query::Node>> arg_col_types, std::vector<std::unique_ptr<::pg_query::Node>> arg_col_typmods, std::vector<std::unique_ptr<::pg_query::Node>> arg_col_collations, std::vector<std::unique_ptr<::pg_query::Node>> arg_group_clauses)
+SetOperationStmt::SetOperationStmt(::pg_query::SetOperation&& arg_op, bool arg_all, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::vector<::pg_query::Node> arg_col_types, std::vector<::pg_query::Node> arg_col_typmods, std::vector<::pg_query::Node> arg_col_collations, std::vector<::pg_query::Node> arg_group_clauses)
     : op(std::move(arg_op))
     , all(arg_all)
-    , larg(arg_larg.release())
-    , rarg(arg_rarg.release())
-    , col_types()
-    , col_typmods()
-    , col_collations()
-    , group_clauses()
-{
-    for (auto& it : arg_col_types)
-        col_types.emplace_back(it.release());
-    for (auto& it : arg_col_typmods)
-        col_typmods.emplace_back(it.release());
-    for (auto& it : arg_col_collations)
-        col_collations.emplace_back(it.release());
-    for (auto& it : arg_group_clauses)
-        group_clauses.emplace_back(it.release());
-}
+    , larg(std::move(arg_larg))
+    , rarg(std::move(arg_rarg))
+    , col_types(std::move(arg_col_types))
+    , col_typmods(std::move(arg_col_typmods))
+    , col_collations(std::move(arg_col_collations))
+    , group_clauses(std::move(arg_group_clauses))
+{}
 
 SetOperationStmt::SetOperationStmt(SetOperationStmt&& other) noexcept
     : op(std::move(other.op))
     , all(std::exchange(other.all, false))
-    , larg(std::exchange(other.larg, nullptr))
-    , rarg(std::exchange(other.rarg, nullptr))
+    , larg(std::move(other.larg))
+    , rarg(std::move(other.rarg))
     , col_types(std::move(other.col_types))
     , col_typmods(std::move(other.col_typmods))
     , col_collations(std::move(other.col_collations))
@@ -8706,16 +8221,6 @@ SetOperationStmt::SetOperationStmt(SetOperationStmt&& other) noexcept
 
 SetOperationStmt::~SetOperationStmt()
 {
-    if (larg) delete larg;
-    if (rarg) delete rarg;
-    for (auto& it : col_types)
-        delete it;
-    for (auto& it : col_typmods)
-        delete it;
-    for (auto& it : col_collations)
-        delete it;
-    for (auto& it : group_clauses)
-        delete it;
 }
 
 bool SetOperationStmt::operator==([[maybe_unused]] const SetOperationStmt& other) const noexcept
@@ -8736,8 +8241,8 @@ SetOperationStmt& SetOperationStmt::operator=(SetOperationStmt&& other) noexcept
     {
         op = std::move(other.op);
         all = std::exchange(other.all, false);
-        larg = std::exchange(other.larg, nullptr);
-        rarg = std::exchange(other.rarg, nullptr);
+        larg = std::move(other.larg);
+        rarg = std::move(other.rarg);
         col_types = std::move(other.col_types);
         col_typmods = std::move(other.col_typmods);
         col_collations = std::move(other.col_collations);
@@ -8769,14 +8274,14 @@ std::ostream& operator<<(std::ostream& stream, const SetOperationStmt& value)
     stream << "SetOperationStmt(";
     stream << "op="; stream << value.op;
     stream << ",all="; stream << (value.all ? "true" : "false");
-    stream << ",larg="; stream << " ptr of other struct" << (value.larg == nullptr ? "true" : "false");
-    stream << ",rarg="; stream << " ptr of other struct" << (value.rarg == nullptr ? "true" : "false");
+    stream << ",larg="; stream << value.larg;
+    stream << ",rarg="; stream << value.rarg;
     {
         bool first = true;
         stream << ",col_types=[" << value.col_types.size() << "][";
         for (const auto& it : value.col_types)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8786,7 +8291,7 @@ std::ostream& operator<<(std::ostream& stream, const SetOperationStmt& value)
         stream << ",col_typmods=[" << value.col_typmods.size() << "][";
         for (const auto& it : value.col_typmods)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8796,7 +8301,7 @@ std::ostream& operator<<(std::ostream& stream, const SetOperationStmt& value)
         stream << ",col_collations=[" << value.col_collations.size() << "][";
         for (const auto& it : value.col_collations)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8806,7 +8311,7 @@ std::ostream& operator<<(std::ostream& stream, const SetOperationStmt& value)
         stream << ",group_clauses=[" << value.group_clauses.size() << "][";
         for (const auto& it : value.group_clauses)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8826,23 +8331,16 @@ GrantStmt::GrantStmt()
     , behavior()
 {}
 
-GrantStmt::GrantStmt(bool arg_is_grant, ::pg_query::GrantTargetType&& arg_targtype, ::pg_query::ObjectType&& arg_objtype, std::vector<std::unique_ptr<::pg_query::Node>> arg_objects, std::vector<std::unique_ptr<::pg_query::Node>> arg_privileges, std::vector<std::unique_ptr<::pg_query::Node>> arg_grantees, bool arg_grant_option, ::pg_query::DropBehavior&& arg_behavior)
+GrantStmt::GrantStmt(bool arg_is_grant, ::pg_query::GrantTargetType&& arg_targtype, ::pg_query::ObjectType&& arg_objtype, std::vector<::pg_query::Node> arg_objects, std::vector<::pg_query::Node> arg_privileges, std::vector<::pg_query::Node> arg_grantees, bool arg_grant_option, ::pg_query::DropBehavior&& arg_behavior)
     : is_grant(arg_is_grant)
     , targtype(std::move(arg_targtype))
     , objtype(std::move(arg_objtype))
-    , objects()
-    , privileges()
-    , grantees()
+    , objects(std::move(arg_objects))
+    , privileges(std::move(arg_privileges))
+    , grantees(std::move(arg_grantees))
     , grant_option(arg_grant_option)
     , behavior(std::move(arg_behavior))
-{
-    for (auto& it : arg_objects)
-        objects.emplace_back(it.release());
-    for (auto& it : arg_privileges)
-        privileges.emplace_back(it.release());
-    for (auto& it : arg_grantees)
-        grantees.emplace_back(it.release());
-}
+{}
 
 GrantStmt::GrantStmt(GrantStmt&& other) noexcept
     : is_grant(std::exchange(other.is_grant, false))
@@ -8857,12 +8355,6 @@ GrantStmt::GrantStmt(GrantStmt&& other) noexcept
 
 GrantStmt::~GrantStmt()
 {
-    for (auto& it : objects)
-        delete it;
-    for (auto& it : privileges)
-        delete it;
-    for (auto& it : grantees)
-        delete it;
 }
 
 bool GrantStmt::operator==([[maybe_unused]] const GrantStmt& other) const noexcept
@@ -8922,7 +8414,7 @@ std::ostream& operator<<(std::ostream& stream, const GrantStmt& value)
         stream << ",objects=[" << value.objects.size() << "][";
         for (const auto& it : value.objects)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8932,7 +8424,7 @@ std::ostream& operator<<(std::ostream& stream, const GrantStmt& value)
         stream << ",privileges=[" << value.privileges.size() << "][";
         for (const auto& it : value.privileges)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8942,7 +8434,7 @@ std::ostream& operator<<(std::ostream& stream, const GrantStmt& value)
         stream << ",grantees=[" << value.grantees.size() << "][";
         for (const auto& it : value.grantees)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -8962,19 +8454,14 @@ GrantRoleStmt::GrantRoleStmt()
     , behavior()
 {}
 
-GrantRoleStmt::GrantRoleStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_granted_roles, std::vector<std::unique_ptr<::pg_query::Node>> arg_grantee_roles, bool arg_is_grant, bool arg_admin_opt, ::pg_query::RoleSpec&& arg_grantor, ::pg_query::DropBehavior&& arg_behavior)
-    : granted_roles()
-    , grantee_roles()
+GrantRoleStmt::GrantRoleStmt(std::vector<::pg_query::Node> arg_granted_roles, std::vector<::pg_query::Node> arg_grantee_roles, bool arg_is_grant, bool arg_admin_opt, ::pg_query::RoleSpec&& arg_grantor, ::pg_query::DropBehavior&& arg_behavior)
+    : granted_roles(std::move(arg_granted_roles))
+    , grantee_roles(std::move(arg_grantee_roles))
     , is_grant(arg_is_grant)
     , admin_opt(arg_admin_opt)
     , grantor(std::move(arg_grantor))
     , behavior(std::move(arg_behavior))
-{
-    for (auto& it : arg_granted_roles)
-        granted_roles.emplace_back(it.release());
-    for (auto& it : arg_grantee_roles)
-        grantee_roles.emplace_back(it.release());
-}
+{}
 
 GrantRoleStmt::GrantRoleStmt(GrantRoleStmt&& other) noexcept
     : granted_roles(std::move(other.granted_roles))
@@ -8987,10 +8474,6 @@ GrantRoleStmt::GrantRoleStmt(GrantRoleStmt&& other) noexcept
 
 GrantRoleStmt::~GrantRoleStmt()
 {
-    for (auto& it : granted_roles)
-        delete it;
-    for (auto& it : grantee_roles)
-        delete it;
 }
 
 bool GrantRoleStmt::operator==([[maybe_unused]] const GrantRoleStmt& other) const noexcept
@@ -9043,7 +8526,7 @@ std::ostream& operator<<(std::ostream& stream, const GrantRoleStmt& value)
         stream << "granted_roles=[" << value.granted_roles.size() << "][";
         for (const auto& it : value.granted_roles)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9053,7 +8536,7 @@ std::ostream& operator<<(std::ostream& stream, const GrantRoleStmt& value)
         stream << ",grantee_roles=[" << value.grantee_roles.size() << "][";
         for (const auto& it : value.grantee_roles)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9071,13 +8554,10 @@ AlterDefaultPrivilegesStmt::AlterDefaultPrivilegesStmt()
     , action()
 {}
 
-AlterDefaultPrivilegesStmt::AlterDefaultPrivilegesStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_options, ::pg_query::GrantStmt&& arg_action)
-    : options()
+AlterDefaultPrivilegesStmt::AlterDefaultPrivilegesStmt(std::vector<::pg_query::Node> arg_options, ::pg_query::GrantStmt&& arg_action)
+    : options(std::move(arg_options))
     , action(std::move(arg_action))
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+{}
 
 AlterDefaultPrivilegesStmt::AlterDefaultPrivilegesStmt(AlterDefaultPrivilegesStmt&& other) noexcept
     : options(std::move(other.options))
@@ -9086,8 +8566,6 @@ AlterDefaultPrivilegesStmt::AlterDefaultPrivilegesStmt(AlterDefaultPrivilegesStm
 
 AlterDefaultPrivilegesStmt::~AlterDefaultPrivilegesStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterDefaultPrivilegesStmt::operator==([[maybe_unused]] const AlterDefaultPrivilegesStmt& other) const noexcept
@@ -9132,7 +8610,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterDefaultPrivilegesStmt&
         stream << "options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9268,50 +8746,39 @@ std::ostream& operator<<(std::ostream& stream, const ClusterStmt& value)
 
 CopyStmt::CopyStmt()
     : relation()
-    , query(nullptr)
+    , query()
     , attlist()
     , is_from(false)
     , is_program(false)
     , filename()
     , options()
-    , where_clause(nullptr)
+    , where_clause()
 {}
 
-CopyStmt::CopyStmt(::pg_query::RangeVar&& arg_relation, std::unique_ptr<::pg_query::Node> arg_query, std::vector<std::unique_ptr<::pg_query::Node>> arg_attlist, bool arg_is_from, bool arg_is_program, const std::string& arg_filename, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, std::unique_ptr<::pg_query::Node> arg_where_clause)
+CopyStmt::CopyStmt(::pg_query::RangeVar&& arg_relation, ::pg_query::Node&& arg_query, std::vector<::pg_query::Node> arg_attlist, bool arg_is_from, bool arg_is_program, const std::string& arg_filename, std::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause)
     : relation(std::move(arg_relation))
-    , query(arg_query.release())
-    , attlist()
+    , query(std::move(arg_query))
+    , attlist(std::move(arg_attlist))
     , is_from(arg_is_from)
     , is_program(arg_is_program)
     , filename(arg_filename)
-    , options()
-    , where_clause(arg_where_clause.release())
-{
-    for (auto& it : arg_attlist)
-        attlist.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+    , where_clause(std::move(arg_where_clause))
+{}
 
 CopyStmt::CopyStmt(CopyStmt&& other) noexcept
     : relation(std::move(other.relation))
-    , query(std::exchange(other.query, nullptr))
+    , query(std::move(other.query))
     , attlist(std::move(other.attlist))
     , is_from(std::exchange(other.is_from, false))
     , is_program(std::exchange(other.is_program, false))
     , filename(std::move(other.filename))
     , options(std::move(other.options))
-    , where_clause(std::exchange(other.where_clause, nullptr))
+    , where_clause(std::move(other.where_clause))
 {}
 
 CopyStmt::~CopyStmt()
 {
-    if (query) delete query;
-    if (where_clause) delete where_clause;
-    for (auto& it : attlist)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool CopyStmt::operator==([[maybe_unused]] const CopyStmt& other) const noexcept
@@ -9331,13 +8798,13 @@ CopyStmt& CopyStmt::operator=(CopyStmt&& other) noexcept
     if (this != &other)
     {
         relation = std::move(other.relation);
-        query = std::exchange(other.query, nullptr);
+        query = std::move(other.query);
         attlist = std::move(other.attlist);
         is_from = std::exchange(other.is_from, false);
         is_program = std::exchange(other.is_program, false);
         filename = std::move(other.filename);
         options = std::move(other.options);
-        where_clause = std::exchange(other.where_clause, nullptr);
+        where_clause = std::move(other.where_clause);
     }
     return *this;
 }
@@ -9364,13 +8831,13 @@ std::ostream& operator<<(std::ostream& stream, const CopyStmt& value)
 {
     stream << "CopyStmt(";
     stream << "relation="; stream << value.relation;
-    stream << ",query="; stream << " ptr of other struct" << (value.query == nullptr ? "true" : "false");
+    stream << ",query="; stream << value.query;
     {
         bool first = true;
         stream << ",attlist=[" << value.attlist.size() << "][";
         for (const auto& it : value.attlist)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9383,12 +8850,12 @@ std::ostream& operator<<(std::ostream& stream, const CopyStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",where_clause="; stream << " ptr of other struct" << (value.where_clause == nullptr ? "true" : "false");
+    stream << ",where_clause="; stream << value.where_clause;
     stream << ")";
     return stream;
 }
@@ -9408,29 +8875,20 @@ CreateStmt::CreateStmt()
     , if_not_exists(false)
 {}
 
-CreateStmt::CreateStmt(::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_table_elts, std::vector<std::unique_ptr<::pg_query::Node>> arg_inh_relations, ::pg_query::PartitionBoundSpec&& arg_partbound, ::pg_query::PartitionSpec&& arg_partspec, ::pg_query::TypeName&& arg_of_typename, std::vector<std::unique_ptr<::pg_query::Node>> arg_constraints, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, ::pg_query::OnCommitAction&& arg_oncommit, const std::string& arg_tablespacename, const std::string& arg_access_method, bool arg_if_not_exists)
+CreateStmt::CreateStmt(::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_table_elts, std::vector<::pg_query::Node> arg_inh_relations, ::pg_query::PartitionBoundSpec&& arg_partbound, ::pg_query::PartitionSpec&& arg_partspec, ::pg_query::TypeName&& arg_of_typename, std::vector<::pg_query::Node> arg_constraints, std::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_oncommit, const std::string& arg_tablespacename, const std::string& arg_access_method, bool arg_if_not_exists)
     : relation(std::move(arg_relation))
-    , table_elts()
-    , inh_relations()
+    , table_elts(std::move(arg_table_elts))
+    , inh_relations(std::move(arg_inh_relations))
     , partbound(std::move(arg_partbound))
     , partspec(std::move(arg_partspec))
     , of_typename(std::move(arg_of_typename))
-    , constraints()
-    , options()
+    , constraints(std::move(arg_constraints))
+    , options(std::move(arg_options))
     , oncommit(std::move(arg_oncommit))
     , tablespacename(arg_tablespacename)
     , access_method(arg_access_method)
     , if_not_exists(arg_if_not_exists)
-{
-    for (auto& it : arg_table_elts)
-        table_elts.emplace_back(it.release());
-    for (auto& it : arg_inh_relations)
-        inh_relations.emplace_back(it.release());
-    for (auto& it : arg_constraints)
-        constraints.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+{}
 
 CreateStmt::CreateStmt(CreateStmt&& other) noexcept
     : relation(std::move(other.relation))
@@ -9449,14 +8907,6 @@ CreateStmt::CreateStmt(CreateStmt&& other) noexcept
 
 CreateStmt::~CreateStmt()
 {
-    for (auto& it : table_elts)
-        delete it;
-    for (auto& it : inh_relations)
-        delete it;
-    for (auto& it : constraints)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateStmt::operator==([[maybe_unused]] const CreateStmt& other) const noexcept
@@ -9522,7 +8972,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateStmt& value)
         stream << ",table_elts=[" << value.table_elts.size() << "][";
         for (const auto& it : value.table_elts)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9532,7 +8982,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateStmt& value)
         stream << ",inh_relations=[" << value.inh_relations.size() << "][";
         for (const auto& it : value.inh_relations)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9545,7 +8995,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateStmt& value)
         stream << ",constraints=[" << value.constraints.size() << "][";
         for (const auto& it : value.constraints)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9555,7 +9005,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9578,22 +9028,15 @@ DefineStmt::DefineStmt()
     , replace(false)
 {}
 
-DefineStmt::DefineStmt(::pg_query::ObjectType&& arg_kind, bool arg_oldstyle, std::vector<std::unique_ptr<::pg_query::Node>> arg_defnames, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::vector<std::unique_ptr<::pg_query::Node>> arg_definition, bool arg_if_not_exists, bool arg_replace)
+DefineStmt::DefineStmt(::pg_query::ObjectType&& arg_kind, bool arg_oldstyle, std::vector<::pg_query::Node> arg_defnames, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_definition, bool arg_if_not_exists, bool arg_replace)
     : kind(std::move(arg_kind))
     , oldstyle(arg_oldstyle)
-    , defnames()
-    , args()
-    , definition()
+    , defnames(std::move(arg_defnames))
+    , args(std::move(arg_args))
+    , definition(std::move(arg_definition))
     , if_not_exists(arg_if_not_exists)
     , replace(arg_replace)
-{
-    for (auto& it : arg_defnames)
-        defnames.emplace_back(it.release());
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-    for (auto& it : arg_definition)
-        definition.emplace_back(it.release());
-}
+{}
 
 DefineStmt::DefineStmt(DefineStmt&& other) noexcept
     : kind(std::move(other.kind))
@@ -9607,12 +9050,6 @@ DefineStmt::DefineStmt(DefineStmt&& other) noexcept
 
 DefineStmt::~DefineStmt()
 {
-    for (auto& it : defnames)
-        delete it;
-    for (auto& it : args)
-        delete it;
-    for (auto& it : definition)
-        delete it;
 }
 
 bool DefineStmt::operator==([[maybe_unused]] const DefineStmt& other) const noexcept
@@ -9669,7 +9106,7 @@ std::ostream& operator<<(std::ostream& stream, const DefineStmt& value)
         stream << ",defnames=[" << value.defnames.size() << "][";
         for (const auto& it : value.defnames)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9679,7 +9116,7 @@ std::ostream& operator<<(std::ostream& stream, const DefineStmt& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9689,7 +9126,7 @@ std::ostream& operator<<(std::ostream& stream, const DefineStmt& value)
         stream << ",definition=[" << value.definition.size() << "][";
         for (const auto& it : value.definition)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9708,16 +9145,13 @@ DropStmt::DropStmt()
     , concurrent(false)
 {}
 
-DropStmt::DropStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_objects, ::pg_query::ObjectType&& arg_remove_type, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok, bool arg_concurrent)
-    : objects()
+DropStmt::DropStmt(std::vector<::pg_query::Node> arg_objects, ::pg_query::ObjectType&& arg_remove_type, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok, bool arg_concurrent)
+    : objects(std::move(arg_objects))
     , remove_type(std::move(arg_remove_type))
     , behavior(std::move(arg_behavior))
     , missing_ok(arg_missing_ok)
     , concurrent(arg_concurrent)
-{
-    for (auto& it : arg_objects)
-        objects.emplace_back(it.release());
-}
+{}
 
 DropStmt::DropStmt(DropStmt&& other) noexcept
     : objects(std::move(other.objects))
@@ -9729,8 +9163,6 @@ DropStmt::DropStmt(DropStmt&& other) noexcept
 
 DropStmt::~DropStmt()
 {
-    for (auto& it : objects)
-        delete it;
 }
 
 bool DropStmt::operator==([[maybe_unused]] const DropStmt& other) const noexcept
@@ -9781,7 +9213,7 @@ std::ostream& operator<<(std::ostream& stream, const DropStmt& value)
         stream << "objects=[" << value.objects.size() << "][";
         for (const auto& it : value.objects)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9800,14 +9232,11 @@ TruncateStmt::TruncateStmt()
     , behavior()
 {}
 
-TruncateStmt::TruncateStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_relations, bool arg_restart_seqs, ::pg_query::DropBehavior&& arg_behavior)
-    : relations()
+TruncateStmt::TruncateStmt(std::vector<::pg_query::Node> arg_relations, bool arg_restart_seqs, ::pg_query::DropBehavior&& arg_behavior)
+    : relations(std::move(arg_relations))
     , restart_seqs(arg_restart_seqs)
     , behavior(std::move(arg_behavior))
-{
-    for (auto& it : arg_relations)
-        relations.emplace_back(it.release());
-}
+{}
 
 TruncateStmt::TruncateStmt(TruncateStmt&& other) noexcept
     : relations(std::move(other.relations))
@@ -9817,8 +9246,6 @@ TruncateStmt::TruncateStmt(TruncateStmt&& other) noexcept
 
 TruncateStmt::~TruncateStmt()
 {
-    for (auto& it : relations)
-        delete it;
 }
 
 bool TruncateStmt::operator==([[maybe_unused]] const TruncateStmt& other) const noexcept
@@ -9865,7 +9292,7 @@ std::ostream& operator<<(std::ostream& stream, const TruncateStmt& value)
         stream << "relations=[" << value.relations.size() << "][";
         for (const auto& it : value.relations)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -9878,25 +9305,24 @@ std::ostream& operator<<(std::ostream& stream, const TruncateStmt& value)
 
 CommentStmt::CommentStmt()
     : objtype()
-    , object(nullptr)
+    , object()
     , comment()
 {}
 
-CommentStmt::CommentStmt(::pg_query::ObjectType&& arg_objtype, std::unique_ptr<::pg_query::Node> arg_object, const std::string& arg_comment)
+CommentStmt::CommentStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::string& arg_comment)
     : objtype(std::move(arg_objtype))
-    , object(arg_object.release())
+    , object(std::move(arg_object))
     , comment(arg_comment)
 {}
 
 CommentStmt::CommentStmt(CommentStmt&& other) noexcept
     : objtype(std::move(other.objtype))
-    , object(std::exchange(other.object, nullptr))
+    , object(std::move(other.object))
     , comment(std::move(other.comment))
 {}
 
 CommentStmt::~CommentStmt()
 {
-    if (object) delete object;
 }
 
 bool CommentStmt::operator==([[maybe_unused]] const CommentStmt& other) const noexcept
@@ -9916,7 +9342,7 @@ CommentStmt& CommentStmt::operator=(CommentStmt&& other) noexcept
     if (this != &other)
     {
         objtype = std::move(other.objtype);
-        object = std::exchange(other.object, nullptr);
+        object = std::move(other.object);
         comment = std::move(other.comment);
     }
     return *this;
@@ -9939,7 +9365,7 @@ std::ostream& operator<<(std::ostream& stream, const CommentStmt& value)
 {
     stream << "CommentStmt(";
     stream << "objtype="; stream << value.objtype;
-    stream << ",object="; stream << " ptr of other struct" << (value.object == nullptr ? "true" : "false");
+    stream << ",object="; stream << value.object;
     stream << ",comment="; stream << "\"" << value.comment << "\"";
     stream << ")";
     return stream;
@@ -10027,7 +9453,7 @@ IndexStmt::IndexStmt()
     , index_params()
     , index_including_params()
     , options()
-    , where_clause(nullptr)
+    , where_clause()
     , exclude_op_names()
     , idxcomment()
     , index_oid((uint32_t)0ull)
@@ -10045,16 +9471,16 @@ IndexStmt::IndexStmt()
     , reset_default_tblspc(false)
 {}
 
-IndexStmt::IndexStmt(const std::string& arg_idxname, ::pg_query::RangeVar&& arg_relation, const std::string& arg_access_method, const std::string& arg_table_space, std::vector<std::unique_ptr<::pg_query::Node>> arg_index_params, std::vector<std::unique_ptr<::pg_query::Node>> arg_index_including_params, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, std::unique_ptr<::pg_query::Node> arg_where_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_exclude_op_names, const std::string& arg_idxcomment, uint32_t arg_index_oid, uint32_t arg_old_node, uint32_t arg_old_create_subid, uint32_t arg_old_first_relfilenode_subid, bool arg_unique, bool arg_primary, bool arg_isconstraint, bool arg_deferrable, bool arg_initdeferred, bool arg_transformed, bool arg_concurrent, bool arg_if_not_exists, bool arg_reset_default_tblspc)
+IndexStmt::IndexStmt(const std::string& arg_idxname, ::pg_query::RangeVar&& arg_relation, const std::string& arg_access_method, const std::string& arg_table_space, std::vector<::pg_query::Node> arg_index_params, std::vector<::pg_query::Node> arg_index_including_params, std::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_exclude_op_names, const std::string& arg_idxcomment, uint32_t arg_index_oid, uint32_t arg_old_node, uint32_t arg_old_create_subid, uint32_t arg_old_first_relfilenode_subid, bool arg_unique, bool arg_primary, bool arg_isconstraint, bool arg_deferrable, bool arg_initdeferred, bool arg_transformed, bool arg_concurrent, bool arg_if_not_exists, bool arg_reset_default_tblspc)
     : idxname(arg_idxname)
     , relation(std::move(arg_relation))
     , access_method(arg_access_method)
     , table_space(arg_table_space)
-    , index_params()
-    , index_including_params()
-    , options()
-    , where_clause(arg_where_clause.release())
-    , exclude_op_names()
+    , index_params(std::move(arg_index_params))
+    , index_including_params(std::move(arg_index_including_params))
+    , options(std::move(arg_options))
+    , where_clause(std::move(arg_where_clause))
+    , exclude_op_names(std::move(arg_exclude_op_names))
     , idxcomment(arg_idxcomment)
     , index_oid(arg_index_oid)
     , old_node(arg_old_node)
@@ -10069,16 +9495,7 @@ IndexStmt::IndexStmt(const std::string& arg_idxname, ::pg_query::RangeVar&& arg_
     , concurrent(arg_concurrent)
     , if_not_exists(arg_if_not_exists)
     , reset_default_tblspc(arg_reset_default_tblspc)
-{
-    for (auto& it : arg_index_params)
-        index_params.emplace_back(it.release());
-    for (auto& it : arg_index_including_params)
-        index_including_params.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-    for (auto& it : arg_exclude_op_names)
-        exclude_op_names.emplace_back(it.release());
-}
+{}
 
 IndexStmt::IndexStmt(IndexStmt&& other) noexcept
     : idxname(std::move(other.idxname))
@@ -10088,7 +9505,7 @@ IndexStmt::IndexStmt(IndexStmt&& other) noexcept
     , index_params(std::move(other.index_params))
     , index_including_params(std::move(other.index_including_params))
     , options(std::move(other.options))
-    , where_clause(std::exchange(other.where_clause, nullptr))
+    , where_clause(std::move(other.where_clause))
     , exclude_op_names(std::move(other.exclude_op_names))
     , idxcomment(std::move(other.idxcomment))
     , index_oid(std::exchange(other.index_oid, (uint32_t)0ull))
@@ -10108,15 +9525,6 @@ IndexStmt::IndexStmt(IndexStmt&& other) noexcept
 
 IndexStmt::~IndexStmt()
 {
-    if (where_clause) delete where_clause;
-    for (auto& it : index_params)
-        delete it;
-    for (auto& it : index_including_params)
-        delete it;
-    for (auto& it : options)
-        delete it;
-    for (auto& it : exclude_op_names)
-        delete it;
 }
 
 bool IndexStmt::operator==([[maybe_unused]] const IndexStmt& other) const noexcept
@@ -10142,7 +9550,7 @@ IndexStmt& IndexStmt::operator=(IndexStmt&& other) noexcept
         index_params = std::move(other.index_params);
         index_including_params = std::move(other.index_including_params);
         options = std::move(other.options);
-        where_clause = std::exchange(other.where_clause, nullptr);
+        where_clause = std::move(other.where_clause);
         exclude_op_names = std::move(other.exclude_op_names);
         idxcomment = std::move(other.idxcomment);
         index_oid = std::exchange(other.index_oid, (uint32_t)0ull);
@@ -10207,7 +9615,7 @@ std::ostream& operator<<(std::ostream& stream, const IndexStmt& value)
         stream << ",index_params=[" << value.index_params.size() << "][";
         for (const auto& it : value.index_params)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -10217,7 +9625,7 @@ std::ostream& operator<<(std::ostream& stream, const IndexStmt& value)
         stream << ",index_including_params=[" << value.index_including_params.size() << "][";
         for (const auto& it : value.index_including_params)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -10227,18 +9635,18 @@ std::ostream& operator<<(std::ostream& stream, const IndexStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",where_clause="; stream << " ptr of other struct" << (value.where_clause == nullptr ? "true" : "false");
+    stream << ",where_clause="; stream << value.where_clause;
     {
         bool first = true;
         stream << ",exclude_op_names=[" << value.exclude_op_names.size() << "][";
         for (const auto& it : value.exclude_op_names)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -10270,21 +9678,14 @@ CreateFunctionStmt::CreateFunctionStmt()
     , options()
 {}
 
-CreateFunctionStmt::CreateFunctionStmt(bool arg_is_procedure, bool arg_replace, std::vector<std::unique_ptr<::pg_query::Node>> arg_funcname, std::vector<std::unique_ptr<::pg_query::Node>> arg_parameters, ::pg_query::TypeName&& arg_return_type, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+CreateFunctionStmt::CreateFunctionStmt(bool arg_is_procedure, bool arg_replace, std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_parameters, ::pg_query::TypeName&& arg_return_type, std::vector<::pg_query::Node> arg_options)
     : is_procedure(arg_is_procedure)
     , replace(arg_replace)
-    , funcname()
-    , parameters()
+    , funcname(std::move(arg_funcname))
+    , parameters(std::move(arg_parameters))
     , return_type(std::move(arg_return_type))
-    , options()
-{
-    for (auto& it : arg_funcname)
-        funcname.emplace_back(it.release());
-    for (auto& it : arg_parameters)
-        parameters.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 CreateFunctionStmt::CreateFunctionStmt(CreateFunctionStmt&& other) noexcept
     : is_procedure(std::exchange(other.is_procedure, false))
@@ -10297,12 +9698,6 @@ CreateFunctionStmt::CreateFunctionStmt(CreateFunctionStmt&& other) noexcept
 
 CreateFunctionStmt::~CreateFunctionStmt()
 {
-    for (auto& it : funcname)
-        delete it;
-    for (auto& it : parameters)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateFunctionStmt::operator==([[maybe_unused]] const CreateFunctionStmt& other) const noexcept
@@ -10357,7 +9752,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateFunctionStmt& value)
         stream << ",funcname=[" << value.funcname.size() << "][";
         for (const auto& it : value.funcname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -10367,7 +9762,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateFunctionStmt& value)
         stream << ",parameters=[" << value.parameters.size() << "][";
         for (const auto& it : value.parameters)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -10378,7 +9773,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateFunctionStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -10393,14 +9788,11 @@ AlterFunctionStmt::AlterFunctionStmt()
     , actions()
 {}
 
-AlterFunctionStmt::AlterFunctionStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::ObjectWithArgs&& arg_func, std::vector<std::unique_ptr<::pg_query::Node>> arg_actions)
+AlterFunctionStmt::AlterFunctionStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::ObjectWithArgs&& arg_func, std::vector<::pg_query::Node> arg_actions)
     : objtype(std::move(arg_objtype))
     , func(std::move(arg_func))
-    , actions()
-{
-    for (auto& it : arg_actions)
-        actions.emplace_back(it.release());
-}
+    , actions(std::move(arg_actions))
+{}
 
 AlterFunctionStmt::AlterFunctionStmt(AlterFunctionStmt&& other) noexcept
     : objtype(std::move(other.objtype))
@@ -10410,8 +9802,6 @@ AlterFunctionStmt::AlterFunctionStmt(AlterFunctionStmt&& other) noexcept
 
 AlterFunctionStmt::~AlterFunctionStmt()
 {
-    for (auto& it : actions)
-        delete it;
 }
 
 bool AlterFunctionStmt::operator==([[maybe_unused]] const AlterFunctionStmt& other) const noexcept
@@ -10460,7 +9850,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterFunctionStmt& value)
         stream << ",actions=[" << value.actions.size() << "][";
         for (const auto& it : value.actions)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -10473,12 +9863,9 @@ DoStmt::DoStmt()
     : args()
 {}
 
-DoStmt::DoStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_args)
-    : args()
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+DoStmt::DoStmt(std::vector<::pg_query::Node> arg_args)
+    : args(std::move(arg_args))
+{}
 
 DoStmt::DoStmt(DoStmt&& other) noexcept
     : args(std::move(other.args))
@@ -10486,8 +9873,6 @@ DoStmt::DoStmt(DoStmt&& other) noexcept
 
 DoStmt::~DoStmt()
 {
-    for (auto& it : args)
-        delete it;
 }
 
 bool DoStmt::operator==([[maybe_unused]] const DoStmt& other) const noexcept
@@ -10530,7 +9915,7 @@ std::ostream& operator<<(std::ostream& stream, const DoStmt& value)
         stream << "args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -10543,18 +9928,18 @@ RenameStmt::RenameStmt()
     : rename_type()
     , relation_type()
     , relation()
-    , object(nullptr)
+    , object()
     , subname()
     , newname()
     , behavior()
     , missing_ok(false)
 {}
 
-RenameStmt::RenameStmt(::pg_query::ObjectType&& arg_rename_type, ::pg_query::ObjectType&& arg_relation_type, ::pg_query::RangeVar&& arg_relation, std::unique_ptr<::pg_query::Node> arg_object, const std::string& arg_subname, const std::string& arg_newname, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
+RenameStmt::RenameStmt(::pg_query::ObjectType&& arg_rename_type, ::pg_query::ObjectType&& arg_relation_type, ::pg_query::RangeVar&& arg_relation, ::pg_query::Node&& arg_object, const std::string& arg_subname, const std::string& arg_newname, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
     : rename_type(std::move(arg_rename_type))
     , relation_type(std::move(arg_relation_type))
     , relation(std::move(arg_relation))
-    , object(arg_object.release())
+    , object(std::move(arg_object))
     , subname(arg_subname)
     , newname(arg_newname)
     , behavior(std::move(arg_behavior))
@@ -10565,7 +9950,7 @@ RenameStmt::RenameStmt(RenameStmt&& other) noexcept
     : rename_type(std::move(other.rename_type))
     , relation_type(std::move(other.relation_type))
     , relation(std::move(other.relation))
-    , object(std::exchange(other.object, nullptr))
+    , object(std::move(other.object))
     , subname(std::move(other.subname))
     , newname(std::move(other.newname))
     , behavior(std::move(other.behavior))
@@ -10574,7 +9959,6 @@ RenameStmt::RenameStmt(RenameStmt&& other) noexcept
 
 RenameStmt::~RenameStmt()
 {
-    if (object) delete object;
 }
 
 bool RenameStmt::operator==([[maybe_unused]] const RenameStmt& other) const noexcept
@@ -10596,7 +9980,7 @@ RenameStmt& RenameStmt::operator=(RenameStmt&& other) noexcept
         rename_type = std::move(other.rename_type);
         relation_type = std::move(other.relation_type);
         relation = std::move(other.relation);
-        object = std::exchange(other.object, nullptr);
+        object = std::move(other.object);
         subname = std::move(other.subname);
         newname = std::move(other.newname);
         behavior = std::move(other.behavior);
@@ -10629,7 +10013,7 @@ std::ostream& operator<<(std::ostream& stream, const RenameStmt& value)
     stream << "rename_type="; stream << value.rename_type;
     stream << ",relation_type="; stream << value.relation_type;
     stream << ",relation="; stream << value.relation;
-    stream << ",object="; stream << " ptr of other struct" << (value.object == nullptr ? "true" : "false");
+    stream << ",object="; stream << value.object;
     stream << ",subname="; stream << "\"" << value.subname << "\"";
     stream << ",newname="; stream << "\"" << value.newname << "\"";
     stream << ",behavior="; stream << value.behavior;
@@ -10641,30 +10025,27 @@ std::ostream& operator<<(std::ostream& stream, const RenameStmt& value)
 RuleStmt::RuleStmt()
     : relation()
     , rulename()
-    , where_clause(nullptr)
+    , where_clause()
     , event()
     , instead(false)
     , actions()
     , replace(false)
 {}
 
-RuleStmt::RuleStmt(::pg_query::RangeVar&& arg_relation, const std::string& arg_rulename, std::unique_ptr<::pg_query::Node> arg_where_clause, ::pg_query::CmdType&& arg_event, bool arg_instead, std::vector<std::unique_ptr<::pg_query::Node>> arg_actions, bool arg_replace)
+RuleStmt::RuleStmt(::pg_query::RangeVar&& arg_relation, const std::string& arg_rulename, ::pg_query::Node&& arg_where_clause, ::pg_query::CmdType&& arg_event, bool arg_instead, std::vector<::pg_query::Node> arg_actions, bool arg_replace)
     : relation(std::move(arg_relation))
     , rulename(arg_rulename)
-    , where_clause(arg_where_clause.release())
+    , where_clause(std::move(arg_where_clause))
     , event(std::move(arg_event))
     , instead(arg_instead)
-    , actions()
+    , actions(std::move(arg_actions))
     , replace(arg_replace)
-{
-    for (auto& it : arg_actions)
-        actions.emplace_back(it.release());
-}
+{}
 
 RuleStmt::RuleStmt(RuleStmt&& other) noexcept
     : relation(std::move(other.relation))
     , rulename(std::move(other.rulename))
-    , where_clause(std::exchange(other.where_clause, nullptr))
+    , where_clause(std::move(other.where_clause))
     , event(std::move(other.event))
     , instead(std::exchange(other.instead, false))
     , actions(std::move(other.actions))
@@ -10673,9 +10054,6 @@ RuleStmt::RuleStmt(RuleStmt&& other) noexcept
 
 RuleStmt::~RuleStmt()
 {
-    if (where_clause) delete where_clause;
-    for (auto& it : actions)
-        delete it;
 }
 
 bool RuleStmt::operator==([[maybe_unused]] const RuleStmt& other) const noexcept
@@ -10696,7 +10074,7 @@ RuleStmt& RuleStmt::operator=(RuleStmt&& other) noexcept
     {
         relation = std::move(other.relation);
         rulename = std::move(other.rulename);
-        where_clause = std::exchange(other.where_clause, nullptr);
+        where_clause = std::move(other.where_clause);
         event = std::move(other.event);
         instead = std::exchange(other.instead, false);
         actions = std::move(other.actions);
@@ -10727,7 +10105,7 @@ std::ostream& operator<<(std::ostream& stream, const RuleStmt& value)
     stream << "RuleStmt(";
     stream << "relation="; stream << value.relation;
     stream << ",rulename="; stream << "\"" << value.rulename << "\"";
-    stream << ",where_clause="; stream << " ptr of other struct" << (value.where_clause == nullptr ? "true" : "false");
+    stream << ",where_clause="; stream << value.where_clause;
     stream << ",event="; stream << value.event;
     stream << ",instead="; stream << (value.instead ? "true" : "false");
     {
@@ -10735,7 +10113,7 @@ std::ostream& operator<<(std::ostream& stream, const RuleStmt& value)
         stream << ",actions=[" << value.actions.size() << "][";
         for (const auto& it : value.actions)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -10927,16 +10305,13 @@ TransactionStmt::TransactionStmt()
     , chain(false)
 {}
 
-TransactionStmt::TransactionStmt(::pg_query::TransactionStmtKind&& arg_kind, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, const std::string& arg_savepoint_name, const std::string& arg_gid, bool arg_chain)
+TransactionStmt::TransactionStmt(::pg_query::TransactionStmtKind&& arg_kind, std::vector<::pg_query::Node> arg_options, const std::string& arg_savepoint_name, const std::string& arg_gid, bool arg_chain)
     : kind(std::move(arg_kind))
-    , options()
+    , options(std::move(arg_options))
     , savepoint_name(arg_savepoint_name)
     , gid(arg_gid)
     , chain(arg_chain)
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+{}
 
 TransactionStmt::TransactionStmt(TransactionStmt&& other) noexcept
     : kind(std::move(other.kind))
@@ -10948,8 +10323,6 @@ TransactionStmt::TransactionStmt(TransactionStmt&& other) noexcept
 
 TransactionStmt::~TransactionStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool TransactionStmt::operator==([[maybe_unused]] const TransactionStmt& other) const noexcept
@@ -11001,7 +10374,7 @@ std::ostream& operator<<(std::ostream& stream, const TransactionStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11016,30 +10389,25 @@ std::ostream& operator<<(std::ostream& stream, const TransactionStmt& value)
 ViewStmt::ViewStmt()
     : view()
     , aliases()
-    , query(nullptr)
+    , query()
     , replace(false)
     , options()
     , with_check_option()
 {}
 
-ViewStmt::ViewStmt(::pg_query::RangeVar&& arg_view, std::vector<std::unique_ptr<::pg_query::Node>> arg_aliases, std::unique_ptr<::pg_query::Node> arg_query, bool arg_replace, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, ::pg_query::ViewCheckOption&& arg_with_check_option)
+ViewStmt::ViewStmt(::pg_query::RangeVar&& arg_view, std::vector<::pg_query::Node> arg_aliases, ::pg_query::Node&& arg_query, bool arg_replace, std::vector<::pg_query::Node> arg_options, ::pg_query::ViewCheckOption&& arg_with_check_option)
     : view(std::move(arg_view))
-    , aliases()
-    , query(arg_query.release())
+    , aliases(std::move(arg_aliases))
+    , query(std::move(arg_query))
     , replace(arg_replace)
-    , options()
+    , options(std::move(arg_options))
     , with_check_option(std::move(arg_with_check_option))
-{
-    for (auto& it : arg_aliases)
-        aliases.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+{}
 
 ViewStmt::ViewStmt(ViewStmt&& other) noexcept
     : view(std::move(other.view))
     , aliases(std::move(other.aliases))
-    , query(std::exchange(other.query, nullptr))
+    , query(std::move(other.query))
     , replace(std::exchange(other.replace, false))
     , options(std::move(other.options))
     , with_check_option(std::move(other.with_check_option))
@@ -11047,11 +10415,6 @@ ViewStmt::ViewStmt(ViewStmt&& other) noexcept
 
 ViewStmt::~ViewStmt()
 {
-    if (query) delete query;
-    for (auto& it : aliases)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool ViewStmt::operator==([[maybe_unused]] const ViewStmt& other) const noexcept
@@ -11072,7 +10435,7 @@ ViewStmt& ViewStmt::operator=(ViewStmt&& other) noexcept
     {
         view = std::move(other.view);
         aliases = std::move(other.aliases);
-        query = std::exchange(other.query, nullptr);
+        query = std::move(other.query);
         replace = std::exchange(other.replace, false);
         options = std::move(other.options);
         with_check_option = std::move(other.with_check_option);
@@ -11105,19 +10468,19 @@ std::ostream& operator<<(std::ostream& stream, const ViewStmt& value)
         stream << ",aliases=[" << value.aliases.size() << "][";
         for (const auto& it : value.aliases)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",query="; stream << " ptr of other struct" << (value.query == nullptr ? "true" : "false");
+    stream << ",query="; stream << value.query;
     stream << ",replace="; stream << (value.replace ? "true" : "false");
     {
         bool first = true;
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11190,17 +10553,12 @@ CreateDomainStmt::CreateDomainStmt()
     , constraints()
 {}
 
-CreateDomainStmt::CreateDomainStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_domainname, ::pg_query::TypeName&& arg_type_name, ::pg_query::CollateClause&& arg_coll_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_constraints)
-    : domainname()
+CreateDomainStmt::CreateDomainStmt(std::vector<::pg_query::Node> arg_domainname, ::pg_query::TypeName&& arg_type_name, ::pg_query::CollateClause&& arg_coll_clause, std::vector<::pg_query::Node> arg_constraints)
+    : domainname(std::move(arg_domainname))
     , type_name(std::move(arg_type_name))
     , coll_clause(std::move(arg_coll_clause))
-    , constraints()
-{
-    for (auto& it : arg_domainname)
-        domainname.emplace_back(it.release());
-    for (auto& it : arg_constraints)
-        constraints.emplace_back(it.release());
-}
+    , constraints(std::move(arg_constraints))
+{}
 
 CreateDomainStmt::CreateDomainStmt(CreateDomainStmt&& other) noexcept
     : domainname(std::move(other.domainname))
@@ -11211,10 +10569,6 @@ CreateDomainStmt::CreateDomainStmt(CreateDomainStmt&& other) noexcept
 
 CreateDomainStmt::~CreateDomainStmt()
 {
-    for (auto& it : domainname)
-        delete it;
-    for (auto& it : constraints)
-        delete it;
 }
 
 bool CreateDomainStmt::operator==([[maybe_unused]] const CreateDomainStmt& other) const noexcept
@@ -11263,7 +10617,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateDomainStmt& value)
         stream << "domainname=[" << value.domainname.size() << "][";
         for (const auto& it : value.domainname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11275,7 +10629,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateDomainStmt& value)
         stream << ",constraints=[" << value.constraints.size() << "][";
         for (const auto& it : value.constraints)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11289,13 +10643,10 @@ CreatedbStmt::CreatedbStmt()
     , options()
 {}
 
-CreatedbStmt::CreatedbStmt(const std::string& arg_dbname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+CreatedbStmt::CreatedbStmt(const std::string& arg_dbname, std::vector<::pg_query::Node> arg_options)
     : dbname(arg_dbname)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 CreatedbStmt::CreatedbStmt(CreatedbStmt&& other) noexcept
     : dbname(std::move(other.dbname))
@@ -11304,8 +10655,6 @@ CreatedbStmt::CreatedbStmt(CreatedbStmt&& other) noexcept
 
 CreatedbStmt::~CreatedbStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreatedbStmt::operator==([[maybe_unused]] const CreatedbStmt& other) const noexcept
@@ -11351,7 +10700,7 @@ std::ostream& operator<<(std::ostream& stream, const CreatedbStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11366,14 +10715,11 @@ DropdbStmt::DropdbStmt()
     , options()
 {}
 
-DropdbStmt::DropdbStmt(const std::string& arg_dbname, bool arg_missing_ok, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+DropdbStmt::DropdbStmt(const std::string& arg_dbname, bool arg_missing_ok, std::vector<::pg_query::Node> arg_options)
     : dbname(arg_dbname)
     , missing_ok(arg_missing_ok)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 DropdbStmt::DropdbStmt(DropdbStmt&& other) noexcept
     : dbname(std::move(other.dbname))
@@ -11383,8 +10729,6 @@ DropdbStmt::DropdbStmt(DropdbStmt&& other) noexcept
 
 DropdbStmt::~DropdbStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool DropdbStmt::operator==([[maybe_unused]] const DropdbStmt& other) const noexcept
@@ -11433,7 +10777,7 @@ std::ostream& operator<<(std::ostream& stream, const DropdbStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11448,16 +10792,11 @@ VacuumStmt::VacuumStmt()
     , is_vacuumcmd(false)
 {}
 
-VacuumStmt::VacuumStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_options, std::vector<std::unique_ptr<::pg_query::Node>> arg_rels, bool arg_is_vacuumcmd)
-    : options()
-    , rels()
+VacuumStmt::VacuumStmt(std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_rels, bool arg_is_vacuumcmd)
+    : options(std::move(arg_options))
+    , rels(std::move(arg_rels))
     , is_vacuumcmd(arg_is_vacuumcmd)
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-    for (auto& it : arg_rels)
-        rels.emplace_back(it.release());
-}
+{}
 
 VacuumStmt::VacuumStmt(VacuumStmt&& other) noexcept
     : options(std::move(other.options))
@@ -11467,10 +10806,6 @@ VacuumStmt::VacuumStmt(VacuumStmt&& other) noexcept
 
 VacuumStmt::~VacuumStmt()
 {
-    for (auto& it : options)
-        delete it;
-    for (auto& it : rels)
-        delete it;
 }
 
 bool VacuumStmt::operator==([[maybe_unused]] const VacuumStmt& other) const noexcept
@@ -11517,7 +10852,7 @@ std::ostream& operator<<(std::ostream& stream, const VacuumStmt& value)
         stream << "options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11527,7 +10862,7 @@ std::ostream& operator<<(std::ostream& stream, const VacuumStmt& value)
         stream << ",rels=[" << value.rels.size() << "][";
         for (const auto& it : value.rels)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11538,28 +10873,22 @@ std::ostream& operator<<(std::ostream& stream, const VacuumStmt& value)
 }
 
 ExplainStmt::ExplainStmt()
-    : query(nullptr)
+    : query()
     , options()
 {}
 
-ExplainStmt::ExplainStmt(std::unique_ptr<::pg_query::Node> arg_query, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
-    : query(arg_query.release())
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+ExplainStmt::ExplainStmt(::pg_query::Node&& arg_query, std::vector<::pg_query::Node> arg_options)
+    : query(std::move(arg_query))
+    , options(std::move(arg_options))
+{}
 
 ExplainStmt::ExplainStmt(ExplainStmt&& other) noexcept
-    : query(std::exchange(other.query, nullptr))
+    : query(std::move(other.query))
     , options(std::move(other.options))
 {}
 
 ExplainStmt::~ExplainStmt()
 {
-    if (query) delete query;
-    for (auto& it : options)
-        delete it;
 }
 
 bool ExplainStmt::operator==([[maybe_unused]] const ExplainStmt& other) const noexcept
@@ -11578,7 +10907,7 @@ ExplainStmt& ExplainStmt::operator=(ExplainStmt&& other) noexcept
 {
     if (this != &other)
     {
-        query = std::exchange(other.query, nullptr);
+        query = std::move(other.query);
         options = std::move(other.options);
     }
     return *this;
@@ -11599,13 +10928,13 @@ void ExplainStmt::swap(ExplainStmt& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const ExplainStmt& value)
 {
     stream << "ExplainStmt(";
-    stream << "query="; stream << " ptr of other struct" << (value.query == nullptr ? "true" : "false");
+    stream << "query="; stream << value.query;
     {
         bool first = true;
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11615,15 +10944,15 @@ std::ostream& operator<<(std::ostream& stream, const ExplainStmt& value)
 }
 
 CreateTableAsStmt::CreateTableAsStmt()
-    : query(nullptr)
+    : query()
     , into()
     , relkind()
     , is_select_into(false)
     , if_not_exists(false)
 {}
 
-CreateTableAsStmt::CreateTableAsStmt(std::unique_ptr<::pg_query::Node> arg_query, ::pg_query::IntoClause&& arg_into, ::pg_query::ObjectType&& arg_relkind, bool arg_is_select_into, bool arg_if_not_exists)
-    : query(arg_query.release())
+CreateTableAsStmt::CreateTableAsStmt(::pg_query::Node&& arg_query, ::pg_query::IntoClause&& arg_into, ::pg_query::ObjectType&& arg_relkind, bool arg_is_select_into, bool arg_if_not_exists)
+    : query(std::move(arg_query))
     , into(std::move(arg_into))
     , relkind(std::move(arg_relkind))
     , is_select_into(arg_is_select_into)
@@ -11631,7 +10960,7 @@ CreateTableAsStmt::CreateTableAsStmt(std::unique_ptr<::pg_query::Node> arg_query
 {}
 
 CreateTableAsStmt::CreateTableAsStmt(CreateTableAsStmt&& other) noexcept
-    : query(std::exchange(other.query, nullptr))
+    : query(std::move(other.query))
     , into(std::move(other.into))
     , relkind(std::move(other.relkind))
     , is_select_into(std::exchange(other.is_select_into, false))
@@ -11640,7 +10969,6 @@ CreateTableAsStmt::CreateTableAsStmt(CreateTableAsStmt&& other) noexcept
 
 CreateTableAsStmt::~CreateTableAsStmt()
 {
-    if (query) delete query;
 }
 
 bool CreateTableAsStmt::operator==([[maybe_unused]] const CreateTableAsStmt& other) const noexcept
@@ -11659,7 +10987,7 @@ CreateTableAsStmt& CreateTableAsStmt::operator=(CreateTableAsStmt&& other) noexc
 {
     if (this != &other)
     {
-        query = std::exchange(other.query, nullptr);
+        query = std::move(other.query);
         into = std::move(other.into);
         relkind = std::move(other.relkind);
         is_select_into = std::exchange(other.is_select_into, false);
@@ -11686,7 +11014,7 @@ void CreateTableAsStmt::swap(CreateTableAsStmt& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CreateTableAsStmt& value)
 {
     stream << "CreateTableAsStmt(";
-    stream << "query="; stream << " ptr of other struct" << (value.query == nullptr ? "true" : "false");
+    stream << "query="; stream << value.query;
     stream << ",into="; stream << value.into;
     stream << ",relkind="; stream << value.relkind;
     stream << ",is_select_into="; stream << (value.is_select_into ? "true" : "false");
@@ -11703,16 +11031,13 @@ CreateSeqStmt::CreateSeqStmt()
     , if_not_exists(false)
 {}
 
-CreateSeqStmt::CreateSeqStmt(::pg_query::RangeVar&& arg_sequence, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, uint32_t arg_owner_id, bool arg_for_identity, bool arg_if_not_exists)
+CreateSeqStmt::CreateSeqStmt(::pg_query::RangeVar&& arg_sequence, std::vector<::pg_query::Node> arg_options, uint32_t arg_owner_id, bool arg_for_identity, bool arg_if_not_exists)
     : sequence(std::move(arg_sequence))
-    , options()
+    , options(std::move(arg_options))
     , owner_id(arg_owner_id)
     , for_identity(arg_for_identity)
     , if_not_exists(arg_if_not_exists)
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+{}
 
 CreateSeqStmt::CreateSeqStmt(CreateSeqStmt&& other) noexcept
     : sequence(std::move(other.sequence))
@@ -11724,8 +11049,6 @@ CreateSeqStmt::CreateSeqStmt(CreateSeqStmt&& other) noexcept
 
 CreateSeqStmt::~CreateSeqStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateSeqStmt::operator==([[maybe_unused]] const CreateSeqStmt& other) const noexcept
@@ -11777,7 +11100,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateSeqStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11796,15 +11119,12 @@ AlterSeqStmt::AlterSeqStmt()
     , missing_ok(false)
 {}
 
-AlterSeqStmt::AlterSeqStmt(::pg_query::RangeVar&& arg_sequence, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, bool arg_for_identity, bool arg_missing_ok)
+AlterSeqStmt::AlterSeqStmt(::pg_query::RangeVar&& arg_sequence, std::vector<::pg_query::Node> arg_options, bool arg_for_identity, bool arg_missing_ok)
     : sequence(std::move(arg_sequence))
-    , options()
+    , options(std::move(arg_options))
     , for_identity(arg_for_identity)
     , missing_ok(arg_missing_ok)
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+{}
 
 AlterSeqStmt::AlterSeqStmt(AlterSeqStmt&& other) noexcept
     : sequence(std::move(other.sequence))
@@ -11815,8 +11135,6 @@ AlterSeqStmt::AlterSeqStmt(AlterSeqStmt&& other) noexcept
 
 AlterSeqStmt::~AlterSeqStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterSeqStmt::operator==([[maybe_unused]] const AlterSeqStmt& other) const noexcept
@@ -11866,7 +11184,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterSeqStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -11884,15 +11202,12 @@ VariableSetStmt::VariableSetStmt()
     , is_local(false)
 {}
 
-VariableSetStmt::VariableSetStmt(::pg_query::VariableSetKind&& arg_kind, const std::string& arg_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, bool arg_is_local)
+VariableSetStmt::VariableSetStmt(::pg_query::VariableSetKind&& arg_kind, const std::string& arg_name, std::vector<::pg_query::Node> arg_args, bool arg_is_local)
     : kind(std::move(arg_kind))
     , name(arg_name)
-    , args()
+    , args(std::move(arg_args))
     , is_local(arg_is_local)
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 VariableSetStmt::VariableSetStmt(VariableSetStmt&& other) noexcept
     : kind(std::move(other.kind))
@@ -11903,8 +11218,6 @@ VariableSetStmt::VariableSetStmt(VariableSetStmt&& other) noexcept
 
 VariableSetStmt::~VariableSetStmt()
 {
-    for (auto& it : args)
-        delete it;
 }
 
 bool VariableSetStmt::operator==([[maybe_unused]] const VariableSetStmt& other) const noexcept
@@ -11955,7 +11268,7 @@ std::ostream& operator<<(std::ostream& stream, const VariableSetStmt& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12086,7 +11399,7 @@ CreateTrigStmt::CreateTrigStmt()
     , timing((int32_t)0ll)
     , events((int32_t)0ll)
     , columns()
-    , when_clause(nullptr)
+    , when_clause()
     , isconstraint(false)
     , transition_rels()
     , deferrable(false)
@@ -12094,31 +11407,22 @@ CreateTrigStmt::CreateTrigStmt()
     , constrrel()
 {}
 
-CreateTrigStmt::CreateTrigStmt(const std::string& arg_trigname, ::pg_query::RangeVar&& arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_funcname, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, bool arg_row, int32_t arg_timing, int32_t arg_events, std::vector<std::unique_ptr<::pg_query::Node>> arg_columns, std::unique_ptr<::pg_query::Node> arg_when_clause, bool arg_isconstraint, std::vector<std::unique_ptr<::pg_query::Node>> arg_transition_rels, bool arg_deferrable, bool arg_initdeferred, ::pg_query::RangeVar&& arg_constrrel)
+CreateTrigStmt::CreateTrigStmt(const std::string& arg_trigname, ::pg_query::RangeVar&& arg_relation, std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_args, bool arg_row, int32_t arg_timing, int32_t arg_events, std::vector<::pg_query::Node> arg_columns, ::pg_query::Node&& arg_when_clause, bool arg_isconstraint, std::vector<::pg_query::Node> arg_transition_rels, bool arg_deferrable, bool arg_initdeferred, ::pg_query::RangeVar&& arg_constrrel)
     : trigname(arg_trigname)
     , relation(std::move(arg_relation))
-    , funcname()
-    , args()
+    , funcname(std::move(arg_funcname))
+    , args(std::move(arg_args))
     , row(arg_row)
     , timing(arg_timing)
     , events(arg_events)
-    , columns()
-    , when_clause(arg_when_clause.release())
+    , columns(std::move(arg_columns))
+    , when_clause(std::move(arg_when_clause))
     , isconstraint(arg_isconstraint)
-    , transition_rels()
+    , transition_rels(std::move(arg_transition_rels))
     , deferrable(arg_deferrable)
     , initdeferred(arg_initdeferred)
     , constrrel(std::move(arg_constrrel))
-{
-    for (auto& it : arg_funcname)
-        funcname.emplace_back(it.release());
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-    for (auto& it : arg_columns)
-        columns.emplace_back(it.release());
-    for (auto& it : arg_transition_rels)
-        transition_rels.emplace_back(it.release());
-}
+{}
 
 CreateTrigStmt::CreateTrigStmt(CreateTrigStmt&& other) noexcept
     : trigname(std::move(other.trigname))
@@ -12129,7 +11433,7 @@ CreateTrigStmt::CreateTrigStmt(CreateTrigStmt&& other) noexcept
     , timing(std::exchange(other.timing, (int32_t)0ll))
     , events(std::exchange(other.events, (int32_t)0ll))
     , columns(std::move(other.columns))
-    , when_clause(std::exchange(other.when_clause, nullptr))
+    , when_clause(std::move(other.when_clause))
     , isconstraint(std::exchange(other.isconstraint, false))
     , transition_rels(std::move(other.transition_rels))
     , deferrable(std::exchange(other.deferrable, false))
@@ -12139,15 +11443,6 @@ CreateTrigStmt::CreateTrigStmt(CreateTrigStmt&& other) noexcept
 
 CreateTrigStmt::~CreateTrigStmt()
 {
-    if (when_clause) delete when_clause;
-    for (auto& it : funcname)
-        delete it;
-    for (auto& it : args)
-        delete it;
-    for (auto& it : columns)
-        delete it;
-    for (auto& it : transition_rels)
-        delete it;
 }
 
 bool CreateTrigStmt::operator==([[maybe_unused]] const CreateTrigStmt& other) const noexcept
@@ -12174,7 +11469,7 @@ CreateTrigStmt& CreateTrigStmt::operator=(CreateTrigStmt&& other) noexcept
         timing = std::exchange(other.timing, (int32_t)0ll);
         events = std::exchange(other.events, (int32_t)0ll);
         columns = std::move(other.columns);
-        when_clause = std::exchange(other.when_clause, nullptr);
+        when_clause = std::move(other.when_clause);
         isconstraint = std::exchange(other.isconstraint, false);
         transition_rels = std::move(other.transition_rels);
         deferrable = std::exchange(other.deferrable, false);
@@ -12218,7 +11513,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateTrigStmt& value)
         stream << ",funcname=[" << value.funcname.size() << "][";
         for (const auto& it : value.funcname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12228,7 +11523,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateTrigStmt& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12241,19 +11536,19 @@ std::ostream& operator<<(std::ostream& stream, const CreateTrigStmt& value)
         stream << ",columns=[" << value.columns.size() << "][";
         for (const auto& it : value.columns)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",when_clause="; stream << " ptr of other struct" << (value.when_clause == nullptr ? "true" : "false");
+    stream << ",when_clause="; stream << value.when_clause;
     stream << ",isconstraint="; stream << (value.isconstraint ? "true" : "false");
     {
         bool first = true;
         stream << ",transition_rels=[" << value.transition_rels.size() << "][";
         for (const auto& it : value.transition_rels)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12274,21 +11569,14 @@ CreatePLangStmt::CreatePLangStmt()
     , pltrusted(false)
 {}
 
-CreatePLangStmt::CreatePLangStmt(bool arg_replace, const std::string& arg_plname, std::vector<std::unique_ptr<::pg_query::Node>> arg_plhandler, std::vector<std::unique_ptr<::pg_query::Node>> arg_plinline, std::vector<std::unique_ptr<::pg_query::Node>> arg_plvalidator, bool arg_pltrusted)
+CreatePLangStmt::CreatePLangStmt(bool arg_replace, const std::string& arg_plname, std::vector<::pg_query::Node> arg_plhandler, std::vector<::pg_query::Node> arg_plinline, std::vector<::pg_query::Node> arg_plvalidator, bool arg_pltrusted)
     : replace(arg_replace)
     , plname(arg_plname)
-    , plhandler()
-    , plinline()
-    , plvalidator()
+    , plhandler(std::move(arg_plhandler))
+    , plinline(std::move(arg_plinline))
+    , plvalidator(std::move(arg_plvalidator))
     , pltrusted(arg_pltrusted)
-{
-    for (auto& it : arg_plhandler)
-        plhandler.emplace_back(it.release());
-    for (auto& it : arg_plinline)
-        plinline.emplace_back(it.release());
-    for (auto& it : arg_plvalidator)
-        plvalidator.emplace_back(it.release());
-}
+{}
 
 CreatePLangStmt::CreatePLangStmt(CreatePLangStmt&& other) noexcept
     : replace(std::exchange(other.replace, false))
@@ -12301,12 +11589,6 @@ CreatePLangStmt::CreatePLangStmt(CreatePLangStmt&& other) noexcept
 
 CreatePLangStmt::~CreatePLangStmt()
 {
-    for (auto& it : plhandler)
-        delete it;
-    for (auto& it : plinline)
-        delete it;
-    for (auto& it : plvalidator)
-        delete it;
 }
 
 bool CreatePLangStmt::operator==([[maybe_unused]] const CreatePLangStmt& other) const noexcept
@@ -12361,7 +11643,7 @@ std::ostream& operator<<(std::ostream& stream, const CreatePLangStmt& value)
         stream << ",plhandler=[" << value.plhandler.size() << "][";
         for (const auto& it : value.plhandler)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12371,7 +11653,7 @@ std::ostream& operator<<(std::ostream& stream, const CreatePLangStmt& value)
         stream << ",plinline=[" << value.plinline.size() << "][";
         for (const auto& it : value.plinline)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12381,7 +11663,7 @@ std::ostream& operator<<(std::ostream& stream, const CreatePLangStmt& value)
         stream << ",plvalidator=[" << value.plvalidator.size() << "][";
         for (const auto& it : value.plvalidator)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12397,14 +11679,11 @@ CreateRoleStmt::CreateRoleStmt()
     , options()
 {}
 
-CreateRoleStmt::CreateRoleStmt(::pg_query::RoleStmtType&& arg_stmt_type, const std::string& arg_role, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+CreateRoleStmt::CreateRoleStmt(::pg_query::RoleStmtType&& arg_stmt_type, const std::string& arg_role, std::vector<::pg_query::Node> arg_options)
     : stmt_type(std::move(arg_stmt_type))
     , role(arg_role)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 CreateRoleStmt::CreateRoleStmt(CreateRoleStmt&& other) noexcept
     : stmt_type(std::move(other.stmt_type))
@@ -12414,8 +11693,6 @@ CreateRoleStmt::CreateRoleStmt(CreateRoleStmt&& other) noexcept
 
 CreateRoleStmt::~CreateRoleStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateRoleStmt::operator==([[maybe_unused]] const CreateRoleStmt& other) const noexcept
@@ -12464,7 +11741,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateRoleStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12479,14 +11756,11 @@ AlterRoleStmt::AlterRoleStmt()
     , action((int32_t)0ll)
 {}
 
-AlterRoleStmt::AlterRoleStmt(::pg_query::RoleSpec&& arg_role, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, int32_t arg_action)
+AlterRoleStmt::AlterRoleStmt(::pg_query::RoleSpec&& arg_role, std::vector<::pg_query::Node> arg_options, int32_t arg_action)
     : role(std::move(arg_role))
-    , options()
+    , options(std::move(arg_options))
     , action(arg_action)
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+{}
 
 AlterRoleStmt::AlterRoleStmt(AlterRoleStmt&& other) noexcept
     : role(std::move(other.role))
@@ -12496,8 +11770,6 @@ AlterRoleStmt::AlterRoleStmt(AlterRoleStmt&& other) noexcept
 
 AlterRoleStmt::~AlterRoleStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterRoleStmt::operator==([[maybe_unused]] const AlterRoleStmt& other) const noexcept
@@ -12545,7 +11817,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterRoleStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12560,13 +11832,10 @@ DropRoleStmt::DropRoleStmt()
     , missing_ok(false)
 {}
 
-DropRoleStmt::DropRoleStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, bool arg_missing_ok)
-    : roles()
+DropRoleStmt::DropRoleStmt(std::vector<::pg_query::Node> arg_roles, bool arg_missing_ok)
+    : roles(std::move(arg_roles))
     , missing_ok(arg_missing_ok)
-{
-    for (auto& it : arg_roles)
-        roles.emplace_back(it.release());
-}
+{}
 
 DropRoleStmt::DropRoleStmt(DropRoleStmt&& other) noexcept
     : roles(std::move(other.roles))
@@ -12575,8 +11844,6 @@ DropRoleStmt::DropRoleStmt(DropRoleStmt&& other) noexcept
 
 DropRoleStmt::~DropRoleStmt()
 {
-    for (auto& it : roles)
-        delete it;
 }
 
 bool DropRoleStmt::operator==([[maybe_unused]] const DropRoleStmt& other) const noexcept
@@ -12621,7 +11888,7 @@ std::ostream& operator<<(std::ostream& stream, const DropRoleStmt& value)
         stream << "roles=[" << value.roles.size() << "][";
         for (const auto& it : value.roles)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12637,14 +11904,11 @@ LockStmt::LockStmt()
     , nowait(false)
 {}
 
-LockStmt::LockStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_relations, int32_t arg_mode, bool arg_nowait)
-    : relations()
+LockStmt::LockStmt(std::vector<::pg_query::Node> arg_relations, int32_t arg_mode, bool arg_nowait)
+    : relations(std::move(arg_relations))
     , mode(arg_mode)
     , nowait(arg_nowait)
-{
-    for (auto& it : arg_relations)
-        relations.emplace_back(it.release());
-}
+{}
 
 LockStmt::LockStmt(LockStmt&& other) noexcept
     : relations(std::move(other.relations))
@@ -12654,8 +11918,6 @@ LockStmt::LockStmt(LockStmt&& other) noexcept
 
 LockStmt::~LockStmt()
 {
-    for (auto& it : relations)
-        delete it;
 }
 
 bool LockStmt::operator==([[maybe_unused]] const LockStmt& other) const noexcept
@@ -12702,7 +11964,7 @@ std::ostream& operator<<(std::ostream& stream, const LockStmt& value)
         stream << "relations=[" << value.relations.size() << "][";
         for (const auto& it : value.relations)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12718,13 +11980,10 @@ ConstraintsSetStmt::ConstraintsSetStmt()
     , deferred(false)
 {}
 
-ConstraintsSetStmt::ConstraintsSetStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_constraints, bool arg_deferred)
-    : constraints()
+ConstraintsSetStmt::ConstraintsSetStmt(std::vector<::pg_query::Node> arg_constraints, bool arg_deferred)
+    : constraints(std::move(arg_constraints))
     , deferred(arg_deferred)
-{
-    for (auto& it : arg_constraints)
-        constraints.emplace_back(it.release());
-}
+{}
 
 ConstraintsSetStmt::ConstraintsSetStmt(ConstraintsSetStmt&& other) noexcept
     : constraints(std::move(other.constraints))
@@ -12733,8 +11992,6 @@ ConstraintsSetStmt::ConstraintsSetStmt(ConstraintsSetStmt&& other) noexcept
 
 ConstraintsSetStmt::~ConstraintsSetStmt()
 {
-    for (auto& it : constraints)
-        delete it;
 }
 
 bool ConstraintsSetStmt::operator==([[maybe_unused]] const ConstraintsSetStmt& other) const noexcept
@@ -12779,7 +12036,7 @@ std::ostream& operator<<(std::ostream& stream, const ConstraintsSetStmt& value)
         stream << "constraints=[" << value.constraints.size() << "][";
         for (const auto& it : value.constraints)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -12923,15 +12180,12 @@ CreateSchemaStmt::CreateSchemaStmt()
     , if_not_exists(false)
 {}
 
-CreateSchemaStmt::CreateSchemaStmt(const std::string& arg_schemaname, ::pg_query::RoleSpec&& arg_authrole, std::vector<std::unique_ptr<::pg_query::Node>> arg_schema_elts, bool arg_if_not_exists)
+CreateSchemaStmt::CreateSchemaStmt(const std::string& arg_schemaname, ::pg_query::RoleSpec&& arg_authrole, std::vector<::pg_query::Node> arg_schema_elts, bool arg_if_not_exists)
     : schemaname(arg_schemaname)
     , authrole(std::move(arg_authrole))
-    , schema_elts()
+    , schema_elts(std::move(arg_schema_elts))
     , if_not_exists(arg_if_not_exists)
-{
-    for (auto& it : arg_schema_elts)
-        schema_elts.emplace_back(it.release());
-}
+{}
 
 CreateSchemaStmt::CreateSchemaStmt(CreateSchemaStmt&& other) noexcept
     : schemaname(std::move(other.schemaname))
@@ -12942,8 +12196,6 @@ CreateSchemaStmt::CreateSchemaStmt(CreateSchemaStmt&& other) noexcept
 
 CreateSchemaStmt::~CreateSchemaStmt()
 {
-    for (auto& it : schema_elts)
-        delete it;
 }
 
 bool CreateSchemaStmt::operator==([[maybe_unused]] const CreateSchemaStmt& other) const noexcept
@@ -12994,7 +12246,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateSchemaStmt& value)
         stream << ",schema_elts=[" << value.schema_elts.size() << "][";
         for (const auto& it : value.schema_elts)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13009,13 +12261,10 @@ AlterDatabaseStmt::AlterDatabaseStmt()
     , options()
 {}
 
-AlterDatabaseStmt::AlterDatabaseStmt(const std::string& arg_dbname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+AlterDatabaseStmt::AlterDatabaseStmt(const std::string& arg_dbname, std::vector<::pg_query::Node> arg_options)
     : dbname(arg_dbname)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 AlterDatabaseStmt::AlterDatabaseStmt(AlterDatabaseStmt&& other) noexcept
     : dbname(std::move(other.dbname))
@@ -13024,8 +12273,6 @@ AlterDatabaseStmt::AlterDatabaseStmt(AlterDatabaseStmt&& other) noexcept
 
 AlterDatabaseStmt::~AlterDatabaseStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterDatabaseStmt::operator==([[maybe_unused]] const AlterDatabaseStmt& other) const noexcept
@@ -13071,7 +12318,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterDatabaseStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13218,18 +12465,13 @@ CreateConversionStmt::CreateConversionStmt()
     , def(false)
 {}
 
-CreateConversionStmt::CreateConversionStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_conversion_name, const std::string& arg_for_encoding_name, const std::string& arg_to_encoding_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_func_name, bool arg_def)
-    : conversion_name()
+CreateConversionStmt::CreateConversionStmt(std::vector<::pg_query::Node> arg_conversion_name, const std::string& arg_for_encoding_name, const std::string& arg_to_encoding_name, std::vector<::pg_query::Node> arg_func_name, bool arg_def)
+    : conversion_name(std::move(arg_conversion_name))
     , for_encoding_name(arg_for_encoding_name)
     , to_encoding_name(arg_to_encoding_name)
-    , func_name()
+    , func_name(std::move(arg_func_name))
     , def(arg_def)
-{
-    for (auto& it : arg_conversion_name)
-        conversion_name.emplace_back(it.release());
-    for (auto& it : arg_func_name)
-        func_name.emplace_back(it.release());
-}
+{}
 
 CreateConversionStmt::CreateConversionStmt(CreateConversionStmt&& other) noexcept
     : conversion_name(std::move(other.conversion_name))
@@ -13241,10 +12483,6 @@ CreateConversionStmt::CreateConversionStmt(CreateConversionStmt&& other) noexcep
 
 CreateConversionStmt::~CreateConversionStmt()
 {
-    for (auto& it : conversion_name)
-        delete it;
-    for (auto& it : func_name)
-        delete it;
 }
 
 bool CreateConversionStmt::operator==([[maybe_unused]] const CreateConversionStmt& other) const noexcept
@@ -13295,7 +12533,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateConversionStmt& value
         stream << "conversion_name=[" << value.conversion_name.size() << "][";
         for (const auto& it : value.conversion_name)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13307,7 +12545,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateConversionStmt& value
         stream << ",func_name=[" << value.func_name.size() << "][";
         for (const auto& it : value.func_name)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13406,21 +12644,14 @@ CreateOpClassStmt::CreateOpClassStmt()
     , is_default(false)
 {}
 
-CreateOpClassStmt::CreateOpClassStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_opclassname, std::vector<std::unique_ptr<::pg_query::Node>> arg_opfamilyname, const std::string& arg_amname, ::pg_query::TypeName&& arg_datatype, std::vector<std::unique_ptr<::pg_query::Node>> arg_items, bool arg_is_default)
-    : opclassname()
-    , opfamilyname()
+CreateOpClassStmt::CreateOpClassStmt(std::vector<::pg_query::Node> arg_opclassname, std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname, ::pg_query::TypeName&& arg_datatype, std::vector<::pg_query::Node> arg_items, bool arg_is_default)
+    : opclassname(std::move(arg_opclassname))
+    , opfamilyname(std::move(arg_opfamilyname))
     , amname(arg_amname)
     , datatype(std::move(arg_datatype))
-    , items()
+    , items(std::move(arg_items))
     , is_default(arg_is_default)
-{
-    for (auto& it : arg_opclassname)
-        opclassname.emplace_back(it.release());
-    for (auto& it : arg_opfamilyname)
-        opfamilyname.emplace_back(it.release());
-    for (auto& it : arg_items)
-        items.emplace_back(it.release());
-}
+{}
 
 CreateOpClassStmt::CreateOpClassStmt(CreateOpClassStmt&& other) noexcept
     : opclassname(std::move(other.opclassname))
@@ -13433,12 +12664,6 @@ CreateOpClassStmt::CreateOpClassStmt(CreateOpClassStmt&& other) noexcept
 
 CreateOpClassStmt::~CreateOpClassStmt()
 {
-    for (auto& it : opclassname)
-        delete it;
-    for (auto& it : opfamilyname)
-        delete it;
-    for (auto& it : items)
-        delete it;
 }
 
 bool CreateOpClassStmt::operator==([[maybe_unused]] const CreateOpClassStmt& other) const noexcept
@@ -13491,7 +12716,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateOpClassStmt& value)
         stream << "opclassname=[" << value.opclassname.size() << "][";
         for (const auto& it : value.opclassname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13501,7 +12726,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateOpClassStmt& value)
         stream << ",opfamilyname=[" << value.opfamilyname.size() << "][";
         for (const auto& it : value.opfamilyname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13513,7 +12738,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateOpClassStmt& value)
         stream << ",items=[" << value.items.size() << "][";
         for (const auto& it : value.items)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13528,13 +12753,10 @@ CreateOpFamilyStmt::CreateOpFamilyStmt()
     , amname()
 {}
 
-CreateOpFamilyStmt::CreateOpFamilyStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_opfamilyname, const std::string& arg_amname)
-    : opfamilyname()
+CreateOpFamilyStmt::CreateOpFamilyStmt(std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname)
+    : opfamilyname(std::move(arg_opfamilyname))
     , amname(arg_amname)
-{
-    for (auto& it : arg_opfamilyname)
-        opfamilyname.emplace_back(it.release());
-}
+{}
 
 CreateOpFamilyStmt::CreateOpFamilyStmt(CreateOpFamilyStmt&& other) noexcept
     : opfamilyname(std::move(other.opfamilyname))
@@ -13543,8 +12765,6 @@ CreateOpFamilyStmt::CreateOpFamilyStmt(CreateOpFamilyStmt&& other) noexcept
 
 CreateOpFamilyStmt::~CreateOpFamilyStmt()
 {
-    for (auto& it : opfamilyname)
-        delete it;
 }
 
 bool CreateOpFamilyStmt::operator==([[maybe_unused]] const CreateOpFamilyStmt& other) const noexcept
@@ -13589,7 +12809,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateOpFamilyStmt& value)
         stream << "opfamilyname=[" << value.opfamilyname.size() << "][";
         for (const auto& it : value.opfamilyname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13606,17 +12826,12 @@ AlterOpFamilyStmt::AlterOpFamilyStmt()
     , items()
 {}
 
-AlterOpFamilyStmt::AlterOpFamilyStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_opfamilyname, const std::string& arg_amname, bool arg_is_drop, std::vector<std::unique_ptr<::pg_query::Node>> arg_items)
-    : opfamilyname()
+AlterOpFamilyStmt::AlterOpFamilyStmt(std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname, bool arg_is_drop, std::vector<::pg_query::Node> arg_items)
+    : opfamilyname(std::move(arg_opfamilyname))
     , amname(arg_amname)
     , is_drop(arg_is_drop)
-    , items()
-{
-    for (auto& it : arg_opfamilyname)
-        opfamilyname.emplace_back(it.release());
-    for (auto& it : arg_items)
-        items.emplace_back(it.release());
-}
+    , items(std::move(arg_items))
+{}
 
 AlterOpFamilyStmt::AlterOpFamilyStmt(AlterOpFamilyStmt&& other) noexcept
     : opfamilyname(std::move(other.opfamilyname))
@@ -13627,10 +12842,6 @@ AlterOpFamilyStmt::AlterOpFamilyStmt(AlterOpFamilyStmt&& other) noexcept
 
 AlterOpFamilyStmt::~AlterOpFamilyStmt()
 {
-    for (auto& it : opfamilyname)
-        delete it;
-    for (auto& it : items)
-        delete it;
 }
 
 bool AlterOpFamilyStmt::operator==([[maybe_unused]] const AlterOpFamilyStmt& other) const noexcept
@@ -13679,7 +12890,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterOpFamilyStmt& value)
         stream << "opfamilyname=[" << value.opfamilyname.size() << "][";
         for (const auto& it : value.opfamilyname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13691,7 +12902,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterOpFamilyStmt& value)
         stream << ",items=[" << value.items.size() << "][";
         for (const auto& it : value.items)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13703,29 +12914,23 @@ std::ostream& operator<<(std::ostream& stream, const AlterOpFamilyStmt& value)
 PrepareStmt::PrepareStmt()
     : name()
     , argtypes()
-    , query(nullptr)
+    , query()
 {}
 
-PrepareStmt::PrepareStmt(const std::string& arg_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_argtypes, std::unique_ptr<::pg_query::Node> arg_query)
+PrepareStmt::PrepareStmt(const std::string& arg_name, std::vector<::pg_query::Node> arg_argtypes, ::pg_query::Node&& arg_query)
     : name(arg_name)
-    , argtypes()
-    , query(arg_query.release())
-{
-    for (auto& it : arg_argtypes)
-        argtypes.emplace_back(it.release());
-}
+    , argtypes(std::move(arg_argtypes))
+    , query(std::move(arg_query))
+{}
 
 PrepareStmt::PrepareStmt(PrepareStmt&& other) noexcept
     : name(std::move(other.name))
     , argtypes(std::move(other.argtypes))
-    , query(std::exchange(other.query, nullptr))
+    , query(std::move(other.query))
 {}
 
 PrepareStmt::~PrepareStmt()
 {
-    if (query) delete query;
-    for (auto& it : argtypes)
-        delete it;
 }
 
 bool PrepareStmt::operator==([[maybe_unused]] const PrepareStmt& other) const noexcept
@@ -13746,7 +12951,7 @@ PrepareStmt& PrepareStmt::operator=(PrepareStmt&& other) noexcept
     {
         name = std::move(other.name);
         argtypes = std::move(other.argtypes);
-        query = std::exchange(other.query, nullptr);
+        query = std::move(other.query);
     }
     return *this;
 }
@@ -13773,12 +12978,12 @@ std::ostream& operator<<(std::ostream& stream, const PrepareStmt& value)
         stream << ",argtypes=[" << value.argtypes.size() << "][";
         for (const auto& it : value.argtypes)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",query="; stream << " ptr of other struct" << (value.query == nullptr ? "true" : "false");
+    stream << ",query="; stream << value.query;
     stream << ")";
     return stream;
 }
@@ -13788,13 +12993,10 @@ ExecuteStmt::ExecuteStmt()
     , params()
 {}
 
-ExecuteStmt::ExecuteStmt(const std::string& arg_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_params)
+ExecuteStmt::ExecuteStmt(const std::string& arg_name, std::vector<::pg_query::Node> arg_params)
     : name(arg_name)
-    , params()
-{
-    for (auto& it : arg_params)
-        params.emplace_back(it.release());
-}
+    , params(std::move(arg_params))
+{}
 
 ExecuteStmt::ExecuteStmt(ExecuteStmt&& other) noexcept
     : name(std::move(other.name))
@@ -13803,8 +13005,6 @@ ExecuteStmt::ExecuteStmt(ExecuteStmt&& other) noexcept
 
 ExecuteStmt::~ExecuteStmt()
 {
-    for (auto& it : params)
-        delete it;
 }
 
 bool ExecuteStmt::operator==([[maybe_unused]] const ExecuteStmt& other) const noexcept
@@ -13850,7 +13050,7 @@ std::ostream& operator<<(std::ostream& stream, const ExecuteStmt& value)
         stream << ",params=[" << value.params.size() << "][";
         for (const auto& it : value.params)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -13918,24 +13118,23 @@ std::ostream& operator<<(std::ostream& stream, const DeallocateStmt& value)
 DeclareCursorStmt::DeclareCursorStmt()
     : portalname()
     , options((int32_t)0ll)
-    , query(nullptr)
+    , query()
 {}
 
-DeclareCursorStmt::DeclareCursorStmt(const std::string& arg_portalname, int32_t arg_options, std::unique_ptr<::pg_query::Node> arg_query)
+DeclareCursorStmt::DeclareCursorStmt(const std::string& arg_portalname, int32_t arg_options, ::pg_query::Node&& arg_query)
     : portalname(arg_portalname)
     , options(arg_options)
-    , query(arg_query.release())
+    , query(std::move(arg_query))
 {}
 
 DeclareCursorStmt::DeclareCursorStmt(DeclareCursorStmt&& other) noexcept
     : portalname(std::move(other.portalname))
     , options(std::exchange(other.options, (int32_t)0ll))
-    , query(std::exchange(other.query, nullptr))
+    , query(std::move(other.query))
 {}
 
 DeclareCursorStmt::~DeclareCursorStmt()
 {
-    if (query) delete query;
 }
 
 bool DeclareCursorStmt::operator==([[maybe_unused]] const DeclareCursorStmt& other) const noexcept
@@ -13956,7 +13155,7 @@ DeclareCursorStmt& DeclareCursorStmt::operator=(DeclareCursorStmt&& other) noexc
     {
         portalname = std::move(other.portalname);
         options = std::exchange(other.options, (int32_t)0ll);
-        query = std::exchange(other.query, nullptr);
+        query = std::move(other.query);
     }
     return *this;
 }
@@ -13979,7 +13178,7 @@ std::ostream& operator<<(std::ostream& stream, const DeclareCursorStmt& value)
     stream << "DeclareCursorStmt(";
     stream << "portalname="; stream << "\"" << value.portalname << "\"";
     stream << ",options="; stream << value.options;
-    stream << ",query="; stream << " ptr of other struct" << (value.query == nullptr ? "true" : "false");
+    stream << ",query="; stream << value.query;
     stream << ")";
     return stream;
 }
@@ -13991,15 +13190,12 @@ CreateTableSpaceStmt::CreateTableSpaceStmt()
     , options()
 {}
 
-CreateTableSpaceStmt::CreateTableSpaceStmt(const std::string& arg_tablespacename, ::pg_query::RoleSpec&& arg_owner, const std::string& arg_location, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+CreateTableSpaceStmt::CreateTableSpaceStmt(const std::string& arg_tablespacename, ::pg_query::RoleSpec&& arg_owner, const std::string& arg_location, std::vector<::pg_query::Node> arg_options)
     : tablespacename(arg_tablespacename)
     , owner(std::move(arg_owner))
     , location(arg_location)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 CreateTableSpaceStmt::CreateTableSpaceStmt(CreateTableSpaceStmt&& other) noexcept
     : tablespacename(std::move(other.tablespacename))
@@ -14010,8 +13206,6 @@ CreateTableSpaceStmt::CreateTableSpaceStmt(CreateTableSpaceStmt&& other) noexcep
 
 CreateTableSpaceStmt::~CreateTableSpaceStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateTableSpaceStmt::operator==([[maybe_unused]] const CreateTableSpaceStmt& other) const noexcept
@@ -14063,7 +13257,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateTableSpaceStmt& value
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14137,15 +13331,15 @@ std::ostream& operator<<(std::ostream& stream, const DropTableSpaceStmt& value)
 AlterObjectDependsStmt::AlterObjectDependsStmt()
     : object_type()
     , relation()
-    , object(nullptr)
+    , object()
     , extname()
     , remove(false)
 {}
 
-AlterObjectDependsStmt::AlterObjectDependsStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, std::unique_ptr<::pg_query::Node> arg_object, ::pg_query::Node&& arg_extname, bool arg_remove)
+AlterObjectDependsStmt::AlterObjectDependsStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, ::pg_query::Node&& arg_object, ::pg_query::Node&& arg_extname, bool arg_remove)
     : object_type(std::move(arg_object_type))
     , relation(std::move(arg_relation))
-    , object(arg_object.release())
+    , object(std::move(arg_object))
     , extname(std::move(arg_extname))
     , remove(arg_remove)
 {}
@@ -14153,14 +13347,13 @@ AlterObjectDependsStmt::AlterObjectDependsStmt(::pg_query::ObjectType&& arg_obje
 AlterObjectDependsStmt::AlterObjectDependsStmt(AlterObjectDependsStmt&& other) noexcept
     : object_type(std::move(other.object_type))
     , relation(std::move(other.relation))
-    , object(std::exchange(other.object, nullptr))
+    , object(std::move(other.object))
     , extname(std::move(other.extname))
     , remove(std::exchange(other.remove, false))
 {}
 
 AlterObjectDependsStmt::~AlterObjectDependsStmt()
 {
-    if (object) delete object;
 }
 
 bool AlterObjectDependsStmt::operator==([[maybe_unused]] const AlterObjectDependsStmt& other) const noexcept
@@ -14181,7 +13374,7 @@ AlterObjectDependsStmt& AlterObjectDependsStmt::operator=(AlterObjectDependsStmt
     {
         object_type = std::move(other.object_type);
         relation = std::move(other.relation);
-        object = std::exchange(other.object, nullptr);
+        object = std::move(other.object);
         extname = std::move(other.extname);
         remove = std::exchange(other.remove, false);
     }
@@ -14208,7 +13401,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterObjectDependsStmt& val
     stream << "AlterObjectDependsStmt(";
     stream << "object_type="; stream << value.object_type;
     stream << ",relation="; stream << value.relation;
-    stream << ",object="; stream << " ptr of other struct" << (value.object == nullptr ? "true" : "false");
+    stream << ",object="; stream << value.object;
     stream << ",extname="; stream << value.extname;
     stream << ",remove="; stream << (value.remove ? "true" : "false");
     stream << ")";
@@ -14218,15 +13411,15 @@ std::ostream& operator<<(std::ostream& stream, const AlterObjectDependsStmt& val
 AlterObjectSchemaStmt::AlterObjectSchemaStmt()
     : object_type()
     , relation()
-    , object(nullptr)
+    , object()
     , newschema()
     , missing_ok(false)
 {}
 
-AlterObjectSchemaStmt::AlterObjectSchemaStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, std::unique_ptr<::pg_query::Node> arg_object, const std::string& arg_newschema, bool arg_missing_ok)
+AlterObjectSchemaStmt::AlterObjectSchemaStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, ::pg_query::Node&& arg_object, const std::string& arg_newschema, bool arg_missing_ok)
     : object_type(std::move(arg_object_type))
     , relation(std::move(arg_relation))
-    , object(arg_object.release())
+    , object(std::move(arg_object))
     , newschema(arg_newschema)
     , missing_ok(arg_missing_ok)
 {}
@@ -14234,14 +13427,13 @@ AlterObjectSchemaStmt::AlterObjectSchemaStmt(::pg_query::ObjectType&& arg_object
 AlterObjectSchemaStmt::AlterObjectSchemaStmt(AlterObjectSchemaStmt&& other) noexcept
     : object_type(std::move(other.object_type))
     , relation(std::move(other.relation))
-    , object(std::exchange(other.object, nullptr))
+    , object(std::move(other.object))
     , newschema(std::move(other.newschema))
     , missing_ok(std::exchange(other.missing_ok, false))
 {}
 
 AlterObjectSchemaStmt::~AlterObjectSchemaStmt()
 {
-    if (object) delete object;
 }
 
 bool AlterObjectSchemaStmt::operator==([[maybe_unused]] const AlterObjectSchemaStmt& other) const noexcept
@@ -14262,7 +13454,7 @@ AlterObjectSchemaStmt& AlterObjectSchemaStmt::operator=(AlterObjectSchemaStmt&& 
     {
         object_type = std::move(other.object_type);
         relation = std::move(other.relation);
-        object = std::exchange(other.object, nullptr);
+        object = std::move(other.object);
         newschema = std::move(other.newschema);
         missing_ok = std::exchange(other.missing_ok, false);
     }
@@ -14289,7 +13481,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterObjectSchemaStmt& valu
     stream << "AlterObjectSchemaStmt(";
     stream << "object_type="; stream << value.object_type;
     stream << ",relation="; stream << value.relation;
-    stream << ",object="; stream << " ptr of other struct" << (value.object == nullptr ? "true" : "false");
+    stream << ",object="; stream << value.object;
     stream << ",newschema="; stream << "\"" << value.newschema << "\"";
     stream << ",missing_ok="; stream << (value.missing_ok ? "true" : "false");
     stream << ")";
@@ -14299,27 +13491,26 @@ std::ostream& operator<<(std::ostream& stream, const AlterObjectSchemaStmt& valu
 AlterOwnerStmt::AlterOwnerStmt()
     : object_type()
     , relation()
-    , object(nullptr)
+    , object()
     , newowner()
 {}
 
-AlterOwnerStmt::AlterOwnerStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, std::unique_ptr<::pg_query::Node> arg_object, ::pg_query::RoleSpec&& arg_newowner)
+AlterOwnerStmt::AlterOwnerStmt(::pg_query::ObjectType&& arg_object_type, ::pg_query::RangeVar&& arg_relation, ::pg_query::Node&& arg_object, ::pg_query::RoleSpec&& arg_newowner)
     : object_type(std::move(arg_object_type))
     , relation(std::move(arg_relation))
-    , object(arg_object.release())
+    , object(std::move(arg_object))
     , newowner(std::move(arg_newowner))
 {}
 
 AlterOwnerStmt::AlterOwnerStmt(AlterOwnerStmt&& other) noexcept
     : object_type(std::move(other.object_type))
     , relation(std::move(other.relation))
-    , object(std::exchange(other.object, nullptr))
+    , object(std::move(other.object))
     , newowner(std::move(other.newowner))
 {}
 
 AlterOwnerStmt::~AlterOwnerStmt()
 {
-    if (object) delete object;
 }
 
 bool AlterOwnerStmt::operator==([[maybe_unused]] const AlterOwnerStmt& other) const noexcept
@@ -14340,7 +13531,7 @@ AlterOwnerStmt& AlterOwnerStmt::operator=(AlterOwnerStmt&& other) noexcept
     {
         object_type = std::move(other.object_type);
         relation = std::move(other.relation);
-        object = std::exchange(other.object, nullptr);
+        object = std::move(other.object);
         newowner = std::move(other.newowner);
     }
     return *this;
@@ -14365,7 +13556,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterOwnerStmt& value)
     stream << "AlterOwnerStmt(";
     stream << "object_type="; stream << value.object_type;
     stream << ",relation="; stream << value.relation;
-    stream << ",object="; stream << " ptr of other struct" << (value.object == nullptr ? "true" : "false");
+    stream << ",object="; stream << value.object;
     stream << ",newowner="; stream << value.newowner;
     stream << ")";
     return stream;
@@ -14376,13 +13567,10 @@ AlterOperatorStmt::AlterOperatorStmt()
     , options()
 {}
 
-AlterOperatorStmt::AlterOperatorStmt(::pg_query::ObjectWithArgs&& arg_opername, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+AlterOperatorStmt::AlterOperatorStmt(::pg_query::ObjectWithArgs&& arg_opername, std::vector<::pg_query::Node> arg_options)
     : opername(std::move(arg_opername))
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 AlterOperatorStmt::AlterOperatorStmt(AlterOperatorStmt&& other) noexcept
     : opername(std::move(other.opername))
@@ -14391,8 +13579,6 @@ AlterOperatorStmt::AlterOperatorStmt(AlterOperatorStmt&& other) noexcept
 
 AlterOperatorStmt::~AlterOperatorStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterOperatorStmt::operator==([[maybe_unused]] const AlterOperatorStmt& other) const noexcept
@@ -14438,7 +13624,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterOperatorStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14452,15 +13638,10 @@ AlterTypeStmt::AlterTypeStmt()
     , options()
 {}
 
-AlterTypeStmt::AlterTypeStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_type_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
-    : type_name()
-    , options()
-{
-    for (auto& it : arg_type_name)
-        type_name.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+AlterTypeStmt::AlterTypeStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_options)
+    : type_name(std::move(arg_type_name))
+    , options(std::move(arg_options))
+{}
 
 AlterTypeStmt::AlterTypeStmt(AlterTypeStmt&& other) noexcept
     : type_name(std::move(other.type_name))
@@ -14469,10 +13650,6 @@ AlterTypeStmt::AlterTypeStmt(AlterTypeStmt&& other) noexcept
 
 AlterTypeStmt::~AlterTypeStmt()
 {
-    for (auto& it : type_name)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterTypeStmt::operator==([[maybe_unused]] const AlterTypeStmt& other) const noexcept
@@ -14517,7 +13694,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTypeStmt& value)
         stream << "type_name=[" << value.type_name.size() << "][";
         for (const auto& it : value.type_name)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14527,7 +13704,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTypeStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14541,13 +13718,10 @@ DropOwnedStmt::DropOwnedStmt()
     , behavior()
 {}
 
-DropOwnedStmt::DropOwnedStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, ::pg_query::DropBehavior&& arg_behavior)
-    : roles()
+DropOwnedStmt::DropOwnedStmt(std::vector<::pg_query::Node> arg_roles, ::pg_query::DropBehavior&& arg_behavior)
+    : roles(std::move(arg_roles))
     , behavior(std::move(arg_behavior))
-{
-    for (auto& it : arg_roles)
-        roles.emplace_back(it.release());
-}
+{}
 
 DropOwnedStmt::DropOwnedStmt(DropOwnedStmt&& other) noexcept
     : roles(std::move(other.roles))
@@ -14556,8 +13730,6 @@ DropOwnedStmt::DropOwnedStmt(DropOwnedStmt&& other) noexcept
 
 DropOwnedStmt::~DropOwnedStmt()
 {
-    for (auto& it : roles)
-        delete it;
 }
 
 bool DropOwnedStmt::operator==([[maybe_unused]] const DropOwnedStmt& other) const noexcept
@@ -14602,7 +13774,7 @@ std::ostream& operator<<(std::ostream& stream, const DropOwnedStmt& value)
         stream << "roles=[" << value.roles.size() << "][";
         for (const auto& it : value.roles)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14617,13 +13789,10 @@ ReassignOwnedStmt::ReassignOwnedStmt()
     , newrole()
 {}
 
-ReassignOwnedStmt::ReassignOwnedStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, ::pg_query::RoleSpec&& arg_newrole)
-    : roles()
+ReassignOwnedStmt::ReassignOwnedStmt(std::vector<::pg_query::Node> arg_roles, ::pg_query::RoleSpec&& arg_newrole)
+    : roles(std::move(arg_roles))
     , newrole(std::move(arg_newrole))
-{
-    for (auto& it : arg_roles)
-        roles.emplace_back(it.release());
-}
+{}
 
 ReassignOwnedStmt::ReassignOwnedStmt(ReassignOwnedStmt&& other) noexcept
     : roles(std::move(other.roles))
@@ -14632,8 +13801,6 @@ ReassignOwnedStmt::ReassignOwnedStmt(ReassignOwnedStmt&& other) noexcept
 
 ReassignOwnedStmt::~ReassignOwnedStmt()
 {
-    for (auto& it : roles)
-        delete it;
 }
 
 bool ReassignOwnedStmt::operator==([[maybe_unused]] const ReassignOwnedStmt& other) const noexcept
@@ -14678,7 +13845,7 @@ std::ostream& operator<<(std::ostream& stream, const ReassignOwnedStmt& value)
         stream << "roles=[" << value.roles.size() << "][";
         for (const auto& it : value.roles)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14693,13 +13860,10 @@ CompositeTypeStmt::CompositeTypeStmt()
     , coldeflist()
 {}
 
-CompositeTypeStmt::CompositeTypeStmt(::pg_query::RangeVar&& arg_typevar, std::vector<std::unique_ptr<::pg_query::Node>> arg_coldeflist)
+CompositeTypeStmt::CompositeTypeStmt(::pg_query::RangeVar&& arg_typevar, std::vector<::pg_query::Node> arg_coldeflist)
     : typevar(std::move(arg_typevar))
-    , coldeflist()
-{
-    for (auto& it : arg_coldeflist)
-        coldeflist.emplace_back(it.release());
-}
+    , coldeflist(std::move(arg_coldeflist))
+{}
 
 CompositeTypeStmt::CompositeTypeStmt(CompositeTypeStmt&& other) noexcept
     : typevar(std::move(other.typevar))
@@ -14708,8 +13872,6 @@ CompositeTypeStmt::CompositeTypeStmt(CompositeTypeStmt&& other) noexcept
 
 CompositeTypeStmt::~CompositeTypeStmt()
 {
-    for (auto& it : coldeflist)
-        delete it;
 }
 
 bool CompositeTypeStmt::operator==([[maybe_unused]] const CompositeTypeStmt& other) const noexcept
@@ -14755,7 +13917,7 @@ std::ostream& operator<<(std::ostream& stream, const CompositeTypeStmt& value)
         stream << ",coldeflist=[" << value.coldeflist.size() << "][";
         for (const auto& it : value.coldeflist)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14769,15 +13931,10 @@ CreateEnumStmt::CreateEnumStmt()
     , vals()
 {}
 
-CreateEnumStmt::CreateEnumStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_type_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_vals)
-    : type_name()
-    , vals()
-{
-    for (auto& it : arg_type_name)
-        type_name.emplace_back(it.release());
-    for (auto& it : arg_vals)
-        vals.emplace_back(it.release());
-}
+CreateEnumStmt::CreateEnumStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_vals)
+    : type_name(std::move(arg_type_name))
+    , vals(std::move(arg_vals))
+{}
 
 CreateEnumStmt::CreateEnumStmt(CreateEnumStmt&& other) noexcept
     : type_name(std::move(other.type_name))
@@ -14786,10 +13943,6 @@ CreateEnumStmt::CreateEnumStmt(CreateEnumStmt&& other) noexcept
 
 CreateEnumStmt::~CreateEnumStmt()
 {
-    for (auto& it : type_name)
-        delete it;
-    for (auto& it : vals)
-        delete it;
 }
 
 bool CreateEnumStmt::operator==([[maybe_unused]] const CreateEnumStmt& other) const noexcept
@@ -14834,7 +13987,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateEnumStmt& value)
         stream << "type_name=[" << value.type_name.size() << "][";
         for (const auto& it : value.type_name)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14844,7 +13997,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateEnumStmt& value)
         stream << ",vals=[" << value.vals.size() << "][";
         for (const auto& it : value.vals)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14858,15 +14011,10 @@ CreateRangeStmt::CreateRangeStmt()
     , params()
 {}
 
-CreateRangeStmt::CreateRangeStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_type_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_params)
-    : type_name()
-    , params()
-{
-    for (auto& it : arg_type_name)
-        type_name.emplace_back(it.release());
-    for (auto& it : arg_params)
-        params.emplace_back(it.release());
-}
+CreateRangeStmt::CreateRangeStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_params)
+    : type_name(std::move(arg_type_name))
+    , params(std::move(arg_params))
+{}
 
 CreateRangeStmt::CreateRangeStmt(CreateRangeStmt&& other) noexcept
     : type_name(std::move(other.type_name))
@@ -14875,10 +14023,6 @@ CreateRangeStmt::CreateRangeStmt(CreateRangeStmt&& other) noexcept
 
 CreateRangeStmt::~CreateRangeStmt()
 {
-    for (auto& it : type_name)
-        delete it;
-    for (auto& it : params)
-        delete it;
 }
 
 bool CreateRangeStmt::operator==([[maybe_unused]] const CreateRangeStmt& other) const noexcept
@@ -14923,7 +14067,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateRangeStmt& value)
         stream << "type_name=[" << value.type_name.size() << "][";
         for (const auto& it : value.type_name)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14933,7 +14077,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateRangeStmt& value)
         stream << ",params=[" << value.params.size() << "][";
         for (const auto& it : value.params)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -14951,17 +14095,14 @@ AlterEnumStmt::AlterEnumStmt()
     , skip_if_new_val_exists(false)
 {}
 
-AlterEnumStmt::AlterEnumStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_type_name, const std::string& arg_old_val, const std::string& arg_new_val, const std::string& arg_new_val_neighbor, bool arg_new_val_is_after, bool arg_skip_if_new_val_exists)
-    : type_name()
+AlterEnumStmt::AlterEnumStmt(std::vector<::pg_query::Node> arg_type_name, const std::string& arg_old_val, const std::string& arg_new_val, const std::string& arg_new_val_neighbor, bool arg_new_val_is_after, bool arg_skip_if_new_val_exists)
+    : type_name(std::move(arg_type_name))
     , old_val(arg_old_val)
     , new_val(arg_new_val)
     , new_val_neighbor(arg_new_val_neighbor)
     , new_val_is_after(arg_new_val_is_after)
     , skip_if_new_val_exists(arg_skip_if_new_val_exists)
-{
-    for (auto& it : arg_type_name)
-        type_name.emplace_back(it.release());
-}
+{}
 
 AlterEnumStmt::AlterEnumStmt(AlterEnumStmt&& other) noexcept
     : type_name(std::move(other.type_name))
@@ -14974,8 +14115,6 @@ AlterEnumStmt::AlterEnumStmt(AlterEnumStmt&& other) noexcept
 
 AlterEnumStmt::~AlterEnumStmt()
 {
-    for (auto& it : type_name)
-        delete it;
 }
 
 bool AlterEnumStmt::operator==([[maybe_unused]] const AlterEnumStmt& other) const noexcept
@@ -15028,7 +14167,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterEnumStmt& value)
         stream << "type_name=[" << value.type_name.size() << "][";
         for (const auto& it : value.type_name)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15047,15 +14186,10 @@ AlterTSDictionaryStmt::AlterTSDictionaryStmt()
     , options()
 {}
 
-AlterTSDictionaryStmt::AlterTSDictionaryStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_dictname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
-    : dictname()
-    , options()
-{
-    for (auto& it : arg_dictname)
-        dictname.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+AlterTSDictionaryStmt::AlterTSDictionaryStmt(std::vector<::pg_query::Node> arg_dictname, std::vector<::pg_query::Node> arg_options)
+    : dictname(std::move(arg_dictname))
+    , options(std::move(arg_options))
+{}
 
 AlterTSDictionaryStmt::AlterTSDictionaryStmt(AlterTSDictionaryStmt&& other) noexcept
     : dictname(std::move(other.dictname))
@@ -15064,10 +14198,6 @@ AlterTSDictionaryStmt::AlterTSDictionaryStmt(AlterTSDictionaryStmt&& other) noex
 
 AlterTSDictionaryStmt::~AlterTSDictionaryStmt()
 {
-    for (auto& it : dictname)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterTSDictionaryStmt::operator==([[maybe_unused]] const AlterTSDictionaryStmt& other) const noexcept
@@ -15112,7 +14242,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTSDictionaryStmt& valu
         stream << "dictname=[" << value.dictname.size() << "][";
         for (const auto& it : value.dictname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15122,7 +14252,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTSDictionaryStmt& valu
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15141,22 +14271,15 @@ AlterTSConfigurationStmt::AlterTSConfigurationStmt()
     , missing_ok(false)
 {}
 
-AlterTSConfigurationStmt::AlterTSConfigurationStmt(::pg_query::AlterTSConfigType&& arg_kind, std::vector<std::unique_ptr<::pg_query::Node>> arg_cfgname, std::vector<std::unique_ptr<::pg_query::Node>> arg_tokentype, std::vector<std::unique_ptr<::pg_query::Node>> arg_dicts, bool arg_override, bool arg_replace, bool arg_missing_ok)
+AlterTSConfigurationStmt::AlterTSConfigurationStmt(::pg_query::AlterTSConfigType&& arg_kind, std::vector<::pg_query::Node> arg_cfgname, std::vector<::pg_query::Node> arg_tokentype, std::vector<::pg_query::Node> arg_dicts, bool arg_override, bool arg_replace, bool arg_missing_ok)
     : kind(std::move(arg_kind))
-    , cfgname()
-    , tokentype()
-    , dicts()
+    , cfgname(std::move(arg_cfgname))
+    , tokentype(std::move(arg_tokentype))
+    , dicts(std::move(arg_dicts))
     , override(arg_override)
     , replace(arg_replace)
     , missing_ok(arg_missing_ok)
-{
-    for (auto& it : arg_cfgname)
-        cfgname.emplace_back(it.release());
-    for (auto& it : arg_tokentype)
-        tokentype.emplace_back(it.release());
-    for (auto& it : arg_dicts)
-        dicts.emplace_back(it.release());
-}
+{}
 
 AlterTSConfigurationStmt::AlterTSConfigurationStmt(AlterTSConfigurationStmt&& other) noexcept
     : kind(std::move(other.kind))
@@ -15170,12 +14293,6 @@ AlterTSConfigurationStmt::AlterTSConfigurationStmt(AlterTSConfigurationStmt&& ot
 
 AlterTSConfigurationStmt::~AlterTSConfigurationStmt()
 {
-    for (auto& it : cfgname)
-        delete it;
-    for (auto& it : tokentype)
-        delete it;
-    for (auto& it : dicts)
-        delete it;
 }
 
 bool AlterTSConfigurationStmt::operator==([[maybe_unused]] const AlterTSConfigurationStmt& other) const noexcept
@@ -15231,7 +14348,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTSConfigurationStmt& v
         stream << ",cfgname=[" << value.cfgname.size() << "][";
         for (const auto& it : value.cfgname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15241,7 +14358,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTSConfigurationStmt& v
         stream << ",tokentype=[" << value.tokentype.size() << "][";
         for (const auto& it : value.tokentype)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15251,7 +14368,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTSConfigurationStmt& v
         stream << ",dicts=[" << value.dicts.size() << "][";
         for (const auto& it : value.dicts)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15269,16 +14386,11 @@ CreateFdwStmt::CreateFdwStmt()
     , options()
 {}
 
-CreateFdwStmt::CreateFdwStmt(const std::string& arg_fdwname, std::vector<std::unique_ptr<::pg_query::Node>> arg_func_options, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+CreateFdwStmt::CreateFdwStmt(const std::string& arg_fdwname, std::vector<::pg_query::Node> arg_func_options, std::vector<::pg_query::Node> arg_options)
     : fdwname(arg_fdwname)
-    , func_options()
-    , options()
-{
-    for (auto& it : arg_func_options)
-        func_options.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , func_options(std::move(arg_func_options))
+    , options(std::move(arg_options))
+{}
 
 CreateFdwStmt::CreateFdwStmt(CreateFdwStmt&& other) noexcept
     : fdwname(std::move(other.fdwname))
@@ -15288,10 +14400,6 @@ CreateFdwStmt::CreateFdwStmt(CreateFdwStmt&& other) noexcept
 
 CreateFdwStmt::~CreateFdwStmt()
 {
-    for (auto& it : func_options)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateFdwStmt::operator==([[maybe_unused]] const CreateFdwStmt& other) const noexcept
@@ -15339,7 +14447,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateFdwStmt& value)
         stream << ",func_options=[" << value.func_options.size() << "][";
         for (const auto& it : value.func_options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15349,7 +14457,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateFdwStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15364,16 +14472,11 @@ AlterFdwStmt::AlterFdwStmt()
     , options()
 {}
 
-AlterFdwStmt::AlterFdwStmt(const std::string& arg_fdwname, std::vector<std::unique_ptr<::pg_query::Node>> arg_func_options, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+AlterFdwStmt::AlterFdwStmt(const std::string& arg_fdwname, std::vector<::pg_query::Node> arg_func_options, std::vector<::pg_query::Node> arg_options)
     : fdwname(arg_fdwname)
-    , func_options()
-    , options()
-{
-    for (auto& it : arg_func_options)
-        func_options.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , func_options(std::move(arg_func_options))
+    , options(std::move(arg_options))
+{}
 
 AlterFdwStmt::AlterFdwStmt(AlterFdwStmt&& other) noexcept
     : fdwname(std::move(other.fdwname))
@@ -15383,10 +14486,6 @@ AlterFdwStmt::AlterFdwStmt(AlterFdwStmt&& other) noexcept
 
 AlterFdwStmt::~AlterFdwStmt()
 {
-    for (auto& it : func_options)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterFdwStmt::operator==([[maybe_unused]] const AlterFdwStmt& other) const noexcept
@@ -15434,7 +14533,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterFdwStmt& value)
         stream << ",func_options=[" << value.func_options.size() << "][";
         for (const auto& it : value.func_options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15444,7 +14543,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterFdwStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15462,17 +14561,14 @@ CreateForeignServerStmt::CreateForeignServerStmt()
     , options()
 {}
 
-CreateForeignServerStmt::CreateForeignServerStmt(const std::string& arg_servername, const std::string& arg_servertype, const std::string& arg_version, const std::string& arg_fdwname, bool arg_if_not_exists, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+CreateForeignServerStmt::CreateForeignServerStmt(const std::string& arg_servername, const std::string& arg_servertype, const std::string& arg_version, const std::string& arg_fdwname, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options)
     : servername(arg_servername)
     , servertype(arg_servertype)
     , version(arg_version)
     , fdwname(arg_fdwname)
     , if_not_exists(arg_if_not_exists)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 CreateForeignServerStmt::CreateForeignServerStmt(CreateForeignServerStmt&& other) noexcept
     : servername(std::move(other.servername))
@@ -15485,8 +14581,6 @@ CreateForeignServerStmt::CreateForeignServerStmt(CreateForeignServerStmt&& other
 
 CreateForeignServerStmt::~CreateForeignServerStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateForeignServerStmt::operator==([[maybe_unused]] const CreateForeignServerStmt& other) const noexcept
@@ -15544,7 +14638,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateForeignServerStmt& va
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15560,15 +14654,12 @@ AlterForeignServerStmt::AlterForeignServerStmt()
     , has_version(false)
 {}
 
-AlterForeignServerStmt::AlterForeignServerStmt(const std::string& arg_servername, const std::string& arg_version, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, bool arg_has_version)
+AlterForeignServerStmt::AlterForeignServerStmt(const std::string& arg_servername, const std::string& arg_version, std::vector<::pg_query::Node> arg_options, bool arg_has_version)
     : servername(arg_servername)
     , version(arg_version)
-    , options()
+    , options(std::move(arg_options))
     , has_version(arg_has_version)
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+{}
 
 AlterForeignServerStmt::AlterForeignServerStmt(AlterForeignServerStmt&& other) noexcept
     : servername(std::move(other.servername))
@@ -15579,8 +14670,6 @@ AlterForeignServerStmt::AlterForeignServerStmt(AlterForeignServerStmt&& other) n
 
 AlterForeignServerStmt::~AlterForeignServerStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterForeignServerStmt::operator==([[maybe_unused]] const AlterForeignServerStmt& other) const noexcept
@@ -15631,7 +14720,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterForeignServerStmt& val
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15648,15 +14737,12 @@ CreateUserMappingStmt::CreateUserMappingStmt()
     , options()
 {}
 
-CreateUserMappingStmt::CreateUserMappingStmt(::pg_query::RoleSpec&& arg_user, const std::string& arg_servername, bool arg_if_not_exists, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+CreateUserMappingStmt::CreateUserMappingStmt(::pg_query::RoleSpec&& arg_user, const std::string& arg_servername, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options)
     : user(std::move(arg_user))
     , servername(arg_servername)
     , if_not_exists(arg_if_not_exists)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 CreateUserMappingStmt::CreateUserMappingStmt(CreateUserMappingStmt&& other) noexcept
     : user(std::move(other.user))
@@ -15667,8 +14753,6 @@ CreateUserMappingStmt::CreateUserMappingStmt(CreateUserMappingStmt&& other) noex
 
 CreateUserMappingStmt::~CreateUserMappingStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateUserMappingStmt::operator==([[maybe_unused]] const CreateUserMappingStmt& other) const noexcept
@@ -15720,7 +14804,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateUserMappingStmt& valu
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15735,14 +14819,11 @@ AlterUserMappingStmt::AlterUserMappingStmt()
     , options()
 {}
 
-AlterUserMappingStmt::AlterUserMappingStmt(::pg_query::RoleSpec&& arg_user, const std::string& arg_servername, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+AlterUserMappingStmt::AlterUserMappingStmt(::pg_query::RoleSpec&& arg_user, const std::string& arg_servername, std::vector<::pg_query::Node> arg_options)
     : user(std::move(arg_user))
     , servername(arg_servername)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 AlterUserMappingStmt::AlterUserMappingStmt(AlterUserMappingStmt&& other) noexcept
     : user(std::move(other.user))
@@ -15752,8 +14833,6 @@ AlterUserMappingStmt::AlterUserMappingStmt(AlterUserMappingStmt&& other) noexcep
 
 AlterUserMappingStmt::~AlterUserMappingStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterUserMappingStmt::operator==([[maybe_unused]] const AlterUserMappingStmt& other) const noexcept
@@ -15802,7 +14881,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterUserMappingStmt& value
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15885,14 +14964,11 @@ AlterTableSpaceOptionsStmt::AlterTableSpaceOptionsStmt()
     , is_reset(false)
 {}
 
-AlterTableSpaceOptionsStmt::AlterTableSpaceOptionsStmt(const std::string& arg_tablespacename, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, bool arg_is_reset)
+AlterTableSpaceOptionsStmt::AlterTableSpaceOptionsStmt(const std::string& arg_tablespacename, std::vector<::pg_query::Node> arg_options, bool arg_is_reset)
     : tablespacename(arg_tablespacename)
-    , options()
+    , options(std::move(arg_options))
     , is_reset(arg_is_reset)
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+{}
 
 AlterTableSpaceOptionsStmt::AlterTableSpaceOptionsStmt(AlterTableSpaceOptionsStmt&& other) noexcept
     : tablespacename(std::move(other.tablespacename))
@@ -15902,8 +14978,6 @@ AlterTableSpaceOptionsStmt::AlterTableSpaceOptionsStmt(AlterTableSpaceOptionsStm
 
 AlterTableSpaceOptionsStmt::~AlterTableSpaceOptionsStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterTableSpaceOptionsStmt::operator==([[maybe_unused]] const AlterTableSpaceOptionsStmt& other) const noexcept
@@ -15951,7 +15025,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTableSpaceOptionsStmt&
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -15969,16 +15043,13 @@ AlterTableMoveAllStmt::AlterTableMoveAllStmt()
     , nowait(false)
 {}
 
-AlterTableMoveAllStmt::AlterTableMoveAllStmt(const std::string& arg_orig_tablespacename, ::pg_query::ObjectType&& arg_objtype, std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, const std::string& arg_new_tablespacename, bool arg_nowait)
+AlterTableMoveAllStmt::AlterTableMoveAllStmt(const std::string& arg_orig_tablespacename, ::pg_query::ObjectType&& arg_objtype, std::vector<::pg_query::Node> arg_roles, const std::string& arg_new_tablespacename, bool arg_nowait)
     : orig_tablespacename(arg_orig_tablespacename)
     , objtype(std::move(arg_objtype))
-    , roles()
+    , roles(std::move(arg_roles))
     , new_tablespacename(arg_new_tablespacename)
     , nowait(arg_nowait)
-{
-    for (auto& it : arg_roles)
-        roles.emplace_back(it.release());
-}
+{}
 
 AlterTableMoveAllStmt::AlterTableMoveAllStmt(AlterTableMoveAllStmt&& other) noexcept
     : orig_tablespacename(std::move(other.orig_tablespacename))
@@ -15990,8 +15061,6 @@ AlterTableMoveAllStmt::AlterTableMoveAllStmt(AlterTableMoveAllStmt&& other) noex
 
 AlterTableMoveAllStmt::~AlterTableMoveAllStmt()
 {
-    for (auto& it : roles)
-        delete it;
 }
 
 bool AlterTableMoveAllStmt::operator==([[maybe_unused]] const AlterTableMoveAllStmt& other) const noexcept
@@ -16044,7 +15113,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterTableMoveAllStmt& valu
         stream << ",roles=[" << value.roles.size() << "][";
         for (const auto& it : value.roles)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -16057,28 +15126,27 @@ std::ostream& operator<<(std::ostream& stream, const AlterTableMoveAllStmt& valu
 
 SecLabelStmt::SecLabelStmt()
     : objtype()
-    , object(nullptr)
+    , object()
     , provider()
     , label()
 {}
 
-SecLabelStmt::SecLabelStmt(::pg_query::ObjectType&& arg_objtype, std::unique_ptr<::pg_query::Node> arg_object, const std::string& arg_provider, const std::string& arg_label)
+SecLabelStmt::SecLabelStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::string& arg_provider, const std::string& arg_label)
     : objtype(std::move(arg_objtype))
-    , object(arg_object.release())
+    , object(std::move(arg_object))
     , provider(arg_provider)
     , label(arg_label)
 {}
 
 SecLabelStmt::SecLabelStmt(SecLabelStmt&& other) noexcept
     : objtype(std::move(other.objtype))
-    , object(std::exchange(other.object, nullptr))
+    , object(std::move(other.object))
     , provider(std::move(other.provider))
     , label(std::move(other.label))
 {}
 
 SecLabelStmt::~SecLabelStmt()
 {
-    if (object) delete object;
 }
 
 bool SecLabelStmt::operator==([[maybe_unused]] const SecLabelStmt& other) const noexcept
@@ -16098,7 +15166,7 @@ SecLabelStmt& SecLabelStmt::operator=(SecLabelStmt&& other) noexcept
     if (this != &other)
     {
         objtype = std::move(other.objtype);
-        object = std::exchange(other.object, nullptr);
+        object = std::move(other.object);
         provider = std::move(other.provider);
         label = std::move(other.label);
     }
@@ -16123,7 +15191,7 @@ std::ostream& operator<<(std::ostream& stream, const SecLabelStmt& value)
 {
     stream << "SecLabelStmt(";
     stream << "objtype="; stream << value.objtype;
-    stream << ",object="; stream << " ptr of other struct" << (value.object == nullptr ? "true" : "false");
+    stream << ",object="; stream << value.object;
     stream << ",provider="; stream << "\"" << value.provider << "\"";
     stream << ",label="; stream << "\"" << value.label << "\"";
     stream << ")";
@@ -16136,14 +15204,11 @@ CreateForeignTableStmt::CreateForeignTableStmt()
     , options()
 {}
 
-CreateForeignTableStmt::CreateForeignTableStmt(::pg_query::CreateStmt&& arg_base_stmt, const std::string& arg_servername, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+CreateForeignTableStmt::CreateForeignTableStmt(::pg_query::CreateStmt&& arg_base_stmt, const std::string& arg_servername, std::vector<::pg_query::Node> arg_options)
     : base_stmt(std::move(arg_base_stmt))
     , servername(arg_servername)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 CreateForeignTableStmt::CreateForeignTableStmt(CreateForeignTableStmt&& other) noexcept
     : base_stmt(std::move(other.base_stmt))
@@ -16153,8 +15218,6 @@ CreateForeignTableStmt::CreateForeignTableStmt(CreateForeignTableStmt&& other) n
 
 CreateForeignTableStmt::~CreateForeignTableStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateForeignTableStmt::operator==([[maybe_unused]] const CreateForeignTableStmt& other) const noexcept
@@ -16203,7 +15266,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateForeignTableStmt& val
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -16221,19 +15284,14 @@ ImportForeignSchemaStmt::ImportForeignSchemaStmt()
     , options()
 {}
 
-ImportForeignSchemaStmt::ImportForeignSchemaStmt(const std::string& arg_server_name, const std::string& arg_remote_schema, const std::string& arg_local_schema, ::pg_query::ImportForeignSchemaType&& arg_list_type, std::vector<std::unique_ptr<::pg_query::Node>> arg_table_list, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+ImportForeignSchemaStmt::ImportForeignSchemaStmt(const std::string& arg_server_name, const std::string& arg_remote_schema, const std::string& arg_local_schema, ::pg_query::ImportForeignSchemaType&& arg_list_type, std::vector<::pg_query::Node> arg_table_list, std::vector<::pg_query::Node> arg_options)
     : server_name(arg_server_name)
     , remote_schema(arg_remote_schema)
     , local_schema(arg_local_schema)
     , list_type(std::move(arg_list_type))
-    , table_list()
-    , options()
-{
-    for (auto& it : arg_table_list)
-        table_list.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , table_list(std::move(arg_table_list))
+    , options(std::move(arg_options))
+{}
 
 ImportForeignSchemaStmt::ImportForeignSchemaStmt(ImportForeignSchemaStmt&& other) noexcept
     : server_name(std::move(other.server_name))
@@ -16246,10 +15304,6 @@ ImportForeignSchemaStmt::ImportForeignSchemaStmt(ImportForeignSchemaStmt&& other
 
 ImportForeignSchemaStmt::~ImportForeignSchemaStmt()
 {
-    for (auto& it : table_list)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool ImportForeignSchemaStmt::operator==([[maybe_unused]] const ImportForeignSchemaStmt& other) const noexcept
@@ -16306,7 +15360,7 @@ std::ostream& operator<<(std::ostream& stream, const ImportForeignSchemaStmt& va
         stream << ",table_list=[" << value.table_list.size() << "][";
         for (const auto& it : value.table_list)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -16316,7 +15370,7 @@ std::ostream& operator<<(std::ostream& stream, const ImportForeignSchemaStmt& va
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -16331,14 +15385,11 @@ CreateExtensionStmt::CreateExtensionStmt()
     , options()
 {}
 
-CreateExtensionStmt::CreateExtensionStmt(const std::string& arg_extname, bool arg_if_not_exists, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+CreateExtensionStmt::CreateExtensionStmt(const std::string& arg_extname, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options)
     : extname(arg_extname)
     , if_not_exists(arg_if_not_exists)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 CreateExtensionStmt::CreateExtensionStmt(CreateExtensionStmt&& other) noexcept
     : extname(std::move(other.extname))
@@ -16348,8 +15399,6 @@ CreateExtensionStmt::CreateExtensionStmt(CreateExtensionStmt&& other) noexcept
 
 CreateExtensionStmt::~CreateExtensionStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateExtensionStmt::operator==([[maybe_unused]] const CreateExtensionStmt& other) const noexcept
@@ -16398,7 +15447,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateExtensionStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -16412,13 +15461,10 @@ AlterExtensionStmt::AlterExtensionStmt()
     , options()
 {}
 
-AlterExtensionStmt::AlterExtensionStmt(const std::string& arg_extname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+AlterExtensionStmt::AlterExtensionStmt(const std::string& arg_extname, std::vector<::pg_query::Node> arg_options)
     : extname(arg_extname)
-    , options()
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , options(std::move(arg_options))
+{}
 
 AlterExtensionStmt::AlterExtensionStmt(AlterExtensionStmt&& other) noexcept
     : extname(std::move(other.extname))
@@ -16427,8 +15473,6 @@ AlterExtensionStmt::AlterExtensionStmt(AlterExtensionStmt&& other) noexcept
 
 AlterExtensionStmt::~AlterExtensionStmt()
 {
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterExtensionStmt::operator==([[maybe_unused]] const AlterExtensionStmt& other) const noexcept
@@ -16474,7 +15518,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterExtensionStmt& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -16487,26 +15531,25 @@ AlterExtensionContentsStmt::AlterExtensionContentsStmt()
     : extname()
     , action((int32_t)0ll)
     , objtype()
-    , object(nullptr)
+    , object()
 {}
 
-AlterExtensionContentsStmt::AlterExtensionContentsStmt(const std::string& arg_extname, int32_t arg_action, ::pg_query::ObjectType&& arg_objtype, std::unique_ptr<::pg_query::Node> arg_object)
+AlterExtensionContentsStmt::AlterExtensionContentsStmt(const std::string& arg_extname, int32_t arg_action, ::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object)
     : extname(arg_extname)
     , action(arg_action)
     , objtype(std::move(arg_objtype))
-    , object(arg_object.release())
+    , object(std::move(arg_object))
 {}
 
 AlterExtensionContentsStmt::AlterExtensionContentsStmt(AlterExtensionContentsStmt&& other) noexcept
     : extname(std::move(other.extname))
     , action(std::exchange(other.action, (int32_t)0ll))
     , objtype(std::move(other.objtype))
-    , object(std::exchange(other.object, nullptr))
+    , object(std::move(other.object))
 {}
 
 AlterExtensionContentsStmt::~AlterExtensionContentsStmt()
 {
-    if (object) delete object;
 }
 
 bool AlterExtensionContentsStmt::operator==([[maybe_unused]] const AlterExtensionContentsStmt& other) const noexcept
@@ -16528,7 +15571,7 @@ AlterExtensionContentsStmt& AlterExtensionContentsStmt::operator=(AlterExtension
         extname = std::move(other.extname);
         action = std::exchange(other.action, (int32_t)0ll);
         objtype = std::move(other.objtype);
-        object = std::exchange(other.object, nullptr);
+        object = std::move(other.object);
     }
     return *this;
 }
@@ -16553,7 +15596,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterExtensionContentsStmt&
     stream << "extname="; stream << "\"" << value.extname << "\"";
     stream << ",action="; stream << value.action;
     stream << ",objtype="; stream << value.objtype;
-    stream << ",object="; stream << " ptr of other struct" << (value.object == nullptr ? "true" : "false");
+    stream << ",object="; stream << value.object;
     stream << ")";
     return stream;
 }
@@ -16565,17 +15608,12 @@ CreateEventTrigStmt::CreateEventTrigStmt()
     , funcname()
 {}
 
-CreateEventTrigStmt::CreateEventTrigStmt(const std::string& arg_trigname, const std::string& arg_eventname, std::vector<std::unique_ptr<::pg_query::Node>> arg_whenclause, std::vector<std::unique_ptr<::pg_query::Node>> arg_funcname)
+CreateEventTrigStmt::CreateEventTrigStmt(const std::string& arg_trigname, const std::string& arg_eventname, std::vector<::pg_query::Node> arg_whenclause, std::vector<::pg_query::Node> arg_funcname)
     : trigname(arg_trigname)
     , eventname(arg_eventname)
-    , whenclause()
-    , funcname()
-{
-    for (auto& it : arg_whenclause)
-        whenclause.emplace_back(it.release());
-    for (auto& it : arg_funcname)
-        funcname.emplace_back(it.release());
-}
+    , whenclause(std::move(arg_whenclause))
+    , funcname(std::move(arg_funcname))
+{}
 
 CreateEventTrigStmt::CreateEventTrigStmt(CreateEventTrigStmt&& other) noexcept
     : trigname(std::move(other.trigname))
@@ -16586,10 +15624,6 @@ CreateEventTrigStmt::CreateEventTrigStmt(CreateEventTrigStmt&& other) noexcept
 
 CreateEventTrigStmt::~CreateEventTrigStmt()
 {
-    for (auto& it : whenclause)
-        delete it;
-    for (auto& it : funcname)
-        delete it;
 }
 
 bool CreateEventTrigStmt::operator==([[maybe_unused]] const CreateEventTrigStmt& other) const noexcept
@@ -16640,7 +15674,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateEventTrigStmt& value)
         stream << ",whenclause=[" << value.whenclause.size() << "][";
         for (const auto& it : value.whenclause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -16650,7 +15684,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateEventTrigStmt& value)
         stream << ",funcname=[" << value.funcname.size() << "][";
         for (const auto& it : value.funcname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -16913,22 +15947,19 @@ CreatePolicyStmt::CreatePolicyStmt()
     , cmd_name()
     , permissive(false)
     , roles()
-    , qual(nullptr)
-    , with_check(nullptr)
+    , qual()
+    , with_check()
 {}
 
-CreatePolicyStmt::CreatePolicyStmt(const std::string& arg_policy_name, ::pg_query::RangeVar&& arg_table, const std::string& arg_cmd_name, bool arg_permissive, std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, std::unique_ptr<::pg_query::Node> arg_qual, std::unique_ptr<::pg_query::Node> arg_with_check)
+CreatePolicyStmt::CreatePolicyStmt(const std::string& arg_policy_name, ::pg_query::RangeVar&& arg_table, const std::string& arg_cmd_name, bool arg_permissive, std::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check)
     : policy_name(arg_policy_name)
     , table(std::move(arg_table))
     , cmd_name(arg_cmd_name)
     , permissive(arg_permissive)
-    , roles()
-    , qual(arg_qual.release())
-    , with_check(arg_with_check.release())
-{
-    for (auto& it : arg_roles)
-        roles.emplace_back(it.release());
-}
+    , roles(std::move(arg_roles))
+    , qual(std::move(arg_qual))
+    , with_check(std::move(arg_with_check))
+{}
 
 CreatePolicyStmt::CreatePolicyStmt(CreatePolicyStmt&& other) noexcept
     : policy_name(std::move(other.policy_name))
@@ -16936,16 +15967,12 @@ CreatePolicyStmt::CreatePolicyStmt(CreatePolicyStmt&& other) noexcept
     , cmd_name(std::move(other.cmd_name))
     , permissive(std::exchange(other.permissive, false))
     , roles(std::move(other.roles))
-    , qual(std::exchange(other.qual, nullptr))
-    , with_check(std::exchange(other.with_check, nullptr))
+    , qual(std::move(other.qual))
+    , with_check(std::move(other.with_check))
 {}
 
 CreatePolicyStmt::~CreatePolicyStmt()
 {
-    if (qual) delete qual;
-    if (with_check) delete with_check;
-    for (auto& it : roles)
-        delete it;
 }
 
 bool CreatePolicyStmt::operator==([[maybe_unused]] const CreatePolicyStmt& other) const noexcept
@@ -16969,8 +15996,8 @@ CreatePolicyStmt& CreatePolicyStmt::operator=(CreatePolicyStmt&& other) noexcept
         cmd_name = std::move(other.cmd_name);
         permissive = std::exchange(other.permissive, false);
         roles = std::move(other.roles);
-        qual = std::exchange(other.qual, nullptr);
-        with_check = std::exchange(other.with_check, nullptr);
+        qual = std::move(other.qual);
+        with_check = std::move(other.with_check);
     }
     return *this;
 }
@@ -17004,13 +16031,13 @@ std::ostream& operator<<(std::ostream& stream, const CreatePolicyStmt& value)
         stream << ",roles=[" << value.roles.size() << "][";
         for (const auto& it : value.roles)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",qual="; stream << " ptr of other struct" << (value.qual == nullptr ? "true" : "false");
-    stream << ",with_check="; stream << " ptr of other struct" << (value.with_check == nullptr ? "true" : "false");
+    stream << ",qual="; stream << value.qual;
+    stream << ",with_check="; stream << value.with_check;
     stream << ")";
     return stream;
 }
@@ -17019,35 +16046,28 @@ AlterPolicyStmt::AlterPolicyStmt()
     : policy_name()
     , table()
     , roles()
-    , qual(nullptr)
-    , with_check(nullptr)
+    , qual()
+    , with_check()
 {}
 
-AlterPolicyStmt::AlterPolicyStmt(const std::string& arg_policy_name, ::pg_query::RangeVar&& arg_table, std::vector<std::unique_ptr<::pg_query::Node>> arg_roles, std::unique_ptr<::pg_query::Node> arg_qual, std::unique_ptr<::pg_query::Node> arg_with_check)
+AlterPolicyStmt::AlterPolicyStmt(const std::string& arg_policy_name, ::pg_query::RangeVar&& arg_table, std::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check)
     : policy_name(arg_policy_name)
     , table(std::move(arg_table))
-    , roles()
-    , qual(arg_qual.release())
-    , with_check(arg_with_check.release())
-{
-    for (auto& it : arg_roles)
-        roles.emplace_back(it.release());
-}
+    , roles(std::move(arg_roles))
+    , qual(std::move(arg_qual))
+    , with_check(std::move(arg_with_check))
+{}
 
 AlterPolicyStmt::AlterPolicyStmt(AlterPolicyStmt&& other) noexcept
     : policy_name(std::move(other.policy_name))
     , table(std::move(other.table))
     , roles(std::move(other.roles))
-    , qual(std::exchange(other.qual, nullptr))
-    , with_check(std::exchange(other.with_check, nullptr))
+    , qual(std::move(other.qual))
+    , with_check(std::move(other.with_check))
 {}
 
 AlterPolicyStmt::~AlterPolicyStmt()
 {
-    if (qual) delete qual;
-    if (with_check) delete with_check;
-    for (auto& it : roles)
-        delete it;
 }
 
 bool AlterPolicyStmt::operator==([[maybe_unused]] const AlterPolicyStmt& other) const noexcept
@@ -17069,8 +16089,8 @@ AlterPolicyStmt& AlterPolicyStmt::operator=(AlterPolicyStmt&& other) noexcept
         policy_name = std::move(other.policy_name);
         table = std::move(other.table);
         roles = std::move(other.roles);
-        qual = std::exchange(other.qual, nullptr);
-        with_check = std::exchange(other.with_check, nullptr);
+        qual = std::move(other.qual);
+        with_check = std::move(other.with_check);
     }
     return *this;
 }
@@ -17100,13 +16120,13 @@ std::ostream& operator<<(std::ostream& stream, const AlterPolicyStmt& value)
         stream << ",roles=[" << value.roles.size() << "][";
         for (const auto& it : value.roles)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",qual="; stream << " ptr of other struct" << (value.qual == nullptr ? "true" : "false");
-    stream << ",with_check="; stream << " ptr of other struct" << (value.with_check == nullptr ? "true" : "false");
+    stream << ",qual="; stream << value.qual;
+    stream << ",with_check="; stream << value.with_check;
     stream << ")";
     return stream;
 }
@@ -17197,14 +16217,11 @@ CreateAmStmt::CreateAmStmt()
     , amtype()
 {}
 
-CreateAmStmt::CreateAmStmt(const std::string& arg_amname, std::vector<std::unique_ptr<::pg_query::Node>> arg_handler_name, const std::string& arg_amtype)
+CreateAmStmt::CreateAmStmt(const std::string& arg_amname, std::vector<::pg_query::Node> arg_handler_name, const std::string& arg_amtype)
     : amname(arg_amname)
-    , handler_name()
+    , handler_name(std::move(arg_handler_name))
     , amtype(arg_amtype)
-{
-    for (auto& it : arg_handler_name)
-        handler_name.emplace_back(it.release());
-}
+{}
 
 CreateAmStmt::CreateAmStmt(CreateAmStmt&& other) noexcept
     : amname(std::move(other.amname))
@@ -17214,8 +16231,6 @@ CreateAmStmt::CreateAmStmt(CreateAmStmt&& other) noexcept
 
 CreateAmStmt::~CreateAmStmt()
 {
-    for (auto& it : handler_name)
-        delete it;
 }
 
 bool CreateAmStmt::operator==([[maybe_unused]] const CreateAmStmt& other) const noexcept
@@ -17263,7 +16278,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateAmStmt& value)
         stream << ",handler_name=[" << value.handler_name.size() << "][";
         for (const auto& it : value.handler_name)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17280,17 +16295,12 @@ CreatePublicationStmt::CreatePublicationStmt()
     , for_all_tables(false)
 {}
 
-CreatePublicationStmt::CreatePublicationStmt(const std::string& arg_pubname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, std::vector<std::unique_ptr<::pg_query::Node>> arg_tables, bool arg_for_all_tables)
+CreatePublicationStmt::CreatePublicationStmt(const std::string& arg_pubname, std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables)
     : pubname(arg_pubname)
-    , options()
-    , tables()
+    , options(std::move(arg_options))
+    , tables(std::move(arg_tables))
     , for_all_tables(arg_for_all_tables)
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-    for (auto& it : arg_tables)
-        tables.emplace_back(it.release());
-}
+{}
 
 CreatePublicationStmt::CreatePublicationStmt(CreatePublicationStmt&& other) noexcept
     : pubname(std::move(other.pubname))
@@ -17301,10 +16311,6 @@ CreatePublicationStmt::CreatePublicationStmt(CreatePublicationStmt&& other) noex
 
 CreatePublicationStmt::~CreatePublicationStmt()
 {
-    for (auto& it : options)
-        delete it;
-    for (auto& it : tables)
-        delete it;
 }
 
 bool CreatePublicationStmt::operator==([[maybe_unused]] const CreatePublicationStmt& other) const noexcept
@@ -17354,7 +16360,7 @@ std::ostream& operator<<(std::ostream& stream, const CreatePublicationStmt& valu
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17364,7 +16370,7 @@ std::ostream& operator<<(std::ostream& stream, const CreatePublicationStmt& valu
         stream << ",tables=[" << value.tables.size() << "][";
         for (const auto& it : value.tables)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17382,18 +16388,13 @@ AlterPublicationStmt::AlterPublicationStmt()
     , table_action()
 {}
 
-AlterPublicationStmt::AlterPublicationStmt(const std::string& arg_pubname, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, std::vector<std::unique_ptr<::pg_query::Node>> arg_tables, bool arg_for_all_tables, ::pg_query::DefElemAction&& arg_table_action)
+AlterPublicationStmt::AlterPublicationStmt(const std::string& arg_pubname, std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables, ::pg_query::DefElemAction&& arg_table_action)
     : pubname(arg_pubname)
-    , options()
-    , tables()
+    , options(std::move(arg_options))
+    , tables(std::move(arg_tables))
     , for_all_tables(arg_for_all_tables)
     , table_action(std::move(arg_table_action))
-{
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-    for (auto& it : arg_tables)
-        tables.emplace_back(it.release());
-}
+{}
 
 AlterPublicationStmt::AlterPublicationStmt(AlterPublicationStmt&& other) noexcept
     : pubname(std::move(other.pubname))
@@ -17405,10 +16406,6 @@ AlterPublicationStmt::AlterPublicationStmt(AlterPublicationStmt&& other) noexcep
 
 AlterPublicationStmt::~AlterPublicationStmt()
 {
-    for (auto& it : options)
-        delete it;
-    for (auto& it : tables)
-        delete it;
 }
 
 bool AlterPublicationStmt::operator==([[maybe_unused]] const AlterPublicationStmt& other) const noexcept
@@ -17460,7 +16457,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterPublicationStmt& value
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17470,7 +16467,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterPublicationStmt& value
         stream << ",tables=[" << value.tables.size() << "][";
         for (const auto& it : value.tables)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17488,17 +16485,12 @@ CreateSubscriptionStmt::CreateSubscriptionStmt()
     , options()
 {}
 
-CreateSubscriptionStmt::CreateSubscriptionStmt(const std::string& arg_subname, const std::string& arg_conninfo, std::vector<std::unique_ptr<::pg_query::Node>> arg_publication, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+CreateSubscriptionStmt::CreateSubscriptionStmt(const std::string& arg_subname, const std::string& arg_conninfo, std::vector<::pg_query::Node> arg_publication, std::vector<::pg_query::Node> arg_options)
     : subname(arg_subname)
     , conninfo(arg_conninfo)
-    , publication()
-    , options()
-{
-    for (auto& it : arg_publication)
-        publication.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , publication(std::move(arg_publication))
+    , options(std::move(arg_options))
+{}
 
 CreateSubscriptionStmt::CreateSubscriptionStmt(CreateSubscriptionStmt&& other) noexcept
     : subname(std::move(other.subname))
@@ -17509,10 +16501,6 @@ CreateSubscriptionStmt::CreateSubscriptionStmt(CreateSubscriptionStmt&& other) n
 
 CreateSubscriptionStmt::~CreateSubscriptionStmt()
 {
-    for (auto& it : publication)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool CreateSubscriptionStmt::operator==([[maybe_unused]] const CreateSubscriptionStmt& other) const noexcept
@@ -17563,7 +16551,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateSubscriptionStmt& val
         stream << ",publication=[" << value.publication.size() << "][";
         for (const auto& it : value.publication)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17573,7 +16561,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateSubscriptionStmt& val
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17590,18 +16578,13 @@ AlterSubscriptionStmt::AlterSubscriptionStmt()
     , options()
 {}
 
-AlterSubscriptionStmt::AlterSubscriptionStmt(::pg_query::AlterSubscriptionType&& arg_kind, const std::string& arg_subname, const std::string& arg_conninfo, std::vector<std::unique_ptr<::pg_query::Node>> arg_publication, std::vector<std::unique_ptr<::pg_query::Node>> arg_options)
+AlterSubscriptionStmt::AlterSubscriptionStmt(::pg_query::AlterSubscriptionType&& arg_kind, const std::string& arg_subname, const std::string& arg_conninfo, std::vector<::pg_query::Node> arg_publication, std::vector<::pg_query::Node> arg_options)
     : kind(std::move(arg_kind))
     , subname(arg_subname)
     , conninfo(arg_conninfo)
-    , publication()
-    , options()
-{
-    for (auto& it : arg_publication)
-        publication.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-}
+    , publication(std::move(arg_publication))
+    , options(std::move(arg_options))
+{}
 
 AlterSubscriptionStmt::AlterSubscriptionStmt(AlterSubscriptionStmt&& other) noexcept
     : kind(std::move(other.kind))
@@ -17613,10 +16596,6 @@ AlterSubscriptionStmt::AlterSubscriptionStmt(AlterSubscriptionStmt&& other) noex
 
 AlterSubscriptionStmt::~AlterSubscriptionStmt()
 {
-    for (auto& it : publication)
-        delete it;
-    for (auto& it : options)
-        delete it;
 }
 
 bool AlterSubscriptionStmt::operator==([[maybe_unused]] const AlterSubscriptionStmt& other) const noexcept
@@ -17670,7 +16649,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterSubscriptionStmt& valu
         stream << ",publication=[" << value.publication.size() << "][";
         for (const auto& it : value.publication)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17680,7 +16659,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterSubscriptionStmt& valu
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17766,23 +16745,14 @@ CreateStatsStmt::CreateStatsStmt()
     , if_not_exists(false)
 {}
 
-CreateStatsStmt::CreateStatsStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_defnames, std::vector<std::unique_ptr<::pg_query::Node>> arg_stat_types, std::vector<std::unique_ptr<::pg_query::Node>> arg_exprs, std::vector<std::unique_ptr<::pg_query::Node>> arg_relations, const std::string& arg_stxcomment, bool arg_if_not_exists)
-    : defnames()
-    , stat_types()
-    , exprs()
-    , relations()
+CreateStatsStmt::CreateStatsStmt(std::vector<::pg_query::Node> arg_defnames, std::vector<::pg_query::Node> arg_stat_types, std::vector<::pg_query::Node> arg_exprs, std::vector<::pg_query::Node> arg_relations, const std::string& arg_stxcomment, bool arg_if_not_exists)
+    : defnames(std::move(arg_defnames))
+    , stat_types(std::move(arg_stat_types))
+    , exprs(std::move(arg_exprs))
+    , relations(std::move(arg_relations))
     , stxcomment(arg_stxcomment)
     , if_not_exists(arg_if_not_exists)
-{
-    for (auto& it : arg_defnames)
-        defnames.emplace_back(it.release());
-    for (auto& it : arg_stat_types)
-        stat_types.emplace_back(it.release());
-    for (auto& it : arg_exprs)
-        exprs.emplace_back(it.release());
-    for (auto& it : arg_relations)
-        relations.emplace_back(it.release());
-}
+{}
 
 CreateStatsStmt::CreateStatsStmt(CreateStatsStmt&& other) noexcept
     : defnames(std::move(other.defnames))
@@ -17795,14 +16765,6 @@ CreateStatsStmt::CreateStatsStmt(CreateStatsStmt&& other) noexcept
 
 CreateStatsStmt::~CreateStatsStmt()
 {
-    for (auto& it : defnames)
-        delete it;
-    for (auto& it : stat_types)
-        delete it;
-    for (auto& it : exprs)
-        delete it;
-    for (auto& it : relations)
-        delete it;
 }
 
 bool CreateStatsStmt::operator==([[maybe_unused]] const CreateStatsStmt& other) const noexcept
@@ -17855,7 +16817,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateStatsStmt& value)
         stream << "defnames=[" << value.defnames.size() << "][";
         for (const auto& it : value.defnames)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17865,7 +16827,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateStatsStmt& value)
         stream << ",stat_types=[" << value.stat_types.size() << "][";
         for (const auto& it : value.stat_types)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17875,7 +16837,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateStatsStmt& value)
         stream << ",exprs=[" << value.exprs.size() << "][";
         for (const auto& it : value.exprs)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17885,7 +16847,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateStatsStmt& value)
         stream << ",relations=[" << value.relations.size() << "][";
         for (const auto& it : value.relations)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -17900,12 +16862,9 @@ AlterCollationStmt::AlterCollationStmt()
     : collname()
 {}
 
-AlterCollationStmt::AlterCollationStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_collname)
-    : collname()
-{
-    for (auto& it : arg_collname)
-        collname.emplace_back(it.release());
-}
+AlterCollationStmt::AlterCollationStmt(std::vector<::pg_query::Node> arg_collname)
+    : collname(std::move(arg_collname))
+{}
 
 AlterCollationStmt::AlterCollationStmt(AlterCollationStmt&& other) noexcept
     : collname(std::move(other.collname))
@@ -17913,8 +16872,6 @@ AlterCollationStmt::AlterCollationStmt(AlterCollationStmt&& other) noexcept
 
 AlterCollationStmt::~AlterCollationStmt()
 {
-    for (auto& it : collname)
-        delete it;
 }
 
 bool AlterCollationStmt::operator==([[maybe_unused]] const AlterCollationStmt& other) const noexcept
@@ -17957,7 +16914,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterCollationStmt& value)
         stream << "collname=[" << value.collname.size() << "][";
         for (const auto& it : value.collname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -18034,14 +16991,11 @@ AlterStatsStmt::AlterStatsStmt()
     , missing_ok(false)
 {}
 
-AlterStatsStmt::AlterStatsStmt(std::vector<std::unique_ptr<::pg_query::Node>> arg_defnames, int32_t arg_stxstattarget, bool arg_missing_ok)
-    : defnames()
+AlterStatsStmt::AlterStatsStmt(std::vector<::pg_query::Node> arg_defnames, int32_t arg_stxstattarget, bool arg_missing_ok)
+    : defnames(std::move(arg_defnames))
     , stxstattarget(arg_stxstattarget)
     , missing_ok(arg_missing_ok)
-{
-    for (auto& it : arg_defnames)
-        defnames.emplace_back(it.release());
-}
+{}
 
 AlterStatsStmt::AlterStatsStmt(AlterStatsStmt&& other) noexcept
     : defnames(std::move(other.defnames))
@@ -18051,8 +17005,6 @@ AlterStatsStmt::AlterStatsStmt(AlterStatsStmt&& other) noexcept
 
 AlterStatsStmt::~AlterStatsStmt()
 {
-    for (auto& it : defnames)
-        delete it;
 }
 
 bool AlterStatsStmt::operator==([[maybe_unused]] const AlterStatsStmt& other) const noexcept
@@ -18099,7 +17051,7 @@ std::ostream& operator<<(std::ostream& stream, const AlterStatsStmt& value)
         stream << "defnames=[" << value.defnames.size() << "][";
         for (const auto& it : value.defnames)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -18113,36 +17065,29 @@ std::ostream& operator<<(std::ostream& stream, const AlterStatsStmt& value)
 A_Expr::A_Expr()
     : kind()
     , name()
-    , lexpr(nullptr)
-    , rexpr(nullptr)
+    , lexpr()
+    , rexpr()
     , location((int32_t)0ll)
 {}
 
-A_Expr::A_Expr(::pg_query::A_Expr_Kind&& arg_kind, std::vector<std::unique_ptr<::pg_query::Node>> arg_name, std::unique_ptr<::pg_query::Node> arg_lexpr, std::unique_ptr<::pg_query::Node> arg_rexpr, int32_t arg_location)
+A_Expr::A_Expr(::pg_query::A_Expr_Kind&& arg_kind, std::vector<::pg_query::Node> arg_name, ::pg_query::Node&& arg_lexpr, ::pg_query::Node&& arg_rexpr, int32_t arg_location)
     : kind(std::move(arg_kind))
-    , name()
-    , lexpr(arg_lexpr.release())
-    , rexpr(arg_rexpr.release())
+    , name(std::move(arg_name))
+    , lexpr(std::move(arg_lexpr))
+    , rexpr(std::move(arg_rexpr))
     , location(arg_location)
-{
-    for (auto& it : arg_name)
-        name.emplace_back(it.release());
-}
+{}
 
 A_Expr::A_Expr(A_Expr&& other) noexcept
     : kind(std::move(other.kind))
     , name(std::move(other.name))
-    , lexpr(std::exchange(other.lexpr, nullptr))
-    , rexpr(std::exchange(other.rexpr, nullptr))
+    , lexpr(std::move(other.lexpr))
+    , rexpr(std::move(other.rexpr))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 A_Expr::~A_Expr()
 {
-    if (lexpr) delete lexpr;
-    if (rexpr) delete rexpr;
-    for (auto& it : name)
-        delete it;
 }
 
 bool A_Expr::operator==([[maybe_unused]] const A_Expr& other) const noexcept
@@ -18163,8 +17108,8 @@ A_Expr& A_Expr::operator=(A_Expr&& other) noexcept
     {
         kind = std::move(other.kind);
         name = std::move(other.name);
-        lexpr = std::exchange(other.lexpr, nullptr);
-        rexpr = std::exchange(other.rexpr, nullptr);
+        lexpr = std::move(other.lexpr);
+        rexpr = std::move(other.rexpr);
         location = std::exchange(other.location, (int32_t)0ll);
     }
     return *this;
@@ -18194,13 +17139,13 @@ std::ostream& operator<<(std::ostream& stream, const A_Expr& value)
         stream << ",name=[" << value.name.size() << "][";
         for (const auto& it : value.name)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",lexpr="; stream << " ptr of other struct" << (value.lexpr == nullptr ? "true" : "false");
-    stream << ",rexpr="; stream << " ptr of other struct" << (value.rexpr == nullptr ? "true" : "false");
+    stream << ",lexpr="; stream << value.lexpr;
+    stream << ",rexpr="; stream << value.rexpr;
     stream << ",location="; stream << value.location;
     stream << ")";
     return stream;
@@ -18211,13 +17156,10 @@ ColumnRef::ColumnRef()
     , location((int32_t)0ll)
 {}
 
-ColumnRef::ColumnRef(std::vector<std::unique_ptr<::pg_query::Node>> arg_fields, int32_t arg_location)
-    : fields()
+ColumnRef::ColumnRef(std::vector<::pg_query::Node> arg_fields, int32_t arg_location)
+    : fields(std::move(arg_fields))
     , location(arg_location)
-{
-    for (auto& it : arg_fields)
-        fields.emplace_back(it.release());
-}
+{}
 
 ColumnRef::ColumnRef(ColumnRef&& other) noexcept
     : fields(std::move(other.fields))
@@ -18226,8 +17168,6 @@ ColumnRef::ColumnRef(ColumnRef&& other) noexcept
 
 ColumnRef::~ColumnRef()
 {
-    for (auto& it : fields)
-        delete it;
 }
 
 bool ColumnRef::operator==([[maybe_unused]] const ColumnRef& other) const noexcept
@@ -18272,7 +17212,7 @@ std::ostream& operator<<(std::ostream& stream, const ColumnRef& value)
         stream << "fields=[" << value.fields.size() << "][";
         for (const auto& it : value.fields)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -18410,7 +17350,7 @@ FuncCall::FuncCall()
     : funcname()
     , args()
     , agg_order()
-    , agg_filter(nullptr)
+    , agg_filter()
     , agg_within_group(false)
     , agg_star(false)
     , agg_distinct(false)
@@ -18419,31 +17359,24 @@ FuncCall::FuncCall()
     , location((int32_t)0ll)
 {}
 
-FuncCall::FuncCall(std::vector<std::unique_ptr<::pg_query::Node>> arg_funcname, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::vector<std::unique_ptr<::pg_query::Node>> arg_agg_order, std::unique_ptr<::pg_query::Node> arg_agg_filter, bool arg_agg_within_group, bool arg_agg_star, bool arg_agg_distinct, bool arg_func_variadic, ::pg_query::WindowDef&& arg_over, int32_t arg_location)
-    : funcname()
-    , args()
-    , agg_order()
-    , agg_filter(arg_agg_filter.release())
+FuncCall::FuncCall(std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_agg_order, ::pg_query::Node&& arg_agg_filter, bool arg_agg_within_group, bool arg_agg_star, bool arg_agg_distinct, bool arg_func_variadic, ::pg_query::WindowDef&& arg_over, int32_t arg_location)
+    : funcname(std::move(arg_funcname))
+    , args(std::move(arg_args))
+    , agg_order(std::move(arg_agg_order))
+    , agg_filter(std::move(arg_agg_filter))
     , agg_within_group(arg_agg_within_group)
     , agg_star(arg_agg_star)
     , agg_distinct(arg_agg_distinct)
     , func_variadic(arg_func_variadic)
     , over(std::move(arg_over))
     , location(arg_location)
-{
-    for (auto& it : arg_funcname)
-        funcname.emplace_back(it.release());
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-    for (auto& it : arg_agg_order)
-        agg_order.emplace_back(it.release());
-}
+{}
 
 FuncCall::FuncCall(FuncCall&& other) noexcept
     : funcname(std::move(other.funcname))
     , args(std::move(other.args))
     , agg_order(std::move(other.agg_order))
-    , agg_filter(std::exchange(other.agg_filter, nullptr))
+    , agg_filter(std::move(other.agg_filter))
     , agg_within_group(std::exchange(other.agg_within_group, false))
     , agg_star(std::exchange(other.agg_star, false))
     , agg_distinct(std::exchange(other.agg_distinct, false))
@@ -18454,13 +17387,6 @@ FuncCall::FuncCall(FuncCall&& other) noexcept
 
 FuncCall::~FuncCall()
 {
-    if (agg_filter) delete agg_filter;
-    for (auto& it : funcname)
-        delete it;
-    for (auto& it : args)
-        delete it;
-    for (auto& it : agg_order)
-        delete it;
 }
 
 bool FuncCall::operator==([[maybe_unused]] const FuncCall& other) const noexcept
@@ -18482,7 +17408,7 @@ FuncCall& FuncCall::operator=(FuncCall&& other) noexcept
         funcname = std::move(other.funcname);
         args = std::move(other.args);
         agg_order = std::move(other.agg_order);
-        agg_filter = std::exchange(other.agg_filter, nullptr);
+        agg_filter = std::move(other.agg_filter);
         agg_within_group = std::exchange(other.agg_within_group, false);
         agg_star = std::exchange(other.agg_star, false);
         agg_distinct = std::exchange(other.agg_distinct, false);
@@ -18521,7 +17447,7 @@ std::ostream& operator<<(std::ostream& stream, const FuncCall& value)
         stream << "funcname=[" << value.funcname.size() << "][";
         for (const auto& it : value.funcname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -18531,7 +17457,7 @@ std::ostream& operator<<(std::ostream& stream, const FuncCall& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -18541,12 +17467,12 @@ std::ostream& operator<<(std::ostream& stream, const FuncCall& value)
         stream << ",agg_order=[" << value.agg_order.size() << "][";
         for (const auto& it : value.agg_order)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",agg_filter="; stream << " ptr of other struct" << (value.agg_filter == nullptr ? "true" : "false");
+    stream << ",agg_filter="; stream << value.agg_filter;
     stream << ",agg_within_group="; stream << (value.agg_within_group ? "true" : "false");
     stream << ",agg_star="; stream << (value.agg_star ? "true" : "false");
     stream << ",agg_distinct="; stream << (value.agg_distinct ? "true" : "false");
@@ -18606,26 +17532,24 @@ std::ostream& operator<<(std::ostream& stream, const A_Star& value)
 
 A_Indices::A_Indices()
     : is_slice(false)
-    , lidx(nullptr)
-    , uidx(nullptr)
+    , lidx()
+    , uidx()
 {}
 
-A_Indices::A_Indices(bool arg_is_slice, std::unique_ptr<::pg_query::Node> arg_lidx, std::unique_ptr<::pg_query::Node> arg_uidx)
+A_Indices::A_Indices(bool arg_is_slice, ::pg_query::Node&& arg_lidx, ::pg_query::Node&& arg_uidx)
     : is_slice(arg_is_slice)
-    , lidx(arg_lidx.release())
-    , uidx(arg_uidx.release())
+    , lidx(std::move(arg_lidx))
+    , uidx(std::move(arg_uidx))
 {}
 
 A_Indices::A_Indices(A_Indices&& other) noexcept
     : is_slice(std::exchange(other.is_slice, false))
-    , lidx(std::exchange(other.lidx, nullptr))
-    , uidx(std::exchange(other.uidx, nullptr))
+    , lidx(std::move(other.lidx))
+    , uidx(std::move(other.uidx))
 {}
 
 A_Indices::~A_Indices()
 {
-    if (lidx) delete lidx;
-    if (uidx) delete uidx;
 }
 
 bool A_Indices::operator==([[maybe_unused]] const A_Indices& other) const noexcept
@@ -18645,8 +17569,8 @@ A_Indices& A_Indices::operator=(A_Indices&& other) noexcept
     if (this != &other)
     {
         is_slice = std::exchange(other.is_slice, false);
-        lidx = std::exchange(other.lidx, nullptr);
-        uidx = std::exchange(other.uidx, nullptr);
+        lidx = std::move(other.lidx);
+        uidx = std::move(other.uidx);
     }
     return *this;
 }
@@ -18668,35 +17592,29 @@ std::ostream& operator<<(std::ostream& stream, const A_Indices& value)
 {
     stream << "A_Indices(";
     stream << "is_slice="; stream << (value.is_slice ? "true" : "false");
-    stream << ",lidx="; stream << " ptr of other struct" << (value.lidx == nullptr ? "true" : "false");
-    stream << ",uidx="; stream << " ptr of other struct" << (value.uidx == nullptr ? "true" : "false");
+    stream << ",lidx="; stream << value.lidx;
+    stream << ",uidx="; stream << value.uidx;
     stream << ")";
     return stream;
 }
 
 A_Indirection::A_Indirection()
-    : arg(nullptr)
+    : arg()
     , indirection()
 {}
 
-A_Indirection::A_Indirection(std::unique_ptr<::pg_query::Node> arg_arg, std::vector<std::unique_ptr<::pg_query::Node>> arg_indirection)
-    : arg(arg_arg.release())
-    , indirection()
-{
-    for (auto& it : arg_indirection)
-        indirection.emplace_back(it.release());
-}
+A_Indirection::A_Indirection(::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_indirection)
+    : arg(std::move(arg_arg))
+    , indirection(std::move(arg_indirection))
+{}
 
 A_Indirection::A_Indirection(A_Indirection&& other) noexcept
-    : arg(std::exchange(other.arg, nullptr))
+    : arg(std::move(other.arg))
     , indirection(std::move(other.indirection))
 {}
 
 A_Indirection::~A_Indirection()
 {
-    if (arg) delete arg;
-    for (auto& it : indirection)
-        delete it;
 }
 
 bool A_Indirection::operator==([[maybe_unused]] const A_Indirection& other) const noexcept
@@ -18715,7 +17633,7 @@ A_Indirection& A_Indirection::operator=(A_Indirection&& other) noexcept
 {
     if (this != &other)
     {
-        arg = std::exchange(other.arg, nullptr);
+        arg = std::move(other.arg);
         indirection = std::move(other.indirection);
     }
     return *this;
@@ -18736,13 +17654,13 @@ void A_Indirection::swap(A_Indirection& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const A_Indirection& value)
 {
     stream << "A_Indirection(";
-    stream << "arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "arg="; stream << value.arg;
     {
         bool first = true;
         stream << ",indirection=[" << value.indirection.size() << "][";
         for (const auto& it : value.indirection)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -18756,13 +17674,10 @@ A_ArrayExpr::A_ArrayExpr()
     , location((int32_t)0ll)
 {}
 
-A_ArrayExpr::A_ArrayExpr(std::vector<std::unique_ptr<::pg_query::Node>> arg_elements, int32_t arg_location)
-    : elements()
+A_ArrayExpr::A_ArrayExpr(std::vector<::pg_query::Node> arg_elements, int32_t arg_location)
+    : elements(std::move(arg_elements))
     , location(arg_location)
-{
-    for (auto& it : arg_elements)
-        elements.emplace_back(it.release());
-}
+{}
 
 A_ArrayExpr::A_ArrayExpr(A_ArrayExpr&& other) noexcept
     : elements(std::move(other.elements))
@@ -18771,8 +17686,6 @@ A_ArrayExpr::A_ArrayExpr(A_ArrayExpr&& other) noexcept
 
 A_ArrayExpr::~A_ArrayExpr()
 {
-    for (auto& it : elements)
-        delete it;
 }
 
 bool A_ArrayExpr::operator==([[maybe_unused]] const A_ArrayExpr& other) const noexcept
@@ -18817,7 +17730,7 @@ std::ostream& operator<<(std::ostream& stream, const A_ArrayExpr& value)
         stream << "elements=[" << value.elements.size() << "][";
         for (const auto& it : value.elements)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -18830,32 +17743,26 @@ std::ostream& operator<<(std::ostream& stream, const A_ArrayExpr& value)
 ResTarget::ResTarget()
     : name()
     , indirection()
-    , val(nullptr)
+    , val()
     , location((int32_t)0ll)
 {}
 
-ResTarget::ResTarget(const std::string& arg_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_indirection, std::unique_ptr<::pg_query::Node> arg_val, int32_t arg_location)
+ResTarget::ResTarget(const std::string& arg_name, std::vector<::pg_query::Node> arg_indirection, ::pg_query::Node&& arg_val, int32_t arg_location)
     : name(arg_name)
-    , indirection()
-    , val(arg_val.release())
+    , indirection(std::move(arg_indirection))
+    , val(std::move(arg_val))
     , location(arg_location)
-{
-    for (auto& it : arg_indirection)
-        indirection.emplace_back(it.release());
-}
+{}
 
 ResTarget::ResTarget(ResTarget&& other) noexcept
     : name(std::move(other.name))
     , indirection(std::move(other.indirection))
-    , val(std::exchange(other.val, nullptr))
+    , val(std::move(other.val))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 ResTarget::~ResTarget()
 {
-    if (val) delete val;
-    for (auto& it : indirection)
-        delete it;
 }
 
 bool ResTarget::operator==([[maybe_unused]] const ResTarget& other) const noexcept
@@ -18876,7 +17783,7 @@ ResTarget& ResTarget::operator=(ResTarget&& other) noexcept
     {
         name = std::move(other.name);
         indirection = std::move(other.indirection);
-        val = std::exchange(other.val, nullptr);
+        val = std::move(other.val);
         location = std::exchange(other.location, (int32_t)0ll);
     }
     return *this;
@@ -18905,38 +17812,37 @@ std::ostream& operator<<(std::ostream& stream, const ResTarget& value)
         stream << ",indirection=[" << value.indirection.size() << "][";
         for (const auto& it : value.indirection)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",val="; stream << " ptr of other struct" << (value.val == nullptr ? "true" : "false");
+    stream << ",val="; stream << value.val;
     stream << ",location="; stream << value.location;
     stream << ")";
     return stream;
 }
 
 MultiAssignRef::MultiAssignRef()
-    : source(nullptr)
+    : source()
     , colno((int32_t)0ll)
     , ncolumns((int32_t)0ll)
 {}
 
-MultiAssignRef::MultiAssignRef(std::unique_ptr<::pg_query::Node> arg_source, int32_t arg_colno, int32_t arg_ncolumns)
-    : source(arg_source.release())
+MultiAssignRef::MultiAssignRef(::pg_query::Node&& arg_source, int32_t arg_colno, int32_t arg_ncolumns)
+    : source(std::move(arg_source))
     , colno(arg_colno)
     , ncolumns(arg_ncolumns)
 {}
 
 MultiAssignRef::MultiAssignRef(MultiAssignRef&& other) noexcept
-    : source(std::exchange(other.source, nullptr))
+    : source(std::move(other.source))
     , colno(std::exchange(other.colno, (int32_t)0ll))
     , ncolumns(std::exchange(other.ncolumns, (int32_t)0ll))
 {}
 
 MultiAssignRef::~MultiAssignRef()
 {
-    if (source) delete source;
 }
 
 bool MultiAssignRef::operator==([[maybe_unused]] const MultiAssignRef& other) const noexcept
@@ -18955,7 +17861,7 @@ MultiAssignRef& MultiAssignRef::operator=(MultiAssignRef&& other) noexcept
 {
     if (this != &other)
     {
-        source = std::exchange(other.source, nullptr);
+        source = std::move(other.source);
         colno = std::exchange(other.colno, (int32_t)0ll);
         ncolumns = std::exchange(other.ncolumns, (int32_t)0ll);
     }
@@ -18978,7 +17884,7 @@ void MultiAssignRef::swap(MultiAssignRef& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const MultiAssignRef& value)
 {
     stream << "MultiAssignRef(";
-    stream << "source="; stream << " ptr of other struct" << (value.source == nullptr ? "true" : "false");
+    stream << "source="; stream << value.source;
     stream << ",colno="; stream << value.colno;
     stream << ",ncolumns="; stream << value.ncolumns;
     stream << ")";
@@ -18986,26 +17892,25 @@ std::ostream& operator<<(std::ostream& stream, const MultiAssignRef& value)
 }
 
 TypeCast::TypeCast()
-    : arg(nullptr)
+    : arg()
     , type_name()
     , location((int32_t)0ll)
 {}
 
-TypeCast::TypeCast(std::unique_ptr<::pg_query::Node> arg_arg, ::pg_query::TypeName&& arg_type_name, int32_t arg_location)
-    : arg(arg_arg.release())
+TypeCast::TypeCast(::pg_query::Node&& arg_arg, ::pg_query::TypeName&& arg_type_name, int32_t arg_location)
+    : arg(std::move(arg_arg))
     , type_name(std::move(arg_type_name))
     , location(arg_location)
 {}
 
 TypeCast::TypeCast(TypeCast&& other) noexcept
-    : arg(std::exchange(other.arg, nullptr))
+    : arg(std::move(other.arg))
     , type_name(std::move(other.type_name))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 TypeCast::~TypeCast()
 {
-    if (arg) delete arg;
 }
 
 bool TypeCast::operator==([[maybe_unused]] const TypeCast& other) const noexcept
@@ -19024,7 +17929,7 @@ TypeCast& TypeCast::operator=(TypeCast&& other) noexcept
 {
     if (this != &other)
     {
-        arg = std::exchange(other.arg, nullptr);
+        arg = std::move(other.arg);
         type_name = std::move(other.type_name);
         location = std::exchange(other.location, (int32_t)0ll);
     }
@@ -19047,7 +17952,7 @@ void TypeCast::swap(TypeCast& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const TypeCast& value)
 {
     stream << "TypeCast(";
-    stream << "arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "arg="; stream << value.arg;
     stream << ",type_name="; stream << value.type_name;
     stream << ",location="; stream << value.location;
     stream << ")";
@@ -19055,31 +17960,25 @@ std::ostream& operator<<(std::ostream& stream, const TypeCast& value)
 }
 
 CollateClause::CollateClause()
-    : arg(nullptr)
+    : arg()
     , collname()
     , location((int32_t)0ll)
 {}
 
-CollateClause::CollateClause(std::unique_ptr<::pg_query::Node> arg_arg, std::vector<std::unique_ptr<::pg_query::Node>> arg_collname, int32_t arg_location)
-    : arg(arg_arg.release())
-    , collname()
+CollateClause::CollateClause(::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_collname, int32_t arg_location)
+    : arg(std::move(arg_arg))
+    , collname(std::move(arg_collname))
     , location(arg_location)
-{
-    for (auto& it : arg_collname)
-        collname.emplace_back(it.release());
-}
+{}
 
 CollateClause::CollateClause(CollateClause&& other) noexcept
-    : arg(std::exchange(other.arg, nullptr))
+    : arg(std::move(other.arg))
     , collname(std::move(other.collname))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 CollateClause::~CollateClause()
 {
-    if (arg) delete arg;
-    for (auto& it : collname)
-        delete it;
 }
 
 bool CollateClause::operator==([[maybe_unused]] const CollateClause& other) const noexcept
@@ -19098,7 +17997,7 @@ CollateClause& CollateClause::operator=(CollateClause&& other) noexcept
 {
     if (this != &other)
     {
-        arg = std::exchange(other.arg, nullptr);
+        arg = std::move(other.arg);
         collname = std::move(other.collname);
         location = std::exchange(other.location, (int32_t)0ll);
     }
@@ -19121,13 +18020,13 @@ void CollateClause::swap(CollateClause& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const CollateClause& value)
 {
     stream << "CollateClause(";
-    stream << "arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << "arg="; stream << value.arg;
     {
         bool first = true;
         stream << ",collname=[" << value.collname.size() << "][";
         for (const auto& it : value.collname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -19138,26 +18037,23 @@ std::ostream& operator<<(std::ostream& stream, const CollateClause& value)
 }
 
 SortBy::SortBy()
-    : node(nullptr)
+    : node()
     , sortby_dir()
     , sortby_nulls()
     , use_op()
     , location((int32_t)0ll)
 {}
 
-SortBy::SortBy(std::unique_ptr<::pg_query::Node> arg_node, ::pg_query::SortByDir&& arg_sortby_dir, ::pg_query::SortByNulls&& arg_sortby_nulls, std::vector<std::unique_ptr<::pg_query::Node>> arg_use_op, int32_t arg_location)
-    : node(arg_node.release())
+SortBy::SortBy(::pg_query::Node&& arg_node, ::pg_query::SortByDir&& arg_sortby_dir, ::pg_query::SortByNulls&& arg_sortby_nulls, std::vector<::pg_query::Node> arg_use_op, int32_t arg_location)
+    : node(std::move(arg_node))
     , sortby_dir(std::move(arg_sortby_dir))
     , sortby_nulls(std::move(arg_sortby_nulls))
-    , use_op()
+    , use_op(std::move(arg_use_op))
     , location(arg_location)
-{
-    for (auto& it : arg_use_op)
-        use_op.emplace_back(it.release());
-}
+{}
 
 SortBy::SortBy(SortBy&& other) noexcept
-    : node(std::exchange(other.node, nullptr))
+    : node(std::move(other.node))
     , sortby_dir(std::move(other.sortby_dir))
     , sortby_nulls(std::move(other.sortby_nulls))
     , use_op(std::move(other.use_op))
@@ -19166,9 +18062,6 @@ SortBy::SortBy(SortBy&& other) noexcept
 
 SortBy::~SortBy()
 {
-    if (node) delete node;
-    for (auto& it : use_op)
-        delete it;
 }
 
 bool SortBy::operator==([[maybe_unused]] const SortBy& other) const noexcept
@@ -19187,7 +18080,7 @@ SortBy& SortBy::operator=(SortBy&& other) noexcept
 {
     if (this != &other)
     {
-        node = std::exchange(other.node, nullptr);
+        node = std::move(other.node);
         sortby_dir = std::move(other.sortby_dir);
         sortby_nulls = std::move(other.sortby_nulls);
         use_op = std::move(other.use_op);
@@ -19214,7 +18107,7 @@ void SortBy::swap(SortBy& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const SortBy& value)
 {
     stream << "SortBy(";
-    stream << "node="; stream << " ptr of other struct" << (value.node == nullptr ? "true" : "false");
+    stream << "node="; stream << value.node;
     stream << ",sortby_dir="; stream << value.sortby_dir;
     stream << ",sortby_nulls="; stream << value.sortby_nulls;
     {
@@ -19222,7 +18115,7 @@ std::ostream& operator<<(std::ostream& stream, const SortBy& value)
         stream << ",use_op=[" << value.use_op.size() << "][";
         for (const auto& it : value.use_op)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -19238,26 +18131,21 @@ WindowDef::WindowDef()
     , partition_clause()
     , order_clause()
     , frame_options((int32_t)0ll)
-    , start_offset(nullptr)
-    , end_offset(nullptr)
+    , start_offset()
+    , end_offset()
     , location((int32_t)0ll)
 {}
 
-WindowDef::WindowDef(const std::string& arg_name, const std::string& arg_refname, std::vector<std::unique_ptr<::pg_query::Node>> arg_partition_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_order_clause, int32_t arg_frame_options, std::unique_ptr<::pg_query::Node> arg_start_offset, std::unique_ptr<::pg_query::Node> arg_end_offset, int32_t arg_location)
+WindowDef::WindowDef(const std::string& arg_name, const std::string& arg_refname, std::vector<::pg_query::Node> arg_partition_clause, std::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, int32_t arg_location)
     : name(arg_name)
     , refname(arg_refname)
-    , partition_clause()
-    , order_clause()
+    , partition_clause(std::move(arg_partition_clause))
+    , order_clause(std::move(arg_order_clause))
     , frame_options(arg_frame_options)
-    , start_offset(arg_start_offset.release())
-    , end_offset(arg_end_offset.release())
+    , start_offset(std::move(arg_start_offset))
+    , end_offset(std::move(arg_end_offset))
     , location(arg_location)
-{
-    for (auto& it : arg_partition_clause)
-        partition_clause.emplace_back(it.release());
-    for (auto& it : arg_order_clause)
-        order_clause.emplace_back(it.release());
-}
+{}
 
 WindowDef::WindowDef(WindowDef&& other) noexcept
     : name(std::move(other.name))
@@ -19265,19 +18153,13 @@ WindowDef::WindowDef(WindowDef&& other) noexcept
     , partition_clause(std::move(other.partition_clause))
     , order_clause(std::move(other.order_clause))
     , frame_options(std::exchange(other.frame_options, (int32_t)0ll))
-    , start_offset(std::exchange(other.start_offset, nullptr))
-    , end_offset(std::exchange(other.end_offset, nullptr))
+    , start_offset(std::move(other.start_offset))
+    , end_offset(std::move(other.end_offset))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 WindowDef::~WindowDef()
 {
-    if (start_offset) delete start_offset;
-    if (end_offset) delete end_offset;
-    for (auto& it : partition_clause)
-        delete it;
-    for (auto& it : order_clause)
-        delete it;
 }
 
 bool WindowDef::operator==([[maybe_unused]] const WindowDef& other) const noexcept
@@ -19301,8 +18183,8 @@ WindowDef& WindowDef::operator=(WindowDef&& other) noexcept
         partition_clause = std::move(other.partition_clause);
         order_clause = std::move(other.order_clause);
         frame_options = std::exchange(other.frame_options, (int32_t)0ll);
-        start_offset = std::exchange(other.start_offset, nullptr);
-        end_offset = std::exchange(other.end_offset, nullptr);
+        start_offset = std::move(other.start_offset);
+        end_offset = std::move(other.end_offset);
         location = std::exchange(other.location, (int32_t)0ll);
     }
     return *this;
@@ -19336,7 +18218,7 @@ std::ostream& operator<<(std::ostream& stream, const WindowDef& value)
         stream << ",partition_clause=[" << value.partition_clause.size() << "][";
         for (const auto& it : value.partition_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -19346,14 +18228,14 @@ std::ostream& operator<<(std::ostream& stream, const WindowDef& value)
         stream << ",order_clause=[" << value.order_clause.size() << "][";
         for (const auto& it : value.order_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
     stream << ",frame_options="; stream << value.frame_options;
-    stream << ",start_offset="; stream << " ptr of other struct" << (value.start_offset == nullptr ? "true" : "false");
-    stream << ",end_offset="; stream << " ptr of other struct" << (value.end_offset == nullptr ? "true" : "false");
+    stream << ",start_offset="; stream << value.start_offset;
+    stream << ",end_offset="; stream << value.end_offset;
     stream << ",location="; stream << value.location;
     stream << ")";
     return stream;
@@ -19361,25 +18243,24 @@ std::ostream& operator<<(std::ostream& stream, const WindowDef& value)
 
 RangeSubselect::RangeSubselect()
     : lateral(false)
-    , subquery(nullptr)
+    , subquery()
     , alias()
 {}
 
-RangeSubselect::RangeSubselect(bool arg_lateral, std::unique_ptr<::pg_query::Node> arg_subquery, ::pg_query::Alias&& arg_alias)
+RangeSubselect::RangeSubselect(bool arg_lateral, ::pg_query::Node&& arg_subquery, ::pg_query::Alias&& arg_alias)
     : lateral(arg_lateral)
-    , subquery(arg_subquery.release())
+    , subquery(std::move(arg_subquery))
     , alias(std::move(arg_alias))
 {}
 
 RangeSubselect::RangeSubselect(RangeSubselect&& other) noexcept
     : lateral(std::exchange(other.lateral, false))
-    , subquery(std::exchange(other.subquery, nullptr))
+    , subquery(std::move(other.subquery))
     , alias(std::move(other.alias))
 {}
 
 RangeSubselect::~RangeSubselect()
 {
-    if (subquery) delete subquery;
 }
 
 bool RangeSubselect::operator==([[maybe_unused]] const RangeSubselect& other) const noexcept
@@ -19399,7 +18280,7 @@ RangeSubselect& RangeSubselect::operator=(RangeSubselect&& other) noexcept
     if (this != &other)
     {
         lateral = std::exchange(other.lateral, false);
-        subquery = std::exchange(other.subquery, nullptr);
+        subquery = std::move(other.subquery);
         alias = std::move(other.alias);
     }
     return *this;
@@ -19422,7 +18303,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeSubselect& value)
 {
     stream << "RangeSubselect(";
     stream << "lateral="; stream << (value.lateral ? "true" : "false");
-    stream << ",subquery="; stream << " ptr of other struct" << (value.subquery == nullptr ? "true" : "false");
+    stream << ",subquery="; stream << value.subquery;
     stream << ",alias="; stream << value.alias;
     stream << ")";
     return stream;
@@ -19437,19 +18318,14 @@ RangeFunction::RangeFunction()
     , coldeflist()
 {}
 
-RangeFunction::RangeFunction(bool arg_lateral, bool arg_ordinality, bool arg_is_rowsfrom, std::vector<std::unique_ptr<::pg_query::Node>> arg_functions, ::pg_query::Alias&& arg_alias, std::vector<std::unique_ptr<::pg_query::Node>> arg_coldeflist)
+RangeFunction::RangeFunction(bool arg_lateral, bool arg_ordinality, bool arg_is_rowsfrom, std::vector<::pg_query::Node> arg_functions, ::pg_query::Alias&& arg_alias, std::vector<::pg_query::Node> arg_coldeflist)
     : lateral(arg_lateral)
     , ordinality(arg_ordinality)
     , is_rowsfrom(arg_is_rowsfrom)
-    , functions()
+    , functions(std::move(arg_functions))
     , alias(std::move(arg_alias))
-    , coldeflist()
-{
-    for (auto& it : arg_functions)
-        functions.emplace_back(it.release());
-    for (auto& it : arg_coldeflist)
-        coldeflist.emplace_back(it.release());
-}
+    , coldeflist(std::move(arg_coldeflist))
+{}
 
 RangeFunction::RangeFunction(RangeFunction&& other) noexcept
     : lateral(std::exchange(other.lateral, false))
@@ -19462,10 +18338,6 @@ RangeFunction::RangeFunction(RangeFunction&& other) noexcept
 
 RangeFunction::~RangeFunction()
 {
-    for (auto& it : functions)
-        delete it;
-    for (auto& it : coldeflist)
-        delete it;
 }
 
 bool RangeFunction::operator==([[maybe_unused]] const RangeFunction& other) const noexcept
@@ -19521,7 +18393,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeFunction& value)
         stream << ",functions=[" << value.functions.size() << "][";
         for (const auto& it : value.functions)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -19532,7 +18404,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeFunction& value)
         stream << ",coldeflist=[" << value.coldeflist.size() << "][";
         for (const auto& it : value.coldeflist)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -19542,42 +18414,31 @@ std::ostream& operator<<(std::ostream& stream, const RangeFunction& value)
 }
 
 RangeTableSample::RangeTableSample()
-    : relation(nullptr)
+    : relation()
     , method()
     , args()
-    , repeatable(nullptr)
+    , repeatable()
     , location((int32_t)0ll)
 {}
 
-RangeTableSample::RangeTableSample(std::unique_ptr<::pg_query::Node> arg_relation, std::vector<std::unique_ptr<::pg_query::Node>> arg_method, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::unique_ptr<::pg_query::Node> arg_repeatable, int32_t arg_location)
-    : relation(arg_relation.release())
-    , method()
-    , args()
-    , repeatable(arg_repeatable.release())
+RangeTableSample::RangeTableSample(::pg_query::Node&& arg_relation, std::vector<::pg_query::Node> arg_method, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable, int32_t arg_location)
+    : relation(std::move(arg_relation))
+    , method(std::move(arg_method))
+    , args(std::move(arg_args))
+    , repeatable(std::move(arg_repeatable))
     , location(arg_location)
-{
-    for (auto& it : arg_method)
-        method.emplace_back(it.release());
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+{}
 
 RangeTableSample::RangeTableSample(RangeTableSample&& other) noexcept
-    : relation(std::exchange(other.relation, nullptr))
+    : relation(std::move(other.relation))
     , method(std::move(other.method))
     , args(std::move(other.args))
-    , repeatable(std::exchange(other.repeatable, nullptr))
+    , repeatable(std::move(other.repeatable))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 RangeTableSample::~RangeTableSample()
 {
-    if (relation) delete relation;
-    if (repeatable) delete repeatable;
-    for (auto& it : method)
-        delete it;
-    for (auto& it : args)
-        delete it;
 }
 
 bool RangeTableSample::operator==([[maybe_unused]] const RangeTableSample& other) const noexcept
@@ -19596,10 +18457,10 @@ RangeTableSample& RangeTableSample::operator=(RangeTableSample&& other) noexcept
 {
     if (this != &other)
     {
-        relation = std::exchange(other.relation, nullptr);
+        relation = std::move(other.relation);
         method = std::move(other.method);
         args = std::move(other.args);
-        repeatable = std::exchange(other.repeatable, nullptr);
+        repeatable = std::move(other.repeatable);
         location = std::exchange(other.location, (int32_t)0ll);
     }
     return *this;
@@ -19623,13 +18484,13 @@ void RangeTableSample::swap(RangeTableSample& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const RangeTableSample& value)
 {
     stream << "RangeTableSample(";
-    stream << "relation="; stream << " ptr of other struct" << (value.relation == nullptr ? "true" : "false");
+    stream << "relation="; stream << value.relation;
     {
         bool first = true;
         stream << ",method=[" << value.method.size() << "][";
         for (const auto& it : value.method)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -19639,12 +18500,12 @@ std::ostream& operator<<(std::ostream& stream, const RangeTableSample& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",repeatable="; stream << " ptr of other struct" << (value.repeatable == nullptr ? "true" : "false");
+    stream << ",repeatable="; stream << value.repeatable;
     stream << ",location="; stream << value.location;
     stream << ")";
     return stream;
@@ -19652,33 +18513,28 @@ std::ostream& operator<<(std::ostream& stream, const RangeTableSample& value)
 
 RangeTableFunc::RangeTableFunc()
     : lateral(false)
-    , docexpr(nullptr)
-    , rowexpr(nullptr)
+    , docexpr()
+    , rowexpr()
     , namespaces()
     , columns()
     , alias()
     , location((int32_t)0ll)
 {}
 
-RangeTableFunc::RangeTableFunc(bool arg_lateral, std::unique_ptr<::pg_query::Node> arg_docexpr, std::unique_ptr<::pg_query::Node> arg_rowexpr, std::vector<std::unique_ptr<::pg_query::Node>> arg_namespaces, std::vector<std::unique_ptr<::pg_query::Node>> arg_columns, ::pg_query::Alias&& arg_alias, int32_t arg_location)
+RangeTableFunc::RangeTableFunc(bool arg_lateral, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::vector<::pg_query::Node> arg_namespaces, std::vector<::pg_query::Node> arg_columns, ::pg_query::Alias&& arg_alias, int32_t arg_location)
     : lateral(arg_lateral)
-    , docexpr(arg_docexpr.release())
-    , rowexpr(arg_rowexpr.release())
-    , namespaces()
-    , columns()
+    , docexpr(std::move(arg_docexpr))
+    , rowexpr(std::move(arg_rowexpr))
+    , namespaces(std::move(arg_namespaces))
+    , columns(std::move(arg_columns))
     , alias(std::move(arg_alias))
     , location(arg_location)
-{
-    for (auto& it : arg_namespaces)
-        namespaces.emplace_back(it.release());
-    for (auto& it : arg_columns)
-        columns.emplace_back(it.release());
-}
+{}
 
 RangeTableFunc::RangeTableFunc(RangeTableFunc&& other) noexcept
     : lateral(std::exchange(other.lateral, false))
-    , docexpr(std::exchange(other.docexpr, nullptr))
-    , rowexpr(std::exchange(other.rowexpr, nullptr))
+    , docexpr(std::move(other.docexpr))
+    , rowexpr(std::move(other.rowexpr))
     , namespaces(std::move(other.namespaces))
     , columns(std::move(other.columns))
     , alias(std::move(other.alias))
@@ -19687,12 +18543,6 @@ RangeTableFunc::RangeTableFunc(RangeTableFunc&& other) noexcept
 
 RangeTableFunc::~RangeTableFunc()
 {
-    if (docexpr) delete docexpr;
-    if (rowexpr) delete rowexpr;
-    for (auto& it : namespaces)
-        delete it;
-    for (auto& it : columns)
-        delete it;
 }
 
 bool RangeTableFunc::operator==([[maybe_unused]] const RangeTableFunc& other) const noexcept
@@ -19712,8 +18562,8 @@ RangeTableFunc& RangeTableFunc::operator=(RangeTableFunc&& other) noexcept
     if (this != &other)
     {
         lateral = std::exchange(other.lateral, false);
-        docexpr = std::exchange(other.docexpr, nullptr);
-        rowexpr = std::exchange(other.rowexpr, nullptr);
+        docexpr = std::move(other.docexpr);
+        rowexpr = std::move(other.rowexpr);
         namespaces = std::move(other.namespaces);
         columns = std::move(other.columns);
         alias = std::move(other.alias);
@@ -19743,14 +18593,14 @@ std::ostream& operator<<(std::ostream& stream, const RangeTableFunc& value)
 {
     stream << "RangeTableFunc(";
     stream << "lateral="; stream << (value.lateral ? "true" : "false");
-    stream << ",docexpr="; stream << " ptr of other struct" << (value.docexpr == nullptr ? "true" : "false");
-    stream << ",rowexpr="; stream << " ptr of other struct" << (value.rowexpr == nullptr ? "true" : "false");
+    stream << ",docexpr="; stream << value.docexpr;
+    stream << ",rowexpr="; stream << value.rowexpr;
     {
         bool first = true;
         stream << ",namespaces=[" << value.namespaces.size() << "][";
         for (const auto& it : value.namespaces)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -19760,7 +18610,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTableFunc& value)
         stream << ",columns=[" << value.columns.size() << "][";
         for (const auto& it : value.columns)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -19776,18 +18626,18 @@ RangeTableFuncCol::RangeTableFuncCol()
     , type_name()
     , for_ordinality(false)
     , is_not_null(false)
-    , colexpr(nullptr)
-    , coldefexpr(nullptr)
+    , colexpr()
+    , coldefexpr()
     , location((int32_t)0ll)
 {}
 
-RangeTableFuncCol::RangeTableFuncCol(const std::string& arg_colname, ::pg_query::TypeName&& arg_type_name, bool arg_for_ordinality, bool arg_is_not_null, std::unique_ptr<::pg_query::Node> arg_colexpr, std::unique_ptr<::pg_query::Node> arg_coldefexpr, int32_t arg_location)
+RangeTableFuncCol::RangeTableFuncCol(const std::string& arg_colname, ::pg_query::TypeName&& arg_type_name, bool arg_for_ordinality, bool arg_is_not_null, ::pg_query::Node&& arg_colexpr, ::pg_query::Node&& arg_coldefexpr, int32_t arg_location)
     : colname(arg_colname)
     , type_name(std::move(arg_type_name))
     , for_ordinality(arg_for_ordinality)
     , is_not_null(arg_is_not_null)
-    , colexpr(arg_colexpr.release())
-    , coldefexpr(arg_coldefexpr.release())
+    , colexpr(std::move(arg_colexpr))
+    , coldefexpr(std::move(arg_coldefexpr))
     , location(arg_location)
 {}
 
@@ -19796,15 +18646,13 @@ RangeTableFuncCol::RangeTableFuncCol(RangeTableFuncCol&& other) noexcept
     , type_name(std::move(other.type_name))
     , for_ordinality(std::exchange(other.for_ordinality, false))
     , is_not_null(std::exchange(other.is_not_null, false))
-    , colexpr(std::exchange(other.colexpr, nullptr))
-    , coldefexpr(std::exchange(other.coldefexpr, nullptr))
+    , colexpr(std::move(other.colexpr))
+    , coldefexpr(std::move(other.coldefexpr))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 RangeTableFuncCol::~RangeTableFuncCol()
 {
-    if (colexpr) delete colexpr;
-    if (coldefexpr) delete coldefexpr;
 }
 
 bool RangeTableFuncCol::operator==([[maybe_unused]] const RangeTableFuncCol& other) const noexcept
@@ -19827,8 +18675,8 @@ RangeTableFuncCol& RangeTableFuncCol::operator=(RangeTableFuncCol&& other) noexc
         type_name = std::move(other.type_name);
         for_ordinality = std::exchange(other.for_ordinality, false);
         is_not_null = std::exchange(other.is_not_null, false);
-        colexpr = std::exchange(other.colexpr, nullptr);
-        coldefexpr = std::exchange(other.coldefexpr, nullptr);
+        colexpr = std::move(other.colexpr);
+        coldefexpr = std::move(other.coldefexpr);
         location = std::exchange(other.location, (int32_t)0ll);
     }
     return *this;
@@ -19858,8 +18706,8 @@ std::ostream& operator<<(std::ostream& stream, const RangeTableFuncCol& value)
     stream << ",type_name="; stream << value.type_name;
     stream << ",for_ordinality="; stream << (value.for_ordinality ? "true" : "false");
     stream << ",is_not_null="; stream << (value.is_not_null ? "true" : "false");
-    stream << ",colexpr="; stream << " ptr of other struct" << (value.colexpr == nullptr ? "true" : "false");
-    stream << ",coldefexpr="; stream << " ptr of other struct" << (value.coldefexpr == nullptr ? "true" : "false");
+    stream << ",colexpr="; stream << value.colexpr;
+    stream << ",coldefexpr="; stream << value.coldefexpr;
     stream << ",location="; stream << value.location;
     stream << ")";
     return stream;
@@ -19876,23 +18724,16 @@ TypeName::TypeName()
     , location((int32_t)0ll)
 {}
 
-TypeName::TypeName(std::vector<std::unique_ptr<::pg_query::Node>> arg_names, uint32_t arg_type_oid, bool arg_setof, bool arg_pct_type, std::vector<std::unique_ptr<::pg_query::Node>> arg_typmods, int32_t arg_typemod, std::vector<std::unique_ptr<::pg_query::Node>> arg_array_bounds, int32_t arg_location)
-    : names()
+TypeName::TypeName(std::vector<::pg_query::Node> arg_names, uint32_t arg_type_oid, bool arg_setof, bool arg_pct_type, std::vector<::pg_query::Node> arg_typmods, int32_t arg_typemod, std::vector<::pg_query::Node> arg_array_bounds, int32_t arg_location)
+    : names(std::move(arg_names))
     , type_oid(arg_type_oid)
     , setof(arg_setof)
     , pct_type(arg_pct_type)
-    , typmods()
+    , typmods(std::move(arg_typmods))
     , typemod(arg_typemod)
-    , array_bounds()
+    , array_bounds(std::move(arg_array_bounds))
     , location(arg_location)
-{
-    for (auto& it : arg_names)
-        names.emplace_back(it.release());
-    for (auto& it : arg_typmods)
-        typmods.emplace_back(it.release());
-    for (auto& it : arg_array_bounds)
-        array_bounds.emplace_back(it.release());
-}
+{}
 
 TypeName::TypeName(TypeName&& other) noexcept
     : names(std::move(other.names))
@@ -19907,12 +18748,6 @@ TypeName::TypeName(TypeName&& other) noexcept
 
 TypeName::~TypeName()
 {
-    for (auto& it : names)
-        delete it;
-    for (auto& it : typmods)
-        delete it;
-    for (auto& it : array_bounds)
-        delete it;
 }
 
 bool TypeName::operator==([[maybe_unused]] const TypeName& other) const noexcept
@@ -19969,7 +18804,7 @@ std::ostream& operator<<(std::ostream& stream, const TypeName& value)
         stream << "names=[" << value.names.size() << "][";
         for (const auto& it : value.names)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -19982,7 +18817,7 @@ std::ostream& operator<<(std::ostream& stream, const TypeName& value)
         stream << ",typmods=[" << value.typmods.size() << "][";
         for (const auto& it : value.typmods)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -19993,7 +18828,7 @@ std::ostream& operator<<(std::ostream& stream, const TypeName& value)
         stream << ",array_bounds=[" << value.array_bounds.size() << "][";
         for (const auto& it : value.array_bounds)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20011,8 +18846,8 @@ ColumnDef::ColumnDef()
     , is_not_null(false)
     , is_from_type(false)
     , storage()
-    , raw_default(nullptr)
-    , cooked_default(nullptr)
+    , raw_default()
+    , cooked_default()
     , identity()
     , identity_sequence()
     , generated()
@@ -20023,7 +18858,7 @@ ColumnDef::ColumnDef()
     , location((int32_t)0ll)
 {}
 
-ColumnDef::ColumnDef(const std::string& arg_colname, ::pg_query::TypeName&& arg_type_name, int32_t arg_inhcount, bool arg_is_local, bool arg_is_not_null, bool arg_is_from_type, const std::string& arg_storage, std::unique_ptr<::pg_query::Node> arg_raw_default, std::unique_ptr<::pg_query::Node> arg_cooked_default, const std::string& arg_identity, ::pg_query::RangeVar&& arg_identity_sequence, const std::string& arg_generated, ::pg_query::CollateClause&& arg_coll_clause, uint32_t arg_coll_oid, std::vector<std::unique_ptr<::pg_query::Node>> arg_constraints, std::vector<std::unique_ptr<::pg_query::Node>> arg_fdwoptions, int32_t arg_location)
+ColumnDef::ColumnDef(const std::string& arg_colname, ::pg_query::TypeName&& arg_type_name, int32_t arg_inhcount, bool arg_is_local, bool arg_is_not_null, bool arg_is_from_type, const std::string& arg_storage, ::pg_query::Node&& arg_raw_default, ::pg_query::Node&& arg_cooked_default, const std::string& arg_identity, ::pg_query::RangeVar&& arg_identity_sequence, const std::string& arg_generated, ::pg_query::CollateClause&& arg_coll_clause, uint32_t arg_coll_oid, std::vector<::pg_query::Node> arg_constraints, std::vector<::pg_query::Node> arg_fdwoptions, int32_t arg_location)
     : colname(arg_colname)
     , type_name(std::move(arg_type_name))
     , inhcount(arg_inhcount)
@@ -20031,22 +18866,17 @@ ColumnDef::ColumnDef(const std::string& arg_colname, ::pg_query::TypeName&& arg_
     , is_not_null(arg_is_not_null)
     , is_from_type(arg_is_from_type)
     , storage(arg_storage)
-    , raw_default(arg_raw_default.release())
-    , cooked_default(arg_cooked_default.release())
+    , raw_default(std::move(arg_raw_default))
+    , cooked_default(std::move(arg_cooked_default))
     , identity(arg_identity)
     , identity_sequence(std::move(arg_identity_sequence))
     , generated(arg_generated)
     , coll_clause(std::move(arg_coll_clause))
     , coll_oid(arg_coll_oid)
-    , constraints()
-    , fdwoptions()
+    , constraints(std::move(arg_constraints))
+    , fdwoptions(std::move(arg_fdwoptions))
     , location(arg_location)
-{
-    for (auto& it : arg_constraints)
-        constraints.emplace_back(it.release());
-    for (auto& it : arg_fdwoptions)
-        fdwoptions.emplace_back(it.release());
-}
+{}
 
 ColumnDef::ColumnDef(ColumnDef&& other) noexcept
     : colname(std::move(other.colname))
@@ -20056,8 +18886,8 @@ ColumnDef::ColumnDef(ColumnDef&& other) noexcept
     , is_not_null(std::exchange(other.is_not_null, false))
     , is_from_type(std::exchange(other.is_from_type, false))
     , storage(std::move(other.storage))
-    , raw_default(std::exchange(other.raw_default, nullptr))
-    , cooked_default(std::exchange(other.cooked_default, nullptr))
+    , raw_default(std::move(other.raw_default))
+    , cooked_default(std::move(other.cooked_default))
     , identity(std::move(other.identity))
     , identity_sequence(std::move(other.identity_sequence))
     , generated(std::move(other.generated))
@@ -20070,12 +18900,6 @@ ColumnDef::ColumnDef(ColumnDef&& other) noexcept
 
 ColumnDef::~ColumnDef()
 {
-    if (raw_default) delete raw_default;
-    if (cooked_default) delete cooked_default;
-    for (auto& it : constraints)
-        delete it;
-    for (auto& it : fdwoptions)
-        delete it;
 }
 
 bool ColumnDef::operator==([[maybe_unused]] const ColumnDef& other) const noexcept
@@ -20101,8 +18925,8 @@ ColumnDef& ColumnDef::operator=(ColumnDef&& other) noexcept
         is_not_null = std::exchange(other.is_not_null, false);
         is_from_type = std::exchange(other.is_from_type, false);
         storage = std::move(other.storage);
-        raw_default = std::exchange(other.raw_default, nullptr);
-        cooked_default = std::exchange(other.cooked_default, nullptr);
+        raw_default = std::move(other.raw_default);
+        cooked_default = std::move(other.cooked_default);
         identity = std::move(other.identity);
         identity_sequence = std::move(other.identity_sequence);
         generated = std::move(other.generated);
@@ -20152,8 +18976,8 @@ std::ostream& operator<<(std::ostream& stream, const ColumnDef& value)
     stream << ",is_not_null="; stream << (value.is_not_null ? "true" : "false");
     stream << ",is_from_type="; stream << (value.is_from_type ? "true" : "false");
     stream << ",storage="; stream << "\"" << value.storage << "\"";
-    stream << ",raw_default="; stream << " ptr of other struct" << (value.raw_default == nullptr ? "true" : "false");
-    stream << ",cooked_default="; stream << " ptr of other struct" << (value.cooked_default == nullptr ? "true" : "false");
+    stream << ",raw_default="; stream << value.raw_default;
+    stream << ",cooked_default="; stream << value.cooked_default;
     stream << ",identity="; stream << "\"" << value.identity << "\"";
     stream << ",identity_sequence="; stream << value.identity_sequence;
     stream << ",generated="; stream << "\"" << value.generated << "\"";
@@ -20164,7 +18988,7 @@ std::ostream& operator<<(std::ostream& stream, const ColumnDef& value)
         stream << ",constraints=[" << value.constraints.size() << "][";
         for (const auto& it : value.constraints)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20174,7 +18998,7 @@ std::ostream& operator<<(std::ostream& stream, const ColumnDef& value)
         stream << ",fdwoptions=[" << value.fdwoptions.size() << "][";
         for (const auto& it : value.fdwoptions)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20186,7 +19010,7 @@ std::ostream& operator<<(std::ostream& stream, const ColumnDef& value)
 
 IndexElem::IndexElem()
     : name()
-    , expr(nullptr)
+    , expr()
     , indexcolname()
     , collation()
     , opclass()
@@ -20195,27 +19019,20 @@ IndexElem::IndexElem()
     , nulls_ordering()
 {}
 
-IndexElem::IndexElem(const std::string& arg_name, std::unique_ptr<::pg_query::Node> arg_expr, const std::string& arg_indexcolname, std::vector<std::unique_ptr<::pg_query::Node>> arg_collation, std::vector<std::unique_ptr<::pg_query::Node>> arg_opclass, std::vector<std::unique_ptr<::pg_query::Node>> arg_opclassopts, ::pg_query::SortByDir&& arg_ordering, ::pg_query::SortByNulls&& arg_nulls_ordering)
+IndexElem::IndexElem(const std::string& arg_name, ::pg_query::Node&& arg_expr, const std::string& arg_indexcolname, std::vector<::pg_query::Node> arg_collation, std::vector<::pg_query::Node> arg_opclass, std::vector<::pg_query::Node> arg_opclassopts, ::pg_query::SortByDir&& arg_ordering, ::pg_query::SortByNulls&& arg_nulls_ordering)
     : name(arg_name)
-    , expr(arg_expr.release())
+    , expr(std::move(arg_expr))
     , indexcolname(arg_indexcolname)
-    , collation()
-    , opclass()
-    , opclassopts()
+    , collation(std::move(arg_collation))
+    , opclass(std::move(arg_opclass))
+    , opclassopts(std::move(arg_opclassopts))
     , ordering(std::move(arg_ordering))
     , nulls_ordering(std::move(arg_nulls_ordering))
-{
-    for (auto& it : arg_collation)
-        collation.emplace_back(it.release());
-    for (auto& it : arg_opclass)
-        opclass.emplace_back(it.release());
-    for (auto& it : arg_opclassopts)
-        opclassopts.emplace_back(it.release());
-}
+{}
 
 IndexElem::IndexElem(IndexElem&& other) noexcept
     : name(std::move(other.name))
-    , expr(std::exchange(other.expr, nullptr))
+    , expr(std::move(other.expr))
     , indexcolname(std::move(other.indexcolname))
     , collation(std::move(other.collation))
     , opclass(std::move(other.opclass))
@@ -20226,13 +19043,6 @@ IndexElem::IndexElem(IndexElem&& other) noexcept
 
 IndexElem::~IndexElem()
 {
-    if (expr) delete expr;
-    for (auto& it : collation)
-        delete it;
-    for (auto& it : opclass)
-        delete it;
-    for (auto& it : opclassopts)
-        delete it;
 }
 
 bool IndexElem::operator==([[maybe_unused]] const IndexElem& other) const noexcept
@@ -20252,7 +19062,7 @@ IndexElem& IndexElem::operator=(IndexElem&& other) noexcept
     if (this != &other)
     {
         name = std::move(other.name);
-        expr = std::exchange(other.expr, nullptr);
+        expr = std::move(other.expr);
         indexcolname = std::move(other.indexcolname);
         collation = std::move(other.collation);
         opclass = std::move(other.opclass);
@@ -20285,14 +19095,14 @@ std::ostream& operator<<(std::ostream& stream, const IndexElem& value)
 {
     stream << "IndexElem(";
     stream << "name="; stream << "\"" << value.name << "\"";
-    stream << ",expr="; stream << " ptr of other struct" << (value.expr == nullptr ? "true" : "false");
+    stream << ",expr="; stream << value.expr;
     stream << ",indexcolname="; stream << "\"" << value.indexcolname << "\"";
     {
         bool first = true;
         stream << ",collation=[" << value.collation.size() << "][";
         for (const auto& it : value.collation)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20302,7 +19112,7 @@ std::ostream& operator<<(std::ostream& stream, const IndexElem& value)
         stream << ",opclass=[" << value.opclass.size() << "][";
         for (const auto& it : value.opclass)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20312,7 +19122,7 @@ std::ostream& operator<<(std::ostream& stream, const IndexElem& value)
         stream << ",opclassopts=[" << value.opclassopts.size() << "][";
         for (const auto& it : value.opclassopts)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20330,7 +19140,7 @@ Constraint::Constraint()
     , initdeferred(false)
     , location((int32_t)0ll)
     , is_no_inherit(false)
-    , raw_expr(nullptr)
+    , raw_expr()
     , cooked_expr()
     , generated_when()
     , keys()
@@ -20341,7 +19151,7 @@ Constraint::Constraint()
     , indexspace()
     , reset_default_tblspc(false)
     , access_method()
-    , where_clause(nullptr)
+    , where_clause()
     , pktable()
     , fk_attrs()
     , pk_attrs()
@@ -20354,51 +19164,36 @@ Constraint::Constraint()
     , initially_valid(false)
 {}
 
-Constraint::Constraint(::pg_query::ConstrType&& arg_contype, const std::string& arg_conname, bool arg_deferrable, bool arg_initdeferred, int32_t arg_location, bool arg_is_no_inherit, std::unique_ptr<::pg_query::Node> arg_raw_expr, const std::string& arg_cooked_expr, const std::string& arg_generated_when, std::vector<std::unique_ptr<::pg_query::Node>> arg_keys, std::vector<std::unique_ptr<::pg_query::Node>> arg_including, std::vector<std::unique_ptr<::pg_query::Node>> arg_exclusions, std::vector<std::unique_ptr<::pg_query::Node>> arg_options, const std::string& arg_indexname, const std::string& arg_indexspace, bool arg_reset_default_tblspc, const std::string& arg_access_method, std::unique_ptr<::pg_query::Node> arg_where_clause, ::pg_query::RangeVar&& arg_pktable, std::vector<std::unique_ptr<::pg_query::Node>> arg_fk_attrs, std::vector<std::unique_ptr<::pg_query::Node>> arg_pk_attrs, const std::string& arg_fk_matchtype, const std::string& arg_fk_upd_action, const std::string& arg_fk_del_action, std::vector<std::unique_ptr<::pg_query::Node>> arg_old_conpfeqop, uint32_t arg_old_pktable_oid, bool arg_skip_validation, bool arg_initially_valid)
+Constraint::Constraint(::pg_query::ConstrType&& arg_contype, const std::string& arg_conname, bool arg_deferrable, bool arg_initdeferred, int32_t arg_location, bool arg_is_no_inherit, ::pg_query::Node&& arg_raw_expr, const std::string& arg_cooked_expr, const std::string& arg_generated_when, std::vector<::pg_query::Node> arg_keys, std::vector<::pg_query::Node> arg_including, std::vector<::pg_query::Node> arg_exclusions, std::vector<::pg_query::Node> arg_options, const std::string& arg_indexname, const std::string& arg_indexspace, bool arg_reset_default_tblspc, const std::string& arg_access_method, ::pg_query::Node&& arg_where_clause, ::pg_query::RangeVar&& arg_pktable, std::vector<::pg_query::Node> arg_fk_attrs, std::vector<::pg_query::Node> arg_pk_attrs, const std::string& arg_fk_matchtype, const std::string& arg_fk_upd_action, const std::string& arg_fk_del_action, std::vector<::pg_query::Node> arg_old_conpfeqop, uint32_t arg_old_pktable_oid, bool arg_skip_validation, bool arg_initially_valid)
     : contype(std::move(arg_contype))
     , conname(arg_conname)
     , deferrable(arg_deferrable)
     , initdeferred(arg_initdeferred)
     , location(arg_location)
     , is_no_inherit(arg_is_no_inherit)
-    , raw_expr(arg_raw_expr.release())
+    , raw_expr(std::move(arg_raw_expr))
     , cooked_expr(arg_cooked_expr)
     , generated_when(arg_generated_when)
-    , keys()
-    , including()
-    , exclusions()
-    , options()
+    , keys(std::move(arg_keys))
+    , including(std::move(arg_including))
+    , exclusions(std::move(arg_exclusions))
+    , options(std::move(arg_options))
     , indexname(arg_indexname)
     , indexspace(arg_indexspace)
     , reset_default_tblspc(arg_reset_default_tblspc)
     , access_method(arg_access_method)
-    , where_clause(arg_where_clause.release())
+    , where_clause(std::move(arg_where_clause))
     , pktable(std::move(arg_pktable))
-    , fk_attrs()
-    , pk_attrs()
+    , fk_attrs(std::move(arg_fk_attrs))
+    , pk_attrs(std::move(arg_pk_attrs))
     , fk_matchtype(arg_fk_matchtype)
     , fk_upd_action(arg_fk_upd_action)
     , fk_del_action(arg_fk_del_action)
-    , old_conpfeqop()
+    , old_conpfeqop(std::move(arg_old_conpfeqop))
     , old_pktable_oid(arg_old_pktable_oid)
     , skip_validation(arg_skip_validation)
     , initially_valid(arg_initially_valid)
-{
-    for (auto& it : arg_keys)
-        keys.emplace_back(it.release());
-    for (auto& it : arg_including)
-        including.emplace_back(it.release());
-    for (auto& it : arg_exclusions)
-        exclusions.emplace_back(it.release());
-    for (auto& it : arg_options)
-        options.emplace_back(it.release());
-    for (auto& it : arg_fk_attrs)
-        fk_attrs.emplace_back(it.release());
-    for (auto& it : arg_pk_attrs)
-        pk_attrs.emplace_back(it.release());
-    for (auto& it : arg_old_conpfeqop)
-        old_conpfeqop.emplace_back(it.release());
-}
+{}
 
 Constraint::Constraint(Constraint&& other) noexcept
     : contype(std::move(other.contype))
@@ -20407,7 +19202,7 @@ Constraint::Constraint(Constraint&& other) noexcept
     , initdeferred(std::exchange(other.initdeferred, false))
     , location(std::exchange(other.location, (int32_t)0ll))
     , is_no_inherit(std::exchange(other.is_no_inherit, false))
-    , raw_expr(std::exchange(other.raw_expr, nullptr))
+    , raw_expr(std::move(other.raw_expr))
     , cooked_expr(std::move(other.cooked_expr))
     , generated_when(std::move(other.generated_when))
     , keys(std::move(other.keys))
@@ -20418,7 +19213,7 @@ Constraint::Constraint(Constraint&& other) noexcept
     , indexspace(std::move(other.indexspace))
     , reset_default_tblspc(std::exchange(other.reset_default_tblspc, false))
     , access_method(std::move(other.access_method))
-    , where_clause(std::exchange(other.where_clause, nullptr))
+    , where_clause(std::move(other.where_clause))
     , pktable(std::move(other.pktable))
     , fk_attrs(std::move(other.fk_attrs))
     , pk_attrs(std::move(other.pk_attrs))
@@ -20433,22 +19228,6 @@ Constraint::Constraint(Constraint&& other) noexcept
 
 Constraint::~Constraint()
 {
-    if (raw_expr) delete raw_expr;
-    if (where_clause) delete where_clause;
-    for (auto& it : keys)
-        delete it;
-    for (auto& it : including)
-        delete it;
-    for (auto& it : exclusions)
-        delete it;
-    for (auto& it : options)
-        delete it;
-    for (auto& it : fk_attrs)
-        delete it;
-    for (auto& it : pk_attrs)
-        delete it;
-    for (auto& it : old_conpfeqop)
-        delete it;
 }
 
 bool Constraint::operator==([[maybe_unused]] const Constraint& other) const noexcept
@@ -20473,7 +19252,7 @@ Constraint& Constraint::operator=(Constraint&& other) noexcept
         initdeferred = std::exchange(other.initdeferred, false);
         location = std::exchange(other.location, (int32_t)0ll);
         is_no_inherit = std::exchange(other.is_no_inherit, false);
-        raw_expr = std::exchange(other.raw_expr, nullptr);
+        raw_expr = std::move(other.raw_expr);
         cooked_expr = std::move(other.cooked_expr);
         generated_when = std::move(other.generated_when);
         keys = std::move(other.keys);
@@ -20484,7 +19263,7 @@ Constraint& Constraint::operator=(Constraint&& other) noexcept
         indexspace = std::move(other.indexspace);
         reset_default_tblspc = std::exchange(other.reset_default_tblspc, false);
         access_method = std::move(other.access_method);
-        where_clause = std::exchange(other.where_clause, nullptr);
+        where_clause = std::move(other.where_clause);
         pktable = std::move(other.pktable);
         fk_attrs = std::move(other.fk_attrs);
         pk_attrs = std::move(other.pk_attrs);
@@ -20546,7 +19325,7 @@ std::ostream& operator<<(std::ostream& stream, const Constraint& value)
     stream << ",initdeferred="; stream << (value.initdeferred ? "true" : "false");
     stream << ",location="; stream << value.location;
     stream << ",is_no_inherit="; stream << (value.is_no_inherit ? "true" : "false");
-    stream << ",raw_expr="; stream << " ptr of other struct" << (value.raw_expr == nullptr ? "true" : "false");
+    stream << ",raw_expr="; stream << value.raw_expr;
     stream << ",cooked_expr="; stream << "\"" << value.cooked_expr << "\"";
     stream << ",generated_when="; stream << "\"" << value.generated_when << "\"";
     {
@@ -20554,7 +19333,7 @@ std::ostream& operator<<(std::ostream& stream, const Constraint& value)
         stream << ",keys=[" << value.keys.size() << "][";
         for (const auto& it : value.keys)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20564,7 +19343,7 @@ std::ostream& operator<<(std::ostream& stream, const Constraint& value)
         stream << ",including=[" << value.including.size() << "][";
         for (const auto& it : value.including)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20574,7 +19353,7 @@ std::ostream& operator<<(std::ostream& stream, const Constraint& value)
         stream << ",exclusions=[" << value.exclusions.size() << "][";
         for (const auto& it : value.exclusions)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20584,7 +19363,7 @@ std::ostream& operator<<(std::ostream& stream, const Constraint& value)
         stream << ",options=[" << value.options.size() << "][";
         for (const auto& it : value.options)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20593,14 +19372,14 @@ std::ostream& operator<<(std::ostream& stream, const Constraint& value)
     stream << ",indexspace="; stream << "\"" << value.indexspace << "\"";
     stream << ",reset_default_tblspc="; stream << (value.reset_default_tblspc ? "true" : "false");
     stream << ",access_method="; stream << "\"" << value.access_method << "\"";
-    stream << ",where_clause="; stream << " ptr of other struct" << (value.where_clause == nullptr ? "true" : "false");
+    stream << ",where_clause="; stream << value.where_clause;
     stream << ",pktable="; stream << value.pktable;
     {
         bool first = true;
         stream << ",fk_attrs=[" << value.fk_attrs.size() << "][";
         for (const auto& it : value.fk_attrs)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20610,7 +19389,7 @@ std::ostream& operator<<(std::ostream& stream, const Constraint& value)
         stream << ",pk_attrs=[" << value.pk_attrs.size() << "][";
         for (const auto& it : value.pk_attrs)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20623,7 +19402,7 @@ std::ostream& operator<<(std::ostream& stream, const Constraint& value)
         stream << ",old_conpfeqop=[" << value.old_conpfeqop.size() << "][";
         for (const auto& it : value.old_conpfeqop)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -20638,15 +19417,15 @@ std::ostream& operator<<(std::ostream& stream, const Constraint& value)
 DefElem::DefElem()
     : defnamespace()
     , defname()
-    , arg(nullptr)
+    , arg()
     , defaction()
     , location((int32_t)0ll)
 {}
 
-DefElem::DefElem(const std::string& arg_defnamespace, const std::string& arg_defname, std::unique_ptr<::pg_query::Node> arg_arg, ::pg_query::DefElemAction&& arg_defaction, int32_t arg_location)
+DefElem::DefElem(const std::string& arg_defnamespace, const std::string& arg_defname, ::pg_query::Node&& arg_arg, ::pg_query::DefElemAction&& arg_defaction, int32_t arg_location)
     : defnamespace(arg_defnamespace)
     , defname(arg_defname)
-    , arg(arg_arg.release())
+    , arg(std::move(arg_arg))
     , defaction(std::move(arg_defaction))
     , location(arg_location)
 {}
@@ -20654,14 +19433,13 @@ DefElem::DefElem(const std::string& arg_defnamespace, const std::string& arg_def
 DefElem::DefElem(DefElem&& other) noexcept
     : defnamespace(std::move(other.defnamespace))
     , defname(std::move(other.defname))
-    , arg(std::exchange(other.arg, nullptr))
+    , arg(std::move(other.arg))
     , defaction(std::move(other.defaction))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 DefElem::~DefElem()
 {
-    if (arg) delete arg;
 }
 
 bool DefElem::operator==([[maybe_unused]] const DefElem& other) const noexcept
@@ -20682,7 +19460,7 @@ DefElem& DefElem::operator=(DefElem&& other) noexcept
     {
         defnamespace = std::move(other.defnamespace);
         defname = std::move(other.defname);
-        arg = std::exchange(other.arg, nullptr);
+        arg = std::move(other.arg);
         defaction = std::move(other.defaction);
         location = std::exchange(other.location, (int32_t)0ll);
     }
@@ -20709,7 +19487,7 @@ std::ostream& operator<<(std::ostream& stream, const DefElem& value)
     stream << "DefElem(";
     stream << "defnamespace="; stream << "\"" << value.defnamespace << "\"";
     stream << ",defname="; stream << "\"" << value.defname << "\"";
-    stream << ",arg="; stream << " ptr of other struct" << (value.arg == nullptr ? "true" : "false");
+    stream << ",arg="; stream << value.arg;
     stream << ",defaction="; stream << value.defaction;
     stream << ",location="; stream << value.location;
     stream << ")";
@@ -20755,7 +19533,7 @@ RangeTblEntry::RangeTblEntry()
     , security_quals()
 {}
 
-RangeTblEntry::RangeTblEntry(::pg_query::RTEKind&& arg_rtekind, uint32_t arg_relid, const std::string& arg_relkind, int32_t arg_rellockmode, ::pg_query::TableSampleClause&& arg_tablesample, ::pg_query::Query&& arg_subquery, bool arg_security_barrier, ::pg_query::JoinType&& arg_jointype, int32_t arg_joinmergedcols, std::vector<std::unique_ptr<::pg_query::Node>> arg_joinaliasvars, std::vector<std::unique_ptr<::pg_query::Node>> arg_joinleftcols, std::vector<std::unique_ptr<::pg_query::Node>> arg_joinrightcols, std::vector<std::unique_ptr<::pg_query::Node>> arg_functions, bool arg_funcordinality, ::pg_query::TableFunc&& arg_tablefunc, std::vector<std::unique_ptr<::pg_query::Node>> arg_values_lists, const std::string& arg_ctename, uint32_t arg_ctelevelsup, bool arg_self_reference, std::vector<std::unique_ptr<::pg_query::Node>> arg_coltypes, std::vector<std::unique_ptr<::pg_query::Node>> arg_coltypmods, std::vector<std::unique_ptr<::pg_query::Node>> arg_colcollations, const std::string& arg_enrname, double arg_enrtuples, ::pg_query::Alias&& arg_alias, ::pg_query::Alias&& arg_eref, bool arg_lateral, bool arg_inh, bool arg_in_from_cl, uint32_t arg_required_perms, uint32_t arg_check_as_user, std::vector<uint64_t> arg_selected_cols, std::vector<uint64_t> arg_inserted_cols, std::vector<uint64_t> arg_updated_cols, std::vector<uint64_t> arg_extra_updated_cols, std::vector<std::unique_ptr<::pg_query::Node>> arg_security_quals)
+RangeTblEntry::RangeTblEntry(::pg_query::RTEKind&& arg_rtekind, uint32_t arg_relid, const std::string& arg_relkind, int32_t arg_rellockmode, ::pg_query::TableSampleClause&& arg_tablesample, ::pg_query::Query&& arg_subquery, bool arg_security_barrier, ::pg_query::JoinType&& arg_jointype, int32_t arg_joinmergedcols, std::vector<::pg_query::Node> arg_joinaliasvars, std::vector<::pg_query::Node> arg_joinleftcols, std::vector<::pg_query::Node> arg_joinrightcols, std::vector<::pg_query::Node> arg_functions, bool arg_funcordinality, ::pg_query::TableFunc&& arg_tablefunc, std::vector<::pg_query::Node> arg_values_lists, const std::string& arg_ctename, uint32_t arg_ctelevelsup, bool arg_self_reference, std::vector<::pg_query::Node> arg_coltypes, std::vector<::pg_query::Node> arg_coltypmods, std::vector<::pg_query::Node> arg_colcollations, const std::string& arg_enrname, double arg_enrtuples, ::pg_query::Alias&& arg_alias, ::pg_query::Alias&& arg_eref, bool arg_lateral, bool arg_inh, bool arg_in_from_cl, uint32_t arg_required_perms, uint32_t arg_check_as_user, std::vector<uint64_t> arg_selected_cols, std::vector<uint64_t> arg_inserted_cols, std::vector<uint64_t> arg_updated_cols, std::vector<uint64_t> arg_extra_updated_cols, std::vector<::pg_query::Node> arg_security_quals)
     : rtekind(std::move(arg_rtekind))
     , relid(arg_relid)
     , relkind(arg_relkind)
@@ -20765,19 +19543,19 @@ RangeTblEntry::RangeTblEntry(::pg_query::RTEKind&& arg_rtekind, uint32_t arg_rel
     , security_barrier(arg_security_barrier)
     , jointype(std::move(arg_jointype))
     , joinmergedcols(arg_joinmergedcols)
-    , joinaliasvars()
-    , joinleftcols()
-    , joinrightcols()
-    , functions()
+    , joinaliasvars(std::move(arg_joinaliasvars))
+    , joinleftcols(std::move(arg_joinleftcols))
+    , joinrightcols(std::move(arg_joinrightcols))
+    , functions(std::move(arg_functions))
     , funcordinality(arg_funcordinality)
     , tablefunc(std::move(arg_tablefunc))
-    , values_lists()
+    , values_lists(std::move(arg_values_lists))
     , ctename(arg_ctename)
     , ctelevelsup(arg_ctelevelsup)
     , self_reference(arg_self_reference)
-    , coltypes()
-    , coltypmods()
-    , colcollations()
+    , coltypes(std::move(arg_coltypes))
+    , coltypmods(std::move(arg_coltypmods))
+    , colcollations(std::move(arg_colcollations))
     , enrname(arg_enrname)
     , enrtuples(arg_enrtuples)
     , alias(std::move(arg_alias))
@@ -20791,27 +19569,8 @@ RangeTblEntry::RangeTblEntry(::pg_query::RTEKind&& arg_rtekind, uint32_t arg_rel
     , inserted_cols(arg_inserted_cols)
     , updated_cols(arg_updated_cols)
     , extra_updated_cols(arg_extra_updated_cols)
-    , security_quals()
-{
-    for (auto& it : arg_joinaliasvars)
-        joinaliasvars.emplace_back(it.release());
-    for (auto& it : arg_joinleftcols)
-        joinleftcols.emplace_back(it.release());
-    for (auto& it : arg_joinrightcols)
-        joinrightcols.emplace_back(it.release());
-    for (auto& it : arg_functions)
-        functions.emplace_back(it.release());
-    for (auto& it : arg_values_lists)
-        values_lists.emplace_back(it.release());
-    for (auto& it : arg_coltypes)
-        coltypes.emplace_back(it.release());
-    for (auto& it : arg_coltypmods)
-        coltypmods.emplace_back(it.release());
-    for (auto& it : arg_colcollations)
-        colcollations.emplace_back(it.release());
-    for (auto& it : arg_security_quals)
-        security_quals.emplace_back(it.release());
-}
+    , security_quals(std::move(arg_security_quals))
+{}
 
 RangeTblEntry::RangeTblEntry(RangeTblEntry&& other) noexcept
     : rtekind(std::move(other.rtekind))
@@ -20854,24 +19613,6 @@ RangeTblEntry::RangeTblEntry(RangeTblEntry&& other) noexcept
 
 RangeTblEntry::~RangeTblEntry()
 {
-    for (auto& it : joinaliasvars)
-        delete it;
-    for (auto& it : joinleftcols)
-        delete it;
-    for (auto& it : joinrightcols)
-        delete it;
-    for (auto& it : functions)
-        delete it;
-    for (auto& it : values_lists)
-        delete it;
-    for (auto& it : coltypes)
-        delete it;
-    for (auto& it : coltypmods)
-        delete it;
-    for (auto& it : colcollations)
-        delete it;
-    for (auto& it : security_quals)
-        delete it;
 }
 
 bool RangeTblEntry::operator==([[maybe_unused]] const RangeTblEntry& other) const noexcept
@@ -20993,7 +19734,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblEntry& value)
         stream << ",joinaliasvars=[" << value.joinaliasvars.size() << "][";
         for (const auto& it : value.joinaliasvars)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21003,7 +19744,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblEntry& value)
         stream << ",joinleftcols=[" << value.joinleftcols.size() << "][";
         for (const auto& it : value.joinleftcols)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21013,7 +19754,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblEntry& value)
         stream << ",joinrightcols=[" << value.joinrightcols.size() << "][";
         for (const auto& it : value.joinrightcols)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21023,7 +19764,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblEntry& value)
         stream << ",functions=[" << value.functions.size() << "][";
         for (const auto& it : value.functions)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21035,7 +19776,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblEntry& value)
         stream << ",values_lists=[" << value.values_lists.size() << "][";
         for (const auto& it : value.values_lists)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21048,7 +19789,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblEntry& value)
         stream << ",coltypes=[" << value.coltypes.size() << "][";
         for (const auto& it : value.coltypes)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21058,7 +19799,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblEntry& value)
         stream << ",coltypmods=[" << value.coltypmods.size() << "][";
         for (const auto& it : value.coltypmods)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21068,7 +19809,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblEntry& value)
         stream << ",colcollations=[" << value.colcollations.size() << "][";
         for (const auto& it : value.colcollations)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21127,7 +19868,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblEntry& value)
         stream << ",security_quals=[" << value.security_quals.size() << "][";
         for (const auto& it : value.security_quals)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21137,7 +19878,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblEntry& value)
 }
 
 RangeTblFunction::RangeTblFunction()
-    : funcexpr(nullptr)
+    : funcexpr()
     , funccolcount((int32_t)0ll)
     , funccolnames()
     , funccoltypes()
@@ -21146,27 +19887,18 @@ RangeTblFunction::RangeTblFunction()
     , funcparams()
 {}
 
-RangeTblFunction::RangeTblFunction(std::unique_ptr<::pg_query::Node> arg_funcexpr, int32_t arg_funccolcount, std::vector<std::unique_ptr<::pg_query::Node>> arg_funccolnames, std::vector<std::unique_ptr<::pg_query::Node>> arg_funccoltypes, std::vector<std::unique_ptr<::pg_query::Node>> arg_funccoltypmods, std::vector<std::unique_ptr<::pg_query::Node>> arg_funccolcollations, std::vector<uint64_t> arg_funcparams)
-    : funcexpr(arg_funcexpr.release())
+RangeTblFunction::RangeTblFunction(::pg_query::Node&& arg_funcexpr, int32_t arg_funccolcount, std::vector<::pg_query::Node> arg_funccolnames, std::vector<::pg_query::Node> arg_funccoltypes, std::vector<::pg_query::Node> arg_funccoltypmods, std::vector<::pg_query::Node> arg_funccolcollations, std::vector<uint64_t> arg_funcparams)
+    : funcexpr(std::move(arg_funcexpr))
     , funccolcount(arg_funccolcount)
-    , funccolnames()
-    , funccoltypes()
-    , funccoltypmods()
-    , funccolcollations()
+    , funccolnames(std::move(arg_funccolnames))
+    , funccoltypes(std::move(arg_funccoltypes))
+    , funccoltypmods(std::move(arg_funccoltypmods))
+    , funccolcollations(std::move(arg_funccolcollations))
     , funcparams(arg_funcparams)
-{
-    for (auto& it : arg_funccolnames)
-        funccolnames.emplace_back(it.release());
-    for (auto& it : arg_funccoltypes)
-        funccoltypes.emplace_back(it.release());
-    for (auto& it : arg_funccoltypmods)
-        funccoltypmods.emplace_back(it.release());
-    for (auto& it : arg_funccolcollations)
-        funccolcollations.emplace_back(it.release());
-}
+{}
 
 RangeTblFunction::RangeTblFunction(RangeTblFunction&& other) noexcept
-    : funcexpr(std::exchange(other.funcexpr, nullptr))
+    : funcexpr(std::move(other.funcexpr))
     , funccolcount(std::exchange(other.funccolcount, (int32_t)0ll))
     , funccolnames(std::move(other.funccolnames))
     , funccoltypes(std::move(other.funccoltypes))
@@ -21177,15 +19909,6 @@ RangeTblFunction::RangeTblFunction(RangeTblFunction&& other) noexcept
 
 RangeTblFunction::~RangeTblFunction()
 {
-    if (funcexpr) delete funcexpr;
-    for (auto& it : funccolnames)
-        delete it;
-    for (auto& it : funccoltypes)
-        delete it;
-    for (auto& it : funccoltypmods)
-        delete it;
-    for (auto& it : funccolcollations)
-        delete it;
 }
 
 bool RangeTblFunction::operator==([[maybe_unused]] const RangeTblFunction& other) const noexcept
@@ -21204,7 +19927,7 @@ RangeTblFunction& RangeTblFunction::operator=(RangeTblFunction&& other) noexcept
 {
     if (this != &other)
     {
-        funcexpr = std::exchange(other.funcexpr, nullptr);
+        funcexpr = std::move(other.funcexpr);
         funccolcount = std::exchange(other.funccolcount, (int32_t)0ll);
         funccolnames = std::move(other.funccolnames);
         funccoltypes = std::move(other.funccoltypes);
@@ -21235,14 +19958,14 @@ void RangeTblFunction::swap(RangeTblFunction& other) noexcept
 std::ostream& operator<<(std::ostream& stream, const RangeTblFunction& value)
 {
     stream << "RangeTblFunction(";
-    stream << "funcexpr="; stream << " ptr of other struct" << (value.funcexpr == nullptr ? "true" : "false");
+    stream << "funcexpr="; stream << value.funcexpr;
     stream << ",funccolcount="; stream << value.funccolcount;
     {
         bool first = true;
         stream << ",funccolnames=[" << value.funccolnames.size() << "][";
         for (const auto& it : value.funccolnames)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21252,7 +19975,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblFunction& value)
         stream << ",funccoltypes=[" << value.funccoltypes.size() << "][";
         for (const auto& it : value.funccoltypes)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21262,7 +19985,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblFunction& value)
         stream << ",funccoltypmods=[" << value.funccoltypmods.size() << "][";
         for (const auto& it : value.funccoltypmods)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21272,7 +19995,7 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblFunction& value)
         stream << ",funccolcollations=[" << value.funccolcollations.size() << "][";
         for (const auto& it : value.funccolcollations)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21294,29 +20017,23 @@ std::ostream& operator<<(std::ostream& stream, const RangeTblFunction& value)
 TableSampleClause::TableSampleClause()
     : tsmhandler((uint32_t)0ull)
     , args()
-    , repeatable(nullptr)
+    , repeatable()
 {}
 
-TableSampleClause::TableSampleClause(uint32_t arg_tsmhandler, std::vector<std::unique_ptr<::pg_query::Node>> arg_args, std::unique_ptr<::pg_query::Node> arg_repeatable)
+TableSampleClause::TableSampleClause(uint32_t arg_tsmhandler, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable)
     : tsmhandler(arg_tsmhandler)
-    , args()
-    , repeatable(arg_repeatable.release())
-{
-    for (auto& it : arg_args)
-        args.emplace_back(it.release());
-}
+    , args(std::move(arg_args))
+    , repeatable(std::move(arg_repeatable))
+{}
 
 TableSampleClause::TableSampleClause(TableSampleClause&& other) noexcept
     : tsmhandler(std::exchange(other.tsmhandler, (uint32_t)0ull))
     , args(std::move(other.args))
-    , repeatable(std::exchange(other.repeatable, nullptr))
+    , repeatable(std::move(other.repeatable))
 {}
 
 TableSampleClause::~TableSampleClause()
 {
-    if (repeatable) delete repeatable;
-    for (auto& it : args)
-        delete it;
 }
 
 bool TableSampleClause::operator==([[maybe_unused]] const TableSampleClause& other) const noexcept
@@ -21337,7 +20054,7 @@ TableSampleClause& TableSampleClause::operator=(TableSampleClause&& other) noexc
     {
         tsmhandler = std::exchange(other.tsmhandler, (uint32_t)0ull);
         args = std::move(other.args);
-        repeatable = std::exchange(other.repeatable, nullptr);
+        repeatable = std::move(other.repeatable);
     }
     return *this;
 }
@@ -21364,12 +20081,12 @@ std::ostream& operator<<(std::ostream& stream, const TableSampleClause& value)
         stream << ",args=[" << value.args.size() << "][";
         for (const auto& it : value.args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",repeatable="; stream << " ptr of other struct" << (value.repeatable == nullptr ? "true" : "false");
+    stream << ",repeatable="; stream << value.repeatable;
     stream << ")";
     return stream;
 }
@@ -21378,15 +20095,15 @@ WithCheckOption::WithCheckOption()
     : kind()
     , relname()
     , polname()
-    , qual(nullptr)
+    , qual()
     , cascaded(false)
 {}
 
-WithCheckOption::WithCheckOption(::pg_query::WCOKind&& arg_kind, const std::string& arg_relname, const std::string& arg_polname, std::unique_ptr<::pg_query::Node> arg_qual, bool arg_cascaded)
+WithCheckOption::WithCheckOption(::pg_query::WCOKind&& arg_kind, const std::string& arg_relname, const std::string& arg_polname, ::pg_query::Node&& arg_qual, bool arg_cascaded)
     : kind(std::move(arg_kind))
     , relname(arg_relname)
     , polname(arg_polname)
-    , qual(arg_qual.release())
+    , qual(std::move(arg_qual))
     , cascaded(arg_cascaded)
 {}
 
@@ -21394,13 +20111,12 @@ WithCheckOption::WithCheckOption(WithCheckOption&& other) noexcept
     : kind(std::move(other.kind))
     , relname(std::move(other.relname))
     , polname(std::move(other.polname))
-    , qual(std::exchange(other.qual, nullptr))
+    , qual(std::move(other.qual))
     , cascaded(std::exchange(other.cascaded, false))
 {}
 
 WithCheckOption::~WithCheckOption()
 {
-    if (qual) delete qual;
 }
 
 bool WithCheckOption::operator==([[maybe_unused]] const WithCheckOption& other) const noexcept
@@ -21422,7 +20138,7 @@ WithCheckOption& WithCheckOption::operator=(WithCheckOption&& other) noexcept
         kind = std::move(other.kind);
         relname = std::move(other.relname);
         polname = std::move(other.polname);
-        qual = std::exchange(other.qual, nullptr);
+        qual = std::move(other.qual);
         cascaded = std::exchange(other.cascaded, false);
     }
     return *this;
@@ -21449,7 +20165,7 @@ std::ostream& operator<<(std::ostream& stream, const WithCheckOption& value)
     stream << "kind="; stream << value.kind;
     stream << ",relname="; stream << "\"" << value.relname << "\"";
     stream << ",polname="; stream << "\"" << value.polname << "\"";
-    stream << ",qual="; stream << " ptr of other struct" << (value.qual == nullptr ? "true" : "false");
+    stream << ",qual="; stream << value.qual;
     stream << ",cascaded="; stream << (value.cascaded ? "true" : "false");
     stream << ")";
     return stream;
@@ -21541,14 +20257,11 @@ GroupingSet::GroupingSet()
     , location((int32_t)0ll)
 {}
 
-GroupingSet::GroupingSet(::pg_query::GroupingSetKind&& arg_kind, std::vector<std::unique_ptr<::pg_query::Node>> arg_content, int32_t arg_location)
+GroupingSet::GroupingSet(::pg_query::GroupingSetKind&& arg_kind, std::vector<::pg_query::Node> arg_content, int32_t arg_location)
     : kind(std::move(arg_kind))
-    , content()
+    , content(std::move(arg_content))
     , location(arg_location)
-{
-    for (auto& it : arg_content)
-        content.emplace_back(it.release());
-}
+{}
 
 GroupingSet::GroupingSet(GroupingSet&& other) noexcept
     : kind(std::move(other.kind))
@@ -21558,8 +20271,6 @@ GroupingSet::GroupingSet(GroupingSet&& other) noexcept
 
 GroupingSet::~GroupingSet()
 {
-    for (auto& it : content)
-        delete it;
 }
 
 bool GroupingSet::operator==([[maybe_unused]] const GroupingSet& other) const noexcept
@@ -21607,7 +20318,7 @@ std::ostream& operator<<(std::ostream& stream, const GroupingSet& value)
         stream << ",content=[" << value.content.size() << "][";
         for (const auto& it : value.content)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21623,8 +20334,8 @@ WindowClause::WindowClause()
     , partition_clause()
     , order_clause()
     , frame_options((int32_t)0ll)
-    , start_offset(nullptr)
-    , end_offset(nullptr)
+    , start_offset()
+    , end_offset()
     , start_in_range_func((uint32_t)0ull)
     , end_in_range_func((uint32_t)0ull)
     , in_range_coll((uint32_t)0ull)
@@ -21634,14 +20345,14 @@ WindowClause::WindowClause()
     , copied_order(false)
 {}
 
-WindowClause::WindowClause(const std::string& arg_name, const std::string& arg_refname, std::vector<std::unique_ptr<::pg_query::Node>> arg_partition_clause, std::vector<std::unique_ptr<::pg_query::Node>> arg_order_clause, int32_t arg_frame_options, std::unique_ptr<::pg_query::Node> arg_start_offset, std::unique_ptr<::pg_query::Node> arg_end_offset, uint32_t arg_start_in_range_func, uint32_t arg_end_in_range_func, uint32_t arg_in_range_coll, bool arg_in_range_asc, bool arg_in_range_nulls_first, uint32_t arg_winref, bool arg_copied_order)
+WindowClause::WindowClause(const std::string& arg_name, const std::string& arg_refname, std::vector<::pg_query::Node> arg_partition_clause, std::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, uint32_t arg_start_in_range_func, uint32_t arg_end_in_range_func, uint32_t arg_in_range_coll, bool arg_in_range_asc, bool arg_in_range_nulls_first, uint32_t arg_winref, bool arg_copied_order)
     : name(arg_name)
     , refname(arg_refname)
-    , partition_clause()
-    , order_clause()
+    , partition_clause(std::move(arg_partition_clause))
+    , order_clause(std::move(arg_order_clause))
     , frame_options(arg_frame_options)
-    , start_offset(arg_start_offset.release())
-    , end_offset(arg_end_offset.release())
+    , start_offset(std::move(arg_start_offset))
+    , end_offset(std::move(arg_end_offset))
     , start_in_range_func(arg_start_in_range_func)
     , end_in_range_func(arg_end_in_range_func)
     , in_range_coll(arg_in_range_coll)
@@ -21649,12 +20360,7 @@ WindowClause::WindowClause(const std::string& arg_name, const std::string& arg_r
     , in_range_nulls_first(arg_in_range_nulls_first)
     , winref(arg_winref)
     , copied_order(arg_copied_order)
-{
-    for (auto& it : arg_partition_clause)
-        partition_clause.emplace_back(it.release());
-    for (auto& it : arg_order_clause)
-        order_clause.emplace_back(it.release());
-}
+{}
 
 WindowClause::WindowClause(WindowClause&& other) noexcept
     : name(std::move(other.name))
@@ -21662,8 +20368,8 @@ WindowClause::WindowClause(WindowClause&& other) noexcept
     , partition_clause(std::move(other.partition_clause))
     , order_clause(std::move(other.order_clause))
     , frame_options(std::exchange(other.frame_options, (int32_t)0ll))
-    , start_offset(std::exchange(other.start_offset, nullptr))
-    , end_offset(std::exchange(other.end_offset, nullptr))
+    , start_offset(std::move(other.start_offset))
+    , end_offset(std::move(other.end_offset))
     , start_in_range_func(std::exchange(other.start_in_range_func, (uint32_t)0ull))
     , end_in_range_func(std::exchange(other.end_in_range_func, (uint32_t)0ull))
     , in_range_coll(std::exchange(other.in_range_coll, (uint32_t)0ull))
@@ -21675,12 +20381,6 @@ WindowClause::WindowClause(WindowClause&& other) noexcept
 
 WindowClause::~WindowClause()
 {
-    if (start_offset) delete start_offset;
-    if (end_offset) delete end_offset;
-    for (auto& it : partition_clause)
-        delete it;
-    for (auto& it : order_clause)
-        delete it;
 }
 
 bool WindowClause::operator==([[maybe_unused]] const WindowClause& other) const noexcept
@@ -21704,8 +20404,8 @@ WindowClause& WindowClause::operator=(WindowClause&& other) noexcept
         partition_clause = std::move(other.partition_clause);
         order_clause = std::move(other.order_clause);
         frame_options = std::exchange(other.frame_options, (int32_t)0ll);
-        start_offset = std::exchange(other.start_offset, nullptr);
-        end_offset = std::exchange(other.end_offset, nullptr);
+        start_offset = std::move(other.start_offset);
+        end_offset = std::move(other.end_offset);
         start_in_range_func = std::exchange(other.start_in_range_func, (uint32_t)0ull);
         end_in_range_func = std::exchange(other.end_in_range_func, (uint32_t)0ull);
         in_range_coll = std::exchange(other.in_range_coll, (uint32_t)0ull);
@@ -21751,7 +20451,7 @@ std::ostream& operator<<(std::ostream& stream, const WindowClause& value)
         stream << ",partition_clause=[" << value.partition_clause.size() << "][";
         for (const auto& it : value.partition_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21761,14 +20461,14 @@ std::ostream& operator<<(std::ostream& stream, const WindowClause& value)
         stream << ",order_clause=[" << value.order_clause.size() << "][";
         for (const auto& it : value.order_clause)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
     stream << ",frame_options="; stream << value.frame_options;
-    stream << ",start_offset="; stream << " ptr of other struct" << (value.start_offset == nullptr ? "true" : "false");
-    stream << ",end_offset="; stream << " ptr of other struct" << (value.end_offset == nullptr ? "true" : "false");
+    stream << ",start_offset="; stream << value.start_offset;
+    stream << ",end_offset="; stream << value.end_offset;
     stream << ",start_in_range_func="; stream << value.start_in_range_func;
     stream << ",end_in_range_func="; stream << value.end_in_range_func;
     stream << ",in_range_coll="; stream << value.in_range_coll;
@@ -21786,16 +20486,11 @@ ObjectWithArgs::ObjectWithArgs()
     , args_unspecified(false)
 {}
 
-ObjectWithArgs::ObjectWithArgs(std::vector<std::unique_ptr<::pg_query::Node>> arg_objname, std::vector<std::unique_ptr<::pg_query::Node>> arg_objargs, bool arg_args_unspecified)
-    : objname()
-    , objargs()
+ObjectWithArgs::ObjectWithArgs(std::vector<::pg_query::Node> arg_objname, std::vector<::pg_query::Node> arg_objargs, bool arg_args_unspecified)
+    : objname(std::move(arg_objname))
+    , objargs(std::move(arg_objargs))
     , args_unspecified(arg_args_unspecified)
-{
-    for (auto& it : arg_objname)
-        objname.emplace_back(it.release());
-    for (auto& it : arg_objargs)
-        objargs.emplace_back(it.release());
-}
+{}
 
 ObjectWithArgs::ObjectWithArgs(ObjectWithArgs&& other) noexcept
     : objname(std::move(other.objname))
@@ -21805,10 +20500,6 @@ ObjectWithArgs::ObjectWithArgs(ObjectWithArgs&& other) noexcept
 
 ObjectWithArgs::~ObjectWithArgs()
 {
-    for (auto& it : objname)
-        delete it;
-    for (auto& it : objargs)
-        delete it;
 }
 
 bool ObjectWithArgs::operator==([[maybe_unused]] const ObjectWithArgs& other) const noexcept
@@ -21855,7 +20546,7 @@ std::ostream& operator<<(std::ostream& stream, const ObjectWithArgs& value)
         stream << "objname=[" << value.objname.size() << "][";
         for (const auto& it : value.objname)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21865,7 +20556,7 @@ std::ostream& operator<<(std::ostream& stream, const ObjectWithArgs& value)
         stream << ",objargs=[" << value.objargs.size() << "][";
         for (const auto& it : value.objargs)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21880,13 +20571,10 @@ AccessPriv::AccessPriv()
     , cols()
 {}
 
-AccessPriv::AccessPriv(const std::string& arg_priv_name, std::vector<std::unique_ptr<::pg_query::Node>> arg_cols)
+AccessPriv::AccessPriv(const std::string& arg_priv_name, std::vector<::pg_query::Node> arg_cols)
     : priv_name(arg_priv_name)
-    , cols()
-{
-    for (auto& it : arg_cols)
-        cols.emplace_back(it.release());
-}
+    , cols(std::move(arg_cols))
+{}
 
 AccessPriv::AccessPriv(AccessPriv&& other) noexcept
     : priv_name(std::move(other.priv_name))
@@ -21895,8 +20583,6 @@ AccessPriv::AccessPriv(AccessPriv&& other) noexcept
 
 AccessPriv::~AccessPriv()
 {
-    for (auto& it : cols)
-        delete it;
 }
 
 bool AccessPriv::operator==([[maybe_unused]] const AccessPriv& other) const noexcept
@@ -21942,7 +20628,7 @@ std::ostream& operator<<(std::ostream& stream, const AccessPriv& value)
         stream << ",cols=[" << value.cols.size() << "][";
         for (const auto& it : value.cols)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -21960,19 +20646,14 @@ CreateOpClassItem::CreateOpClassItem()
     , storedtype()
 {}
 
-CreateOpClassItem::CreateOpClassItem(int32_t arg_itemtype, ::pg_query::ObjectWithArgs&& arg_name, int32_t arg_number, std::vector<std::unique_ptr<::pg_query::Node>> arg_order_family, std::vector<std::unique_ptr<::pg_query::Node>> arg_class_args, ::pg_query::TypeName&& arg_storedtype)
+CreateOpClassItem::CreateOpClassItem(int32_t arg_itemtype, ::pg_query::ObjectWithArgs&& arg_name, int32_t arg_number, std::vector<::pg_query::Node> arg_order_family, std::vector<::pg_query::Node> arg_class_args, ::pg_query::TypeName&& arg_storedtype)
     : itemtype(arg_itemtype)
     , name(std::move(arg_name))
     , number(arg_number)
-    , order_family()
-    , class_args()
+    , order_family(std::move(arg_order_family))
+    , class_args(std::move(arg_class_args))
     , storedtype(std::move(arg_storedtype))
-{
-    for (auto& it : arg_order_family)
-        order_family.emplace_back(it.release());
-    for (auto& it : arg_class_args)
-        class_args.emplace_back(it.release());
-}
+{}
 
 CreateOpClassItem::CreateOpClassItem(CreateOpClassItem&& other) noexcept
     : itemtype(std::exchange(other.itemtype, (int32_t)0ll))
@@ -21985,10 +20666,6 @@ CreateOpClassItem::CreateOpClassItem(CreateOpClassItem&& other) noexcept
 
 CreateOpClassItem::~CreateOpClassItem()
 {
-    for (auto& it : order_family)
-        delete it;
-    for (auto& it : class_args)
-        delete it;
 }
 
 bool CreateOpClassItem::operator==([[maybe_unused]] const CreateOpClassItem& other) const noexcept
@@ -22044,7 +20721,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateOpClassItem& value)
         stream << ",order_family=[" << value.order_family.size() << "][";
         for (const auto& it : value.order_family)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -22054,7 +20731,7 @@ std::ostream& operator<<(std::ostream& stream, const CreateOpClassItem& value)
         stream << ",class_args=[" << value.class_args.size() << "][";
         for (const auto& it : value.class_args)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -22136,26 +20813,25 @@ FunctionParameter::FunctionParameter()
     : name()
     , arg_type()
     , mode()
-    , defexpr(nullptr)
+    , defexpr()
 {}
 
-FunctionParameter::FunctionParameter(const std::string& arg_name, ::pg_query::TypeName&& arg_arg_type, ::pg_query::FunctionParameterMode&& arg_mode, std::unique_ptr<::pg_query::Node> arg_defexpr)
+FunctionParameter::FunctionParameter(const std::string& arg_name, ::pg_query::TypeName&& arg_arg_type, ::pg_query::FunctionParameterMode&& arg_mode, ::pg_query::Node&& arg_defexpr)
     : name(arg_name)
     , arg_type(std::move(arg_arg_type))
     , mode(std::move(arg_mode))
-    , defexpr(arg_defexpr.release())
+    , defexpr(std::move(arg_defexpr))
 {}
 
 FunctionParameter::FunctionParameter(FunctionParameter&& other) noexcept
     : name(std::move(other.name))
     , arg_type(std::move(other.arg_type))
     , mode(std::move(other.mode))
-    , defexpr(std::exchange(other.defexpr, nullptr))
+    , defexpr(std::move(other.defexpr))
 {}
 
 FunctionParameter::~FunctionParameter()
 {
-    if (defexpr) delete defexpr;
 }
 
 bool FunctionParameter::operator==([[maybe_unused]] const FunctionParameter& other) const noexcept
@@ -22177,7 +20853,7 @@ FunctionParameter& FunctionParameter::operator=(FunctionParameter&& other) noexc
         name = std::move(other.name);
         arg_type = std::move(other.arg_type);
         mode = std::move(other.mode);
-        defexpr = std::exchange(other.defexpr, nullptr);
+        defexpr = std::move(other.defexpr);
     }
     return *this;
 }
@@ -22202,7 +20878,7 @@ std::ostream& operator<<(std::ostream& stream, const FunctionParameter& value)
     stream << "name="; stream << "\"" << value.name << "\"";
     stream << ",arg_type="; stream << value.arg_type;
     stream << ",mode="; stream << value.mode;
-    stream << ",defexpr="; stream << " ptr of other struct" << (value.defexpr == nullptr ? "true" : "false");
+    stream << ",defexpr="; stream << value.defexpr;
     stream << ")";
     return stream;
 }
@@ -22213,14 +20889,11 @@ LockingClause::LockingClause()
     , wait_policy()
 {}
 
-LockingClause::LockingClause(std::vector<std::unique_ptr<::pg_query::Node>> arg_locked_rels, ::pg_query::LockClauseStrength&& arg_strength, ::pg_query::LockWaitPolicy&& arg_wait_policy)
-    : locked_rels()
+LockingClause::LockingClause(std::vector<::pg_query::Node> arg_locked_rels, ::pg_query::LockClauseStrength&& arg_strength, ::pg_query::LockWaitPolicy&& arg_wait_policy)
+    : locked_rels(std::move(arg_locked_rels))
     , strength(std::move(arg_strength))
     , wait_policy(std::move(arg_wait_policy))
-{
-    for (auto& it : arg_locked_rels)
-        locked_rels.emplace_back(it.release());
-}
+{}
 
 LockingClause::LockingClause(LockingClause&& other) noexcept
     : locked_rels(std::move(other.locked_rels))
@@ -22230,8 +20903,6 @@ LockingClause::LockingClause(LockingClause&& other) noexcept
 
 LockingClause::~LockingClause()
 {
-    for (auto& it : locked_rels)
-        delete it;
 }
 
 bool LockingClause::operator==([[maybe_unused]] const LockingClause& other) const noexcept
@@ -22278,7 +20949,7 @@ std::ostream& operator<<(std::ostream& stream, const LockingClause& value)
         stream << "locked_rels=[" << value.locked_rels.size() << "][";
         for (const auto& it : value.locked_rels)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -22365,28 +21036,27 @@ std::ostream& operator<<(std::ostream& stream, const RowMarkClause& value)
 
 XmlSerialize::XmlSerialize()
     : xmloption()
-    , expr(nullptr)
+    , expr()
     , type_name()
     , location((int32_t)0ll)
 {}
 
-XmlSerialize::XmlSerialize(::pg_query::XmlOptionType&& arg_xmloption, std::unique_ptr<::pg_query::Node> arg_expr, ::pg_query::TypeName&& arg_type_name, int32_t arg_location)
+XmlSerialize::XmlSerialize(::pg_query::XmlOptionType&& arg_xmloption, ::pg_query::Node&& arg_expr, ::pg_query::TypeName&& arg_type_name, int32_t arg_location)
     : xmloption(std::move(arg_xmloption))
-    , expr(arg_expr.release())
+    , expr(std::move(arg_expr))
     , type_name(std::move(arg_type_name))
     , location(arg_location)
 {}
 
 XmlSerialize::XmlSerialize(XmlSerialize&& other) noexcept
     : xmloption(std::move(other.xmloption))
-    , expr(std::exchange(other.expr, nullptr))
+    , expr(std::move(other.expr))
     , type_name(std::move(other.type_name))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 XmlSerialize::~XmlSerialize()
 {
-    if (expr) delete expr;
 }
 
 bool XmlSerialize::operator==([[maybe_unused]] const XmlSerialize& other) const noexcept
@@ -22406,7 +21076,7 @@ XmlSerialize& XmlSerialize::operator=(XmlSerialize&& other) noexcept
     if (this != &other)
     {
         xmloption = std::move(other.xmloption);
-        expr = std::exchange(other.expr, nullptr);
+        expr = std::move(other.expr);
         type_name = std::move(other.type_name);
         location = std::exchange(other.location, (int32_t)0ll);
     }
@@ -22431,7 +21101,7 @@ std::ostream& operator<<(std::ostream& stream, const XmlSerialize& value)
 {
     stream << "XmlSerialize(";
     stream << "xmloption="; stream << value.xmloption;
-    stream << ",expr="; stream << " ptr of other struct" << (value.expr == nullptr ? "true" : "false");
+    stream << ",expr="; stream << value.expr;
     stream << ",type_name="; stream << value.type_name;
     stream << ",location="; stream << value.location;
     stream << ")";
@@ -22444,14 +21114,11 @@ WithClause::WithClause()
     , location((int32_t)0ll)
 {}
 
-WithClause::WithClause(std::vector<std::unique_ptr<::pg_query::Node>> arg_ctes, bool arg_recursive, int32_t arg_location)
-    : ctes()
+WithClause::WithClause(std::vector<::pg_query::Node> arg_ctes, bool arg_recursive, int32_t arg_location)
+    : ctes(std::move(arg_ctes))
     , recursive(arg_recursive)
     , location(arg_location)
-{
-    for (auto& it : arg_ctes)
-        ctes.emplace_back(it.release());
-}
+{}
 
 WithClause::WithClause(WithClause&& other) noexcept
     : ctes(std::move(other.ctes))
@@ -22461,8 +21128,6 @@ WithClause::WithClause(WithClause&& other) noexcept
 
 WithClause::~WithClause()
 {
-    for (auto& it : ctes)
-        delete it;
 }
 
 bool WithClause::operator==([[maybe_unused]] const WithClause& other) const noexcept
@@ -22509,7 +21174,7 @@ std::ostream& operator<<(std::ostream& stream, const WithClause& value)
         stream << "ctes=[" << value.ctes.size() << "][";
         for (const auto& it : value.ctes)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -22522,33 +21187,27 @@ std::ostream& operator<<(std::ostream& stream, const WithClause& value)
 
 InferClause::InferClause()
     : index_elems()
-    , where_clause(nullptr)
+    , where_clause()
     , conname()
     , location((int32_t)0ll)
 {}
 
-InferClause::InferClause(std::vector<std::unique_ptr<::pg_query::Node>> arg_index_elems, std::unique_ptr<::pg_query::Node> arg_where_clause, const std::string& arg_conname, int32_t arg_location)
-    : index_elems()
-    , where_clause(arg_where_clause.release())
+InferClause::InferClause(std::vector<::pg_query::Node> arg_index_elems, ::pg_query::Node&& arg_where_clause, const std::string& arg_conname, int32_t arg_location)
+    : index_elems(std::move(arg_index_elems))
+    , where_clause(std::move(arg_where_clause))
     , conname(arg_conname)
     , location(arg_location)
-{
-    for (auto& it : arg_index_elems)
-        index_elems.emplace_back(it.release());
-}
+{}
 
 InferClause::InferClause(InferClause&& other) noexcept
     : index_elems(std::move(other.index_elems))
-    , where_clause(std::exchange(other.where_clause, nullptr))
+    , where_clause(std::move(other.where_clause))
     , conname(std::move(other.conname))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 InferClause::~InferClause()
 {
-    if (where_clause) delete where_clause;
-    for (auto& it : index_elems)
-        delete it;
 }
 
 bool InferClause::operator==([[maybe_unused]] const InferClause& other) const noexcept
@@ -22568,7 +21227,7 @@ InferClause& InferClause::operator=(InferClause&& other) noexcept
     if (this != &other)
     {
         index_elems = std::move(other.index_elems);
-        where_clause = std::exchange(other.where_clause, nullptr);
+        where_clause = std::move(other.where_clause);
         conname = std::move(other.conname);
         location = std::exchange(other.location, (int32_t)0ll);
     }
@@ -22597,12 +21256,12 @@ std::ostream& operator<<(std::ostream& stream, const InferClause& value)
         stream << "index_elems=[" << value.index_elems.size() << "][";
         for (const auto& it : value.index_elems)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",where_clause="; stream << " ptr of other struct" << (value.where_clause == nullptr ? "true" : "false");
+    stream << ",where_clause="; stream << value.where_clause;
     stream << ",conname="; stream << "\"" << value.conname << "\"";
     stream << ",location="; stream << value.location;
     stream << ")";
@@ -22613,34 +21272,28 @@ OnConflictClause::OnConflictClause()
     : action()
     , infer()
     , target_list()
-    , where_clause(nullptr)
+    , where_clause()
     , location((int32_t)0ll)
 {}
 
-OnConflictClause::OnConflictClause(::pg_query::OnConflictAction&& arg_action, ::pg_query::InferClause&& arg_infer, std::vector<std::unique_ptr<::pg_query::Node>> arg_target_list, std::unique_ptr<::pg_query::Node> arg_where_clause, int32_t arg_location)
+OnConflictClause::OnConflictClause(::pg_query::OnConflictAction&& arg_action, ::pg_query::InferClause&& arg_infer, std::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, int32_t arg_location)
     : action(std::move(arg_action))
     , infer(std::move(arg_infer))
-    , target_list()
-    , where_clause(arg_where_clause.release())
+    , target_list(std::move(arg_target_list))
+    , where_clause(std::move(arg_where_clause))
     , location(arg_location)
-{
-    for (auto& it : arg_target_list)
-        target_list.emplace_back(it.release());
-}
+{}
 
 OnConflictClause::OnConflictClause(OnConflictClause&& other) noexcept
     : action(std::move(other.action))
     , infer(std::move(other.infer))
     , target_list(std::move(other.target_list))
-    , where_clause(std::exchange(other.where_clause, nullptr))
+    , where_clause(std::move(other.where_clause))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 OnConflictClause::~OnConflictClause()
 {
-    if (where_clause) delete where_clause;
-    for (auto& it : target_list)
-        delete it;
 }
 
 bool OnConflictClause::operator==([[maybe_unused]] const OnConflictClause& other) const noexcept
@@ -22662,7 +21315,7 @@ OnConflictClause& OnConflictClause::operator=(OnConflictClause&& other) noexcept
         action = std::move(other.action);
         infer = std::move(other.infer);
         target_list = std::move(other.target_list);
-        where_clause = std::exchange(other.where_clause, nullptr);
+        where_clause = std::move(other.where_clause);
         location = std::exchange(other.location, (int32_t)0ll);
     }
     return *this;
@@ -22693,12 +21346,12 @@ std::ostream& operator<<(std::ostream& stream, const OnConflictClause& value)
         stream << ",target_list=[" << value.target_list.size() << "][";
         for (const auto& it : value.target_list)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
-    stream << ",where_clause="; stream << " ptr of other struct" << (value.where_clause == nullptr ? "true" : "false");
+    stream << ",where_clause="; stream << value.where_clause;
     stream << ",location="; stream << value.location;
     stream << ")";
     return stream;
@@ -22708,7 +21361,7 @@ CommonTableExpr::CommonTableExpr()
     : ctename()
     , aliascolnames()
     , ctematerialized()
-    , ctequery(nullptr)
+    , ctequery()
     , location((int32_t)0ll)
     , cterecursive(false)
     , cterefcount((int32_t)0ll)
@@ -22718,36 +21371,25 @@ CommonTableExpr::CommonTableExpr()
     , ctecolcollations()
 {}
 
-CommonTableExpr::CommonTableExpr(const std::string& arg_ctename, std::vector<std::unique_ptr<::pg_query::Node>> arg_aliascolnames, ::pg_query::CTEMaterialize&& arg_ctematerialized, std::unique_ptr<::pg_query::Node> arg_ctequery, int32_t arg_location, bool arg_cterecursive, int32_t arg_cterefcount, std::vector<std::unique_ptr<::pg_query::Node>> arg_ctecolnames, std::vector<std::unique_ptr<::pg_query::Node>> arg_ctecoltypes, std::vector<std::unique_ptr<::pg_query::Node>> arg_ctecoltypmods, std::vector<std::unique_ptr<::pg_query::Node>> arg_ctecolcollations)
+CommonTableExpr::CommonTableExpr(const std::string& arg_ctename, std::vector<::pg_query::Node> arg_aliascolnames, ::pg_query::CTEMaterialize&& arg_ctematerialized, ::pg_query::Node&& arg_ctequery, int32_t arg_location, bool arg_cterecursive, int32_t arg_cterefcount, std::vector<::pg_query::Node> arg_ctecolnames, std::vector<::pg_query::Node> arg_ctecoltypes, std::vector<::pg_query::Node> arg_ctecoltypmods, std::vector<::pg_query::Node> arg_ctecolcollations)
     : ctename(arg_ctename)
-    , aliascolnames()
+    , aliascolnames(std::move(arg_aliascolnames))
     , ctematerialized(std::move(arg_ctematerialized))
-    , ctequery(arg_ctequery.release())
+    , ctequery(std::move(arg_ctequery))
     , location(arg_location)
     , cterecursive(arg_cterecursive)
     , cterefcount(arg_cterefcount)
-    , ctecolnames()
-    , ctecoltypes()
-    , ctecoltypmods()
-    , ctecolcollations()
-{
-    for (auto& it : arg_aliascolnames)
-        aliascolnames.emplace_back(it.release());
-    for (auto& it : arg_ctecolnames)
-        ctecolnames.emplace_back(it.release());
-    for (auto& it : arg_ctecoltypes)
-        ctecoltypes.emplace_back(it.release());
-    for (auto& it : arg_ctecoltypmods)
-        ctecoltypmods.emplace_back(it.release());
-    for (auto& it : arg_ctecolcollations)
-        ctecolcollations.emplace_back(it.release());
-}
+    , ctecolnames(std::move(arg_ctecolnames))
+    , ctecoltypes(std::move(arg_ctecoltypes))
+    , ctecoltypmods(std::move(arg_ctecoltypmods))
+    , ctecolcollations(std::move(arg_ctecolcollations))
+{}
 
 CommonTableExpr::CommonTableExpr(CommonTableExpr&& other) noexcept
     : ctename(std::move(other.ctename))
     , aliascolnames(std::move(other.aliascolnames))
     , ctematerialized(std::move(other.ctematerialized))
-    , ctequery(std::exchange(other.ctequery, nullptr))
+    , ctequery(std::move(other.ctequery))
     , location(std::exchange(other.location, (int32_t)0ll))
     , cterecursive(std::exchange(other.cterecursive, false))
     , cterefcount(std::exchange(other.cterefcount, (int32_t)0ll))
@@ -22759,17 +21401,6 @@ CommonTableExpr::CommonTableExpr(CommonTableExpr&& other) noexcept
 
 CommonTableExpr::~CommonTableExpr()
 {
-    if (ctequery) delete ctequery;
-    for (auto& it : aliascolnames)
-        delete it;
-    for (auto& it : ctecolnames)
-        delete it;
-    for (auto& it : ctecoltypes)
-        delete it;
-    for (auto& it : ctecoltypmods)
-        delete it;
-    for (auto& it : ctecolcollations)
-        delete it;
 }
 
 bool CommonTableExpr::operator==([[maybe_unused]] const CommonTableExpr& other) const noexcept
@@ -22791,7 +21422,7 @@ CommonTableExpr& CommonTableExpr::operator=(CommonTableExpr&& other) noexcept
         ctename = std::move(other.ctename);
         aliascolnames = std::move(other.aliascolnames);
         ctematerialized = std::move(other.ctematerialized);
-        ctequery = std::exchange(other.ctequery, nullptr);
+        ctequery = std::move(other.ctequery);
         location = std::exchange(other.location, (int32_t)0ll);
         cterecursive = std::exchange(other.cterecursive, false);
         cterefcount = std::exchange(other.cterefcount, (int32_t)0ll);
@@ -22833,13 +21464,13 @@ std::ostream& operator<<(std::ostream& stream, const CommonTableExpr& value)
         stream << ",aliascolnames=[" << value.aliascolnames.size() << "][";
         for (const auto& it : value.aliascolnames)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
     }
     stream << ",ctematerialized="; stream << value.ctematerialized;
-    stream << ",ctequery="; stream << " ptr of other struct" << (value.ctequery == nullptr ? "true" : "false");
+    stream << ",ctequery="; stream << value.ctequery;
     stream << ",location="; stream << value.location;
     stream << ",cterecursive="; stream << (value.cterecursive ? "true" : "false");
     stream << ",cterefcount="; stream << value.cterefcount;
@@ -22848,7 +21479,7 @@ std::ostream& operator<<(std::ostream& stream, const CommonTableExpr& value)
         stream << ",ctecolnames=[" << value.ctecolnames.size() << "][";
         for (const auto& it : value.ctecolnames)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -22858,7 +21489,7 @@ std::ostream& operator<<(std::ostream& stream, const CommonTableExpr& value)
         stream << ",ctecoltypes=[" << value.ctecoltypes.size() << "][";
         for (const auto& it : value.ctecoltypes)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -22868,7 +21499,7 @@ std::ostream& operator<<(std::ostream& stream, const CommonTableExpr& value)
         stream << ",ctecoltypmods=[" << value.ctecoltypmods.size() << "][";
         for (const auto& it : value.ctecoltypmods)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -22878,7 +21509,7 @@ std::ostream& operator<<(std::ostream& stream, const CommonTableExpr& value)
         stream << ",ctecolcollations=[" << value.ctecolcollations.size() << "][";
         for (const auto& it : value.ctecolcollations)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -23025,28 +21656,23 @@ std::ostream& operator<<(std::ostream& stream, const TriggerTransition& value)
 
 PartitionElem::PartitionElem()
     : name()
-    , expr(nullptr)
+    , expr()
     , collation()
     , opclass()
     , location((int32_t)0ll)
 {}
 
-PartitionElem::PartitionElem(const std::string& arg_name, std::unique_ptr<::pg_query::Node> arg_expr, std::vector<std::unique_ptr<::pg_query::Node>> arg_collation, std::vector<std::unique_ptr<::pg_query::Node>> arg_opclass, int32_t arg_location)
+PartitionElem::PartitionElem(const std::string& arg_name, ::pg_query::Node&& arg_expr, std::vector<::pg_query::Node> arg_collation, std::vector<::pg_query::Node> arg_opclass, int32_t arg_location)
     : name(arg_name)
-    , expr(arg_expr.release())
-    , collation()
-    , opclass()
+    , expr(std::move(arg_expr))
+    , collation(std::move(arg_collation))
+    , opclass(std::move(arg_opclass))
     , location(arg_location)
-{
-    for (auto& it : arg_collation)
-        collation.emplace_back(it.release());
-    for (auto& it : arg_opclass)
-        opclass.emplace_back(it.release());
-}
+{}
 
 PartitionElem::PartitionElem(PartitionElem&& other) noexcept
     : name(std::move(other.name))
-    , expr(std::exchange(other.expr, nullptr))
+    , expr(std::move(other.expr))
     , collation(std::move(other.collation))
     , opclass(std::move(other.opclass))
     , location(std::exchange(other.location, (int32_t)0ll))
@@ -23054,11 +21680,6 @@ PartitionElem::PartitionElem(PartitionElem&& other) noexcept
 
 PartitionElem::~PartitionElem()
 {
-    if (expr) delete expr;
-    for (auto& it : collation)
-        delete it;
-    for (auto& it : opclass)
-        delete it;
 }
 
 bool PartitionElem::operator==([[maybe_unused]] const PartitionElem& other) const noexcept
@@ -23078,7 +21699,7 @@ PartitionElem& PartitionElem::operator=(PartitionElem&& other) noexcept
     if (this != &other)
     {
         name = std::move(other.name);
-        expr = std::exchange(other.expr, nullptr);
+        expr = std::move(other.expr);
         collation = std::move(other.collation);
         opclass = std::move(other.opclass);
         location = std::exchange(other.location, (int32_t)0ll);
@@ -23105,13 +21726,13 @@ std::ostream& operator<<(std::ostream& stream, const PartitionElem& value)
 {
     stream << "PartitionElem(";
     stream << "name="; stream << "\"" << value.name << "\"";
-    stream << ",expr="; stream << " ptr of other struct" << (value.expr == nullptr ? "true" : "false");
+    stream << ",expr="; stream << value.expr;
     {
         bool first = true;
         stream << ",collation=[" << value.collation.size() << "][";
         for (const auto& it : value.collation)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -23121,7 +21742,7 @@ std::ostream& operator<<(std::ostream& stream, const PartitionElem& value)
         stream << ",opclass=[" << value.opclass.size() << "][";
         for (const auto& it : value.opclass)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -23137,14 +21758,11 @@ PartitionSpec::PartitionSpec()
     , location((int32_t)0ll)
 {}
 
-PartitionSpec::PartitionSpec(const std::string& arg_strategy, std::vector<std::unique_ptr<::pg_query::Node>> arg_part_params, int32_t arg_location)
+PartitionSpec::PartitionSpec(const std::string& arg_strategy, std::vector<::pg_query::Node> arg_part_params, int32_t arg_location)
     : strategy(arg_strategy)
-    , part_params()
+    , part_params(std::move(arg_part_params))
     , location(arg_location)
-{
-    for (auto& it : arg_part_params)
-        part_params.emplace_back(it.release());
-}
+{}
 
 PartitionSpec::PartitionSpec(PartitionSpec&& other) noexcept
     : strategy(std::move(other.strategy))
@@ -23154,8 +21772,6 @@ PartitionSpec::PartitionSpec(PartitionSpec&& other) noexcept
 
 PartitionSpec::~PartitionSpec()
 {
-    for (auto& it : part_params)
-        delete it;
 }
 
 bool PartitionSpec::operator==([[maybe_unused]] const PartitionSpec& other) const noexcept
@@ -23203,7 +21819,7 @@ std::ostream& operator<<(std::ostream& stream, const PartitionSpec& value)
         stream << ",part_params=[" << value.part_params.size() << "][";
         for (const auto& it : value.part_params)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -23224,23 +21840,16 @@ PartitionBoundSpec::PartitionBoundSpec()
     , location((int32_t)0ll)
 {}
 
-PartitionBoundSpec::PartitionBoundSpec(const std::string& arg_strategy, bool arg_is_default, int32_t arg_modulus, int32_t arg_remainder, std::vector<std::unique_ptr<::pg_query::Node>> arg_listdatums, std::vector<std::unique_ptr<::pg_query::Node>> arg_lowerdatums, std::vector<std::unique_ptr<::pg_query::Node>> arg_upperdatums, int32_t arg_location)
+PartitionBoundSpec::PartitionBoundSpec(const std::string& arg_strategy, bool arg_is_default, int32_t arg_modulus, int32_t arg_remainder, std::vector<::pg_query::Node> arg_listdatums, std::vector<::pg_query::Node> arg_lowerdatums, std::vector<::pg_query::Node> arg_upperdatums, int32_t arg_location)
     : strategy(arg_strategy)
     , is_default(arg_is_default)
     , modulus(arg_modulus)
     , remainder(arg_remainder)
-    , listdatums()
-    , lowerdatums()
-    , upperdatums()
+    , listdatums(std::move(arg_listdatums))
+    , lowerdatums(std::move(arg_lowerdatums))
+    , upperdatums(std::move(arg_upperdatums))
     , location(arg_location)
-{
-    for (auto& it : arg_listdatums)
-        listdatums.emplace_back(it.release());
-    for (auto& it : arg_lowerdatums)
-        lowerdatums.emplace_back(it.release());
-    for (auto& it : arg_upperdatums)
-        upperdatums.emplace_back(it.release());
-}
+{}
 
 PartitionBoundSpec::PartitionBoundSpec(PartitionBoundSpec&& other) noexcept
     : strategy(std::move(other.strategy))
@@ -23255,12 +21864,6 @@ PartitionBoundSpec::PartitionBoundSpec(PartitionBoundSpec&& other) noexcept
 
 PartitionBoundSpec::~PartitionBoundSpec()
 {
-    for (auto& it : listdatums)
-        delete it;
-    for (auto& it : lowerdatums)
-        delete it;
-    for (auto& it : upperdatums)
-        delete it;
 }
 
 bool PartitionBoundSpec::operator==([[maybe_unused]] const PartitionBoundSpec& other) const noexcept
@@ -23321,7 +21924,7 @@ std::ostream& operator<<(std::ostream& stream, const PartitionBoundSpec& value)
         stream << ",listdatums=[" << value.listdatums.size() << "][";
         for (const auto& it : value.listdatums)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -23331,7 +21934,7 @@ std::ostream& operator<<(std::ostream& stream, const PartitionBoundSpec& value)
         stream << ",lowerdatums=[" << value.lowerdatums.size() << "][";
         for (const auto& it : value.lowerdatums)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -23341,7 +21944,7 @@ std::ostream& operator<<(std::ostream& stream, const PartitionBoundSpec& value)
         stream << ",upperdatums=[" << value.upperdatums.size() << "][";
         for (const auto& it : value.upperdatums)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
@@ -23353,25 +21956,24 @@ std::ostream& operator<<(std::ostream& stream, const PartitionBoundSpec& value)
 
 PartitionRangeDatum::PartitionRangeDatum()
     : kind()
-    , value(nullptr)
+    , value()
     , location((int32_t)0ll)
 {}
 
-PartitionRangeDatum::PartitionRangeDatum(::pg_query::PartitionRangeDatumKind&& arg_kind, std::unique_ptr<::pg_query::Node> arg_value, int32_t arg_location)
+PartitionRangeDatum::PartitionRangeDatum(::pg_query::PartitionRangeDatumKind&& arg_kind, ::pg_query::Node&& arg_value, int32_t arg_location)
     : kind(std::move(arg_kind))
-    , value(arg_value.release())
+    , value(std::move(arg_value))
     , location(arg_location)
 {}
 
 PartitionRangeDatum::PartitionRangeDatum(PartitionRangeDatum&& other) noexcept
     : kind(std::move(other.kind))
-    , value(std::exchange(other.value, nullptr))
+    , value(std::move(other.value))
     , location(std::exchange(other.location, (int32_t)0ll))
 {}
 
 PartitionRangeDatum::~PartitionRangeDatum()
 {
-    if (value) delete value;
 }
 
 bool PartitionRangeDatum::operator==([[maybe_unused]] const PartitionRangeDatum& other) const noexcept
@@ -23391,7 +21993,7 @@ PartitionRangeDatum& PartitionRangeDatum::operator=(PartitionRangeDatum&& other)
     if (this != &other)
     {
         kind = std::move(other.kind);
-        value = std::exchange(other.value, nullptr);
+        value = std::move(other.value);
         location = std::exchange(other.location, (int32_t)0ll);
     }
     return *this;
@@ -23414,7 +22016,7 @@ std::ostream& operator<<(std::ostream& stream, const PartitionRangeDatum& value)
 {
     stream << "PartitionRangeDatum(";
     stream << "kind="; stream << value.kind;
-    stream << ",value="; stream << " ptr of other struct" << (value.value == nullptr ? "true" : "false");
+    stream << ",value="; stream << value.value;
     stream << ",location="; stream << value.location;
     stream << ")";
     return stream;
@@ -23488,14 +22090,11 @@ VacuumRelation::VacuumRelation()
     , va_cols()
 {}
 
-VacuumRelation::VacuumRelation(::pg_query::RangeVar&& arg_relation, uint32_t arg_oid, std::vector<std::unique_ptr<::pg_query::Node>> arg_va_cols)
+VacuumRelation::VacuumRelation(::pg_query::RangeVar&& arg_relation, uint32_t arg_oid, std::vector<::pg_query::Node> arg_va_cols)
     : relation(std::move(arg_relation))
     , oid(arg_oid)
-    , va_cols()
-{
-    for (auto& it : arg_va_cols)
-        va_cols.emplace_back(it.release());
-}
+    , va_cols(std::move(arg_va_cols))
+{}
 
 VacuumRelation::VacuumRelation(VacuumRelation&& other) noexcept
     : relation(std::move(other.relation))
@@ -23505,8 +22104,6 @@ VacuumRelation::VacuumRelation(VacuumRelation&& other) noexcept
 
 VacuumRelation::~VacuumRelation()
 {
-    for (auto& it : va_cols)
-        delete it;
 }
 
 bool VacuumRelation::operator==([[maybe_unused]] const VacuumRelation& other) const noexcept
@@ -23555,7 +22152,7 @@ std::ostream& operator<<(std::ostream& stream, const VacuumRelation& value)
         stream << ",va_cols=[" << value.va_cols.size() << "][";
         for (const auto& it : value.va_cols)
         {
-            stream << std::string(first ? "" : ",") << " ptr of other struct" << (it == nullptr ? "true" : "false");
+            stream << std::string(first ? "" : ",") << it;
             first = false;
         }
         stream << "]";
