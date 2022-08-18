@@ -165,7 +165,7 @@ class Generator
             @outmethods[node_type] += format("  WRITE_SPECIFIC_NODE_PTR_FIELD(%s, %s, %s, %s, %s);\n", type.gsub('*', ''), underscore(type.gsub('*', '')).downcase, outname, outname_json, name)
             @readmethods[node_type] += format("  READ_SPECIFIC_NODE_PTR_FIELD(%s, %s, %s, %s, %s);\n", type.gsub('*', ''), underscore(type.gsub('*', '')).downcase, outname, outname_json, name)
             @protobuf_messages[node_type] += format("  %s %s = %d [json_name=\"%s\"];\n", type.gsub('*', ''), outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  %s %s;\n", type.gsub('*', ''), outname)
+            @fbe_structs[node_type] += format("  %s* %s;\n", type.gsub('*', ''), outname)
             protobuf_field_count += 1
           elsif type.end_with?('*')
             puts format('ERR: %s %s', name, type)
@@ -474,16 +474,6 @@ enum Token {
 
 package pg_query
 
-struct ParseResult {
-  int32 version;
-  RawStmt[] stmts;
-}
-
-struct ScanResult {
-  int32 version;
-  ScanToken[] tokens;
-}
-
 variant Node {
     #{fbe_nodes.join("\n    ")}
 }
@@ -530,13 +520,6 @@ struct IntList
 
 #{fbe_structs}
 
-struct ScanToken {
-  int32 start;
-  int32 end;
-  Token token;
-  KeywordKind keyword_kind;
-}
-
 enum KeywordKind {
   NO_KEYWORD = 0;
   UNRESERVED_KEYWORD = 1;
@@ -572,6 +555,24 @@ enum Token {
   // Named tokens in scan.l
   #{@scan_protobuf_tokens.join("\n  ")}
 }
+
+struct ScanToken {
+  int32 start;
+  int32 end;
+  Token token;
+  KeywordKind keyword_kind;
+}
+
+struct ParseResult {
+  int32 version;
+  RawStmt[] stmts;
+}
+
+struct ScanResult {
+  int32 version;
+  ScanToken[] tokens;
+}
+
 "
 
     File.write('./fbe/pg_query.fbe', fbe)
