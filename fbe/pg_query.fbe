@@ -2,16 +2,6 @@
 
 package pg_query
 
-struct ParseResult {
-  int32 version;
-  RawStmt[] stmts;
-}
-
-struct ScanResult {
-  int32 version;
-  ScanToken[] tokens;
-}
-
 variant Node {
     Alias*;
     RangeVar*;
@@ -296,7 +286,7 @@ struct RangeVar
   string relname;
   bool inh;
   string relpersistence;
-  Alias alias;
+  Alias* alias;
   int32 location;
 }
 
@@ -790,7 +780,7 @@ struct JoinExpr
   Node rarg;
   Node[] using_clause;
   Node quals;
-  Alias alias;
+  Alias* alias;
   int32 rtindex;
 }
 
@@ -814,7 +804,7 @@ struct OnConflictExpr
 
 struct IntoClause
 {
-  RangeVar rel;
+  RangeVar* rel;
   Node[] col_names;
   string access_method;
   Node[] options;
@@ -849,10 +839,10 @@ struct Query
   bool has_row_security;
   Node[] cte_list;
   Node[] rtable;
-  FromExpr jointree;
+  FromExpr* jointree;
   Node[] target_list;
   OverridingKind override;
-  OnConflictExpr on_conflict;
+  OnConflictExpr* on_conflict;
   Node[] returning_list;
   Node[] group_clause;
   Node[] grouping_sets;
@@ -873,38 +863,38 @@ struct Query
 
 struct InsertStmt
 {
-  RangeVar relation;
+  RangeVar* relation;
   Node[] cols;
   Node select_stmt;
-  OnConflictClause on_conflict_clause;
+  OnConflictClause* on_conflict_clause;
   Node[] returning_list;
-  WithClause with_clause;
+  WithClause* with_clause;
   OverridingKind override;
 }
 
 struct DeleteStmt
 {
-  RangeVar relation;
+  RangeVar* relation;
   Node[] using_clause;
   Node where_clause;
   Node[] returning_list;
-  WithClause with_clause;
+  WithClause* with_clause;
 }
 
 struct UpdateStmt
 {
-  RangeVar relation;
+  RangeVar* relation;
   Node[] target_list;
   Node where_clause;
   Node[] from_clause;
   Node[] returning_list;
-  WithClause with_clause;
+  WithClause* with_clause;
 }
 
 struct SelectStmt
 {
   Node[] distinct_clause;
-  IntoClause into_clause;
+  IntoClause* into_clause;
   Node[] target_list;
   Node[] from_clause;
   Node where_clause;
@@ -917,16 +907,16 @@ struct SelectStmt
   Node limit_count;
   LimitOption limit_option;
   Node[] locking_clause;
-  WithClause with_clause;
+  WithClause* with_clause;
   SetOperation op;
   bool all;
-  SelectStmt larg;
-  SelectStmt rarg;
+  SelectStmt* larg;
+  SelectStmt* rarg;
 }
 
 struct AlterTableStmt
 {
-  RangeVar relation;
+  RangeVar* relation;
   Node[] cmds;
   ObjectType relkind;
   bool missing_ok;
@@ -937,7 +927,7 @@ struct AlterTableCmd
   AlterTableType subtype;
   string name;
   int32 num;
-  RoleSpec newowner;
+  RoleSpec* newowner;
   Node def;
   DropBehavior behavior;
   bool missing_ok;
@@ -983,14 +973,14 @@ struct GrantRoleStmt
   Node[] grantee_roles;
   bool is_grant;
   bool admin_opt;
-  RoleSpec grantor;
+  RoleSpec* grantor;
   DropBehavior behavior;
 }
 
 struct AlterDefaultPrivilegesStmt
 {
   Node[] options;
-  GrantStmt action;
+  GrantStmt* action;
 }
 
 struct ClosePortalStmt
@@ -1000,14 +990,14 @@ struct ClosePortalStmt
 
 struct ClusterStmt
 {
-  RangeVar relation;
+  RangeVar* relation;
   string indexname;
   int32 options;
 }
 
 struct CopyStmt
 {
-  RangeVar relation;
+  RangeVar* relation;
   Node query;
   Node[] attlist;
   bool is_from;
@@ -1019,12 +1009,12 @@ struct CopyStmt
 
 struct CreateStmt
 {
-  RangeVar relation;
+  RangeVar* relation;
   Node[] table_elts;
   Node[] inh_relations;
-  PartitionBoundSpec partbound;
-  PartitionSpec partspec;
-  TypeName of_typename;
+  PartitionBoundSpec* partbound;
+  PartitionSpec* partspec;
+  TypeName* of_typename;
   Node[] constraints;
   Node[] options;
   OnCommitAction oncommit;
@@ -1078,7 +1068,7 @@ struct FetchStmt
 struct IndexStmt
 {
   string idxname;
-  RangeVar relation;
+  RangeVar* relation;
   string access_method;
   string table_space;
   Node[] index_params;
@@ -1108,14 +1098,14 @@ struct CreateFunctionStmt
   bool replace;
   Node[] funcname;
   Node[] parameters;
-  TypeName return_type;
+  TypeName* return_type;
   Node[] options;
 }
 
 struct AlterFunctionStmt
 {
   ObjectType objtype;
-  ObjectWithArgs func;
+  ObjectWithArgs* func;
   Node[] actions;
 }
 
@@ -1128,7 +1118,7 @@ struct RenameStmt
 {
   ObjectType rename_type;
   ObjectType relation_type;
-  RangeVar relation;
+  RangeVar* relation;
   Node object;
   string subname;
   string newname;
@@ -1138,7 +1128,7 @@ struct RenameStmt
 
 struct RuleStmt
 {
-  RangeVar relation;
+  RangeVar* relation;
   string rulename;
   Node where_clause;
   CmdType event;
@@ -1174,7 +1164,7 @@ struct TransactionStmt
 
 struct ViewStmt
 {
-  RangeVar view;
+  RangeVar* view;
   Node[] aliases;
   Node query;
   bool replace;
@@ -1190,8 +1180,8 @@ struct LoadStmt
 struct CreateDomainStmt
 {
   Node[] domainname;
-  TypeName type_name;
-  CollateClause coll_clause;
+  TypeName* type_name;
+  CollateClause* coll_clause;
   Node[] constraints;
 }
 
@@ -1224,7 +1214,7 @@ struct ExplainStmt
 struct CreateTableAsStmt
 {
   Node query;
-  IntoClause into;
+  IntoClause* into;
   ObjectType relkind;
   bool is_select_into;
   bool if_not_exists;
@@ -1232,7 +1222,7 @@ struct CreateTableAsStmt
 
 struct CreateSeqStmt
 {
-  RangeVar sequence;
+  RangeVar* sequence;
   Node[] options;
   uint32 owner_id;
   bool for_identity;
@@ -1241,7 +1231,7 @@ struct CreateSeqStmt
 
 struct AlterSeqStmt
 {
-  RangeVar sequence;
+  RangeVar* sequence;
   Node[] options;
   bool for_identity;
   bool missing_ok;
@@ -1268,7 +1258,7 @@ struct DiscardStmt
 struct CreateTrigStmt
 {
   string trigname;
-  RangeVar relation;
+  RangeVar* relation;
   Node[] funcname;
   Node[] args;
   bool row;
@@ -1280,7 +1270,7 @@ struct CreateTrigStmt
   Node[] transition_rels;
   bool deferrable;
   bool initdeferred;
-  RangeVar constrrel;
+  RangeVar* constrrel;
 }
 
 struct CreatePLangStmt
@@ -1302,7 +1292,7 @@ struct CreateRoleStmt
 
 struct AlterRoleStmt
 {
-  RoleSpec role;
+  RoleSpec* role;
   Node[] options;
   int32 action;
 }
@@ -1329,7 +1319,7 @@ struct ConstraintsSetStmt
 struct ReindexStmt
 {
   ReindexObjectType kind;
-  RangeVar relation;
+  RangeVar* relation;
   string name;
   int32 options;
   bool concurrent;
@@ -1342,7 +1332,7 @@ struct CheckPointStmt
 struct CreateSchemaStmt
 {
   string schemaname;
-  RoleSpec authrole;
+  RoleSpec* authrole;
   Node[] schema_elts;
   bool if_not_exists;
 }
@@ -1356,14 +1346,14 @@ struct AlterDatabaseStmt
 struct AlterDatabaseSetStmt
 {
   string dbname;
-  VariableSetStmt setstmt;
+  VariableSetStmt* setstmt;
 }
 
 struct AlterRoleSetStmt
 {
-  RoleSpec role;
+  RoleSpec* role;
   string database;
-  VariableSetStmt setstmt;
+  VariableSetStmt* setstmt;
 }
 
 struct CreateConversionStmt
@@ -1377,9 +1367,9 @@ struct CreateConversionStmt
 
 struct CreateCastStmt
 {
-  TypeName sourcetype;
-  TypeName targettype;
-  ObjectWithArgs func;
+  TypeName* sourcetype;
+  TypeName* targettype;
+  ObjectWithArgs* func;
   CoercionContext context;
   bool inout;
 }
@@ -1389,7 +1379,7 @@ struct CreateOpClassStmt
   Node[] opclassname;
   Node[] opfamilyname;
   string amname;
-  TypeName datatype;
+  TypeName* datatype;
   Node[] items;
   bool is_default;
 }
@@ -1436,7 +1426,7 @@ struct DeclareCursorStmt
 struct CreateTableSpaceStmt
 {
   string tablespacename;
-  RoleSpec owner;
+  RoleSpec* owner;
   string location;
   Node[] options;
 }
@@ -1450,7 +1440,7 @@ struct DropTableSpaceStmt
 struct AlterObjectDependsStmt
 {
   ObjectType object_type;
-  RangeVar relation;
+  RangeVar* relation;
   Node object;
   Node extname;
   bool remove;
@@ -1459,7 +1449,7 @@ struct AlterObjectDependsStmt
 struct AlterObjectSchemaStmt
 {
   ObjectType object_type;
-  RangeVar relation;
+  RangeVar* relation;
   Node object;
   string newschema;
   bool missing_ok;
@@ -1468,14 +1458,14 @@ struct AlterObjectSchemaStmt
 struct AlterOwnerStmt
 {
   ObjectType object_type;
-  RangeVar relation;
+  RangeVar* relation;
   Node object;
-  RoleSpec newowner;
+  RoleSpec* newowner;
 }
 
 struct AlterOperatorStmt
 {
-  ObjectWithArgs opername;
+  ObjectWithArgs* opername;
   Node[] options;
 }
 
@@ -1494,12 +1484,12 @@ struct DropOwnedStmt
 struct ReassignOwnedStmt
 {
   Node[] roles;
-  RoleSpec newrole;
+  RoleSpec* newrole;
 }
 
 struct CompositeTypeStmt
 {
-  RangeVar typevar;
+  RangeVar* typevar;
   Node[] coldeflist;
 }
 
@@ -1576,7 +1566,7 @@ struct AlterForeignServerStmt
 
 struct CreateUserMappingStmt
 {
-  RoleSpec user;
+  RoleSpec* user;
   string servername;
   bool if_not_exists;
   Node[] options;
@@ -1584,14 +1574,14 @@ struct CreateUserMappingStmt
 
 struct AlterUserMappingStmt
 {
-  RoleSpec user;
+  RoleSpec* user;
   string servername;
   Node[] options;
 }
 
 struct DropUserMappingStmt
 {
-  RoleSpec user;
+  RoleSpec* user;
   string servername;
   bool missing_ok;
 }
@@ -1676,7 +1666,7 @@ struct RefreshMatViewStmt
 {
   bool concurrent;
   bool skip_data;
-  RangeVar relation;
+  RangeVar* relation;
 }
 
 struct ReplicaIdentityStmt
@@ -1687,13 +1677,13 @@ struct ReplicaIdentityStmt
 
 struct AlterSystemStmt
 {
-  VariableSetStmt setstmt;
+  VariableSetStmt* setstmt;
 }
 
 struct CreatePolicyStmt
 {
   string policy_name;
-  RangeVar table;
+  RangeVar* table;
   string cmd_name;
   bool permissive;
   Node[] roles;
@@ -1704,7 +1694,7 @@ struct CreatePolicyStmt
 struct AlterPolicyStmt
 {
   string policy_name;
-  RangeVar table;
+  RangeVar* table;
   Node[] roles;
   Node qual;
   Node with_check;
@@ -1713,10 +1703,10 @@ struct AlterPolicyStmt
 struct CreateTransformStmt
 {
   bool replace;
-  TypeName type_name;
+  TypeName* type_name;
   string lang;
-  ObjectWithArgs fromsql;
-  ObjectWithArgs tosql;
+  ObjectWithArgs* fromsql;
+  ObjectWithArgs* tosql;
 }
 
 struct CreateAmStmt
@@ -1784,8 +1774,8 @@ struct AlterCollationStmt
 
 struct CallStmt
 {
-  FuncCall funccall;
-  FuncExpr funcexpr;
+  FuncCall* funccall;
+  FuncExpr* funcexpr;
 }
 
 struct AlterStatsStmt
@@ -1832,7 +1822,7 @@ struct FuncCall
   bool agg_star;
   bool agg_distinct;
   bool func_variadic;
-  WindowDef over;
+  WindowDef* over;
   int32 location;
 }
 
@@ -1877,7 +1867,7 @@ struct MultiAssignRef
 struct TypeCast
 {
   Node arg;
-  TypeName type_name;
+  TypeName* type_name;
   int32 location;
 }
 
@@ -1913,7 +1903,7 @@ struct RangeSubselect
 {
   bool lateral;
   Node subquery;
-  Alias alias;
+  Alias* alias;
 }
 
 struct RangeFunction
@@ -1922,7 +1912,7 @@ struct RangeFunction
   bool ordinality;
   bool is_rowsfrom;
   Node[] functions;
-  Alias alias;
+  Alias* alias;
   Node[] coldeflist;
 }
 
@@ -1942,14 +1932,14 @@ struct RangeTableFunc
   Node rowexpr;
   Node[] namespaces;
   Node[] columns;
-  Alias alias;
+  Alias* alias;
   int32 location;
 }
 
 struct RangeTableFuncCol
 {
   string colname;
-  TypeName type_name;
+  TypeName* type_name;
   bool for_ordinality;
   bool is_not_null;
   Node colexpr;
@@ -1972,7 +1962,7 @@ struct TypeName
 struct ColumnDef
 {
   string colname;
-  TypeName type_name;
+  TypeName* type_name;
   int32 inhcount;
   bool is_local;
   bool is_not_null;
@@ -1981,9 +1971,9 @@ struct ColumnDef
   Node raw_default;
   Node cooked_default;
   string identity;
-  RangeVar identity_sequence;
+  RangeVar* identity_sequence;
   string generated;
-  CollateClause coll_clause;
+  CollateClause* coll_clause;
   uint32 coll_oid;
   Node[] constraints;
   Node[] fdwoptions;
@@ -2022,7 +2012,7 @@ struct Constraint
   bool reset_default_tblspc;
   string access_method;
   Node where_clause;
-  RangeVar pktable;
+  RangeVar* pktable;
   Node[] fk_attrs;
   Node[] pk_attrs;
   string fk_matchtype;
@@ -2049,8 +2039,8 @@ struct RangeTblEntry
   uint32 relid;
   string relkind;
   int32 rellockmode;
-  TableSampleClause tablesample;
-  Query subquery;
+  TableSampleClause* tablesample;
+  Query* subquery;
   bool security_barrier;
   JoinType jointype;
   int32 joinmergedcols;
@@ -2059,7 +2049,7 @@ struct RangeTblEntry
   Node[] joinrightcols;
   Node[] functions;
   bool funcordinality;
-  TableFunc tablefunc;
+  TableFunc* tablefunc;
   Node[] values_lists;
   string ctename;
   uint32 ctelevelsup;
@@ -2069,8 +2059,8 @@ struct RangeTblEntry
   Node[] colcollations;
   string enrname;
   double enrtuples;
-  Alias alias;
-  Alias eref;
+  Alias* alias;
+  Alias* eref;
   bool lateral;
   bool inh;
   bool in_from_cl;
@@ -2160,16 +2150,16 @@ struct AccessPriv
 struct CreateOpClassItem
 {
   int32 itemtype;
-  ObjectWithArgs name;
+  ObjectWithArgs* name;
   int32 number;
   Node[] order_family;
   Node[] class_args;
-  TypeName storedtype;
+  TypeName* storedtype;
 }
 
 struct TableLikeClause
 {
-  RangeVar relation;
+  RangeVar* relation;
   uint32 options;
   uint32 relation_oid;
 }
@@ -2177,7 +2167,7 @@ struct TableLikeClause
 struct FunctionParameter
 {
   string name;
-  TypeName arg_type;
+  TypeName* arg_type;
   FunctionParameterMode mode;
   Node defexpr;
 }
@@ -2201,7 +2191,7 @@ struct XmlSerialize
 {
   XmlOptionType xmloption;
   Node expr;
-  TypeName type_name;
+  TypeName* type_name;
   int32 location;
 }
 
@@ -2223,7 +2213,7 @@ struct InferClause
 struct OnConflictClause
 {
   OnConflictAction action;
-  InferClause infer;
+  InferClause* infer;
   Node[] target_list;
   Node where_clause;
   int32 location;
@@ -2295,13 +2285,13 @@ struct PartitionRangeDatum
 
 struct PartitionCmd
 {
-  RangeVar name;
-  PartitionBoundSpec bound;
+  RangeVar* name;
+  PartitionBoundSpec* bound;
 }
 
 struct VacuumRelation
 {
-  RangeVar relation;
+  RangeVar* relation;
   uint32 oid;
   Node[] va_cols;
 }
@@ -2973,13 +2963,6 @@ enum LockTupleMode
   LockTupleExclusive = 4;
 }
 
-struct ScanToken {
-  int32 start;
-  int32 end;
-  Token token;
-  KeywordKind keyword_kind;
-}
-
 enum KeywordKind {
   NO_KEYWORD = 0;
   UNRESERVED_KEYWORD = 1;
@@ -3488,3 +3471,21 @@ enum Token {
   POSTFIXOP = 730;
   UMINUS = 731;
 }
+
+struct ScanToken {
+  int32 start;
+  int32 end;
+  Token token;
+  KeywordKind keyword_kind;
+}
+
+struct ParseResult {
+  int32 version;
+  RawStmt[] stmts;
+}
+
+struct ScanResult {
+  int32 version;
+  ScanToken[] tokens;
+}
+
