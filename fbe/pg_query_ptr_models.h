@@ -479,11 +479,11 @@ public:
     using FieldModelBase<::pg_query::Token, int32_t>::FieldModelBase;
 };
 
-class FieldModel_pg_query_Node
+template <>
+class FieldModel<::pg_query::Node>
 {
 public:
-    FieldModel_pg_query_Node(FBEBuffer& buffer, size_t offset) noexcept;
-    ~FieldModel_pg_query_Node() = default;
+    FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
 
     // Get the field offset
     size_t fbe_offset() const noexcept { return _offset; }
@@ -518,112 +518,6 @@ private:
     size_t _offset;
 };
 
-class FieldModelPtr_pg_query_ParseResult
-{
-public:
-    FieldModelPtr_pg_query_ParseResult(FBEBuffer& buffer, size_t offset) noexcept;
-    ~FieldModelPtr_pg_query_ParseResult();
-
-    // Get the field offset
-    size_t fbe_offset() const noexcept { return _offset; }
-    // Get the field size
-    size_t fbe_size() const noexcept { return 5; }
-    // Get the field extra size
-    size_t fbe_extra() const noexcept;
-    // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 1; }
-
-    // Shift the current field offset
-    void fbe_shift(size_t size) noexcept { _offset += size; }
-    // Unshift the current field offset
-    void fbe_unshift(size_t size) noexcept { _offset -= size; }
-
-    // Check if the struct value is valid
-    bool verify() const noexcept;
-    // Check if the struct ptr is nullptr
-    bool has_value() const noexcept;
-
-    // Get the struct value (begin phase)
-    size_t get_begin() const noexcept;
-    // Get the struct value (end phase)
-    void get_end(size_t fbe_begin) const noexcept;
-
-    // Get the struct value
-    void get(::pg_query::ParseResult** fbe_value) noexcept;
-    // Get the struct fields values
-    void get_fields(::pg_query::ParseResult& fbe_value, size_t fbe_struct_size) noexcept;
-
-    // Set the struct value (begin phase)
-    size_t set_begin(bool has_value);
-    // Set the struct value (end phase)
-    void set_end(size_t fbe_begin);
-
-    // Set the struct value
-    void set(const ::pg_query::ParseResult* fbe_value) noexcept;
-    // Set the struct fields values
-    void set_fields(const ::pg_query::ParseResult* fbe_value) noexcept;
-
-private:
-    FBEBuffer& _buffer;
-    size_t _offset;
-
-public:
-    BaseFieldModel* ptr{nullptr};
-};
-
-class FieldModelPtr_pg_query_ScanResult
-{
-public:
-    FieldModelPtr_pg_query_ScanResult(FBEBuffer& buffer, size_t offset) noexcept;
-    ~FieldModelPtr_pg_query_ScanResult();
-
-    // Get the field offset
-    size_t fbe_offset() const noexcept { return _offset; }
-    // Get the field size
-    size_t fbe_size() const noexcept { return 5; }
-    // Get the field extra size
-    size_t fbe_extra() const noexcept;
-    // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 2; }
-
-    // Shift the current field offset
-    void fbe_shift(size_t size) noexcept { _offset += size; }
-    // Unshift the current field offset
-    void fbe_unshift(size_t size) noexcept { _offset -= size; }
-
-    // Check if the struct value is valid
-    bool verify() const noexcept;
-    // Check if the struct ptr is nullptr
-    bool has_value() const noexcept;
-
-    // Get the struct value (begin phase)
-    size_t get_begin() const noexcept;
-    // Get the struct value (end phase)
-    void get_end(size_t fbe_begin) const noexcept;
-
-    // Get the struct value
-    void get(::pg_query::ScanResult** fbe_value) noexcept;
-    // Get the struct fields values
-    void get_fields(::pg_query::ScanResult& fbe_value, size_t fbe_struct_size) noexcept;
-
-    // Set the struct value (begin phase)
-    size_t set_begin(bool has_value);
-    // Set the struct value (end phase)
-    void set_end(size_t fbe_begin);
-
-    // Set the struct value
-    void set(const ::pg_query::ScanResult* fbe_value) noexcept;
-    // Set the struct fields values
-    void set_fields(const ::pg_query::ScanResult* fbe_value) noexcept;
-
-private:
-    FBEBuffer& _buffer;
-    size_t _offset;
-
-public:
-    BaseFieldModel* ptr{nullptr};
-};
-
 class FieldModelPtr_pg_query_Integer
 {
 public:
@@ -637,7 +531,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 3; }
+    static constexpr size_t fbe_type() noexcept { return 1; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -690,7 +584,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 4; }
+    static constexpr size_t fbe_type() noexcept { return 2; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -743,7 +637,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 5; }
+    static constexpr size_t fbe_type() noexcept { return 3; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -796,7 +690,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 6; }
+    static constexpr size_t fbe_type() noexcept { return 4; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -849,7 +743,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 7; }
+    static constexpr size_t fbe_type() noexcept { return 5; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -902,7 +796,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 8; }
+    static constexpr size_t fbe_type() noexcept { return 6; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -955,7 +849,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 9; }
+    static constexpr size_t fbe_type() noexcept { return 7; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1008,7 +902,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 10; }
+    static constexpr size_t fbe_type() noexcept { return 8; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1061,7 +955,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 11; }
+    static constexpr size_t fbe_type() noexcept { return 9; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1114,7 +1008,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 12; }
+    static constexpr size_t fbe_type() noexcept { return 10; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1167,7 +1061,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 13; }
+    static constexpr size_t fbe_type() noexcept { return 11; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1220,7 +1114,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 14; }
+    static constexpr size_t fbe_type() noexcept { return 12; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1273,7 +1167,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 15; }
+    static constexpr size_t fbe_type() noexcept { return 13; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1326,7 +1220,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 16; }
+    static constexpr size_t fbe_type() noexcept { return 14; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1379,7 +1273,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 17; }
+    static constexpr size_t fbe_type() noexcept { return 15; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1432,7 +1326,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 18; }
+    static constexpr size_t fbe_type() noexcept { return 16; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1485,7 +1379,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 19; }
+    static constexpr size_t fbe_type() noexcept { return 17; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1538,7 +1432,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 20; }
+    static constexpr size_t fbe_type() noexcept { return 18; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1591,7 +1485,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 21; }
+    static constexpr size_t fbe_type() noexcept { return 19; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1644,7 +1538,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 22; }
+    static constexpr size_t fbe_type() noexcept { return 20; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1697,7 +1591,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 23; }
+    static constexpr size_t fbe_type() noexcept { return 21; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1750,7 +1644,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 24; }
+    static constexpr size_t fbe_type() noexcept { return 22; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1803,7 +1697,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 25; }
+    static constexpr size_t fbe_type() noexcept { return 23; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1856,7 +1750,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 26; }
+    static constexpr size_t fbe_type() noexcept { return 24; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1909,7 +1803,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 27; }
+    static constexpr size_t fbe_type() noexcept { return 25; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -1962,7 +1856,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 28; }
+    static constexpr size_t fbe_type() noexcept { return 26; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2015,7 +1909,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 29; }
+    static constexpr size_t fbe_type() noexcept { return 27; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2068,7 +1962,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 30; }
+    static constexpr size_t fbe_type() noexcept { return 28; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2121,7 +2015,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 31; }
+    static constexpr size_t fbe_type() noexcept { return 29; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2174,7 +2068,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 32; }
+    static constexpr size_t fbe_type() noexcept { return 30; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2227,7 +2121,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 33; }
+    static constexpr size_t fbe_type() noexcept { return 31; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2280,7 +2174,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 34; }
+    static constexpr size_t fbe_type() noexcept { return 32; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2333,7 +2227,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 35; }
+    static constexpr size_t fbe_type() noexcept { return 33; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2386,7 +2280,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 36; }
+    static constexpr size_t fbe_type() noexcept { return 34; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2439,7 +2333,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 37; }
+    static constexpr size_t fbe_type() noexcept { return 35; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2492,7 +2386,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 38; }
+    static constexpr size_t fbe_type() noexcept { return 36; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2545,7 +2439,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 39; }
+    static constexpr size_t fbe_type() noexcept { return 37; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2598,7 +2492,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 40; }
+    static constexpr size_t fbe_type() noexcept { return 38; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2651,7 +2545,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 41; }
+    static constexpr size_t fbe_type() noexcept { return 39; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2704,7 +2598,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 42; }
+    static constexpr size_t fbe_type() noexcept { return 40; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2757,7 +2651,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 43; }
+    static constexpr size_t fbe_type() noexcept { return 41; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2810,7 +2704,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 44; }
+    static constexpr size_t fbe_type() noexcept { return 42; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2863,7 +2757,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 45; }
+    static constexpr size_t fbe_type() noexcept { return 43; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2916,7 +2810,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 46; }
+    static constexpr size_t fbe_type() noexcept { return 44; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -2969,7 +2863,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 47; }
+    static constexpr size_t fbe_type() noexcept { return 45; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3022,7 +2916,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 48; }
+    static constexpr size_t fbe_type() noexcept { return 46; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3075,7 +2969,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 49; }
+    static constexpr size_t fbe_type() noexcept { return 47; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3128,7 +3022,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 50; }
+    static constexpr size_t fbe_type() noexcept { return 48; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3181,7 +3075,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 51; }
+    static constexpr size_t fbe_type() noexcept { return 49; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3234,7 +3128,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 52; }
+    static constexpr size_t fbe_type() noexcept { return 50; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3287,7 +3181,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 53; }
+    static constexpr size_t fbe_type() noexcept { return 51; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3340,7 +3234,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 54; }
+    static constexpr size_t fbe_type() noexcept { return 52; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3393,7 +3287,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 55; }
+    static constexpr size_t fbe_type() noexcept { return 53; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3446,7 +3340,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 56; }
+    static constexpr size_t fbe_type() noexcept { return 54; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3499,7 +3393,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 57; }
+    static constexpr size_t fbe_type() noexcept { return 55; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3552,7 +3446,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 58; }
+    static constexpr size_t fbe_type() noexcept { return 56; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3605,7 +3499,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 59; }
+    static constexpr size_t fbe_type() noexcept { return 57; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3658,7 +3552,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 60; }
+    static constexpr size_t fbe_type() noexcept { return 58; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3711,7 +3605,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 61; }
+    static constexpr size_t fbe_type() noexcept { return 59; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3764,7 +3658,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 62; }
+    static constexpr size_t fbe_type() noexcept { return 60; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3817,7 +3711,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 63; }
+    static constexpr size_t fbe_type() noexcept { return 61; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3870,7 +3764,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 64; }
+    static constexpr size_t fbe_type() noexcept { return 62; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3923,7 +3817,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 65; }
+    static constexpr size_t fbe_type() noexcept { return 63; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -3976,7 +3870,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 66; }
+    static constexpr size_t fbe_type() noexcept { return 64; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4029,7 +3923,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 67; }
+    static constexpr size_t fbe_type() noexcept { return 65; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4082,7 +3976,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 68; }
+    static constexpr size_t fbe_type() noexcept { return 66; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4135,7 +4029,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 69; }
+    static constexpr size_t fbe_type() noexcept { return 67; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4188,7 +4082,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 70; }
+    static constexpr size_t fbe_type() noexcept { return 68; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4241,7 +4135,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 71; }
+    static constexpr size_t fbe_type() noexcept { return 69; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4294,7 +4188,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 72; }
+    static constexpr size_t fbe_type() noexcept { return 70; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4347,7 +4241,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 73; }
+    static constexpr size_t fbe_type() noexcept { return 71; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4400,7 +4294,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 74; }
+    static constexpr size_t fbe_type() noexcept { return 72; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4453,7 +4347,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 75; }
+    static constexpr size_t fbe_type() noexcept { return 73; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4506,7 +4400,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 76; }
+    static constexpr size_t fbe_type() noexcept { return 74; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4559,7 +4453,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 77; }
+    static constexpr size_t fbe_type() noexcept { return 75; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4612,7 +4506,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 78; }
+    static constexpr size_t fbe_type() noexcept { return 76; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4665,7 +4559,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 79; }
+    static constexpr size_t fbe_type() noexcept { return 77; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4718,7 +4612,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 80; }
+    static constexpr size_t fbe_type() noexcept { return 78; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4771,7 +4665,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 81; }
+    static constexpr size_t fbe_type() noexcept { return 79; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4824,7 +4718,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 82; }
+    static constexpr size_t fbe_type() noexcept { return 80; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4877,7 +4771,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 83; }
+    static constexpr size_t fbe_type() noexcept { return 81; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4930,7 +4824,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 84; }
+    static constexpr size_t fbe_type() noexcept { return 82; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -4983,7 +4877,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 85; }
+    static constexpr size_t fbe_type() noexcept { return 83; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5036,7 +4930,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 86; }
+    static constexpr size_t fbe_type() noexcept { return 84; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5089,7 +4983,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 87; }
+    static constexpr size_t fbe_type() noexcept { return 85; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5142,7 +5036,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 88; }
+    static constexpr size_t fbe_type() noexcept { return 86; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5195,7 +5089,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 89; }
+    static constexpr size_t fbe_type() noexcept { return 87; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5248,7 +5142,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 90; }
+    static constexpr size_t fbe_type() noexcept { return 88; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5301,7 +5195,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 91; }
+    static constexpr size_t fbe_type() noexcept { return 89; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5354,7 +5248,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 92; }
+    static constexpr size_t fbe_type() noexcept { return 90; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5407,7 +5301,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 93; }
+    static constexpr size_t fbe_type() noexcept { return 91; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5460,7 +5354,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 94; }
+    static constexpr size_t fbe_type() noexcept { return 92; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5513,7 +5407,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 95; }
+    static constexpr size_t fbe_type() noexcept { return 93; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5566,7 +5460,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 96; }
+    static constexpr size_t fbe_type() noexcept { return 94; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5619,7 +5513,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 97; }
+    static constexpr size_t fbe_type() noexcept { return 95; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5672,7 +5566,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 98; }
+    static constexpr size_t fbe_type() noexcept { return 96; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5725,7 +5619,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 99; }
+    static constexpr size_t fbe_type() noexcept { return 97; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5778,7 +5672,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 100; }
+    static constexpr size_t fbe_type() noexcept { return 98; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5831,7 +5725,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 101; }
+    static constexpr size_t fbe_type() noexcept { return 99; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5884,7 +5778,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 102; }
+    static constexpr size_t fbe_type() noexcept { return 100; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5937,7 +5831,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 103; }
+    static constexpr size_t fbe_type() noexcept { return 101; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -5990,7 +5884,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 104; }
+    static constexpr size_t fbe_type() noexcept { return 102; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6043,7 +5937,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 105; }
+    static constexpr size_t fbe_type() noexcept { return 103; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6096,7 +5990,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 106; }
+    static constexpr size_t fbe_type() noexcept { return 104; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6149,7 +6043,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 107; }
+    static constexpr size_t fbe_type() noexcept { return 105; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6202,7 +6096,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 108; }
+    static constexpr size_t fbe_type() noexcept { return 106; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6255,7 +6149,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 109; }
+    static constexpr size_t fbe_type() noexcept { return 107; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6308,7 +6202,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 110; }
+    static constexpr size_t fbe_type() noexcept { return 108; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6361,7 +6255,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 111; }
+    static constexpr size_t fbe_type() noexcept { return 109; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6414,7 +6308,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 112; }
+    static constexpr size_t fbe_type() noexcept { return 110; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6467,7 +6361,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 113; }
+    static constexpr size_t fbe_type() noexcept { return 111; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6520,7 +6414,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 114; }
+    static constexpr size_t fbe_type() noexcept { return 112; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6573,7 +6467,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 115; }
+    static constexpr size_t fbe_type() noexcept { return 113; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6626,7 +6520,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 116; }
+    static constexpr size_t fbe_type() noexcept { return 114; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6679,7 +6573,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 117; }
+    static constexpr size_t fbe_type() noexcept { return 115; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6732,7 +6626,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 118; }
+    static constexpr size_t fbe_type() noexcept { return 116; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6785,7 +6679,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 119; }
+    static constexpr size_t fbe_type() noexcept { return 117; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6838,7 +6732,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 120; }
+    static constexpr size_t fbe_type() noexcept { return 118; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6891,7 +6785,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 121; }
+    static constexpr size_t fbe_type() noexcept { return 119; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6944,7 +6838,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 122; }
+    static constexpr size_t fbe_type() noexcept { return 120; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -6997,7 +6891,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 123; }
+    static constexpr size_t fbe_type() noexcept { return 121; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7050,7 +6944,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 124; }
+    static constexpr size_t fbe_type() noexcept { return 122; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7103,7 +6997,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 125; }
+    static constexpr size_t fbe_type() noexcept { return 123; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7156,7 +7050,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 126; }
+    static constexpr size_t fbe_type() noexcept { return 124; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7209,7 +7103,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 127; }
+    static constexpr size_t fbe_type() noexcept { return 125; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7262,7 +7156,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 128; }
+    static constexpr size_t fbe_type() noexcept { return 126; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7315,7 +7209,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 129; }
+    static constexpr size_t fbe_type() noexcept { return 127; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7368,7 +7262,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 130; }
+    static constexpr size_t fbe_type() noexcept { return 128; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7421,7 +7315,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 131; }
+    static constexpr size_t fbe_type() noexcept { return 129; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7474,7 +7368,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 132; }
+    static constexpr size_t fbe_type() noexcept { return 130; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7527,7 +7421,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 133; }
+    static constexpr size_t fbe_type() noexcept { return 131; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7580,7 +7474,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 134; }
+    static constexpr size_t fbe_type() noexcept { return 132; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7633,7 +7527,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 135; }
+    static constexpr size_t fbe_type() noexcept { return 133; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7686,7 +7580,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 136; }
+    static constexpr size_t fbe_type() noexcept { return 134; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7739,7 +7633,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 137; }
+    static constexpr size_t fbe_type() noexcept { return 135; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7792,7 +7686,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 138; }
+    static constexpr size_t fbe_type() noexcept { return 136; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7845,7 +7739,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 139; }
+    static constexpr size_t fbe_type() noexcept { return 137; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7898,7 +7792,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 140; }
+    static constexpr size_t fbe_type() noexcept { return 138; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -7951,7 +7845,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 141; }
+    static constexpr size_t fbe_type() noexcept { return 139; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8004,7 +7898,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 142; }
+    static constexpr size_t fbe_type() noexcept { return 140; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8057,7 +7951,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 143; }
+    static constexpr size_t fbe_type() noexcept { return 141; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8110,7 +8004,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 144; }
+    static constexpr size_t fbe_type() noexcept { return 142; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8163,7 +8057,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 145; }
+    static constexpr size_t fbe_type() noexcept { return 143; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8216,7 +8110,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 146; }
+    static constexpr size_t fbe_type() noexcept { return 144; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8269,7 +8163,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 147; }
+    static constexpr size_t fbe_type() noexcept { return 145; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8322,7 +8216,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 148; }
+    static constexpr size_t fbe_type() noexcept { return 146; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8375,7 +8269,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 149; }
+    static constexpr size_t fbe_type() noexcept { return 147; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8428,7 +8322,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 150; }
+    static constexpr size_t fbe_type() noexcept { return 148; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8481,7 +8375,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 151; }
+    static constexpr size_t fbe_type() noexcept { return 149; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8534,7 +8428,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 152; }
+    static constexpr size_t fbe_type() noexcept { return 150; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8587,7 +8481,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 153; }
+    static constexpr size_t fbe_type() noexcept { return 151; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8640,7 +8534,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 154; }
+    static constexpr size_t fbe_type() noexcept { return 152; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8693,7 +8587,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 155; }
+    static constexpr size_t fbe_type() noexcept { return 153; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8746,7 +8640,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 156; }
+    static constexpr size_t fbe_type() noexcept { return 154; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8799,7 +8693,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 157; }
+    static constexpr size_t fbe_type() noexcept { return 155; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8852,7 +8746,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 158; }
+    static constexpr size_t fbe_type() noexcept { return 156; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8905,7 +8799,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 159; }
+    static constexpr size_t fbe_type() noexcept { return 157; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -8958,7 +8852,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 160; }
+    static constexpr size_t fbe_type() noexcept { return 158; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9011,7 +8905,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 161; }
+    static constexpr size_t fbe_type() noexcept { return 159; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9064,7 +8958,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 162; }
+    static constexpr size_t fbe_type() noexcept { return 160; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9117,7 +9011,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 163; }
+    static constexpr size_t fbe_type() noexcept { return 161; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9170,7 +9064,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 164; }
+    static constexpr size_t fbe_type() noexcept { return 162; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9223,7 +9117,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 165; }
+    static constexpr size_t fbe_type() noexcept { return 163; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9276,7 +9170,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 166; }
+    static constexpr size_t fbe_type() noexcept { return 164; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9329,7 +9223,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 167; }
+    static constexpr size_t fbe_type() noexcept { return 165; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9382,7 +9276,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 168; }
+    static constexpr size_t fbe_type() noexcept { return 166; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9435,7 +9329,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 169; }
+    static constexpr size_t fbe_type() noexcept { return 167; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9488,7 +9382,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 170; }
+    static constexpr size_t fbe_type() noexcept { return 168; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9541,7 +9435,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 171; }
+    static constexpr size_t fbe_type() noexcept { return 169; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9594,7 +9488,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 172; }
+    static constexpr size_t fbe_type() noexcept { return 170; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9647,7 +9541,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 173; }
+    static constexpr size_t fbe_type() noexcept { return 171; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9700,7 +9594,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 174; }
+    static constexpr size_t fbe_type() noexcept { return 172; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9753,7 +9647,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 175; }
+    static constexpr size_t fbe_type() noexcept { return 173; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9806,7 +9700,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 176; }
+    static constexpr size_t fbe_type() noexcept { return 174; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9859,7 +9753,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 177; }
+    static constexpr size_t fbe_type() noexcept { return 175; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9912,7 +9806,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 178; }
+    static constexpr size_t fbe_type() noexcept { return 176; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -9965,7 +9859,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 179; }
+    static constexpr size_t fbe_type() noexcept { return 177; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10018,7 +9912,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 180; }
+    static constexpr size_t fbe_type() noexcept { return 178; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10071,7 +9965,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 181; }
+    static constexpr size_t fbe_type() noexcept { return 179; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10124,7 +10018,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 182; }
+    static constexpr size_t fbe_type() noexcept { return 180; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10177,7 +10071,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 183; }
+    static constexpr size_t fbe_type() noexcept { return 181; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10230,7 +10124,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 184; }
+    static constexpr size_t fbe_type() noexcept { return 182; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10283,7 +10177,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 185; }
+    static constexpr size_t fbe_type() noexcept { return 183; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10336,7 +10230,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 186; }
+    static constexpr size_t fbe_type() noexcept { return 184; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10389,7 +10283,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 187; }
+    static constexpr size_t fbe_type() noexcept { return 185; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10442,7 +10336,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 188; }
+    static constexpr size_t fbe_type() noexcept { return 186; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10495,7 +10389,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 189; }
+    static constexpr size_t fbe_type() noexcept { return 187; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10548,7 +10442,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 190; }
+    static constexpr size_t fbe_type() noexcept { return 188; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10601,7 +10495,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 191; }
+    static constexpr size_t fbe_type() noexcept { return 189; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10654,7 +10548,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 192; }
+    static constexpr size_t fbe_type() noexcept { return 190; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10707,7 +10601,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 193; }
+    static constexpr size_t fbe_type() noexcept { return 191; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10760,7 +10654,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 194; }
+    static constexpr size_t fbe_type() noexcept { return 192; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10813,7 +10707,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 195; }
+    static constexpr size_t fbe_type() noexcept { return 193; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10866,7 +10760,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 196; }
+    static constexpr size_t fbe_type() noexcept { return 194; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10919,7 +10813,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 197; }
+    static constexpr size_t fbe_type() noexcept { return 195; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -10972,7 +10866,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 198; }
+    static constexpr size_t fbe_type() noexcept { return 196; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11025,7 +10919,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 199; }
+    static constexpr size_t fbe_type() noexcept { return 197; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11078,7 +10972,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 200; }
+    static constexpr size_t fbe_type() noexcept { return 198; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11131,7 +11025,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 201; }
+    static constexpr size_t fbe_type() noexcept { return 199; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11184,7 +11078,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 202; }
+    static constexpr size_t fbe_type() noexcept { return 200; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11237,7 +11131,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 203; }
+    static constexpr size_t fbe_type() noexcept { return 201; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11290,7 +11184,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 204; }
+    static constexpr size_t fbe_type() noexcept { return 202; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11343,7 +11237,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 205; }
+    static constexpr size_t fbe_type() noexcept { return 203; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11396,7 +11290,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 206; }
+    static constexpr size_t fbe_type() noexcept { return 204; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11449,7 +11343,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 207; }
+    static constexpr size_t fbe_type() noexcept { return 205; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11502,7 +11396,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 208; }
+    static constexpr size_t fbe_type() noexcept { return 206; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11555,7 +11449,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 209; }
+    static constexpr size_t fbe_type() noexcept { return 207; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11608,7 +11502,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 210; }
+    static constexpr size_t fbe_type() noexcept { return 208; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11661,7 +11555,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 211; }
+    static constexpr size_t fbe_type() noexcept { return 209; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11714,7 +11608,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 212; }
+    static constexpr size_t fbe_type() noexcept { return 210; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11767,7 +11661,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 213; }
+    static constexpr size_t fbe_type() noexcept { return 211; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11820,7 +11714,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 214; }
+    static constexpr size_t fbe_type() noexcept { return 212; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11873,7 +11767,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 215; }
+    static constexpr size_t fbe_type() noexcept { return 213; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11926,7 +11820,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 216; }
+    static constexpr size_t fbe_type() noexcept { return 214; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -11979,7 +11873,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 217; }
+    static constexpr size_t fbe_type() noexcept { return 215; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12032,7 +11926,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 218; }
+    static constexpr size_t fbe_type() noexcept { return 216; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12085,7 +11979,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 219; }
+    static constexpr size_t fbe_type() noexcept { return 217; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12138,7 +12032,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 220; }
+    static constexpr size_t fbe_type() noexcept { return 218; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12191,7 +12085,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 221; }
+    static constexpr size_t fbe_type() noexcept { return 219; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12244,7 +12138,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 222; }
+    static constexpr size_t fbe_type() noexcept { return 220; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12297,7 +12191,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 223; }
+    static constexpr size_t fbe_type() noexcept { return 221; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12350,7 +12244,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 224; }
+    static constexpr size_t fbe_type() noexcept { return 222; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12403,7 +12297,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 225; }
+    static constexpr size_t fbe_type() noexcept { return 223; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12456,7 +12350,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 226; }
+    static constexpr size_t fbe_type() noexcept { return 224; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12509,7 +12403,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 227; }
+    static constexpr size_t fbe_type() noexcept { return 225; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12562,7 +12456,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 228; }
+    static constexpr size_t fbe_type() noexcept { return 226; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12615,7 +12509,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 229; }
+    static constexpr size_t fbe_type() noexcept { return 227; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12668,7 +12562,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 230; }
+    static constexpr size_t fbe_type() noexcept { return 228; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12721,7 +12615,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 231; }
+    static constexpr size_t fbe_type() noexcept { return 229; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -12761,189 +12655,111 @@ public:
     BaseFieldModel* ptr{nullptr};
 };
 
-// Fast Binary Encoding ::pg_query::ParseResult field model
-class FieldModel_pg_query_ParseResult : public BaseFieldModel
+class FieldModelPtr_pg_query_ParseResult
 {
 public:
-    FieldModel_pg_query_ParseResult(FBEBuffer& buffer, size_t offset) noexcept;
+    FieldModelPtr_pg_query_ParseResult(FBEBuffer& buffer, size_t offset) noexcept;
+    ~FieldModelPtr_pg_query_ParseResult();
 
     // Get the field offset
-    size_t fbe_offset() const noexcept override { return _offset; }
+    size_t fbe_offset() const noexcept { return _offset; }
     // Get the field size
-    size_t fbe_size() const noexcept override { return 4; }
-    // Get the field body size
-    size_t fbe_body() const noexcept;
+    size_t fbe_size() const noexcept { return 5; }
     // Get the field extra size
-    size_t fbe_extra() const noexcept override;
+    size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 1; }
+    static constexpr size_t fbe_type() noexcept { return 230; }
 
     // Shift the current field offset
-    void fbe_shift(size_t size) noexcept override { _offset += size; }
+    void fbe_shift(size_t size) noexcept { _offset += size; }
     // Unshift the current field offset
-    void fbe_unshift(size_t size) noexcept override { _offset -= size; }
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
 
     // Check if the struct value is valid
-    bool verify(bool fbe_verify_type = true) const noexcept override;
-    // Check if the struct fields are valid
-    bool verify_fields(size_t fbe_struct_size) const noexcept override;
+    bool verify() const noexcept;
+    // Check if the struct ptr is nullptr
+    bool has_value() const noexcept;
 
     // Get the struct value (begin phase)
-    size_t get_begin() const noexcept override;
+    size_t get_begin() const noexcept;
     // Get the struct value (end phase)
-    void get_end(size_t fbe_begin) const noexcept override;
+    void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::FBE::Base& fbe_value) noexcept override;
+    void get(::pg_query::ParseResult** fbe_value) noexcept;
     // Get the struct fields values
-    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size) noexcept override;
+    void get_fields(::pg_query::ParseResult& fbe_value, size_t fbe_struct_size) noexcept;
 
     // Set the struct value (begin phase)
-    size_t set_begin() override;
+    size_t set_begin(bool has_value);
     // Set the struct value (end phase)
-    void set_end(size_t fbe_begin) override;
+    void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::FBE::Base& fbe_value) noexcept override;
+    void set(const ::pg_query::ParseResult* fbe_value) noexcept;
     // Set the struct fields values
-    void set_fields(const ::FBE::Base& fbe_value) noexcept override;
+    void set_fields(const ::pg_query::ParseResult* fbe_value) noexcept;
 
 private:
     FBEBuffer& _buffer;
     size_t _offset;
 
 public:
-    FieldModel<int32_t> version;
-    FieldModelCustomVector<FieldModel_pg_query_RawStmt, ::pg_query::RawStmt> stmts;
+    BaseFieldModel* ptr{nullptr};
 };
 
-namespace pg_query {
-
-// Fast Binary Encoding ParseResult model
-class ParseResultModel : public FBE::Model
+class FieldModelPtr_pg_query_ScanResult
 {
 public:
-    ParseResultModel() : model(this->buffer(), 4) {}
-    ParseResultModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), model(this->buffer(), 4) {}
-
-    // Get the model size
-    size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
-    // Get the model type
-    static constexpr size_t fbe_type() noexcept { return FieldModel_pg_query_ParseResult::fbe_type(); }
-
-    // Check if the struct value is valid
-    bool verify();
-
-    // Create a new model (begin phase)
-    size_t create_begin();
-    // Create a new model (end phase)
-    size_t create_end(size_t fbe_begin);
-
-    // Serialize the struct value
-    size_t serialize(const ::pg_query::ParseResult& value);
-    // Deserialize the struct value
-    size_t deserialize(::pg_query::ParseResult& value) noexcept;
-
-    // Move to the next struct value
-    void next(size_t prev) noexcept { model.fbe_shift(prev); }
-
-public:
-    FieldModel_pg_query_ParseResult model;
-};
-
-} // namespace pg_query
-
-// Fast Binary Encoding ::pg_query::ScanResult field model
-class FieldModel_pg_query_ScanResult : public BaseFieldModel
-{
-public:
-    FieldModel_pg_query_ScanResult(FBEBuffer& buffer, size_t offset) noexcept;
+    FieldModelPtr_pg_query_ScanResult(FBEBuffer& buffer, size_t offset) noexcept;
+    ~FieldModelPtr_pg_query_ScanResult();
 
     // Get the field offset
-    size_t fbe_offset() const noexcept override { return _offset; }
+    size_t fbe_offset() const noexcept { return _offset; }
     // Get the field size
-    size_t fbe_size() const noexcept override { return 4; }
-    // Get the field body size
-    size_t fbe_body() const noexcept;
+    size_t fbe_size() const noexcept { return 5; }
     // Get the field extra size
-    size_t fbe_extra() const noexcept override;
+    size_t fbe_extra() const noexcept;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 2; }
+    static constexpr size_t fbe_type() noexcept { return 231; }
 
     // Shift the current field offset
-    void fbe_shift(size_t size) noexcept override { _offset += size; }
+    void fbe_shift(size_t size) noexcept { _offset += size; }
     // Unshift the current field offset
-    void fbe_unshift(size_t size) noexcept override { _offset -= size; }
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
 
     // Check if the struct value is valid
-    bool verify(bool fbe_verify_type = true) const noexcept override;
-    // Check if the struct fields are valid
-    bool verify_fields(size_t fbe_struct_size) const noexcept override;
+    bool verify() const noexcept;
+    // Check if the struct ptr is nullptr
+    bool has_value() const noexcept;
 
     // Get the struct value (begin phase)
-    size_t get_begin() const noexcept override;
+    size_t get_begin() const noexcept;
     // Get the struct value (end phase)
-    void get_end(size_t fbe_begin) const noexcept override;
+    void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::FBE::Base& fbe_value) noexcept override;
+    void get(::pg_query::ScanResult** fbe_value) noexcept;
     // Get the struct fields values
-    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size) noexcept override;
+    void get_fields(::pg_query::ScanResult& fbe_value, size_t fbe_struct_size) noexcept;
 
     // Set the struct value (begin phase)
-    size_t set_begin() override;
+    size_t set_begin(bool has_value);
     // Set the struct value (end phase)
-    void set_end(size_t fbe_begin) override;
+    void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::FBE::Base& fbe_value) noexcept override;
+    void set(const ::pg_query::ScanResult* fbe_value) noexcept;
     // Set the struct fields values
-    void set_fields(const ::FBE::Base& fbe_value) noexcept override;
+    void set_fields(const ::pg_query::ScanResult* fbe_value) noexcept;
 
 private:
     FBEBuffer& _buffer;
     size_t _offset;
 
 public:
-    FieldModel<int32_t> version;
-    FieldModelCustomVector<FieldModel_pg_query_ScanToken, ::pg_query::ScanToken> tokens;
+    BaseFieldModel* ptr{nullptr};
 };
-
-namespace pg_query {
-
-// Fast Binary Encoding ScanResult model
-class ScanResultModel : public FBE::Model
-{
-public:
-    ScanResultModel() : model(this->buffer(), 4) {}
-    ScanResultModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), model(this->buffer(), 4) {}
-
-    // Get the model size
-    size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
-    // Get the model type
-    static constexpr size_t fbe_type() noexcept { return FieldModel_pg_query_ScanResult::fbe_type(); }
-
-    // Check if the struct value is valid
-    bool verify();
-
-    // Create a new model (begin phase)
-    size_t create_begin();
-    // Create a new model (end phase)
-    size_t create_end(size_t fbe_begin);
-
-    // Serialize the struct value
-    size_t serialize(const ::pg_query::ScanResult& value);
-    // Deserialize the struct value
-    size_t deserialize(::pg_query::ScanResult& value) noexcept;
-
-    // Move to the next struct value
-    void next(size_t prev) noexcept { model.fbe_shift(prev); }
-
-public:
-    FieldModel_pg_query_ScanResult model;
-};
-
-} // namespace pg_query
 
 // Fast Binary Encoding ::pg_query::Integer field model
 class FieldModel_pg_query_Integer : public BaseFieldModel
@@ -12960,7 +12776,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 3; }
+    static constexpr size_t fbe_type() noexcept { return 1; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13051,7 +12867,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 4; }
+    static constexpr size_t fbe_type() noexcept { return 2; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13142,7 +12958,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 5; }
+    static constexpr size_t fbe_type() noexcept { return 3; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13233,7 +13049,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 6; }
+    static constexpr size_t fbe_type() noexcept { return 4; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13324,7 +13140,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 7; }
+    static constexpr size_t fbe_type() noexcept { return 5; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13414,7 +13230,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 8; }
+    static constexpr size_t fbe_type() noexcept { return 6; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13451,7 +13267,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> items;
+    FieldModelVector<::pg_query::Node> items;
 };
 
 namespace pg_query {
@@ -13505,7 +13321,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 9; }
+    static constexpr size_t fbe_type() noexcept { return 7; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13542,7 +13358,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> items;
+    FieldModelVector<::pg_query::Node> items;
 };
 
 namespace pg_query {
@@ -13596,7 +13412,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 10; }
+    static constexpr size_t fbe_type() noexcept { return 8; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13633,7 +13449,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> items;
+    FieldModelVector<::pg_query::Node> items;
 };
 
 namespace pg_query {
@@ -13687,7 +13503,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 11; }
+    static constexpr size_t fbe_type() noexcept { return 9; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13725,7 +13541,7 @@ private:
 
 public:
     FieldModel<std::string> aliasname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> colnames;
+    FieldModelVector<::pg_query::Node> colnames;
 };
 
 namespace pg_query {
@@ -13779,7 +13595,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 12; }
+    static constexpr size_t fbe_type() noexcept { return 10; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13821,7 +13637,7 @@ public:
     FieldModel<std::string> relname;
     FieldModel<bool> inh;
     FieldModel<std::string> relpersistence;
-    FieldModel_pg_query_Alias alias;
+    FieldModelPtr_pg_query_Alias alias;
     FieldModel<int32_t> location;
 };
 
@@ -13876,7 +13692,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 13; }
+    static constexpr size_t fbe_type() noexcept { return 11; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -13913,16 +13729,16 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> ns_uris;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> ns_names;
-    FieldModel_pg_query_Node docexpr;
-    FieldModel_pg_query_Node rowexpr;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> colnames;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> coltypes;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> coltypmods;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> colcollations;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> colexprs;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> coldefexprs;
+    FieldModelVector<::pg_query::Node> ns_uris;
+    FieldModelVector<::pg_query::Node> ns_names;
+    FieldModel<::pg_query::Node> docexpr;
+    FieldModel<::pg_query::Node> rowexpr;
+    FieldModelVector<::pg_query::Node> colnames;
+    FieldModelVector<::pg_query::Node> coltypes;
+    FieldModelVector<::pg_query::Node> coltypmods;
+    FieldModelVector<::pg_query::Node> colcollations;
+    FieldModelVector<::pg_query::Node> colexprs;
+    FieldModelVector<::pg_query::Node> coldefexprs;
     FieldModelVector<uint64_t> notnulls;
     FieldModel<int32_t> ordinalitycol;
     FieldModel<int32_t> location;
@@ -13979,7 +13795,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 14; }
+    static constexpr size_t fbe_type() noexcept { return 12; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -14069,7 +13885,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 15; }
+    static constexpr size_t fbe_type() noexcept { return 13; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -14106,7 +13922,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> varno;
     FieldModel<int32_t> varattno;
     FieldModel<uint32_t> vartype;
@@ -14169,7 +13985,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 16; }
+    static constexpr size_t fbe_type() noexcept { return 14; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -14206,7 +14022,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<::pg_query::ParamKind> paramkind;
     FieldModel<int32_t> paramid;
     FieldModel<uint32_t> paramtype;
@@ -14266,7 +14082,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 17; }
+    static constexpr size_t fbe_type() noexcept { return 15; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -14303,18 +14119,18 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> aggfnoid;
     FieldModel<uint32_t> aggtype;
     FieldModel<uint32_t> aggcollid;
     FieldModel<uint32_t> inputcollid;
     FieldModel<uint32_t> aggtranstype;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> aggargtypes;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> aggdirectargs;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> aggorder;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> aggdistinct;
-    FieldModel_pg_query_Node aggfilter;
+    FieldModelVector<::pg_query::Node> aggargtypes;
+    FieldModelVector<::pg_query::Node> aggdirectargs;
+    FieldModelVector<::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> aggorder;
+    FieldModelVector<::pg_query::Node> aggdistinct;
+    FieldModel<::pg_query::Node> aggfilter;
     FieldModel<bool> aggstar;
     FieldModel<bool> aggvariadic;
     FieldModel<std::string> aggkind;
@@ -14374,7 +14190,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 18; }
+    static constexpr size_t fbe_type() noexcept { return 16; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -14411,10 +14227,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> refs;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> cols;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModelVector<::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> refs;
+    FieldModelVector<::pg_query::Node> cols;
     FieldModel<uint32_t> agglevelsup;
     FieldModel<int32_t> location;
 };
@@ -14470,7 +14286,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 19; }
+    static constexpr size_t fbe_type() noexcept { return 17; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -14507,13 +14323,13 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> winfnoid;
     FieldModel<uint32_t> wintype;
     FieldModel<uint32_t> wincollid;
     FieldModel<uint32_t> inputcollid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
-    FieldModel_pg_query_Node aggfilter;
+    FieldModelVector<::pg_query::Node> args;
+    FieldModel<::pg_query::Node> aggfilter;
     FieldModel<uint32_t> winref;
     FieldModel<bool> winstar;
     FieldModel<bool> winagg;
@@ -14571,7 +14387,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 20; }
+    static constexpr size_t fbe_type() noexcept { return 18; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -14608,15 +14424,15 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> refcontainertype;
     FieldModel<uint32_t> refelemtype;
     FieldModel<int32_t> reftypmod;
     FieldModel<uint32_t> refcollid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> refupperindexpr;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> reflowerindexpr;
-    FieldModel_pg_query_Node refexpr;
-    FieldModel_pg_query_Node refassgnexpr;
+    FieldModelVector<::pg_query::Node> refupperindexpr;
+    FieldModelVector<::pg_query::Node> reflowerindexpr;
+    FieldModel<::pg_query::Node> refexpr;
+    FieldModel<::pg_query::Node> refassgnexpr;
 };
 
 namespace pg_query {
@@ -14670,7 +14486,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 21; }
+    static constexpr size_t fbe_type() noexcept { return 19; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -14707,7 +14523,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> funcid;
     FieldModel<uint32_t> funcresulttype;
     FieldModel<bool> funcretset;
@@ -14715,7 +14531,7 @@ public:
     FieldModel<::pg_query::CoercionForm> funcformat;
     FieldModel<uint32_t> funccollid;
     FieldModel<uint32_t> inputcollid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<int32_t> location;
 };
 
@@ -14770,7 +14586,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 22; }
+    static constexpr size_t fbe_type() noexcept { return 20; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -14807,8 +14623,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
     FieldModel<std::string> name;
     FieldModel<int32_t> argnumber;
     FieldModel<int32_t> location;
@@ -14865,7 +14681,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 23; }
+    static constexpr size_t fbe_type() noexcept { return 21; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -14902,14 +14718,14 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> opno;
     FieldModel<uint32_t> opfuncid;
     FieldModel<uint32_t> opresulttype;
     FieldModel<bool> opretset;
     FieldModel<uint32_t> opcollid;
     FieldModel<uint32_t> inputcollid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<int32_t> location;
 };
 
@@ -14964,7 +14780,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 24; }
+    static constexpr size_t fbe_type() noexcept { return 22; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15001,14 +14817,14 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> opno;
     FieldModel<uint32_t> opfuncid;
     FieldModel<uint32_t> opresulttype;
     FieldModel<bool> opretset;
     FieldModel<uint32_t> opcollid;
     FieldModel<uint32_t> inputcollid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<int32_t> location;
 };
 
@@ -15063,7 +14879,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 25; }
+    static constexpr size_t fbe_type() noexcept { return 23; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15100,14 +14916,14 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> opno;
     FieldModel<uint32_t> opfuncid;
     FieldModel<uint32_t> opresulttype;
     FieldModel<bool> opretset;
     FieldModel<uint32_t> opcollid;
     FieldModel<uint32_t> inputcollid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<int32_t> location;
 };
 
@@ -15162,7 +14978,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 26; }
+    static constexpr size_t fbe_type() noexcept { return 24; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15199,12 +15015,12 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> opno;
     FieldModel<uint32_t> opfuncid;
     FieldModel<bool> use_or;
     FieldModel<uint32_t> inputcollid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<int32_t> location;
 };
 
@@ -15259,7 +15075,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 27; }
+    static constexpr size_t fbe_type() noexcept { return 25; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15296,9 +15112,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<::pg_query::BoolExprType> boolop;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<int32_t> location;
 };
 
@@ -15353,7 +15169,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 28; }
+    static constexpr size_t fbe_type() noexcept { return 26; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15390,12 +15206,12 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<::pg_query::SubLinkType> sub_link_type;
     FieldModel<int32_t> sub_link_id;
-    FieldModel_pg_query_Node testexpr;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> oper_name;
-    FieldModel_pg_query_Node subselect;
+    FieldModel<::pg_query::Node> testexpr;
+    FieldModelVector<::pg_query::Node> oper_name;
+    FieldModel<::pg_query::Node> subselect;
     FieldModel<int32_t> location;
 };
 
@@ -15450,7 +15266,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 29; }
+    static constexpr size_t fbe_type() noexcept { return 27; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15487,10 +15303,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<::pg_query::SubLinkType> sub_link_type;
-    FieldModel_pg_query_Node testexpr;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> param_ids;
+    FieldModel<::pg_query::Node> testexpr;
+    FieldModelVector<::pg_query::Node> param_ids;
     FieldModel<int32_t> plan_id;
     FieldModel<std::string> plan_name;
     FieldModel<uint32_t> first_col_type;
@@ -15499,9 +15315,9 @@ public:
     FieldModel<bool> use_hash_table;
     FieldModel<bool> unknown_eq_false;
     FieldModel<bool> parallel_safe;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> set_param;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> par_param;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> set_param;
+    FieldModelVector<::pg_query::Node> par_param;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<double> startup_cost;
     FieldModel<double> per_call_cost;
 };
@@ -15557,7 +15373,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 30; }
+    static constexpr size_t fbe_type() noexcept { return 28; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15594,8 +15410,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> subplans;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModelVector<::pg_query::Node> subplans;
 };
 
 namespace pg_query {
@@ -15649,7 +15465,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 31; }
+    static constexpr size_t fbe_type() noexcept { return 29; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15686,8 +15502,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
     FieldModel<int32_t> fieldnum;
     FieldModel<uint32_t> resulttype;
     FieldModel<int32_t> resulttypmod;
@@ -15745,7 +15561,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 32; }
+    static constexpr size_t fbe_type() noexcept { return 30; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15782,10 +15598,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> newvals;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> fieldnums;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
+    FieldModelVector<::pg_query::Node> newvals;
+    FieldModelVector<::pg_query::Node> fieldnums;
     FieldModel<uint32_t> resulttype;
 };
 
@@ -15840,7 +15656,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 33; }
+    static constexpr size_t fbe_type() noexcept { return 31; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15877,8 +15693,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
     FieldModel<uint32_t> resulttype;
     FieldModel<int32_t> resulttypmod;
     FieldModel<uint32_t> resultcollid;
@@ -15937,7 +15753,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 34; }
+    static constexpr size_t fbe_type() noexcept { return 32; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -15974,8 +15790,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
     FieldModel<uint32_t> resulttype;
     FieldModel<uint32_t> resultcollid;
     FieldModel<::pg_query::CoercionForm> coerceformat;
@@ -16033,7 +15849,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 35; }
+    static constexpr size_t fbe_type() noexcept { return 33; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -16070,9 +15886,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
-    FieldModel_pg_query_Node elemexpr;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
+    FieldModel<::pg_query::Node> elemexpr;
     FieldModel<uint32_t> resulttype;
     FieldModel<int32_t> resulttypmod;
     FieldModel<uint32_t> resultcollid;
@@ -16131,7 +15947,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 36; }
+    static constexpr size_t fbe_type() noexcept { return 34; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -16168,8 +15984,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
     FieldModel<uint32_t> resulttype;
     FieldModel<::pg_query::CoercionForm> convertformat;
     FieldModel<int32_t> location;
@@ -16226,7 +16042,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 37; }
+    static constexpr size_t fbe_type() noexcept { return 35; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -16263,8 +16079,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
     FieldModel<uint32_t> coll_oid;
     FieldModel<int32_t> location;
 };
@@ -16320,7 +16136,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 38; }
+    static constexpr size_t fbe_type() noexcept { return 36; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -16357,12 +16173,12 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> casetype;
     FieldModel<uint32_t> casecollid;
-    FieldModel_pg_query_Node arg;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
-    FieldModel_pg_query_Node defresult;
+    FieldModel<::pg_query::Node> arg;
+    FieldModelVector<::pg_query::Node> args;
+    FieldModel<::pg_query::Node> defresult;
     FieldModel<int32_t> location;
 };
 
@@ -16417,7 +16233,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 39; }
+    static constexpr size_t fbe_type() noexcept { return 37; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -16454,9 +16270,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node expr;
-    FieldModel_pg_query_Node result;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> expr;
+    FieldModel<::pg_query::Node> result;
     FieldModel<int32_t> location;
 };
 
@@ -16511,7 +16327,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 40; }
+    static constexpr size_t fbe_type() noexcept { return 38; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -16548,7 +16364,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> type_id;
     FieldModel<int32_t> type_mod;
     FieldModel<uint32_t> collation;
@@ -16605,7 +16421,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 41; }
+    static constexpr size_t fbe_type() noexcept { return 39; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -16642,11 +16458,11 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> array_typeid;
     FieldModel<uint32_t> array_collid;
     FieldModel<uint32_t> element_typeid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> elements;
+    FieldModelVector<::pg_query::Node> elements;
     FieldModel<bool> multidims;
     FieldModel<int32_t> location;
 };
@@ -16702,7 +16518,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 42; }
+    static constexpr size_t fbe_type() noexcept { return 40; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -16739,11 +16555,11 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<uint32_t> row_typeid;
     FieldModel<::pg_query::CoercionForm> row_format;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> colnames;
+    FieldModelVector<::pg_query::Node> colnames;
     FieldModel<int32_t> location;
 };
 
@@ -16798,7 +16614,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 43; }
+    static constexpr size_t fbe_type() noexcept { return 41; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -16835,13 +16651,13 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<::pg_query::RowCompareType> rctype;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> opnos;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> opfamilies;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> inputcollids;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> largs;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> rargs;
+    FieldModelVector<::pg_query::Node> opnos;
+    FieldModelVector<::pg_query::Node> opfamilies;
+    FieldModelVector<::pg_query::Node> inputcollids;
+    FieldModelVector<::pg_query::Node> largs;
+    FieldModelVector<::pg_query::Node> rargs;
 };
 
 namespace pg_query {
@@ -16895,7 +16711,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 44; }
+    static constexpr size_t fbe_type() noexcept { return 42; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -16932,10 +16748,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> coalescetype;
     FieldModel<uint32_t> coalescecollid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<int32_t> location;
 };
 
@@ -16990,7 +16806,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 45; }
+    static constexpr size_t fbe_type() noexcept { return 43; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17027,12 +16843,12 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> minmaxtype;
     FieldModel<uint32_t> minmaxcollid;
     FieldModel<uint32_t> inputcollid;
     FieldModel<::pg_query::MinMaxOp> op;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<int32_t> location;
 };
 
@@ -17087,7 +16903,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 46; }
+    static constexpr size_t fbe_type() noexcept { return 44; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17124,7 +16940,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<::pg_query::SQLValueFunctionOp> op;
     FieldModel<uint32_t> type;
     FieldModel<int32_t> typmod;
@@ -17182,7 +16998,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 47; }
+    static constexpr size_t fbe_type() noexcept { return 45; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17219,12 +17035,12 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<::pg_query::XmlExprOp> op;
     FieldModel<std::string> name;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> named_args;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> arg_names;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> named_args;
+    FieldModelVector<::pg_query::Node> arg_names;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<::pg_query::XmlOptionType> xmloption;
     FieldModel<uint32_t> type;
     FieldModel<int32_t> typmod;
@@ -17282,7 +17098,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 48; }
+    static constexpr size_t fbe_type() noexcept { return 46; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17319,8 +17135,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
     FieldModel<::pg_query::NullTestType> nulltesttype;
     FieldModel<bool> argisrow;
     FieldModel<int32_t> location;
@@ -17377,7 +17193,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 49; }
+    static constexpr size_t fbe_type() noexcept { return 47; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17414,8 +17230,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
     FieldModel<::pg_query::BoolTestType> booltesttype;
     FieldModel<int32_t> location;
 };
@@ -17471,7 +17287,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 50; }
+    static constexpr size_t fbe_type() noexcept { return 48; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17508,8 +17324,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node arg;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> arg;
     FieldModel<uint32_t> resulttype;
     FieldModel<int32_t> resulttypmod;
     FieldModel<uint32_t> resultcollid;
@@ -17568,7 +17384,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 51; }
+    static constexpr size_t fbe_type() noexcept { return 49; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17605,7 +17421,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> type_id;
     FieldModel<int32_t> type_mod;
     FieldModel<uint32_t> collation;
@@ -17663,7 +17479,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 52; }
+    static constexpr size_t fbe_type() noexcept { return 50; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17700,7 +17516,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> type_id;
     FieldModel<int32_t> type_mod;
     FieldModel<uint32_t> collation;
@@ -17758,7 +17574,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 53; }
+    static constexpr size_t fbe_type() noexcept { return 51; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17795,7 +17611,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> cvarno;
     FieldModel<std::string> cursor_name;
     FieldModel<int32_t> cursor_param;
@@ -17852,7 +17668,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 54; }
+    static constexpr size_t fbe_type() noexcept { return 52; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17889,7 +17705,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
+    FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> seqid;
     FieldModel<uint32_t> type_id;
 };
@@ -17945,7 +17761,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 55; }
+    static constexpr size_t fbe_type() noexcept { return 53; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -17982,8 +17798,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node expr;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> expr;
     FieldModel<uint32_t> infercollid;
     FieldModel<uint32_t> inferopclass;
 };
@@ -18039,7 +17855,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 56; }
+    static constexpr size_t fbe_type() noexcept { return 54; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -18076,8 +17892,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node xpr;
-    FieldModel_pg_query_Node expr;
+    FieldModel<::pg_query::Node> xpr;
+    FieldModel<::pg_query::Node> expr;
     FieldModel<int32_t> resno;
     FieldModel<std::string> resname;
     FieldModel<uint32_t> ressortgroupref;
@@ -18137,7 +17953,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 57; }
+    static constexpr size_t fbe_type() noexcept { return 55; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -18228,7 +18044,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 58; }
+    static constexpr size_t fbe_type() noexcept { return 56; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -18267,11 +18083,11 @@ private:
 public:
     FieldModel<::pg_query::JoinType> jointype;
     FieldModel<bool> is_natural;
-    FieldModel_pg_query_Node larg;
-    FieldModel_pg_query_Node rarg;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> using_clause;
-    FieldModel_pg_query_Node quals;
-    FieldModel_pg_query_Alias alias;
+    FieldModel<::pg_query::Node> larg;
+    FieldModel<::pg_query::Node> rarg;
+    FieldModelVector<::pg_query::Node> using_clause;
+    FieldModel<::pg_query::Node> quals;
+    FieldModelPtr_pg_query_Alias alias;
     FieldModel<int32_t> rtindex;
 };
 
@@ -18326,7 +18142,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 59; }
+    static constexpr size_t fbe_type() noexcept { return 57; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -18363,8 +18179,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> fromlist;
-    FieldModel_pg_query_Node quals;
+    FieldModelVector<::pg_query::Node> fromlist;
+    FieldModel<::pg_query::Node> quals;
 };
 
 namespace pg_query {
@@ -18418,7 +18234,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 60; }
+    static constexpr size_t fbe_type() noexcept { return 58; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -18456,13 +18272,13 @@ private:
 
 public:
     FieldModel<::pg_query::OnConflictAction> action;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> arbiter_elems;
-    FieldModel_pg_query_Node arbiter_where;
+    FieldModelVector<::pg_query::Node> arbiter_elems;
+    FieldModel<::pg_query::Node> arbiter_where;
     FieldModel<uint32_t> constraint;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> on_conflict_set;
-    FieldModel_pg_query_Node on_conflict_where;
+    FieldModelVector<::pg_query::Node> on_conflict_set;
+    FieldModel<::pg_query::Node> on_conflict_where;
     FieldModel<int32_t> excl_rel_index;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> excl_rel_tlist;
+    FieldModelVector<::pg_query::Node> excl_rel_tlist;
 };
 
 namespace pg_query {
@@ -18516,7 +18332,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 61; }
+    static constexpr size_t fbe_type() noexcept { return 59; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -18553,13 +18369,13 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar rel;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> col_names;
+    FieldModelPtr_pg_query_RangeVar rel;
+    FieldModelVector<::pg_query::Node> col_names;
     FieldModel<std::string> access_method;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
     FieldModel<::pg_query::OnCommitAction> on_commit;
     FieldModel<std::string> table_space_name;
-    FieldModel_pg_query_Node view_query;
+    FieldModel<::pg_query::Node> view_query;
     FieldModel<bool> skip_data;
 };
 
@@ -18614,7 +18430,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 62; }
+    static constexpr size_t fbe_type() noexcept { return 60; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -18651,7 +18467,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node stmt;
+    FieldModel<::pg_query::Node> stmt;
     FieldModel<int32_t> stmt_location;
     FieldModel<int32_t> stmt_len;
 };
@@ -18707,7 +18523,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 63; }
+    static constexpr size_t fbe_type() noexcept { return 61; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -18747,7 +18563,7 @@ public:
     FieldModel<::pg_query::CmdType> command_type;
     FieldModel<::pg_query::QuerySource> query_source;
     FieldModel<bool> can_set_tag;
-    FieldModel_pg_query_Node utility_stmt;
+    FieldModel<::pg_query::Node> utility_stmt;
     FieldModel<int32_t> result_relation;
     FieldModel<bool> has_aggs;
     FieldModel<bool> has_window_funcs;
@@ -18758,26 +18574,26 @@ public:
     FieldModel<bool> has_modifying_cte;
     FieldModel<bool> has_for_update;
     FieldModel<bool> has_row_security;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> cte_list;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> rtable;
-    FieldModel_pg_query_FromExpr jointree;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> target_list;
+    FieldModelVector<::pg_query::Node> cte_list;
+    FieldModelVector<::pg_query::Node> rtable;
+    FieldModelPtr_pg_query_FromExpr jointree;
+    FieldModelVector<::pg_query::Node> target_list;
     FieldModel<::pg_query::OverridingKind> override;
-    FieldModel_pg_query_OnConflictExpr on_conflict;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> returning_list;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> group_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> grouping_sets;
-    FieldModel_pg_query_Node having_qual;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> window_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> distinct_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> sort_clause;
-    FieldModel_pg_query_Node limit_offset;
-    FieldModel_pg_query_Node limit_count;
+    FieldModelPtr_pg_query_OnConflictExpr on_conflict;
+    FieldModelVector<::pg_query::Node> returning_list;
+    FieldModelVector<::pg_query::Node> group_clause;
+    FieldModelVector<::pg_query::Node> grouping_sets;
+    FieldModel<::pg_query::Node> having_qual;
+    FieldModelVector<::pg_query::Node> window_clause;
+    FieldModelVector<::pg_query::Node> distinct_clause;
+    FieldModelVector<::pg_query::Node> sort_clause;
+    FieldModel<::pg_query::Node> limit_offset;
+    FieldModel<::pg_query::Node> limit_count;
     FieldModel<::pg_query::LimitOption> limit_option;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> row_marks;
-    FieldModel_pg_query_Node set_operations;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> constraint_deps;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> with_check_options;
+    FieldModelVector<::pg_query::Node> row_marks;
+    FieldModel<::pg_query::Node> set_operations;
+    FieldModelVector<::pg_query::Node> constraint_deps;
+    FieldModelVector<::pg_query::Node> with_check_options;
     FieldModel<int32_t> stmt_location;
     FieldModel<int32_t> stmt_len;
 };
@@ -18833,7 +18649,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 64; }
+    static constexpr size_t fbe_type() noexcept { return 62; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -18870,12 +18686,12 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar relation;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> cols;
-    FieldModel_pg_query_Node select_stmt;
-    FieldModel_pg_query_OnConflictClause on_conflict_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> returning_list;
-    FieldModel_pg_query_WithClause with_clause;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModelVector<::pg_query::Node> cols;
+    FieldModel<::pg_query::Node> select_stmt;
+    FieldModelPtr_pg_query_OnConflictClause on_conflict_clause;
+    FieldModelVector<::pg_query::Node> returning_list;
+    FieldModelPtr_pg_query_WithClause with_clause;
     FieldModel<::pg_query::OverridingKind> override;
 };
 
@@ -18930,7 +18746,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 65; }
+    static constexpr size_t fbe_type() noexcept { return 63; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -18967,11 +18783,11 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar relation;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> using_clause;
-    FieldModel_pg_query_Node where_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> returning_list;
-    FieldModel_pg_query_WithClause with_clause;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModelVector<::pg_query::Node> using_clause;
+    FieldModel<::pg_query::Node> where_clause;
+    FieldModelVector<::pg_query::Node> returning_list;
+    FieldModelPtr_pg_query_WithClause with_clause;
 };
 
 namespace pg_query {
@@ -19025,7 +18841,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 66; }
+    static constexpr size_t fbe_type() noexcept { return 64; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -19062,12 +18878,12 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar relation;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> target_list;
-    FieldModel_pg_query_Node where_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> from_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> returning_list;
-    FieldModel_pg_query_WithClause with_clause;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModelVector<::pg_query::Node> target_list;
+    FieldModel<::pg_query::Node> where_clause;
+    FieldModelVector<::pg_query::Node> from_clause;
+    FieldModelVector<::pg_query::Node> returning_list;
+    FieldModelPtr_pg_query_WithClause with_clause;
 };
 
 namespace pg_query {
@@ -19121,7 +18937,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 67; }
+    static constexpr size_t fbe_type() noexcept { return 65; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -19158,25 +18974,25 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> distinct_clause;
-    FieldModel_pg_query_IntoClause into_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> target_list;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> from_clause;
-    FieldModel_pg_query_Node where_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> group_clause;
-    FieldModel_pg_query_Node having_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> window_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> values_lists;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> sort_clause;
-    FieldModel_pg_query_Node limit_offset;
-    FieldModel_pg_query_Node limit_count;
+    FieldModelVector<::pg_query::Node> distinct_clause;
+    FieldModelPtr_pg_query_IntoClause into_clause;
+    FieldModelVector<::pg_query::Node> target_list;
+    FieldModelVector<::pg_query::Node> from_clause;
+    FieldModel<::pg_query::Node> where_clause;
+    FieldModelVector<::pg_query::Node> group_clause;
+    FieldModel<::pg_query::Node> having_clause;
+    FieldModelVector<::pg_query::Node> window_clause;
+    FieldModelVector<::pg_query::Node> values_lists;
+    FieldModelVector<::pg_query::Node> sort_clause;
+    FieldModel<::pg_query::Node> limit_offset;
+    FieldModel<::pg_query::Node> limit_count;
     FieldModel<::pg_query::LimitOption> limit_option;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> locking_clause;
-    FieldModel_pg_query_WithClause with_clause;
+    FieldModelVector<::pg_query::Node> locking_clause;
+    FieldModelPtr_pg_query_WithClause with_clause;
     FieldModel<::pg_query::SetOperation> op;
     FieldModel<bool> all;
-    FieldModel_pg_query_SelectStmt larg;
-    FieldModel_pg_query_SelectStmt rarg;
+    FieldModelPtr_pg_query_SelectStmt larg;
+    FieldModelPtr_pg_query_SelectStmt rarg;
 };
 
 namespace pg_query {
@@ -19230,7 +19046,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 68; }
+    static constexpr size_t fbe_type() noexcept { return 66; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -19267,8 +19083,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar relation;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> cmds;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModelVector<::pg_query::Node> cmds;
     FieldModel<::pg_query::ObjectType> relkind;
     FieldModel<bool> missing_ok;
 };
@@ -19324,7 +19140,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 69; }
+    static constexpr size_t fbe_type() noexcept { return 67; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -19364,8 +19180,8 @@ public:
     FieldModel<::pg_query::AlterTableType> subtype;
     FieldModel<std::string> name;
     FieldModel<int32_t> num;
-    FieldModel_pg_query_RoleSpec newowner;
-    FieldModel_pg_query_Node def;
+    FieldModelPtr_pg_query_RoleSpec newowner;
+    FieldModel<::pg_query::Node> def;
     FieldModel<::pg_query::DropBehavior> behavior;
     FieldModel<bool> missing_ok;
 };
@@ -19421,7 +19237,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 70; }
+    static constexpr size_t fbe_type() noexcept { return 68; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -19459,9 +19275,9 @@ private:
 
 public:
     FieldModel<std::string> subtype;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> type_name;
+    FieldModelVector<::pg_query::Node> type_name;
     FieldModel<std::string> name;
-    FieldModel_pg_query_Node def;
+    FieldModel<::pg_query::Node> def;
     FieldModel<::pg_query::DropBehavior> behavior;
     FieldModel<bool> missing_ok;
 };
@@ -19517,7 +19333,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 71; }
+    static constexpr size_t fbe_type() noexcept { return 69; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -19556,12 +19372,12 @@ private:
 public:
     FieldModel<::pg_query::SetOperation> op;
     FieldModel<bool> all;
-    FieldModel_pg_query_Node larg;
-    FieldModel_pg_query_Node rarg;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> col_types;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> col_typmods;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> col_collations;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> group_clauses;
+    FieldModel<::pg_query::Node> larg;
+    FieldModel<::pg_query::Node> rarg;
+    FieldModelVector<::pg_query::Node> col_types;
+    FieldModelVector<::pg_query::Node> col_typmods;
+    FieldModelVector<::pg_query::Node> col_collations;
+    FieldModelVector<::pg_query::Node> group_clauses;
 };
 
 namespace pg_query {
@@ -19615,7 +19431,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 72; }
+    static constexpr size_t fbe_type() noexcept { return 70; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -19655,9 +19471,9 @@ public:
     FieldModel<bool> is_grant;
     FieldModel<::pg_query::GrantTargetType> targtype;
     FieldModel<::pg_query::ObjectType> objtype;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> objects;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> privileges;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> grantees;
+    FieldModelVector<::pg_query::Node> objects;
+    FieldModelVector<::pg_query::Node> privileges;
+    FieldModelVector<::pg_query::Node> grantees;
     FieldModel<bool> grant_option;
     FieldModel<::pg_query::DropBehavior> behavior;
 };
@@ -19713,7 +19529,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 73; }
+    static constexpr size_t fbe_type() noexcept { return 71; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -19750,11 +19566,11 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> granted_roles;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> grantee_roles;
+    FieldModelVector<::pg_query::Node> granted_roles;
+    FieldModelVector<::pg_query::Node> grantee_roles;
     FieldModel<bool> is_grant;
     FieldModel<bool> admin_opt;
-    FieldModel_pg_query_RoleSpec grantor;
+    FieldModelPtr_pg_query_RoleSpec grantor;
     FieldModel<::pg_query::DropBehavior> behavior;
 };
 
@@ -19809,7 +19625,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 74; }
+    static constexpr size_t fbe_type() noexcept { return 72; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -19846,8 +19662,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
-    FieldModel_pg_query_GrantStmt action;
+    FieldModelVector<::pg_query::Node> options;
+    FieldModelPtr_pg_query_GrantStmt action;
 };
 
 namespace pg_query {
@@ -19901,7 +19717,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 75; }
+    static constexpr size_t fbe_type() noexcept { return 73; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -19992,7 +19808,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 76; }
+    static constexpr size_t fbe_type() noexcept { return 74; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -20029,7 +19845,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar relation;
+    FieldModelPtr_pg_query_RangeVar relation;
     FieldModel<std::string> indexname;
     FieldModel<int32_t> options;
 };
@@ -20085,7 +19901,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 77; }
+    static constexpr size_t fbe_type() noexcept { return 75; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -20122,14 +19938,14 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar relation;
-    FieldModel_pg_query_Node query;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> attlist;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModel<::pg_query::Node> query;
+    FieldModelVector<::pg_query::Node> attlist;
     FieldModel<bool> is_from;
     FieldModel<bool> is_program;
     FieldModel<std::string> filename;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
-    FieldModel_pg_query_Node where_clause;
+    FieldModelVector<::pg_query::Node> options;
+    FieldModel<::pg_query::Node> where_clause;
 };
 
 namespace pg_query {
@@ -20183,7 +19999,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 78; }
+    static constexpr size_t fbe_type() noexcept { return 76; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -20220,14 +20036,14 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar relation;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> table_elts;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> inh_relations;
-    FieldModel_pg_query_PartitionBoundSpec partbound;
-    FieldModel_pg_query_PartitionSpec partspec;
-    FieldModel_pg_query_TypeName of_typename;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> constraints;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModelVector<::pg_query::Node> table_elts;
+    FieldModelVector<::pg_query::Node> inh_relations;
+    FieldModelPtr_pg_query_PartitionBoundSpec partbound;
+    FieldModelPtr_pg_query_PartitionSpec partspec;
+    FieldModelPtr_pg_query_TypeName of_typename;
+    FieldModelVector<::pg_query::Node> constraints;
+    FieldModelVector<::pg_query::Node> options;
     FieldModel<::pg_query::OnCommitAction> oncommit;
     FieldModel<std::string> tablespacename;
     FieldModel<std::string> access_method;
@@ -20285,7 +20101,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 79; }
+    static constexpr size_t fbe_type() noexcept { return 77; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -20324,9 +20140,9 @@ private:
 public:
     FieldModel<::pg_query::ObjectType> kind;
     FieldModel<bool> oldstyle;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> defnames;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> definition;
+    FieldModelVector<::pg_query::Node> defnames;
+    FieldModelVector<::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> definition;
     FieldModel<bool> if_not_exists;
     FieldModel<bool> replace;
 };
@@ -20382,7 +20198,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 80; }
+    static constexpr size_t fbe_type() noexcept { return 78; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -20419,7 +20235,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> objects;
+    FieldModelVector<::pg_query::Node> objects;
     FieldModel<::pg_query::ObjectType> remove_type;
     FieldModel<::pg_query::DropBehavior> behavior;
     FieldModel<bool> missing_ok;
@@ -20477,7 +20293,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 81; }
+    static constexpr size_t fbe_type() noexcept { return 79; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -20514,7 +20330,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> relations;
+    FieldModelVector<::pg_query::Node> relations;
     FieldModel<bool> restart_seqs;
     FieldModel<::pg_query::DropBehavior> behavior;
 };
@@ -20570,7 +20386,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 82; }
+    static constexpr size_t fbe_type() noexcept { return 80; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -20608,7 +20424,7 @@ private:
 
 public:
     FieldModel<::pg_query::ObjectType> objtype;
-    FieldModel_pg_query_Node object;
+    FieldModel<::pg_query::Node> object;
     FieldModel<std::string> comment;
 };
 
@@ -20663,7 +20479,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 83; }
+    static constexpr size_t fbe_type() noexcept { return 81; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -20757,7 +20573,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 84; }
+    static constexpr size_t fbe_type() noexcept { return 82; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -20795,14 +20611,14 @@ private:
 
 public:
     FieldModel<std::string> idxname;
-    FieldModel_pg_query_RangeVar relation;
+    FieldModelPtr_pg_query_RangeVar relation;
     FieldModel<std::string> access_method;
     FieldModel<std::string> table_space;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> index_params;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> index_including_params;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
-    FieldModel_pg_query_Node where_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> exclude_op_names;
+    FieldModelVector<::pg_query::Node> index_params;
+    FieldModelVector<::pg_query::Node> index_including_params;
+    FieldModelVector<::pg_query::Node> options;
+    FieldModel<::pg_query::Node> where_clause;
+    FieldModelVector<::pg_query::Node> exclude_op_names;
     FieldModel<std::string> idxcomment;
     FieldModel<uint32_t> index_oid;
     FieldModel<uint32_t> old_node;
@@ -20870,7 +20686,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 85; }
+    static constexpr size_t fbe_type() noexcept { return 83; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -20909,10 +20725,10 @@ private:
 public:
     FieldModel<bool> is_procedure;
     FieldModel<bool> replace;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> funcname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> parameters;
-    FieldModel_pg_query_TypeName return_type;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> funcname;
+    FieldModelVector<::pg_query::Node> parameters;
+    FieldModelPtr_pg_query_TypeName return_type;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -20966,7 +20782,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 86; }
+    static constexpr size_t fbe_type() noexcept { return 84; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21004,8 +20820,8 @@ private:
 
 public:
     FieldModel<::pg_query::ObjectType> objtype;
-    FieldModel_pg_query_ObjectWithArgs func;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> actions;
+    FieldModelPtr_pg_query_ObjectWithArgs func;
+    FieldModelVector<::pg_query::Node> actions;
 };
 
 namespace pg_query {
@@ -21059,7 +20875,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 87; }
+    static constexpr size_t fbe_type() noexcept { return 85; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21096,7 +20912,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> args;
 };
 
 namespace pg_query {
@@ -21150,7 +20966,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 88; }
+    static constexpr size_t fbe_type() noexcept { return 86; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21189,8 +21005,8 @@ private:
 public:
     FieldModel<::pg_query::ObjectType> rename_type;
     FieldModel<::pg_query::ObjectType> relation_type;
-    FieldModel_pg_query_RangeVar relation;
-    FieldModel_pg_query_Node object;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModel<::pg_query::Node> object;
     FieldModel<std::string> subname;
     FieldModel<std::string> newname;
     FieldModel<::pg_query::DropBehavior> behavior;
@@ -21248,7 +21064,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 89; }
+    static constexpr size_t fbe_type() noexcept { return 87; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21285,12 +21101,12 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar relation;
+    FieldModelPtr_pg_query_RangeVar relation;
     FieldModel<std::string> rulename;
-    FieldModel_pg_query_Node where_clause;
+    FieldModel<::pg_query::Node> where_clause;
     FieldModel<::pg_query::CmdType> event;
     FieldModel<bool> instead;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> actions;
+    FieldModelVector<::pg_query::Node> actions;
     FieldModel<bool> replace;
 };
 
@@ -21345,7 +21161,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 90; }
+    static constexpr size_t fbe_type() noexcept { return 88; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21437,7 +21253,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 91; }
+    static constexpr size_t fbe_type() noexcept { return 89; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21528,7 +21344,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 92; }
+    static constexpr size_t fbe_type() noexcept { return 90; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21619,7 +21435,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 93; }
+    static constexpr size_t fbe_type() noexcept { return 91; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21657,7 +21473,7 @@ private:
 
 public:
     FieldModel<::pg_query::TransactionStmtKind> kind;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
     FieldModel<std::string> savepoint_name;
     FieldModel<std::string> gid;
     FieldModel<bool> chain;
@@ -21714,7 +21530,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 94; }
+    static constexpr size_t fbe_type() noexcept { return 92; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21751,11 +21567,11 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar view;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> aliases;
-    FieldModel_pg_query_Node query;
+    FieldModelPtr_pg_query_RangeVar view;
+    FieldModelVector<::pg_query::Node> aliases;
+    FieldModel<::pg_query::Node> query;
     FieldModel<bool> replace;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
     FieldModel<::pg_query::ViewCheckOption> with_check_option;
 };
 
@@ -21810,7 +21626,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 95; }
+    static constexpr size_t fbe_type() noexcept { return 93; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21901,7 +21717,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 96; }
+    static constexpr size_t fbe_type() noexcept { return 94; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -21938,10 +21754,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> domainname;
-    FieldModel_pg_query_TypeName type_name;
-    FieldModel_pg_query_CollateClause coll_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> constraints;
+    FieldModelVector<::pg_query::Node> domainname;
+    FieldModelPtr_pg_query_TypeName type_name;
+    FieldModelPtr_pg_query_CollateClause coll_clause;
+    FieldModelVector<::pg_query::Node> constraints;
 };
 
 namespace pg_query {
@@ -21995,7 +21811,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 97; }
+    static constexpr size_t fbe_type() noexcept { return 95; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22033,7 +21849,7 @@ private:
 
 public:
     FieldModel<std::string> dbname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -22087,7 +21903,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 98; }
+    static constexpr size_t fbe_type() noexcept { return 96; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22126,7 +21942,7 @@ private:
 public:
     FieldModel<std::string> dbname;
     FieldModel<bool> missing_ok;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -22180,7 +21996,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 99; }
+    static constexpr size_t fbe_type() noexcept { return 97; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22217,8 +22033,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> rels;
+    FieldModelVector<::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> rels;
     FieldModel<bool> is_vacuumcmd;
 };
 
@@ -22273,7 +22089,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 100; }
+    static constexpr size_t fbe_type() noexcept { return 98; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22310,8 +22126,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node query;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModel<::pg_query::Node> query;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -22365,7 +22181,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 101; }
+    static constexpr size_t fbe_type() noexcept { return 99; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22402,8 +22218,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node query;
-    FieldModel_pg_query_IntoClause into;
+    FieldModel<::pg_query::Node> query;
+    FieldModelPtr_pg_query_IntoClause into;
     FieldModel<::pg_query::ObjectType> relkind;
     FieldModel<bool> is_select_into;
     FieldModel<bool> if_not_exists;
@@ -22460,7 +22276,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 102; }
+    static constexpr size_t fbe_type() noexcept { return 100; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22497,8 +22313,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar sequence;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelPtr_pg_query_RangeVar sequence;
+    FieldModelVector<::pg_query::Node> options;
     FieldModel<uint32_t> owner_id;
     FieldModel<bool> for_identity;
     FieldModel<bool> if_not_exists;
@@ -22555,7 +22371,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 103; }
+    static constexpr size_t fbe_type() noexcept { return 101; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22592,8 +22408,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar sequence;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelPtr_pg_query_RangeVar sequence;
+    FieldModelVector<::pg_query::Node> options;
     FieldModel<bool> for_identity;
     FieldModel<bool> missing_ok;
 };
@@ -22649,7 +22465,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 104; }
+    static constexpr size_t fbe_type() noexcept { return 102; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22688,7 +22504,7 @@ private:
 public:
     FieldModel<::pg_query::VariableSetKind> kind;
     FieldModel<std::string> name;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<bool> is_local;
 };
 
@@ -22743,7 +22559,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 105; }
+    static constexpr size_t fbe_type() noexcept { return 103; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22834,7 +22650,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 106; }
+    static constexpr size_t fbe_type() noexcept { return 104; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22925,7 +22741,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 107; }
+    static constexpr size_t fbe_type() noexcept { return 105; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -22963,19 +22779,19 @@ private:
 
 public:
     FieldModel<std::string> trigname;
-    FieldModel_pg_query_RangeVar relation;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> funcname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModelVector<::pg_query::Node> funcname;
+    FieldModelVector<::pg_query::Node> args;
     FieldModel<bool> row;
     FieldModel<int32_t> timing;
     FieldModel<int32_t> events;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> columns;
-    FieldModel_pg_query_Node when_clause;
+    FieldModelVector<::pg_query::Node> columns;
+    FieldModel<::pg_query::Node> when_clause;
     FieldModel<bool> isconstraint;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> transition_rels;
+    FieldModelVector<::pg_query::Node> transition_rels;
     FieldModel<bool> deferrable;
     FieldModel<bool> initdeferred;
-    FieldModel_pg_query_RangeVar constrrel;
+    FieldModelPtr_pg_query_RangeVar constrrel;
 };
 
 namespace pg_query {
@@ -23029,7 +22845,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 108; }
+    static constexpr size_t fbe_type() noexcept { return 106; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23068,9 +22884,9 @@ private:
 public:
     FieldModel<bool> replace;
     FieldModel<std::string> plname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> plhandler;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> plinline;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> plvalidator;
+    FieldModelVector<::pg_query::Node> plhandler;
+    FieldModelVector<::pg_query::Node> plinline;
+    FieldModelVector<::pg_query::Node> plvalidator;
     FieldModel<bool> pltrusted;
 };
 
@@ -23125,7 +22941,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 109; }
+    static constexpr size_t fbe_type() noexcept { return 107; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23164,7 +22980,7 @@ private:
 public:
     FieldModel<::pg_query::RoleStmtType> stmt_type;
     FieldModel<std::string> role;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -23218,7 +23034,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 110; }
+    static constexpr size_t fbe_type() noexcept { return 108; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23255,8 +23071,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RoleSpec role;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelPtr_pg_query_RoleSpec role;
+    FieldModelVector<::pg_query::Node> options;
     FieldModel<int32_t> action;
 };
 
@@ -23311,7 +23127,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 111; }
+    static constexpr size_t fbe_type() noexcept { return 109; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23348,7 +23164,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> roles;
+    FieldModelVector<::pg_query::Node> roles;
     FieldModel<bool> missing_ok;
 };
 
@@ -23403,7 +23219,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 112; }
+    static constexpr size_t fbe_type() noexcept { return 110; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23440,7 +23256,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> relations;
+    FieldModelVector<::pg_query::Node> relations;
     FieldModel<int32_t> mode;
     FieldModel<bool> nowait;
 };
@@ -23496,7 +23312,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 113; }
+    static constexpr size_t fbe_type() noexcept { return 111; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23533,7 +23349,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> constraints;
+    FieldModelVector<::pg_query::Node> constraints;
     FieldModel<bool> deferred;
 };
 
@@ -23588,7 +23404,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 114; }
+    static constexpr size_t fbe_type() noexcept { return 112; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23626,7 +23442,7 @@ private:
 
 public:
     FieldModel<::pg_query::ReindexObjectType> kind;
-    FieldModel_pg_query_RangeVar relation;
+    FieldModelPtr_pg_query_RangeVar relation;
     FieldModel<std::string> name;
     FieldModel<int32_t> options;
     FieldModel<bool> concurrent;
@@ -23683,7 +23499,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 115; }
+    static constexpr size_t fbe_type() noexcept { return 113; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23773,7 +23589,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 116; }
+    static constexpr size_t fbe_type() noexcept { return 114; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23811,8 +23627,8 @@ private:
 
 public:
     FieldModel<std::string> schemaname;
-    FieldModel_pg_query_RoleSpec authrole;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> schema_elts;
+    FieldModelPtr_pg_query_RoleSpec authrole;
+    FieldModelVector<::pg_query::Node> schema_elts;
     FieldModel<bool> if_not_exists;
 };
 
@@ -23867,7 +23683,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 117; }
+    static constexpr size_t fbe_type() noexcept { return 115; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23905,7 +23721,7 @@ private:
 
 public:
     FieldModel<std::string> dbname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -23959,7 +23775,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 118; }
+    static constexpr size_t fbe_type() noexcept { return 116; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -23997,7 +23813,7 @@ private:
 
 public:
     FieldModel<std::string> dbname;
-    FieldModel_pg_query_VariableSetStmt setstmt;
+    FieldModelPtr_pg_query_VariableSetStmt setstmt;
 };
 
 namespace pg_query {
@@ -24051,7 +23867,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 119; }
+    static constexpr size_t fbe_type() noexcept { return 117; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -24088,9 +23904,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RoleSpec role;
+    FieldModelPtr_pg_query_RoleSpec role;
     FieldModel<std::string> database;
-    FieldModel_pg_query_VariableSetStmt setstmt;
+    FieldModelPtr_pg_query_VariableSetStmt setstmt;
 };
 
 namespace pg_query {
@@ -24144,7 +23960,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 120; }
+    static constexpr size_t fbe_type() noexcept { return 118; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -24181,10 +23997,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> conversion_name;
+    FieldModelVector<::pg_query::Node> conversion_name;
     FieldModel<std::string> for_encoding_name;
     FieldModel<std::string> to_encoding_name;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> func_name;
+    FieldModelVector<::pg_query::Node> func_name;
     FieldModel<bool> def;
 };
 
@@ -24239,7 +24055,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 121; }
+    static constexpr size_t fbe_type() noexcept { return 119; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -24276,9 +24092,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_TypeName sourcetype;
-    FieldModel_pg_query_TypeName targettype;
-    FieldModel_pg_query_ObjectWithArgs func;
+    FieldModelPtr_pg_query_TypeName sourcetype;
+    FieldModelPtr_pg_query_TypeName targettype;
+    FieldModelPtr_pg_query_ObjectWithArgs func;
     FieldModel<::pg_query::CoercionContext> context;
     FieldModel<bool> inout;
 };
@@ -24334,7 +24150,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 122; }
+    static constexpr size_t fbe_type() noexcept { return 120; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -24371,11 +24187,11 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> opclassname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> opfamilyname;
+    FieldModelVector<::pg_query::Node> opclassname;
+    FieldModelVector<::pg_query::Node> opfamilyname;
     FieldModel<std::string> amname;
-    FieldModel_pg_query_TypeName datatype;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> items;
+    FieldModelPtr_pg_query_TypeName datatype;
+    FieldModelVector<::pg_query::Node> items;
     FieldModel<bool> is_default;
 };
 
@@ -24430,7 +24246,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 123; }
+    static constexpr size_t fbe_type() noexcept { return 121; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -24467,7 +24283,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> opfamilyname;
+    FieldModelVector<::pg_query::Node> opfamilyname;
     FieldModel<std::string> amname;
 };
 
@@ -24522,7 +24338,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 124; }
+    static constexpr size_t fbe_type() noexcept { return 122; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -24559,10 +24375,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> opfamilyname;
+    FieldModelVector<::pg_query::Node> opfamilyname;
     FieldModel<std::string> amname;
     FieldModel<bool> is_drop;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> items;
+    FieldModelVector<::pg_query::Node> items;
 };
 
 namespace pg_query {
@@ -24616,7 +24432,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 125; }
+    static constexpr size_t fbe_type() noexcept { return 123; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -24654,8 +24470,8 @@ private:
 
 public:
     FieldModel<std::string> name;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> argtypes;
-    FieldModel_pg_query_Node query;
+    FieldModelVector<::pg_query::Node> argtypes;
+    FieldModel<::pg_query::Node> query;
 };
 
 namespace pg_query {
@@ -24709,7 +24525,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 126; }
+    static constexpr size_t fbe_type() noexcept { return 124; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -24747,7 +24563,7 @@ private:
 
 public:
     FieldModel<std::string> name;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> params;
+    FieldModelVector<::pg_query::Node> params;
 };
 
 namespace pg_query {
@@ -24801,7 +24617,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 127; }
+    static constexpr size_t fbe_type() noexcept { return 125; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -24892,7 +24708,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 128; }
+    static constexpr size_t fbe_type() noexcept { return 126; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -24931,7 +24747,7 @@ private:
 public:
     FieldModel<std::string> portalname;
     FieldModel<int32_t> options;
-    FieldModel_pg_query_Node query;
+    FieldModel<::pg_query::Node> query;
 };
 
 namespace pg_query {
@@ -24985,7 +24801,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 129; }
+    static constexpr size_t fbe_type() noexcept { return 127; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25023,9 +24839,9 @@ private:
 
 public:
     FieldModel<std::string> tablespacename;
-    FieldModel_pg_query_RoleSpec owner;
+    FieldModelPtr_pg_query_RoleSpec owner;
     FieldModel<std::string> location;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -25079,7 +24895,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 130; }
+    static constexpr size_t fbe_type() noexcept { return 128; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25171,7 +24987,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 131; }
+    static constexpr size_t fbe_type() noexcept { return 129; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25209,9 +25025,9 @@ private:
 
 public:
     FieldModel<::pg_query::ObjectType> object_type;
-    FieldModel_pg_query_RangeVar relation;
-    FieldModel_pg_query_Node object;
-    FieldModel_pg_query_Node extname;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModel<::pg_query::Node> object;
+    FieldModel<::pg_query::Node> extname;
     FieldModel<bool> remove;
 };
 
@@ -25266,7 +25082,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 132; }
+    static constexpr size_t fbe_type() noexcept { return 130; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25304,8 +25120,8 @@ private:
 
 public:
     FieldModel<::pg_query::ObjectType> object_type;
-    FieldModel_pg_query_RangeVar relation;
-    FieldModel_pg_query_Node object;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModel<::pg_query::Node> object;
     FieldModel<std::string> newschema;
     FieldModel<bool> missing_ok;
 };
@@ -25361,7 +25177,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 133; }
+    static constexpr size_t fbe_type() noexcept { return 131; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25399,9 +25215,9 @@ private:
 
 public:
     FieldModel<::pg_query::ObjectType> object_type;
-    FieldModel_pg_query_RangeVar relation;
-    FieldModel_pg_query_Node object;
-    FieldModel_pg_query_RoleSpec newowner;
+    FieldModelPtr_pg_query_RangeVar relation;
+    FieldModel<::pg_query::Node> object;
+    FieldModelPtr_pg_query_RoleSpec newowner;
 };
 
 namespace pg_query {
@@ -25455,7 +25271,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 134; }
+    static constexpr size_t fbe_type() noexcept { return 132; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25492,8 +25308,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_ObjectWithArgs opername;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelPtr_pg_query_ObjectWithArgs opername;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -25547,7 +25363,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 135; }
+    static constexpr size_t fbe_type() noexcept { return 133; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25584,8 +25400,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> type_name;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> type_name;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -25639,7 +25455,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 136; }
+    static constexpr size_t fbe_type() noexcept { return 134; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25676,7 +25492,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> roles;
+    FieldModelVector<::pg_query::Node> roles;
     FieldModel<::pg_query::DropBehavior> behavior;
 };
 
@@ -25731,7 +25547,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 137; }
+    static constexpr size_t fbe_type() noexcept { return 135; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25768,8 +25584,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> roles;
-    FieldModel_pg_query_RoleSpec newrole;
+    FieldModelVector<::pg_query::Node> roles;
+    FieldModelPtr_pg_query_RoleSpec newrole;
 };
 
 namespace pg_query {
@@ -25823,7 +25639,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 138; }
+    static constexpr size_t fbe_type() noexcept { return 136; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25860,8 +25676,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar typevar;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> coldeflist;
+    FieldModelPtr_pg_query_RangeVar typevar;
+    FieldModelVector<::pg_query::Node> coldeflist;
 };
 
 namespace pg_query {
@@ -25915,7 +25731,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 139; }
+    static constexpr size_t fbe_type() noexcept { return 137; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -25952,8 +25768,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> type_name;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> vals;
+    FieldModelVector<::pg_query::Node> type_name;
+    FieldModelVector<::pg_query::Node> vals;
 };
 
 namespace pg_query {
@@ -26007,7 +25823,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 140; }
+    static constexpr size_t fbe_type() noexcept { return 138; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26044,8 +25860,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> type_name;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> params;
+    FieldModelVector<::pg_query::Node> type_name;
+    FieldModelVector<::pg_query::Node> params;
 };
 
 namespace pg_query {
@@ -26099,7 +25915,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 141; }
+    static constexpr size_t fbe_type() noexcept { return 139; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26136,7 +25952,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> type_name;
+    FieldModelVector<::pg_query::Node> type_name;
     FieldModel<std::string> old_val;
     FieldModel<std::string> new_val;
     FieldModel<std::string> new_val_neighbor;
@@ -26195,7 +26011,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 142; }
+    static constexpr size_t fbe_type() noexcept { return 140; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26232,8 +26048,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> dictname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> dictname;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -26287,7 +26103,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 143; }
+    static constexpr size_t fbe_type() noexcept { return 141; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26325,9 +26141,9 @@ private:
 
 public:
     FieldModel<::pg_query::AlterTSConfigType> kind;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> cfgname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> tokentype;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> dicts;
+    FieldModelVector<::pg_query::Node> cfgname;
+    FieldModelVector<::pg_query::Node> tokentype;
+    FieldModelVector<::pg_query::Node> dicts;
     FieldModel<bool> override;
     FieldModel<bool> replace;
     FieldModel<bool> missing_ok;
@@ -26384,7 +26200,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 144; }
+    static constexpr size_t fbe_type() noexcept { return 142; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26422,8 +26238,8 @@ private:
 
 public:
     FieldModel<std::string> fdwname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> func_options;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> func_options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -26477,7 +26293,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 145; }
+    static constexpr size_t fbe_type() noexcept { return 143; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26515,8 +26331,8 @@ private:
 
 public:
     FieldModel<std::string> fdwname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> func_options;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> func_options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -26570,7 +26386,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 146; }
+    static constexpr size_t fbe_type() noexcept { return 144; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26612,7 +26428,7 @@ public:
     FieldModel<std::string> version;
     FieldModel<std::string> fdwname;
     FieldModel<bool> if_not_exists;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -26666,7 +26482,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 147; }
+    static constexpr size_t fbe_type() noexcept { return 145; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26705,7 +26521,7 @@ private:
 public:
     FieldModel<std::string> servername;
     FieldModel<std::string> version;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
     FieldModel<bool> has_version;
 };
 
@@ -26760,7 +26576,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 148; }
+    static constexpr size_t fbe_type() noexcept { return 146; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26797,10 +26613,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RoleSpec user;
+    FieldModelPtr_pg_query_RoleSpec user;
     FieldModel<std::string> servername;
     FieldModel<bool> if_not_exists;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -26854,7 +26670,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 149; }
+    static constexpr size_t fbe_type() noexcept { return 147; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26891,9 +26707,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RoleSpec user;
+    FieldModelPtr_pg_query_RoleSpec user;
     FieldModel<std::string> servername;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -26947,7 +26763,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 150; }
+    static constexpr size_t fbe_type() noexcept { return 148; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -26984,7 +26800,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RoleSpec user;
+    FieldModelPtr_pg_query_RoleSpec user;
     FieldModel<std::string> servername;
     FieldModel<bool> missing_ok;
 };
@@ -27040,7 +26856,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 151; }
+    static constexpr size_t fbe_type() noexcept { return 149; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -27078,7 +26894,7 @@ private:
 
 public:
     FieldModel<std::string> tablespacename;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
     FieldModel<bool> is_reset;
 };
 
@@ -27133,7 +26949,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 152; }
+    static constexpr size_t fbe_type() noexcept { return 150; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -27172,7 +26988,7 @@ private:
 public:
     FieldModel<std::string> orig_tablespacename;
     FieldModel<::pg_query::ObjectType> objtype;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> roles;
+    FieldModelVector<::pg_query::Node> roles;
     FieldModel<std::string> new_tablespacename;
     FieldModel<bool> nowait;
 };
@@ -27228,7 +27044,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 153; }
+    static constexpr size_t fbe_type() noexcept { return 151; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -27266,7 +27082,7 @@ private:
 
 public:
     FieldModel<::pg_query::ObjectType> objtype;
-    FieldModel_pg_query_Node object;
+    FieldModel<::pg_query::Node> object;
     FieldModel<std::string> provider;
     FieldModel<std::string> label;
 };
@@ -27322,7 +27138,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 154; }
+    static constexpr size_t fbe_type() noexcept { return 152; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -27361,7 +27177,7 @@ private:
 public:
     FieldModel_pg_query_CreateStmt base_stmt;
     FieldModel<std::string> servername;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -27415,7 +27231,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 155; }
+    static constexpr size_t fbe_type() noexcept { return 153; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -27456,8 +27272,8 @@ public:
     FieldModel<std::string> remote_schema;
     FieldModel<std::string> local_schema;
     FieldModel<::pg_query::ImportForeignSchemaType> list_type;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> table_list;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> table_list;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -27511,7 +27327,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 156; }
+    static constexpr size_t fbe_type() noexcept { return 154; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -27550,7 +27366,7 @@ private:
 public:
     FieldModel<std::string> extname;
     FieldModel<bool> if_not_exists;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -27604,7 +27420,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 157; }
+    static constexpr size_t fbe_type() noexcept { return 155; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -27642,7 +27458,7 @@ private:
 
 public:
     FieldModel<std::string> extname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -27696,7 +27512,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 158; }
+    static constexpr size_t fbe_type() noexcept { return 156; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -27736,7 +27552,7 @@ public:
     FieldModel<std::string> extname;
     FieldModel<int32_t> action;
     FieldModel<::pg_query::ObjectType> objtype;
-    FieldModel_pg_query_Node object;
+    FieldModel<::pg_query::Node> object;
 };
 
 namespace pg_query {
@@ -27790,7 +27606,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 159; }
+    static constexpr size_t fbe_type() noexcept { return 157; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -27829,8 +27645,8 @@ private:
 public:
     FieldModel<std::string> trigname;
     FieldModel<std::string> eventname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> whenclause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> funcname;
+    FieldModelVector<::pg_query::Node> whenclause;
+    FieldModelVector<::pg_query::Node> funcname;
 };
 
 namespace pg_query {
@@ -27884,7 +27700,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 160; }
+    static constexpr size_t fbe_type() noexcept { return 158; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -27976,7 +27792,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 161; }
+    static constexpr size_t fbe_type() noexcept { return 159; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28015,7 +27831,7 @@ private:
 public:
     FieldModel<bool> concurrent;
     FieldModel<bool> skip_data;
-    FieldModel_pg_query_RangeVar relation;
+    FieldModelPtr_pg_query_RangeVar relation;
 };
 
 namespace pg_query {
@@ -28069,7 +27885,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 162; }
+    static constexpr size_t fbe_type() noexcept { return 160; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28161,7 +27977,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 163; }
+    static constexpr size_t fbe_type() noexcept { return 161; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28198,7 +28014,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_VariableSetStmt setstmt;
+    FieldModelPtr_pg_query_VariableSetStmt setstmt;
 };
 
 namespace pg_query {
@@ -28252,7 +28068,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 164; }
+    static constexpr size_t fbe_type() noexcept { return 162; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28290,12 +28106,12 @@ private:
 
 public:
     FieldModel<std::string> policy_name;
-    FieldModel_pg_query_RangeVar table;
+    FieldModelPtr_pg_query_RangeVar table;
     FieldModel<std::string> cmd_name;
     FieldModel<bool> permissive;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> roles;
-    FieldModel_pg_query_Node qual;
-    FieldModel_pg_query_Node with_check;
+    FieldModelVector<::pg_query::Node> roles;
+    FieldModel<::pg_query::Node> qual;
+    FieldModel<::pg_query::Node> with_check;
 };
 
 namespace pg_query {
@@ -28349,7 +28165,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 165; }
+    static constexpr size_t fbe_type() noexcept { return 163; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28387,10 +28203,10 @@ private:
 
 public:
     FieldModel<std::string> policy_name;
-    FieldModel_pg_query_RangeVar table;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> roles;
-    FieldModel_pg_query_Node qual;
-    FieldModel_pg_query_Node with_check;
+    FieldModelPtr_pg_query_RangeVar table;
+    FieldModelVector<::pg_query::Node> roles;
+    FieldModel<::pg_query::Node> qual;
+    FieldModel<::pg_query::Node> with_check;
 };
 
 namespace pg_query {
@@ -28444,7 +28260,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 166; }
+    static constexpr size_t fbe_type() noexcept { return 164; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28482,10 +28298,10 @@ private:
 
 public:
     FieldModel<bool> replace;
-    FieldModel_pg_query_TypeName type_name;
+    FieldModelPtr_pg_query_TypeName type_name;
     FieldModel<std::string> lang;
-    FieldModel_pg_query_ObjectWithArgs fromsql;
-    FieldModel_pg_query_ObjectWithArgs tosql;
+    FieldModelPtr_pg_query_ObjectWithArgs fromsql;
+    FieldModelPtr_pg_query_ObjectWithArgs tosql;
 };
 
 namespace pg_query {
@@ -28539,7 +28355,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 167; }
+    static constexpr size_t fbe_type() noexcept { return 165; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28577,7 +28393,7 @@ private:
 
 public:
     FieldModel<std::string> amname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> handler_name;
+    FieldModelVector<::pg_query::Node> handler_name;
     FieldModel<std::string> amtype;
 };
 
@@ -28632,7 +28448,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 168; }
+    static constexpr size_t fbe_type() noexcept { return 166; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28670,8 +28486,8 @@ private:
 
 public:
     FieldModel<std::string> pubname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> tables;
+    FieldModelVector<::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> tables;
     FieldModel<bool> for_all_tables;
 };
 
@@ -28726,7 +28542,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 169; }
+    static constexpr size_t fbe_type() noexcept { return 167; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28764,8 +28580,8 @@ private:
 
 public:
     FieldModel<std::string> pubname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> tables;
+    FieldModelVector<::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> tables;
     FieldModel<bool> for_all_tables;
     FieldModel<::pg_query::DefElemAction> table_action;
 };
@@ -28821,7 +28637,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 170; }
+    static constexpr size_t fbe_type() noexcept { return 168; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28860,8 +28676,8 @@ private:
 public:
     FieldModel<std::string> subname;
     FieldModel<std::string> conninfo;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> publication;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> publication;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -28915,7 +28731,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 171; }
+    static constexpr size_t fbe_type() noexcept { return 169; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -28955,8 +28771,8 @@ public:
     FieldModel<::pg_query::AlterSubscriptionType> kind;
     FieldModel<std::string> subname;
     FieldModel<std::string> conninfo;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> publication;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> publication;
+    FieldModelVector<::pg_query::Node> options;
 };
 
 namespace pg_query {
@@ -29010,7 +28826,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 172; }
+    static constexpr size_t fbe_type() noexcept { return 170; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -29103,7 +28919,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 173; }
+    static constexpr size_t fbe_type() noexcept { return 171; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -29140,10 +28956,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> defnames;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> stat_types;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> exprs;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> relations;
+    FieldModelVector<::pg_query::Node> defnames;
+    FieldModelVector<::pg_query::Node> stat_types;
+    FieldModelVector<::pg_query::Node> exprs;
+    FieldModelVector<::pg_query::Node> relations;
     FieldModel<std::string> stxcomment;
     FieldModel<bool> if_not_exists;
 };
@@ -29199,7 +29015,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 174; }
+    static constexpr size_t fbe_type() noexcept { return 172; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -29236,7 +29052,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> collname;
+    FieldModelVector<::pg_query::Node> collname;
 };
 
 namespace pg_query {
@@ -29290,7 +29106,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 175; }
+    static constexpr size_t fbe_type() noexcept { return 173; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -29327,8 +29143,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_FuncCall funccall;
-    FieldModel_pg_query_FuncExpr funcexpr;
+    FieldModelPtr_pg_query_FuncCall funccall;
+    FieldModelPtr_pg_query_FuncExpr funcexpr;
 };
 
 namespace pg_query {
@@ -29382,7 +29198,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 176; }
+    static constexpr size_t fbe_type() noexcept { return 174; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -29419,7 +29235,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> defnames;
+    FieldModelVector<::pg_query::Node> defnames;
     FieldModel<int32_t> stxstattarget;
     FieldModel<bool> missing_ok;
 };
@@ -29475,7 +29291,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 177; }
+    static constexpr size_t fbe_type() noexcept { return 175; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -29513,9 +29329,9 @@ private:
 
 public:
     FieldModel<::pg_query::A_Expr_Kind> kind;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> name;
-    FieldModel_pg_query_Node lexpr;
-    FieldModel_pg_query_Node rexpr;
+    FieldModelVector<::pg_query::Node> name;
+    FieldModel<::pg_query::Node> lexpr;
+    FieldModel<::pg_query::Node> rexpr;
     FieldModel<int32_t> location;
 };
 
@@ -29570,7 +29386,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 178; }
+    static constexpr size_t fbe_type() noexcept { return 176; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -29607,7 +29423,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> fields;
+    FieldModelVector<::pg_query::Node> fields;
     FieldModel<int32_t> location;
 };
 
@@ -29662,7 +29478,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 179; }
+    static constexpr size_t fbe_type() noexcept { return 177; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -29754,7 +29570,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 180; }
+    static constexpr size_t fbe_type() noexcept { return 178; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -29791,7 +29607,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node val;
+    FieldModel<::pg_query::Node> val;
     FieldModel<int32_t> location;
 };
 
@@ -29846,7 +29662,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 181; }
+    static constexpr size_t fbe_type() noexcept { return 179; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -29883,15 +29699,15 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> funcname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> agg_order;
-    FieldModel_pg_query_Node agg_filter;
+    FieldModelVector<::pg_query::Node> funcname;
+    FieldModelVector<::pg_query::Node> args;
+    FieldModelVector<::pg_query::Node> agg_order;
+    FieldModel<::pg_query::Node> agg_filter;
     FieldModel<bool> agg_within_group;
     FieldModel<bool> agg_star;
     FieldModel<bool> agg_distinct;
     FieldModel<bool> func_variadic;
-    FieldModel_pg_query_WindowDef over;
+    FieldModelPtr_pg_query_WindowDef over;
     FieldModel<int32_t> location;
 };
 
@@ -29946,7 +29762,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 182; }
+    static constexpr size_t fbe_type() noexcept { return 180; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30036,7 +29852,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 183; }
+    static constexpr size_t fbe_type() noexcept { return 181; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30074,8 +29890,8 @@ private:
 
 public:
     FieldModel<bool> is_slice;
-    FieldModel_pg_query_Node lidx;
-    FieldModel_pg_query_Node uidx;
+    FieldModel<::pg_query::Node> lidx;
+    FieldModel<::pg_query::Node> uidx;
 };
 
 namespace pg_query {
@@ -30129,7 +29945,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 184; }
+    static constexpr size_t fbe_type() noexcept { return 182; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30166,8 +29982,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node arg;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> indirection;
+    FieldModel<::pg_query::Node> arg;
+    FieldModelVector<::pg_query::Node> indirection;
 };
 
 namespace pg_query {
@@ -30221,7 +30037,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 185; }
+    static constexpr size_t fbe_type() noexcept { return 183; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30258,7 +30074,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> elements;
+    FieldModelVector<::pg_query::Node> elements;
     FieldModel<int32_t> location;
 };
 
@@ -30313,7 +30129,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 186; }
+    static constexpr size_t fbe_type() noexcept { return 184; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30351,8 +30167,8 @@ private:
 
 public:
     FieldModel<std::string> name;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> indirection;
-    FieldModel_pg_query_Node val;
+    FieldModelVector<::pg_query::Node> indirection;
+    FieldModel<::pg_query::Node> val;
     FieldModel<int32_t> location;
 };
 
@@ -30407,7 +30223,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 187; }
+    static constexpr size_t fbe_type() noexcept { return 185; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30444,7 +30260,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node source;
+    FieldModel<::pg_query::Node> source;
     FieldModel<int32_t> colno;
     FieldModel<int32_t> ncolumns;
 };
@@ -30500,7 +30316,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 188; }
+    static constexpr size_t fbe_type() noexcept { return 186; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30537,8 +30353,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node arg;
-    FieldModel_pg_query_TypeName type_name;
+    FieldModel<::pg_query::Node> arg;
+    FieldModelPtr_pg_query_TypeName type_name;
     FieldModel<int32_t> location;
 };
 
@@ -30593,7 +30409,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 189; }
+    static constexpr size_t fbe_type() noexcept { return 187; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30630,8 +30446,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node arg;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> collname;
+    FieldModel<::pg_query::Node> arg;
+    FieldModelVector<::pg_query::Node> collname;
     FieldModel<int32_t> location;
 };
 
@@ -30686,7 +30502,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 190; }
+    static constexpr size_t fbe_type() noexcept { return 188; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30723,10 +30539,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node node;
+    FieldModel<::pg_query::Node> node;
     FieldModel<::pg_query::SortByDir> sortby_dir;
     FieldModel<::pg_query::SortByNulls> sortby_nulls;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> use_op;
+    FieldModelVector<::pg_query::Node> use_op;
     FieldModel<int32_t> location;
 };
 
@@ -30781,7 +30597,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 191; }
+    static constexpr size_t fbe_type() noexcept { return 189; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30820,11 +30636,11 @@ private:
 public:
     FieldModel<std::string> name;
     FieldModel<std::string> refname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> partition_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> order_clause;
+    FieldModelVector<::pg_query::Node> partition_clause;
+    FieldModelVector<::pg_query::Node> order_clause;
     FieldModel<int32_t> frame_options;
-    FieldModel_pg_query_Node start_offset;
-    FieldModel_pg_query_Node end_offset;
+    FieldModel<::pg_query::Node> start_offset;
+    FieldModel<::pg_query::Node> end_offset;
     FieldModel<int32_t> location;
 };
 
@@ -30879,7 +30695,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 192; }
+    static constexpr size_t fbe_type() noexcept { return 190; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -30917,8 +30733,8 @@ private:
 
 public:
     FieldModel<bool> lateral;
-    FieldModel_pg_query_Node subquery;
-    FieldModel_pg_query_Alias alias;
+    FieldModel<::pg_query::Node> subquery;
+    FieldModelPtr_pg_query_Alias alias;
 };
 
 namespace pg_query {
@@ -30972,7 +30788,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 193; }
+    static constexpr size_t fbe_type() noexcept { return 191; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -31012,9 +30828,9 @@ public:
     FieldModel<bool> lateral;
     FieldModel<bool> ordinality;
     FieldModel<bool> is_rowsfrom;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> functions;
-    FieldModel_pg_query_Alias alias;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> coldeflist;
+    FieldModelVector<::pg_query::Node> functions;
+    FieldModelPtr_pg_query_Alias alias;
+    FieldModelVector<::pg_query::Node> coldeflist;
 };
 
 namespace pg_query {
@@ -31068,7 +30884,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 194; }
+    static constexpr size_t fbe_type() noexcept { return 192; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -31105,10 +30921,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node relation;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> method;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
-    FieldModel_pg_query_Node repeatable;
+    FieldModel<::pg_query::Node> relation;
+    FieldModelVector<::pg_query::Node> method;
+    FieldModelVector<::pg_query::Node> args;
+    FieldModel<::pg_query::Node> repeatable;
     FieldModel<int32_t> location;
 };
 
@@ -31163,7 +30979,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 195; }
+    static constexpr size_t fbe_type() noexcept { return 193; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -31201,11 +31017,11 @@ private:
 
 public:
     FieldModel<bool> lateral;
-    FieldModel_pg_query_Node docexpr;
-    FieldModel_pg_query_Node rowexpr;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> namespaces;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> columns;
-    FieldModel_pg_query_Alias alias;
+    FieldModel<::pg_query::Node> docexpr;
+    FieldModel<::pg_query::Node> rowexpr;
+    FieldModelVector<::pg_query::Node> namespaces;
+    FieldModelVector<::pg_query::Node> columns;
+    FieldModelPtr_pg_query_Alias alias;
     FieldModel<int32_t> location;
 };
 
@@ -31260,7 +31076,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 196; }
+    static constexpr size_t fbe_type() noexcept { return 194; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -31298,11 +31114,11 @@ private:
 
 public:
     FieldModel<std::string> colname;
-    FieldModel_pg_query_TypeName type_name;
+    FieldModelPtr_pg_query_TypeName type_name;
     FieldModel<bool> for_ordinality;
     FieldModel<bool> is_not_null;
-    FieldModel_pg_query_Node colexpr;
-    FieldModel_pg_query_Node coldefexpr;
+    FieldModel<::pg_query::Node> colexpr;
+    FieldModel<::pg_query::Node> coldefexpr;
     FieldModel<int32_t> location;
 };
 
@@ -31357,7 +31173,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 197; }
+    static constexpr size_t fbe_type() noexcept { return 195; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -31394,13 +31210,13 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> names;
+    FieldModelVector<::pg_query::Node> names;
     FieldModel<uint32_t> type_oid;
     FieldModel<bool> setof;
     FieldModel<bool> pct_type;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> typmods;
+    FieldModelVector<::pg_query::Node> typmods;
     FieldModel<int32_t> typemod;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> array_bounds;
+    FieldModelVector<::pg_query::Node> array_bounds;
     FieldModel<int32_t> location;
 };
 
@@ -31455,7 +31271,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 198; }
+    static constexpr size_t fbe_type() noexcept { return 196; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -31493,21 +31309,21 @@ private:
 
 public:
     FieldModel<std::string> colname;
-    FieldModel_pg_query_TypeName type_name;
+    FieldModelPtr_pg_query_TypeName type_name;
     FieldModel<int32_t> inhcount;
     FieldModel<bool> is_local;
     FieldModel<bool> is_not_null;
     FieldModel<bool> is_from_type;
     FieldModel<std::string> storage;
-    FieldModel_pg_query_Node raw_default;
-    FieldModel_pg_query_Node cooked_default;
+    FieldModel<::pg_query::Node> raw_default;
+    FieldModel<::pg_query::Node> cooked_default;
     FieldModel<std::string> identity;
-    FieldModel_pg_query_RangeVar identity_sequence;
+    FieldModelPtr_pg_query_RangeVar identity_sequence;
     FieldModel<std::string> generated;
-    FieldModel_pg_query_CollateClause coll_clause;
+    FieldModelPtr_pg_query_CollateClause coll_clause;
     FieldModel<uint32_t> coll_oid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> constraints;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> fdwoptions;
+    FieldModelVector<::pg_query::Node> constraints;
+    FieldModelVector<::pg_query::Node> fdwoptions;
     FieldModel<int32_t> location;
 };
 
@@ -31562,7 +31378,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 199; }
+    static constexpr size_t fbe_type() noexcept { return 197; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -31600,11 +31416,11 @@ private:
 
 public:
     FieldModel<std::string> name;
-    FieldModel_pg_query_Node expr;
+    FieldModel<::pg_query::Node> expr;
     FieldModel<std::string> indexcolname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> collation;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> opclass;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> opclassopts;
+    FieldModelVector<::pg_query::Node> collation;
+    FieldModelVector<::pg_query::Node> opclass;
+    FieldModelVector<::pg_query::Node> opclassopts;
     FieldModel<::pg_query::SortByDir> ordering;
     FieldModel<::pg_query::SortByNulls> nulls_ordering;
 };
@@ -31660,7 +31476,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 200; }
+    static constexpr size_t fbe_type() noexcept { return 198; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -31703,25 +31519,25 @@ public:
     FieldModel<bool> initdeferred;
     FieldModel<int32_t> location;
     FieldModel<bool> is_no_inherit;
-    FieldModel_pg_query_Node raw_expr;
+    FieldModel<::pg_query::Node> raw_expr;
     FieldModel<std::string> cooked_expr;
     FieldModel<std::string> generated_when;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> keys;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> including;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> exclusions;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> options;
+    FieldModelVector<::pg_query::Node> keys;
+    FieldModelVector<::pg_query::Node> including;
+    FieldModelVector<::pg_query::Node> exclusions;
+    FieldModelVector<::pg_query::Node> options;
     FieldModel<std::string> indexname;
     FieldModel<std::string> indexspace;
     FieldModel<bool> reset_default_tblspc;
     FieldModel<std::string> access_method;
-    FieldModel_pg_query_Node where_clause;
-    FieldModel_pg_query_RangeVar pktable;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> fk_attrs;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> pk_attrs;
+    FieldModel<::pg_query::Node> where_clause;
+    FieldModelPtr_pg_query_RangeVar pktable;
+    FieldModelVector<::pg_query::Node> fk_attrs;
+    FieldModelVector<::pg_query::Node> pk_attrs;
     FieldModel<std::string> fk_matchtype;
     FieldModel<std::string> fk_upd_action;
     FieldModel<std::string> fk_del_action;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> old_conpfeqop;
+    FieldModelVector<::pg_query::Node> old_conpfeqop;
     FieldModel<uint32_t> old_pktable_oid;
     FieldModel<bool> skip_validation;
     FieldModel<bool> initially_valid;
@@ -31778,7 +31594,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 201; }
+    static constexpr size_t fbe_type() noexcept { return 199; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -31817,7 +31633,7 @@ private:
 public:
     FieldModel<std::string> defnamespace;
     FieldModel<std::string> defname;
-    FieldModel_pg_query_Node arg;
+    FieldModel<::pg_query::Node> arg;
     FieldModel<::pg_query::DefElemAction> defaction;
     FieldModel<int32_t> location;
 };
@@ -31873,7 +31689,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 202; }
+    static constexpr size_t fbe_type() noexcept { return 200; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -31914,28 +31730,28 @@ public:
     FieldModel<uint32_t> relid;
     FieldModel<std::string> relkind;
     FieldModel<int32_t> rellockmode;
-    FieldModel_pg_query_TableSampleClause tablesample;
-    FieldModel_pg_query_Query subquery;
+    FieldModelPtr_pg_query_TableSampleClause tablesample;
+    FieldModelPtr_pg_query_Query subquery;
     FieldModel<bool> security_barrier;
     FieldModel<::pg_query::JoinType> jointype;
     FieldModel<int32_t> joinmergedcols;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> joinaliasvars;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> joinleftcols;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> joinrightcols;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> functions;
+    FieldModelVector<::pg_query::Node> joinaliasvars;
+    FieldModelVector<::pg_query::Node> joinleftcols;
+    FieldModelVector<::pg_query::Node> joinrightcols;
+    FieldModelVector<::pg_query::Node> functions;
     FieldModel<bool> funcordinality;
-    FieldModel_pg_query_TableFunc tablefunc;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> values_lists;
+    FieldModelPtr_pg_query_TableFunc tablefunc;
+    FieldModelVector<::pg_query::Node> values_lists;
     FieldModel<std::string> ctename;
     FieldModel<uint32_t> ctelevelsup;
     FieldModel<bool> self_reference;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> coltypes;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> coltypmods;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> colcollations;
+    FieldModelVector<::pg_query::Node> coltypes;
+    FieldModelVector<::pg_query::Node> coltypmods;
+    FieldModelVector<::pg_query::Node> colcollations;
     FieldModel<std::string> enrname;
     FieldModel<double> enrtuples;
-    FieldModel_pg_query_Alias alias;
-    FieldModel_pg_query_Alias eref;
+    FieldModelPtr_pg_query_Alias alias;
+    FieldModelPtr_pg_query_Alias eref;
     FieldModel<bool> lateral;
     FieldModel<bool> inh;
     FieldModel<bool> in_from_cl;
@@ -31945,7 +31761,7 @@ public:
     FieldModelVector<uint64_t> inserted_cols;
     FieldModelVector<uint64_t> updated_cols;
     FieldModelVector<uint64_t> extra_updated_cols;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> security_quals;
+    FieldModelVector<::pg_query::Node> security_quals;
 };
 
 namespace pg_query {
@@ -31999,7 +31815,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 203; }
+    static constexpr size_t fbe_type() noexcept { return 201; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32036,12 +31852,12 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_Node funcexpr;
+    FieldModel<::pg_query::Node> funcexpr;
     FieldModel<int32_t> funccolcount;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> funccolnames;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> funccoltypes;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> funccoltypmods;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> funccolcollations;
+    FieldModelVector<::pg_query::Node> funccolnames;
+    FieldModelVector<::pg_query::Node> funccoltypes;
+    FieldModelVector<::pg_query::Node> funccoltypmods;
+    FieldModelVector<::pg_query::Node> funccolcollations;
     FieldModelVector<uint64_t> funcparams;
 };
 
@@ -32096,7 +31912,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 204; }
+    static constexpr size_t fbe_type() noexcept { return 202; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32134,8 +31950,8 @@ private:
 
 public:
     FieldModel<uint32_t> tsmhandler;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> args;
-    FieldModel_pg_query_Node repeatable;
+    FieldModelVector<::pg_query::Node> args;
+    FieldModel<::pg_query::Node> repeatable;
 };
 
 namespace pg_query {
@@ -32189,7 +32005,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 205; }
+    static constexpr size_t fbe_type() noexcept { return 203; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32229,7 +32045,7 @@ public:
     FieldModel<::pg_query::WCOKind> kind;
     FieldModel<std::string> relname;
     FieldModel<std::string> polname;
-    FieldModel_pg_query_Node qual;
+    FieldModel<::pg_query::Node> qual;
     FieldModel<bool> cascaded;
 };
 
@@ -32284,7 +32100,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 206; }
+    static constexpr size_t fbe_type() noexcept { return 204; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32379,7 +32195,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 207; }
+    static constexpr size_t fbe_type() noexcept { return 205; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32417,7 +32233,7 @@ private:
 
 public:
     FieldModel<::pg_query::GroupingSetKind> kind;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> content;
+    FieldModelVector<::pg_query::Node> content;
     FieldModel<int32_t> location;
 };
 
@@ -32472,7 +32288,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 208; }
+    static constexpr size_t fbe_type() noexcept { return 206; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32511,11 +32327,11 @@ private:
 public:
     FieldModel<std::string> name;
     FieldModel<std::string> refname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> partition_clause;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> order_clause;
+    FieldModelVector<::pg_query::Node> partition_clause;
+    FieldModelVector<::pg_query::Node> order_clause;
     FieldModel<int32_t> frame_options;
-    FieldModel_pg_query_Node start_offset;
-    FieldModel_pg_query_Node end_offset;
+    FieldModel<::pg_query::Node> start_offset;
+    FieldModel<::pg_query::Node> end_offset;
     FieldModel<uint32_t> start_in_range_func;
     FieldModel<uint32_t> end_in_range_func;
     FieldModel<uint32_t> in_range_coll;
@@ -32576,7 +32392,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 209; }
+    static constexpr size_t fbe_type() noexcept { return 207; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32613,8 +32429,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> objname;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> objargs;
+    FieldModelVector<::pg_query::Node> objname;
+    FieldModelVector<::pg_query::Node> objargs;
     FieldModel<bool> args_unspecified;
 };
 
@@ -32669,7 +32485,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 210; }
+    static constexpr size_t fbe_type() noexcept { return 208; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32707,7 +32523,7 @@ private:
 
 public:
     FieldModel<std::string> priv_name;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> cols;
+    FieldModelVector<::pg_query::Node> cols;
 };
 
 namespace pg_query {
@@ -32761,7 +32577,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 211; }
+    static constexpr size_t fbe_type() noexcept { return 209; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32799,11 +32615,11 @@ private:
 
 public:
     FieldModel<int32_t> itemtype;
-    FieldModel_pg_query_ObjectWithArgs name;
+    FieldModelPtr_pg_query_ObjectWithArgs name;
     FieldModel<int32_t> number;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> order_family;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> class_args;
-    FieldModel_pg_query_TypeName storedtype;
+    FieldModelVector<::pg_query::Node> order_family;
+    FieldModelVector<::pg_query::Node> class_args;
+    FieldModelPtr_pg_query_TypeName storedtype;
 };
 
 namespace pg_query {
@@ -32857,7 +32673,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 212; }
+    static constexpr size_t fbe_type() noexcept { return 210; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32894,7 +32710,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar relation;
+    FieldModelPtr_pg_query_RangeVar relation;
     FieldModel<uint32_t> options;
     FieldModel<uint32_t> relation_oid;
 };
@@ -32950,7 +32766,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 213; }
+    static constexpr size_t fbe_type() noexcept { return 211; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -32988,9 +32804,9 @@ private:
 
 public:
     FieldModel<std::string> name;
-    FieldModel_pg_query_TypeName arg_type;
+    FieldModelPtr_pg_query_TypeName arg_type;
     FieldModel<::pg_query::FunctionParameterMode> mode;
-    FieldModel_pg_query_Node defexpr;
+    FieldModel<::pg_query::Node> defexpr;
 };
 
 namespace pg_query {
@@ -33044,7 +32860,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 214; }
+    static constexpr size_t fbe_type() noexcept { return 212; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -33081,7 +32897,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> locked_rels;
+    FieldModelVector<::pg_query::Node> locked_rels;
     FieldModel<::pg_query::LockClauseStrength> strength;
     FieldModel<::pg_query::LockWaitPolicy> wait_policy;
 };
@@ -33137,7 +32953,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 215; }
+    static constexpr size_t fbe_type() noexcept { return 213; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -33231,7 +33047,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 216; }
+    static constexpr size_t fbe_type() noexcept { return 214; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -33269,8 +33085,8 @@ private:
 
 public:
     FieldModel<::pg_query::XmlOptionType> xmloption;
-    FieldModel_pg_query_Node expr;
-    FieldModel_pg_query_TypeName type_name;
+    FieldModel<::pg_query::Node> expr;
+    FieldModelPtr_pg_query_TypeName type_name;
     FieldModel<int32_t> location;
 };
 
@@ -33325,7 +33141,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 217; }
+    static constexpr size_t fbe_type() noexcept { return 215; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -33362,7 +33178,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> ctes;
+    FieldModelVector<::pg_query::Node> ctes;
     FieldModel<bool> recursive;
     FieldModel<int32_t> location;
 };
@@ -33418,7 +33234,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 218; }
+    static constexpr size_t fbe_type() noexcept { return 216; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -33455,8 +33271,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> index_elems;
-    FieldModel_pg_query_Node where_clause;
+    FieldModelVector<::pg_query::Node> index_elems;
+    FieldModel<::pg_query::Node> where_clause;
     FieldModel<std::string> conname;
     FieldModel<int32_t> location;
 };
@@ -33512,7 +33328,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 219; }
+    static constexpr size_t fbe_type() noexcept { return 217; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -33550,9 +33366,9 @@ private:
 
 public:
     FieldModel<::pg_query::OnConflictAction> action;
-    FieldModel_pg_query_InferClause infer;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> target_list;
-    FieldModel_pg_query_Node where_clause;
+    FieldModelPtr_pg_query_InferClause infer;
+    FieldModelVector<::pg_query::Node> target_list;
+    FieldModel<::pg_query::Node> where_clause;
     FieldModel<int32_t> location;
 };
 
@@ -33607,7 +33423,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 220; }
+    static constexpr size_t fbe_type() noexcept { return 218; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -33645,16 +33461,16 @@ private:
 
 public:
     FieldModel<std::string> ctename;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> aliascolnames;
+    FieldModelVector<::pg_query::Node> aliascolnames;
     FieldModel<::pg_query::CTEMaterialize> ctematerialized;
-    FieldModel_pg_query_Node ctequery;
+    FieldModel<::pg_query::Node> ctequery;
     FieldModel<int32_t> location;
     FieldModel<bool> cterecursive;
     FieldModel<int32_t> cterefcount;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> ctecolnames;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> ctecoltypes;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> ctecoltypmods;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> ctecolcollations;
+    FieldModelVector<::pg_query::Node> ctecolnames;
+    FieldModelVector<::pg_query::Node> ctecoltypes;
+    FieldModelVector<::pg_query::Node> ctecoltypmods;
+    FieldModelVector<::pg_query::Node> ctecolcollations;
 };
 
 namespace pg_query {
@@ -33708,7 +33524,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 221; }
+    static constexpr size_t fbe_type() noexcept { return 219; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -33801,7 +33617,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 222; }
+    static constexpr size_t fbe_type() noexcept { return 220; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -33894,7 +33710,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 223; }
+    static constexpr size_t fbe_type() noexcept { return 221; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -33932,9 +33748,9 @@ private:
 
 public:
     FieldModel<std::string> name;
-    FieldModel_pg_query_Node expr;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> collation;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> opclass;
+    FieldModel<::pg_query::Node> expr;
+    FieldModelVector<::pg_query::Node> collation;
+    FieldModelVector<::pg_query::Node> opclass;
     FieldModel<int32_t> location;
 };
 
@@ -33989,7 +33805,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 224; }
+    static constexpr size_t fbe_type() noexcept { return 222; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -34027,7 +33843,7 @@ private:
 
 public:
     FieldModel<std::string> strategy;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> part_params;
+    FieldModelVector<::pg_query::Node> part_params;
     FieldModel<int32_t> location;
 };
 
@@ -34082,7 +33898,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 225; }
+    static constexpr size_t fbe_type() noexcept { return 223; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -34123,9 +33939,9 @@ public:
     FieldModel<bool> is_default;
     FieldModel<int32_t> modulus;
     FieldModel<int32_t> remainder;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> listdatums;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> lowerdatums;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> upperdatums;
+    FieldModelVector<::pg_query::Node> listdatums;
+    FieldModelVector<::pg_query::Node> lowerdatums;
+    FieldModelVector<::pg_query::Node> upperdatums;
     FieldModel<int32_t> location;
 };
 
@@ -34180,7 +33996,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 226; }
+    static constexpr size_t fbe_type() noexcept { return 224; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -34218,7 +34034,7 @@ private:
 
 public:
     FieldModel<::pg_query::PartitionRangeDatumKind> kind;
-    FieldModel_pg_query_Node value;
+    FieldModel<::pg_query::Node> value;
     FieldModel<int32_t> location;
 };
 
@@ -34273,7 +34089,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 227; }
+    static constexpr size_t fbe_type() noexcept { return 225; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -34310,8 +34126,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar name;
-    FieldModel_pg_query_PartitionBoundSpec bound;
+    FieldModelPtr_pg_query_RangeVar name;
+    FieldModelPtr_pg_query_PartitionBoundSpec bound;
 };
 
 namespace pg_query {
@@ -34365,7 +34181,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 228; }
+    static constexpr size_t fbe_type() noexcept { return 226; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -34402,9 +34218,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel_pg_query_RangeVar relation;
+    FieldModelPtr_pg_query_RangeVar relation;
     FieldModel<uint32_t> oid;
-    FieldModelCustomVector<FieldModel_pg_query_Node, ::pg_query::Node> va_cols;
+    FieldModelVector<::pg_query::Node> va_cols;
 };
 
 namespace pg_query {
@@ -34458,7 +34274,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 229; }
+    static constexpr size_t fbe_type() noexcept { return 227; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -34552,7 +34368,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 230; }
+    static constexpr size_t fbe_type() noexcept { return 228; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -34643,7 +34459,7 @@ public:
     // Get the field extra size
     size_t fbe_extra() const noexcept override;
     // Get the field type
-    static constexpr size_t fbe_type() noexcept { return 231; }
+    static constexpr size_t fbe_type() noexcept { return 229; }
 
     // Shift the current field offset
     void fbe_shift(size_t size) noexcept override { _offset += size; }
@@ -34718,6 +34534,190 @@ public:
 
 public:
     FieldModel_pg_query_ScanToken model;
+};
+
+} // namespace pg_query
+
+// Fast Binary Encoding ::pg_query::ParseResult field model
+class FieldModel_pg_query_ParseResult : public BaseFieldModel
+{
+public:
+    FieldModel_pg_query_ParseResult(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the field offset
+    size_t fbe_offset() const noexcept override { return _offset; }
+    // Get the field size
+    size_t fbe_size() const noexcept override { return 4; }
+    // Get the field body size
+    size_t fbe_body() const noexcept;
+    // Get the field extra size
+    size_t fbe_extra() const noexcept override;
+    // Get the field type
+    static constexpr size_t fbe_type() noexcept { return 230; }
+
+    // Shift the current field offset
+    void fbe_shift(size_t size) noexcept override { _offset += size; }
+    // Unshift the current field offset
+    void fbe_unshift(size_t size) noexcept override { _offset -= size; }
+
+    // Check if the struct value is valid
+    bool verify(bool fbe_verify_type = true) const noexcept override;
+    // Check if the struct fields are valid
+    bool verify_fields(size_t fbe_struct_size) const noexcept override;
+
+    // Get the struct value (begin phase)
+    size_t get_begin() const noexcept override;
+    // Get the struct value (end phase)
+    void get_end(size_t fbe_begin) const noexcept override;
+
+    // Get the struct value
+    void get(::FBE::Base& fbe_value) noexcept override;
+    // Get the struct fields values
+    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size) noexcept override;
+
+    // Set the struct value (begin phase)
+    size_t set_begin() override;
+    // Set the struct value (end phase)
+    void set_end(size_t fbe_begin) override;
+
+    // Set the struct value
+    void set(const ::FBE::Base& fbe_value) noexcept override;
+    // Set the struct fields values
+    void set_fields(const ::FBE::Base& fbe_value) noexcept override;
+
+private:
+    FBEBuffer& _buffer;
+    size_t _offset;
+
+public:
+    FieldModel<int32_t> version;
+    FieldModelCustomVector<FieldModel_pg_query_RawStmt, ::pg_query::RawStmt> stmts;
+};
+
+namespace pg_query {
+
+// Fast Binary Encoding ParseResult model
+class ParseResultModel : public FBE::Model
+{
+public:
+    ParseResultModel() : model(this->buffer(), 4) {}
+    ParseResultModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), model(this->buffer(), 4) {}
+
+    // Get the model size
+    size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FieldModel_pg_query_ParseResult::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Create a new model (begin phase)
+    size_t create_begin();
+    // Create a new model (end phase)
+    size_t create_end(size_t fbe_begin);
+
+    // Serialize the struct value
+    size_t serialize(const ::pg_query::ParseResult& value);
+    // Deserialize the struct value
+    size_t deserialize(::pg_query::ParseResult& value) noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { model.fbe_shift(prev); }
+
+public:
+    FieldModel_pg_query_ParseResult model;
+};
+
+} // namespace pg_query
+
+// Fast Binary Encoding ::pg_query::ScanResult field model
+class FieldModel_pg_query_ScanResult : public BaseFieldModel
+{
+public:
+    FieldModel_pg_query_ScanResult(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the field offset
+    size_t fbe_offset() const noexcept override { return _offset; }
+    // Get the field size
+    size_t fbe_size() const noexcept override { return 4; }
+    // Get the field body size
+    size_t fbe_body() const noexcept;
+    // Get the field extra size
+    size_t fbe_extra() const noexcept override;
+    // Get the field type
+    static constexpr size_t fbe_type() noexcept { return 231; }
+
+    // Shift the current field offset
+    void fbe_shift(size_t size) noexcept override { _offset += size; }
+    // Unshift the current field offset
+    void fbe_unshift(size_t size) noexcept override { _offset -= size; }
+
+    // Check if the struct value is valid
+    bool verify(bool fbe_verify_type = true) const noexcept override;
+    // Check if the struct fields are valid
+    bool verify_fields(size_t fbe_struct_size) const noexcept override;
+
+    // Get the struct value (begin phase)
+    size_t get_begin() const noexcept override;
+    // Get the struct value (end phase)
+    void get_end(size_t fbe_begin) const noexcept override;
+
+    // Get the struct value
+    void get(::FBE::Base& fbe_value) noexcept override;
+    // Get the struct fields values
+    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size) noexcept override;
+
+    // Set the struct value (begin phase)
+    size_t set_begin() override;
+    // Set the struct value (end phase)
+    void set_end(size_t fbe_begin) override;
+
+    // Set the struct value
+    void set(const ::FBE::Base& fbe_value) noexcept override;
+    // Set the struct fields values
+    void set_fields(const ::FBE::Base& fbe_value) noexcept override;
+
+private:
+    FBEBuffer& _buffer;
+    size_t _offset;
+
+public:
+    FieldModel<int32_t> version;
+    FieldModelCustomVector<FieldModel_pg_query_ScanToken, ::pg_query::ScanToken> tokens;
+};
+
+namespace pg_query {
+
+// Fast Binary Encoding ScanResult model
+class ScanResultModel : public FBE::Model
+{
+public:
+    ScanResultModel() : model(this->buffer(), 4) {}
+    ScanResultModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), model(this->buffer(), 4) {}
+
+    // Get the model size
+    size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FieldModel_pg_query_ScanResult::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Create a new model (begin phase)
+    size_t create_begin();
+    // Create a new model (end phase)
+    size_t create_end(size_t fbe_begin);
+
+    // Serialize the struct value
+    size_t serialize(const ::pg_query::ScanResult& value);
+    // Deserialize the struct value
+    size_t deserialize(::pg_query::ScanResult& value) noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { model.fbe_shift(prev); }
+
+public:
+    FieldModel_pg_query_ScanResult model;
 };
 
 } // namespace pg_query

@@ -389,7 +389,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the optional value
-    void get(std::optional<T>& opt, const std::optional<T>& defaults = std::nullopt) const noexcept;
+    void get(std::optional<T>& opt, const std::optional<T>& defaults) const noexcept;
+    // Get the optional value
+    void get(std::optional<T>& opt) const noexcept;
 
     // Set the optional value (begin phase)
     size_t set_begin(bool has_value);
