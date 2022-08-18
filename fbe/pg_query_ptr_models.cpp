@@ -7,17 +7,17 @@
 
 namespace FBE {
 
-FieldModel_pg_query_Node::FieldModel_pg_query_Node(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+FieldModel<::pg_query::Node>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
 {}
 
-size_t FieldModel_pg_query_Node::fbe_body() const noexcept
+size_t FieldModel<::pg_query::Node>::fbe_body() const noexcept
 {
     // variant type's fbe_size not included
     size_t fbe_result = 4;
     return fbe_result;
 }
 
-size_t FieldModel_pg_query_Node::fbe_extra() const noexcept
+size_t FieldModel<::pg_query::Node>::fbe_extra() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -35,7 +35,7 @@ size_t FieldModel_pg_query_Node::fbe_extra() const noexcept
     return fbe_result;
 }
 
-bool FieldModel_pg_query_Node::verify() const noexcept
+bool FieldModel<::pg_query::Node>::verify() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return true;
@@ -1424,7 +1424,7 @@ bool FieldModel_pg_query_Node::verify() const noexcept
     return true;
 }
 
-void FieldModel_pg_query_Node::get(::pg_query::Node& fbe_value) const noexcept
+void FieldModel<::pg_query::Node>::get(::pg_query::Node& fbe_value) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
@@ -3040,7 +3040,7 @@ void FieldModel_pg_query_Node::get(::pg_query::Node& fbe_value) const noexcept
     _buffer.unshift(fbe_variant_offset);
 }
 
-size_t FieldModel_pg_query_Node::set_begin(size_t variant_type_fbe_size, size_t variant_type_index)
+size_t FieldModel<::pg_query::Node>::set_begin(size_t variant_type_fbe_size, size_t variant_type_index)
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -3059,13 +3059,13 @@ size_t FieldModel_pg_query_Node::set_begin(size_t variant_type_fbe_size, size_t 
     return fbe_variant_offset;
 }
 
-void FieldModel_pg_query_Node::set_end(size_t fbe_begin)
+void FieldModel<::pg_query::Node>::set_end(size_t fbe_begin)
 {
     _buffer.unshift(fbe_begin);
 }
 
 // Set the variant value
-void FieldModel_pg_query_Node::set(const ::pg_query::Node& fbe_value) noexcept
+void FieldModel<::pg_query::Node>::set(const ::pg_query::Node& fbe_value) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -4903,728 +4903,6 @@ void FieldModel_pg_query_Node::set(const ::pg_query::Node& fbe_value) noexcept
     );
 }
 
-
-FieldModelPtr_pg_query_ParseResult::FieldModelPtr_pg_query_ParseResult(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
-{}
-
-FieldModelPtr_pg_query_ParseResult::~FieldModelPtr_pg_query_ParseResult()
-{
-    if (ptr) delete ptr;
-}
-
-size_t FieldModelPtr_pg_query_ParseResult::fbe_extra() const noexcept
-{
-    if (!ptr) return 0;
-
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_ptr_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
-    if ((fbe_ptr_offset == 0) || ((_buffer.offset() + fbe_ptr_offset + 4) > _buffer.size()))
-        return 0;
-
-    _buffer.shift(fbe_ptr_offset);
-    size_t fbe_result = ptr->fbe_size() + ptr->fbe_extra();
-    _buffer.unshift(fbe_ptr_offset);
-
-    return fbe_result;
-}
-
-bool FieldModelPtr_pg_query_ParseResult::verify() const noexcept
-{
-    if (!ptr) return true;
-
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return true;
-
-    uint8_t fbe_has_value = *((const uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset()));
-    if (fbe_has_value == 0)
-        return true;
-
-    uint32_t fbe_optional_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
-    if (fbe_optional_offset == 0)
-        return false;
-
-    _buffer.shift(fbe_optional_offset);
-    bool fbe_result = ptr->verify();
-    _buffer.unshift(fbe_optional_offset);
-    return fbe_result;
-}
-
-bool FieldModelPtr_pg_query_ParseResult::has_value() const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return false;
-
-    uint8_t fbe_has_value = *((const uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset()));
-    return (fbe_has_value != 0);
-}
-
-size_t FieldModelPtr_pg_query_ParseResult::get_begin() const noexcept
-{
-    if (!has_value())
-        return 0;
-
-    uint32_t fbe_ptr_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
-    assert((fbe_ptr_offset > 0) && "Model is broken!");
-    if (fbe_ptr_offset == 0)
-        return 0;
-
-    _buffer.shift(fbe_ptr_offset);
-    return fbe_ptr_offset;
-}
-
-void FieldModelPtr_pg_query_ParseResult::get_end(size_t fbe_begin) const noexcept
-{
-    _buffer.unshift(fbe_begin);
-}
-
-void FieldModelPtr_pg_query_ParseResult::get(::pg_query::ParseResult** fbe_value) noexcept
-{
-    size_t fbe_begin = get_begin();
-    if (fbe_begin == 0)
-        return;
-
-    ptr = new FieldModel_pg_query_ParseResult(_buffer, 0);
-
-    ::pg_query::ParseResult *tempModel = new ::pg_query::ParseResult();
-    ptr->get(*tempModel);
-    *fbe_value = tempModel;
-
-    get_end(fbe_begin);
-}
-
-size_t FieldModelPtr_pg_query_ParseResult::set_begin(bool has_value)
-{
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint8_t fbe_has_value = has_value ? 1 : 0;
-    *((uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_has_value;
-    if (fbe_has_value == 0)
-        return 0;
-
-    uint32_t fbe_ptr_size = 4;
-    uint32_t fbe_ptr_offset = (uint32_t)(_buffer.allocate(fbe_ptr_size) - _buffer.offset());
-    assert(((fbe_ptr_offset > 0) && ((_buffer.offset() + fbe_ptr_offset + fbe_ptr_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_ptr_offset == 0) || ((_buffer.offset() + fbe_ptr_offset + fbe_ptr_size) > _buffer.size()))
-        return 0;
-
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1, fbe_ptr_offset);
-
-    _buffer.shift(fbe_ptr_offset);
-    return fbe_ptr_offset;
-}
-
-void FieldModelPtr_pg_query_ParseResult::set_end(size_t fbe_begin)
-{
-    _buffer.unshift(fbe_begin);
-}
-
-void FieldModelPtr_pg_query_ParseResult::set(const ::pg_query::ParseResult* fbe_value) noexcept
-{
-    size_t fbe_begin = set_begin(fbe_value != nullptr);
-    if (fbe_begin == 0)
-        return;
-
-    if (fbe_value != nullptr) {
-        BaseFieldModel* temp = new FieldModel_pg_query_ParseResult(_buffer, 0);
-        ptr = temp;
-        ptr->set(*fbe_value);
-    }
-
-    set_end(fbe_begin);
-}
-
-FieldModel_pg_query_ParseResult::FieldModel_pg_query_ParseResult(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
-    , version(buffer, 4 + 4)
-    , stmts(buffer, version.fbe_offset() + version.fbe_size())
-{}
-
-size_t FieldModel_pg_query_ParseResult::fbe_body() const noexcept
-{
-    size_t fbe_result = 4 + 4
-        + version.fbe_size()
-        + stmts.fbe_size()
-        ;
-    return fbe_result;
-}
-
-size_t FieldModel_pg_query_ParseResult::fbe_extra() const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
-        return 0;
-
-    _buffer.shift(fbe_struct_offset);
-
-    size_t fbe_result = fbe_body()
-        + version.fbe_extra()
-        + stmts.fbe_extra()
-        ;
-
-    _buffer.unshift(fbe_struct_offset);
-
-    return fbe_result;
-}
-
-bool FieldModel_pg_query_ParseResult::verify(bool fbe_verify_type) const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return true;
-
-    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
-        return false;
-
-    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
-    if (fbe_struct_size < (4 + 4))
-        return false;
-
-    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
-    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
-        return false;
-
-    _buffer.shift(fbe_struct_offset);
-    bool fbe_result = verify_fields(fbe_struct_size);
-    _buffer.unshift(fbe_struct_offset);
-    return fbe_result;
-}
-
-bool FieldModel_pg_query_ParseResult::verify_fields(size_t fbe_struct_size) const noexcept
-{
-    size_t fbe_current_size = 4 + 4;
-
-    if ((fbe_current_size + version.fbe_size()) > fbe_struct_size)
-        return true;
-    if (!version.verify())
-        return false;
-    fbe_current_size += version.fbe_size();
-
-    if ((fbe_current_size + stmts.fbe_size()) > fbe_struct_size)
-        return true;
-    if (!stmts.verify())
-        return false;
-    fbe_current_size += stmts.fbe_size();
-
-    return true;
-}
-
-size_t FieldModel_pg_query_ParseResult::get_begin() const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
-        return 0;
-
-    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
-    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
-    if (fbe_struct_size < (4 + 4))
-        return 0;
-
-    _buffer.shift(fbe_struct_offset);
-    return fbe_struct_offset;
-}
-
-void FieldModel_pg_query_ParseResult::get_end(size_t fbe_begin) const noexcept
-{
-    _buffer.unshift(fbe_begin);
-}
-
-void FieldModel_pg_query_ParseResult::get(::FBE::Base& fbe_value) noexcept
-{
-    size_t fbe_begin = get_begin();
-    if (fbe_begin == 0)
-        return;
-
-    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
-    get_end(fbe_begin);
-}
-
-void FieldModel_pg_query_ParseResult::get_fields(::FBE::Base& base_fbe_value, size_t fbe_struct_size) noexcept
-{
-    ::pg_query::ParseResult& fbe_value = static_cast<::pg_query::ParseResult&>(base_fbe_value);
-    size_t fbe_current_size = 4 + 4;
-
-    if ((fbe_current_size + version.fbe_size()) <= fbe_struct_size)
-        {
-            version.get(fbe_value.version);
-        }
-    else
-        fbe_value.version = (int32_t)0ll;
-    fbe_current_size += version.fbe_size();
-
-    if ((fbe_current_size + stmts.fbe_size()) <= fbe_struct_size)
-        {
-            stmts.get(fbe_value.stmts);
-        }
-    else
-        fbe_value.stmts.clear();
-    fbe_current_size += stmts.fbe_size();
-}
-
-size_t FieldModel_pg_query_ParseResult::set_begin()
-{
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_struct_size = (uint32_t)fbe_body();
-    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
-    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
-        return 0;
-
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, fbe_type());
-
-    _buffer.shift(fbe_struct_offset);
-    return fbe_struct_offset;
-}
-
-void FieldModel_pg_query_ParseResult::set_end(size_t fbe_begin)
-{
-    _buffer.unshift(fbe_begin);
-}
-
-void FieldModel_pg_query_ParseResult::set(const ::FBE::Base& fbe_value) noexcept
-{
-    size_t fbe_begin = set_begin();
-    if (fbe_begin == 0)
-        return;
-
-    set_fields(fbe_value);
-    set_end(fbe_begin);
-}
-
-void FieldModel_pg_query_ParseResult::set_fields(const ::FBE::Base& base_fbe_value) noexcept
-{
-    const ::pg_query::ParseResult& fbe_value = static_cast<const ::pg_query::ParseResult&>(base_fbe_value);
-    version.set(fbe_value.version);
-    stmts.set(fbe_value.stmts);
-}
-
-namespace pg_query {
-
-bool ParseResultModel::verify()
-{
-    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
-        return false;
-
-    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
-    if (fbe_full_size < model.fbe_size())
-        return false;
-
-    return model.verify();
-}
-
-size_t ParseResultModel::create_begin()
-{
-    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
-    return fbe_begin;
-}
-
-size_t ParseResultModel::create_end(size_t fbe_begin)
-{
-    size_t fbe_end = this->buffer().size();
-    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
-    return fbe_full_size;
-}
-
-size_t ParseResultModel::serialize(const ::pg_query::ParseResult& value)
-{
-    size_t fbe_begin = create_begin();
-    model.set(value);
-    size_t fbe_full_size = create_end(fbe_begin);
-    return fbe_full_size;
-}
-
-size_t ParseResultModel::deserialize(::pg_query::ParseResult& value) noexcept
-{
-    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
-        return 0;
-
-    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
-    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
-    if (fbe_full_size < model.fbe_size())
-        return 0;
-
-    model.get(value);
-    return fbe_full_size;
-}
-
-} // namespace pg_query
-
-FieldModelPtr_pg_query_ScanResult::FieldModelPtr_pg_query_ScanResult(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
-{}
-
-FieldModelPtr_pg_query_ScanResult::~FieldModelPtr_pg_query_ScanResult()
-{
-    if (ptr) delete ptr;
-}
-
-size_t FieldModelPtr_pg_query_ScanResult::fbe_extra() const noexcept
-{
-    if (!ptr) return 0;
-
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_ptr_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
-    if ((fbe_ptr_offset == 0) || ((_buffer.offset() + fbe_ptr_offset + 4) > _buffer.size()))
-        return 0;
-
-    _buffer.shift(fbe_ptr_offset);
-    size_t fbe_result = ptr->fbe_size() + ptr->fbe_extra();
-    _buffer.unshift(fbe_ptr_offset);
-
-    return fbe_result;
-}
-
-bool FieldModelPtr_pg_query_ScanResult::verify() const noexcept
-{
-    if (!ptr) return true;
-
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return true;
-
-    uint8_t fbe_has_value = *((const uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset()));
-    if (fbe_has_value == 0)
-        return true;
-
-    uint32_t fbe_optional_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
-    if (fbe_optional_offset == 0)
-        return false;
-
-    _buffer.shift(fbe_optional_offset);
-    bool fbe_result = ptr->verify();
-    _buffer.unshift(fbe_optional_offset);
-    return fbe_result;
-}
-
-bool FieldModelPtr_pg_query_ScanResult::has_value() const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return false;
-
-    uint8_t fbe_has_value = *((const uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset()));
-    return (fbe_has_value != 0);
-}
-
-size_t FieldModelPtr_pg_query_ScanResult::get_begin() const noexcept
-{
-    if (!has_value())
-        return 0;
-
-    uint32_t fbe_ptr_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
-    assert((fbe_ptr_offset > 0) && "Model is broken!");
-    if (fbe_ptr_offset == 0)
-        return 0;
-
-    _buffer.shift(fbe_ptr_offset);
-    return fbe_ptr_offset;
-}
-
-void FieldModelPtr_pg_query_ScanResult::get_end(size_t fbe_begin) const noexcept
-{
-    _buffer.unshift(fbe_begin);
-}
-
-void FieldModelPtr_pg_query_ScanResult::get(::pg_query::ScanResult** fbe_value) noexcept
-{
-    size_t fbe_begin = get_begin();
-    if (fbe_begin == 0)
-        return;
-
-    ptr = new FieldModel_pg_query_ScanResult(_buffer, 0);
-
-    ::pg_query::ScanResult *tempModel = new ::pg_query::ScanResult();
-    ptr->get(*tempModel);
-    *fbe_value = tempModel;
-
-    get_end(fbe_begin);
-}
-
-size_t FieldModelPtr_pg_query_ScanResult::set_begin(bool has_value)
-{
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint8_t fbe_has_value = has_value ? 1 : 0;
-    *((uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_has_value;
-    if (fbe_has_value == 0)
-        return 0;
-
-    uint32_t fbe_ptr_size = 4;
-    uint32_t fbe_ptr_offset = (uint32_t)(_buffer.allocate(fbe_ptr_size) - _buffer.offset());
-    assert(((fbe_ptr_offset > 0) && ((_buffer.offset() + fbe_ptr_offset + fbe_ptr_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_ptr_offset == 0) || ((_buffer.offset() + fbe_ptr_offset + fbe_ptr_size) > _buffer.size()))
-        return 0;
-
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1, fbe_ptr_offset);
-
-    _buffer.shift(fbe_ptr_offset);
-    return fbe_ptr_offset;
-}
-
-void FieldModelPtr_pg_query_ScanResult::set_end(size_t fbe_begin)
-{
-    _buffer.unshift(fbe_begin);
-}
-
-void FieldModelPtr_pg_query_ScanResult::set(const ::pg_query::ScanResult* fbe_value) noexcept
-{
-    size_t fbe_begin = set_begin(fbe_value != nullptr);
-    if (fbe_begin == 0)
-        return;
-
-    if (fbe_value != nullptr) {
-        BaseFieldModel* temp = new FieldModel_pg_query_ScanResult(_buffer, 0);
-        ptr = temp;
-        ptr->set(*fbe_value);
-    }
-
-    set_end(fbe_begin);
-}
-
-FieldModel_pg_query_ScanResult::FieldModel_pg_query_ScanResult(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
-    , version(buffer, 4 + 4)
-    , tokens(buffer, version.fbe_offset() + version.fbe_size())
-{}
-
-size_t FieldModel_pg_query_ScanResult::fbe_body() const noexcept
-{
-    size_t fbe_result = 4 + 4
-        + version.fbe_size()
-        + tokens.fbe_size()
-        ;
-    return fbe_result;
-}
-
-size_t FieldModel_pg_query_ScanResult::fbe_extra() const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
-        return 0;
-
-    _buffer.shift(fbe_struct_offset);
-
-    size_t fbe_result = fbe_body()
-        + version.fbe_extra()
-        + tokens.fbe_extra()
-        ;
-
-    _buffer.unshift(fbe_struct_offset);
-
-    return fbe_result;
-}
-
-bool FieldModel_pg_query_ScanResult::verify(bool fbe_verify_type) const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return true;
-
-    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
-        return false;
-
-    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
-    if (fbe_struct_size < (4 + 4))
-        return false;
-
-    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
-    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
-        return false;
-
-    _buffer.shift(fbe_struct_offset);
-    bool fbe_result = verify_fields(fbe_struct_size);
-    _buffer.unshift(fbe_struct_offset);
-    return fbe_result;
-}
-
-bool FieldModel_pg_query_ScanResult::verify_fields(size_t fbe_struct_size) const noexcept
-{
-    size_t fbe_current_size = 4 + 4;
-
-    if ((fbe_current_size + version.fbe_size()) > fbe_struct_size)
-        return true;
-    if (!version.verify())
-        return false;
-    fbe_current_size += version.fbe_size();
-
-    if ((fbe_current_size + tokens.fbe_size()) > fbe_struct_size)
-        return true;
-    if (!tokens.verify())
-        return false;
-    fbe_current_size += tokens.fbe_size();
-
-    return true;
-}
-
-size_t FieldModel_pg_query_ScanResult::get_begin() const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
-        return 0;
-
-    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
-    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
-    if (fbe_struct_size < (4 + 4))
-        return 0;
-
-    _buffer.shift(fbe_struct_offset);
-    return fbe_struct_offset;
-}
-
-void FieldModel_pg_query_ScanResult::get_end(size_t fbe_begin) const noexcept
-{
-    _buffer.unshift(fbe_begin);
-}
-
-void FieldModel_pg_query_ScanResult::get(::FBE::Base& fbe_value) noexcept
-{
-    size_t fbe_begin = get_begin();
-    if (fbe_begin == 0)
-        return;
-
-    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
-    get_end(fbe_begin);
-}
-
-void FieldModel_pg_query_ScanResult::get_fields(::FBE::Base& base_fbe_value, size_t fbe_struct_size) noexcept
-{
-    ::pg_query::ScanResult& fbe_value = static_cast<::pg_query::ScanResult&>(base_fbe_value);
-    size_t fbe_current_size = 4 + 4;
-
-    if ((fbe_current_size + version.fbe_size()) <= fbe_struct_size)
-        {
-            version.get(fbe_value.version);
-        }
-    else
-        fbe_value.version = (int32_t)0ll;
-    fbe_current_size += version.fbe_size();
-
-    if ((fbe_current_size + tokens.fbe_size()) <= fbe_struct_size)
-        {
-            tokens.get(fbe_value.tokens);
-        }
-    else
-        fbe_value.tokens.clear();
-    fbe_current_size += tokens.fbe_size();
-}
-
-size_t FieldModel_pg_query_ScanResult::set_begin()
-{
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_struct_size = (uint32_t)fbe_body();
-    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
-    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
-        return 0;
-
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, fbe_type());
-
-    _buffer.shift(fbe_struct_offset);
-    return fbe_struct_offset;
-}
-
-void FieldModel_pg_query_ScanResult::set_end(size_t fbe_begin)
-{
-    _buffer.unshift(fbe_begin);
-}
-
-void FieldModel_pg_query_ScanResult::set(const ::FBE::Base& fbe_value) noexcept
-{
-    size_t fbe_begin = set_begin();
-    if (fbe_begin == 0)
-        return;
-
-    set_fields(fbe_value);
-    set_end(fbe_begin);
-}
-
-void FieldModel_pg_query_ScanResult::set_fields(const ::FBE::Base& base_fbe_value) noexcept
-{
-    const ::pg_query::ScanResult& fbe_value = static_cast<const ::pg_query::ScanResult&>(base_fbe_value);
-    version.set(fbe_value.version);
-    tokens.set(fbe_value.tokens);
-}
-
-namespace pg_query {
-
-bool ScanResultModel::verify()
-{
-    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
-        return false;
-
-    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
-    if (fbe_full_size < model.fbe_size())
-        return false;
-
-    return model.verify();
-}
-
-size_t ScanResultModel::create_begin()
-{
-    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
-    return fbe_begin;
-}
-
-size_t ScanResultModel::create_end(size_t fbe_begin)
-{
-    size_t fbe_end = this->buffer().size();
-    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
-    return fbe_full_size;
-}
-
-size_t ScanResultModel::serialize(const ::pg_query::ScanResult& value)
-{
-    size_t fbe_begin = create_begin();
-    model.set(value);
-    size_t fbe_full_size = create_end(fbe_begin);
-    return fbe_full_size;
-}
-
-size_t ScanResultModel::deserialize(::pg_query::ScanResult& value) noexcept
-{
-    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
-        return 0;
-
-    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
-    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
-    if (fbe_full_size < model.fbe_size())
-        return 0;
-
-    model.get(value);
-    return fbe_full_size;
-}
-
-} // namespace pg_query
 
 FieldModelPtr_pg_query_Integer::FieldModelPtr_pg_query_Integer(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
 {}
@@ -9046,10 +8324,10 @@ void FieldModel_pg_query_RangeVar::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + alias.fbe_size()) <= fbe_struct_size)
         {
-            alias.get(fbe_value.alias);
+            alias.get(&fbe_value.alias);
         }
     else
-        fbe_value.alias = ::pg_query::Alias();
+        fbe_value.alias = nullptr;
     fbe_current_size += alias.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -9104,7 +8382,7 @@ void FieldModel_pg_query_RangeVar::set_fields(const ::FBE::Base& base_fbe_value)
     relname.set(fbe_value.relname);
     inh.set(fbe_value.inh);
     relpersistence.set(fbe_value.relpersistence);
-    alias.set(static_cast<const ::pg_query::Alias&>(fbe_value.alias));
+    alias.set(fbe_value.alias);
     location.set(fbe_value.location);
 }
 
@@ -29571,10 +28849,10 @@ void FieldModel_pg_query_JoinExpr::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + alias.fbe_size()) <= fbe_struct_size)
         {
-            alias.get(fbe_value.alias);
+            alias.get(&fbe_value.alias);
         }
     else
-        fbe_value.alias = ::pg_query::Alias();
+        fbe_value.alias = nullptr;
     fbe_current_size += alias.fbe_size();
 
     if ((fbe_current_size + rtindex.fbe_size()) <= fbe_struct_size)
@@ -29630,7 +28908,7 @@ void FieldModel_pg_query_JoinExpr::set_fields(const ::FBE::Base& base_fbe_value)
     rarg.set(fbe_value.rarg);
     using_clause.set(fbe_value.using_clause);
     quals.set(fbe_value.quals);
-    alias.set(static_cast<const ::pg_query::Alias&>(fbe_value.alias));
+    alias.set(fbe_value.alias);
     rtindex.set(fbe_value.rtindex);
 }
 
@@ -30822,10 +30100,10 @@ void FieldModel_pg_query_IntoClause::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + rel.fbe_size()) <= fbe_struct_size)
         {
-            rel.get(fbe_value.rel);
+            rel.get(&fbe_value.rel);
         }
     else
-        fbe_value.rel = ::pg_query::RangeVar();
+        fbe_value.rel = nullptr;
     fbe_current_size += rel.fbe_size();
 
     if ((fbe_current_size + col_names.fbe_size()) <= fbe_struct_size)
@@ -30923,7 +30201,7 @@ void FieldModel_pg_query_IntoClause::set(const ::FBE::Base& fbe_value) noexcept
 void FieldModel_pg_query_IntoClause::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::IntoClause& fbe_value = static_cast<const ::pg_query::IntoClause&>(base_fbe_value);
-    rel.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.rel));
+    rel.set(fbe_value.rel);
     col_names.set(fbe_value.col_names);
     access_method.set(fbe_value.access_method);
     options.set(fbe_value.options);
@@ -32050,10 +31328,10 @@ void FieldModel_pg_query_Query::get_fields(::FBE::Base& base_fbe_value, size_t f
 
     if ((fbe_current_size + jointree.fbe_size()) <= fbe_struct_size)
         {
-            jointree.get(fbe_value.jointree);
+            jointree.get(&fbe_value.jointree);
         }
     else
-        fbe_value.jointree = ::pg_query::FromExpr();
+        fbe_value.jointree = nullptr;
     fbe_current_size += jointree.fbe_size();
 
     if ((fbe_current_size + target_list.fbe_size()) <= fbe_struct_size)
@@ -32074,10 +31352,10 @@ void FieldModel_pg_query_Query::get_fields(::FBE::Base& base_fbe_value, size_t f
 
     if ((fbe_current_size + on_conflict.fbe_size()) <= fbe_struct_size)
         {
-            on_conflict.get(fbe_value.on_conflict);
+            on_conflict.get(&fbe_value.on_conflict);
         }
     else
-        fbe_value.on_conflict = ::pg_query::OnConflictExpr();
+        fbe_value.on_conflict = nullptr;
     fbe_current_size += on_conflict.fbe_size();
 
     if ((fbe_current_size + returning_list.fbe_size()) <= fbe_struct_size)
@@ -32263,10 +31541,10 @@ void FieldModel_pg_query_Query::set_fields(const ::FBE::Base& base_fbe_value) no
     has_row_security.set(fbe_value.has_row_security);
     cte_list.set(fbe_value.cte_list);
     rtable.set(fbe_value.rtable);
-    jointree.set(static_cast<const ::pg_query::FromExpr&>(fbe_value.jointree));
+    jointree.set(fbe_value.jointree);
     target_list.set(fbe_value.target_list);
     override.set(fbe_value.override);
-    on_conflict.set(static_cast<const ::pg_query::OnConflictExpr&>(fbe_value.on_conflict));
+    on_conflict.set(fbe_value.on_conflict);
     returning_list.set(fbe_value.returning_list);
     group_clause.set(fbe_value.group_clause);
     grouping_sets.set(fbe_value.grouping_sets);
@@ -32634,10 +31912,10 @@ void FieldModel_pg_query_InsertStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + cols.fbe_size()) <= fbe_struct_size)
@@ -32658,10 +31936,10 @@ void FieldModel_pg_query_InsertStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + on_conflict_clause.fbe_size()) <= fbe_struct_size)
         {
-            on_conflict_clause.get(fbe_value.on_conflict_clause);
+            on_conflict_clause.get(&fbe_value.on_conflict_clause);
         }
     else
-        fbe_value.on_conflict_clause = ::pg_query::OnConflictClause();
+        fbe_value.on_conflict_clause = nullptr;
     fbe_current_size += on_conflict_clause.fbe_size();
 
     if ((fbe_current_size + returning_list.fbe_size()) <= fbe_struct_size)
@@ -32674,10 +31952,10 @@ void FieldModel_pg_query_InsertStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + with_clause.fbe_size()) <= fbe_struct_size)
         {
-            with_clause.get(fbe_value.with_clause);
+            with_clause.get(&fbe_value.with_clause);
         }
     else
-        fbe_value.with_clause = ::pg_query::WithClause();
+        fbe_value.with_clause = nullptr;
     fbe_current_size += with_clause.fbe_size();
 
     if ((fbe_current_size + override.fbe_size()) <= fbe_struct_size)
@@ -32727,12 +32005,12 @@ void FieldModel_pg_query_InsertStmt::set(const ::FBE::Base& fbe_value) noexcept
 void FieldModel_pg_query_InsertStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::InsertStmt& fbe_value = static_cast<const ::pg_query::InsertStmt&>(base_fbe_value);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     cols.set(fbe_value.cols);
     select_stmt.set(fbe_value.select_stmt);
-    on_conflict_clause.set(static_cast<const ::pg_query::OnConflictClause&>(fbe_value.on_conflict_clause));
+    on_conflict_clause.set(fbe_value.on_conflict_clause);
     returning_list.set(fbe_value.returning_list);
-    with_clause.set(static_cast<const ::pg_query::WithClause&>(fbe_value.with_clause));
+    with_clause.set(fbe_value.with_clause);
     override.set(fbe_value.override);
 }
 
@@ -33067,10 +32345,10 @@ void FieldModel_pg_query_DeleteStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + using_clause.fbe_size()) <= fbe_struct_size)
@@ -33099,10 +32377,10 @@ void FieldModel_pg_query_DeleteStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + with_clause.fbe_size()) <= fbe_struct_size)
         {
-            with_clause.get(fbe_value.with_clause);
+            with_clause.get(&fbe_value.with_clause);
         }
     else
-        fbe_value.with_clause = ::pg_query::WithClause();
+        fbe_value.with_clause = nullptr;
     fbe_current_size += with_clause.fbe_size();
 }
 
@@ -33144,11 +32422,11 @@ void FieldModel_pg_query_DeleteStmt::set(const ::FBE::Base& fbe_value) noexcept
 void FieldModel_pg_query_DeleteStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::DeleteStmt& fbe_value = static_cast<const ::pg_query::DeleteStmt&>(base_fbe_value);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     using_clause.set(fbe_value.using_clause);
     where_clause.set(fbe_value.where_clause);
     returning_list.set(fbe_value.returning_list);
-    with_clause.set(static_cast<const ::pg_query::WithClause&>(fbe_value.with_clause));
+    with_clause.set(fbe_value.with_clause);
 }
 
 namespace pg_query {
@@ -33491,10 +32769,10 @@ void FieldModel_pg_query_UpdateStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + target_list.fbe_size()) <= fbe_struct_size)
@@ -33531,10 +32809,10 @@ void FieldModel_pg_query_UpdateStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + with_clause.fbe_size()) <= fbe_struct_size)
         {
-            with_clause.get(fbe_value.with_clause);
+            with_clause.get(&fbe_value.with_clause);
         }
     else
-        fbe_value.with_clause = ::pg_query::WithClause();
+        fbe_value.with_clause = nullptr;
     fbe_current_size += with_clause.fbe_size();
 }
 
@@ -33576,12 +32854,12 @@ void FieldModel_pg_query_UpdateStmt::set(const ::FBE::Base& fbe_value) noexcept
 void FieldModel_pg_query_UpdateStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::UpdateStmt& fbe_value = static_cast<const ::pg_query::UpdateStmt&>(base_fbe_value);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     target_list.set(fbe_value.target_list);
     where_clause.set(fbe_value.where_clause);
     from_clause.set(fbe_value.from_clause);
     returning_list.set(fbe_value.returning_list);
-    with_clause.set(static_cast<const ::pg_query::WithClause&>(fbe_value.with_clause));
+    with_clause.set(fbe_value.with_clause);
 }
 
 namespace pg_query {
@@ -34049,10 +33327,10 @@ void FieldModel_pg_query_SelectStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + into_clause.fbe_size()) <= fbe_struct_size)
         {
-            into_clause.get(fbe_value.into_clause);
+            into_clause.get(&fbe_value.into_clause);
         }
     else
-        fbe_value.into_clause = ::pg_query::IntoClause();
+        fbe_value.into_clause = nullptr;
     fbe_current_size += into_clause.fbe_size();
 
     if ((fbe_current_size + target_list.fbe_size()) <= fbe_struct_size)
@@ -34153,10 +33431,10 @@ void FieldModel_pg_query_SelectStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + with_clause.fbe_size()) <= fbe_struct_size)
         {
-            with_clause.get(fbe_value.with_clause);
+            with_clause.get(&fbe_value.with_clause);
         }
     else
-        fbe_value.with_clause = ::pg_query::WithClause();
+        fbe_value.with_clause = nullptr;
     fbe_current_size += with_clause.fbe_size();
 
     if ((fbe_current_size + op.fbe_size()) <= fbe_struct_size)
@@ -34177,18 +33455,18 @@ void FieldModel_pg_query_SelectStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + larg.fbe_size()) <= fbe_struct_size)
         {
-            larg.get(fbe_value.larg);
+            larg.get(&fbe_value.larg);
         }
     else
-        fbe_value.larg = ::pg_query::SelectStmt();
+        fbe_value.larg = nullptr;
     fbe_current_size += larg.fbe_size();
 
     if ((fbe_current_size + rarg.fbe_size()) <= fbe_struct_size)
         {
-            rarg.get(fbe_value.rarg);
+            rarg.get(&fbe_value.rarg);
         }
     else
-        fbe_value.rarg = ::pg_query::SelectStmt();
+        fbe_value.rarg = nullptr;
     fbe_current_size += rarg.fbe_size();
 }
 
@@ -34231,7 +33509,7 @@ void FieldModel_pg_query_SelectStmt::set_fields(const ::FBE::Base& base_fbe_valu
 {
     const ::pg_query::SelectStmt& fbe_value = static_cast<const ::pg_query::SelectStmt&>(base_fbe_value);
     distinct_clause.set(fbe_value.distinct_clause);
-    into_clause.set(static_cast<const ::pg_query::IntoClause&>(fbe_value.into_clause));
+    into_clause.set(fbe_value.into_clause);
     target_list.set(fbe_value.target_list);
     from_clause.set(fbe_value.from_clause);
     where_clause.set(fbe_value.where_clause);
@@ -34244,11 +33522,11 @@ void FieldModel_pg_query_SelectStmt::set_fields(const ::FBE::Base& base_fbe_valu
     limit_count.set(fbe_value.limit_count);
     limit_option.set(fbe_value.limit_option);
     locking_clause.set(fbe_value.locking_clause);
-    with_clause.set(static_cast<const ::pg_query::WithClause&>(fbe_value.with_clause));
+    with_clause.set(fbe_value.with_clause);
     op.set(fbe_value.op);
     all.set(fbe_value.all);
-    larg.set(static_cast<const ::pg_query::SelectStmt&>(fbe_value.larg));
-    rarg.set(static_cast<const ::pg_query::SelectStmt&>(fbe_value.rarg));
+    larg.set(fbe_value.larg);
+    rarg.set(fbe_value.rarg);
 }
 
 namespace pg_query {
@@ -34573,10 +33851,10 @@ void FieldModel_pg_query_AlterTableStmt::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + cmds.fbe_size()) <= fbe_struct_size)
@@ -34642,7 +33920,7 @@ void FieldModel_pg_query_AlterTableStmt::set(const ::FBE::Base& fbe_value) noexc
 void FieldModel_pg_query_AlterTableStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::AlterTableStmt& fbe_value = static_cast<const ::pg_query::AlterTableStmt&>(base_fbe_value);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     cmds.set(fbe_value.cmds);
     relkind.set(fbe_value.relkind);
     missing_ok.set(fbe_value.missing_ok);
@@ -35021,10 +34299,10 @@ void FieldModel_pg_query_AlterTableCmd::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + newowner.fbe_size()) <= fbe_struct_size)
         {
-            newowner.get(fbe_value.newowner);
+            newowner.get(&fbe_value.newowner);
         }
     else
-        fbe_value.newowner = ::pg_query::RoleSpec();
+        fbe_value.newowner = nullptr;
     fbe_current_size += newowner.fbe_size();
 
     if ((fbe_current_size + def.fbe_size()) <= fbe_struct_size)
@@ -35093,7 +34371,7 @@ void FieldModel_pg_query_AlterTableCmd::set_fields(const ::FBE::Base& base_fbe_v
     subtype.set(fbe_value.subtype);
     name.set(fbe_value.name);
     num.set(fbe_value.num);
-    newowner.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.newowner));
+    newowner.set(fbe_value.newowner);
     def.set(fbe_value.def);
     behavior.set(fbe_value.behavior);
     missing_ok.set(fbe_value.missing_ok);
@@ -36842,10 +36120,10 @@ void FieldModel_pg_query_GrantRoleStmt::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + grantor.fbe_size()) <= fbe_struct_size)
         {
-            grantor.get(fbe_value.grantor);
+            grantor.get(&fbe_value.grantor);
         }
     else
-        fbe_value.grantor = ::pg_query::RoleSpec();
+        fbe_value.grantor = nullptr;
     fbe_current_size += grantor.fbe_size();
 
     if ((fbe_current_size + behavior.fbe_size()) <= fbe_struct_size)
@@ -36899,7 +36177,7 @@ void FieldModel_pg_query_GrantRoleStmt::set_fields(const ::FBE::Base& base_fbe_v
     grantee_roles.set(fbe_value.grantee_roles);
     is_grant.set(fbe_value.is_grant);
     admin_opt.set(fbe_value.admin_opt);
-    grantor.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.grantor));
+    grantor.set(fbe_value.grantor);
     behavior.set(fbe_value.behavior);
 }
 
@@ -37215,10 +36493,10 @@ void FieldModel_pg_query_AlterDefaultPrivilegesStmt::get_fields(::FBE::Base& bas
 
     if ((fbe_current_size + action.fbe_size()) <= fbe_struct_size)
         {
-            action.get(fbe_value.action);
+            action.get(&fbe_value.action);
         }
     else
-        fbe_value.action = ::pg_query::GrantStmt();
+        fbe_value.action = nullptr;
     fbe_current_size += action.fbe_size();
 }
 
@@ -37261,7 +36539,7 @@ void FieldModel_pg_query_AlterDefaultPrivilegesStmt::set_fields(const ::FBE::Bas
 {
     const ::pg_query::AlterDefaultPrivilegesStmt& fbe_value = static_cast<const ::pg_query::AlterDefaultPrivilegesStmt&>(base_fbe_value);
     options.set(fbe_value.options);
-    action.set(static_cast<const ::pg_query::GrantStmt&>(fbe_value.action));
+    action.set(fbe_value.action);
 }
 
 namespace pg_query {
@@ -37920,10 +37198,10 @@ void FieldModel_pg_query_ClusterStmt::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + indexname.fbe_size()) <= fbe_struct_size)
@@ -37981,7 +37259,7 @@ void FieldModel_pg_query_ClusterStmt::set(const ::FBE::Base& fbe_value) noexcept
 void FieldModel_pg_query_ClusterStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::ClusterStmt& fbe_value = static_cast<const ::pg_query::ClusterStmt&>(base_fbe_value);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     indexname.set(fbe_value.indexname);
     options.set(fbe_value.options);
 }
@@ -38344,10 +37622,10 @@ void FieldModel_pg_query_CopyStmt::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + query.fbe_size()) <= fbe_struct_size)
@@ -38445,7 +37723,7 @@ void FieldModel_pg_query_CopyStmt::set(const ::FBE::Base& fbe_value) noexcept
 void FieldModel_pg_query_CopyStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::CopyStmt& fbe_value = static_cast<const ::pg_query::CopyStmt&>(base_fbe_value);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     query.set(fbe_value.query);
     attlist.set(fbe_value.attlist);
     is_from.set(fbe_value.is_from);
@@ -38849,10 +38127,10 @@ void FieldModel_pg_query_CreateStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + table_elts.fbe_size()) <= fbe_struct_size)
@@ -38873,26 +38151,26 @@ void FieldModel_pg_query_CreateStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + partbound.fbe_size()) <= fbe_struct_size)
         {
-            partbound.get(fbe_value.partbound);
+            partbound.get(&fbe_value.partbound);
         }
     else
-        fbe_value.partbound = ::pg_query::PartitionBoundSpec();
+        fbe_value.partbound = nullptr;
     fbe_current_size += partbound.fbe_size();
 
     if ((fbe_current_size + partspec.fbe_size()) <= fbe_struct_size)
         {
-            partspec.get(fbe_value.partspec);
+            partspec.get(&fbe_value.partspec);
         }
     else
-        fbe_value.partspec = ::pg_query::PartitionSpec();
+        fbe_value.partspec = nullptr;
     fbe_current_size += partspec.fbe_size();
 
     if ((fbe_current_size + of_typename.fbe_size()) <= fbe_struct_size)
         {
-            of_typename.get(fbe_value.of_typename);
+            of_typename.get(&fbe_value.of_typename);
         }
     else
-        fbe_value.of_typename = ::pg_query::TypeName();
+        fbe_value.of_typename = nullptr;
     fbe_current_size += of_typename.fbe_size();
 
     if ((fbe_current_size + constraints.fbe_size()) <= fbe_struct_size)
@@ -38982,12 +38260,12 @@ void FieldModel_pg_query_CreateStmt::set(const ::FBE::Base& fbe_value) noexcept
 void FieldModel_pg_query_CreateStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::CreateStmt& fbe_value = static_cast<const ::pg_query::CreateStmt&>(base_fbe_value);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     table_elts.set(fbe_value.table_elts);
     inh_relations.set(fbe_value.inh_relations);
-    partbound.set(static_cast<const ::pg_query::PartitionBoundSpec&>(fbe_value.partbound));
-    partspec.set(static_cast<const ::pg_query::PartitionSpec&>(fbe_value.partspec));
-    of_typename.set(static_cast<const ::pg_query::TypeName&>(fbe_value.of_typename));
+    partbound.set(fbe_value.partbound);
+    partspec.set(fbe_value.partspec);
+    of_typename.set(fbe_value.of_typename);
     constraints.set(fbe_value.constraints);
     options.set(fbe_value.options);
     oncommit.set(fbe_value.oncommit);
@@ -41518,10 +40796,10 @@ void FieldModel_pg_query_IndexStmt::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + access_method.fbe_size()) <= fbe_struct_size)
@@ -41732,7 +41010,7 @@ void FieldModel_pg_query_IndexStmt::set_fields(const ::FBE::Base& base_fbe_value
 {
     const ::pg_query::IndexStmt& fbe_value = static_cast<const ::pg_query::IndexStmt&>(base_fbe_value);
     idxname.set(fbe_value.idxname);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     access_method.set(fbe_value.access_method);
     table_space.set(fbe_value.table_space);
     index_params.set(fbe_value.index_params);
@@ -42128,10 +41406,10 @@ void FieldModel_pg_query_CreateFunctionStmt::get_fields(::FBE::Base& base_fbe_va
 
     if ((fbe_current_size + return_type.fbe_size()) <= fbe_struct_size)
         {
-            return_type.get(fbe_value.return_type);
+            return_type.get(&fbe_value.return_type);
         }
     else
-        fbe_value.return_type = ::pg_query::TypeName();
+        fbe_value.return_type = nullptr;
     fbe_current_size += return_type.fbe_size();
 
     if ((fbe_current_size + options.fbe_size()) <= fbe_struct_size)
@@ -42185,7 +41463,7 @@ void FieldModel_pg_query_CreateFunctionStmt::set_fields(const ::FBE::Base& base_
     replace.set(fbe_value.replace);
     funcname.set(fbe_value.funcname);
     parameters.set(fbe_value.parameters);
-    return_type.set(static_cast<const ::pg_query::TypeName&>(fbe_value.return_type));
+    return_type.set(fbe_value.return_type);
     options.set(fbe_value.options);
 }
 
@@ -42510,10 +41788,10 @@ void FieldModel_pg_query_AlterFunctionStmt::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + func.fbe_size()) <= fbe_struct_size)
         {
-            func.get(fbe_value.func);
+            func.get(&fbe_value.func);
         }
     else
-        fbe_value.func = ::pg_query::ObjectWithArgs();
+        fbe_value.func = nullptr;
     fbe_current_size += func.fbe_size();
 
     if ((fbe_current_size + actions.fbe_size()) <= fbe_struct_size)
@@ -42564,7 +41842,7 @@ void FieldModel_pg_query_AlterFunctionStmt::set_fields(const ::FBE::Base& base_f
 {
     const ::pg_query::AlterFunctionStmt& fbe_value = static_cast<const ::pg_query::AlterFunctionStmt&>(base_fbe_value);
     objtype.set(fbe_value.objtype);
-    func.set(static_cast<const ::pg_query::ObjectWithArgs&>(fbe_value.func));
+    func.set(fbe_value.func);
     actions.set(fbe_value.actions);
 }
 
@@ -43285,10 +42563,10 @@ void FieldModel_pg_query_RenameStmt::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
@@ -43372,7 +42650,7 @@ void FieldModel_pg_query_RenameStmt::set_fields(const ::FBE::Base& base_fbe_valu
     const ::pg_query::RenameStmt& fbe_value = static_cast<const ::pg_query::RenameStmt&>(base_fbe_value);
     rename_type.set(fbe_value.rename_type);
     relation_type.set(fbe_value.relation_type);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     object.set(fbe_value.object);
     subname.set(fbe_value.subname);
     newname.set(fbe_value.newname);
@@ -43729,10 +43007,10 @@ void FieldModel_pg_query_RuleStmt::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + rulename.fbe_size()) <= fbe_struct_size)
@@ -43822,7 +43100,7 @@ void FieldModel_pg_query_RuleStmt::set(const ::FBE::Base& fbe_value) noexcept
 void FieldModel_pg_query_RuleStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::RuleStmt& fbe_value = static_cast<const ::pg_query::RuleStmt&>(base_fbe_value);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     rulename.set(fbe_value.rulename);
     where_clause.set(fbe_value.where_clause);
     event.set(fbe_value.event);
@@ -45633,10 +44911,10 @@ void FieldModel_pg_query_ViewStmt::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + view.fbe_size()) <= fbe_struct_size)
         {
-            view.get(fbe_value.view);
+            view.get(&fbe_value.view);
         }
     else
-        fbe_value.view = ::pg_query::RangeVar();
+        fbe_value.view = nullptr;
     fbe_current_size += view.fbe_size();
 
     if ((fbe_current_size + aliases.fbe_size()) <= fbe_struct_size)
@@ -45718,7 +44996,7 @@ void FieldModel_pg_query_ViewStmt::set(const ::FBE::Base& fbe_value) noexcept
 void FieldModel_pg_query_ViewStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::ViewStmt& fbe_value = static_cast<const ::pg_query::ViewStmt&>(base_fbe_value);
-    view.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.view));
+    view.set(fbe_value.view);
     aliases.set(fbe_value.aliases);
     query.set(fbe_value.query);
     replace.set(fbe_value.replace);
@@ -46399,18 +45677,18 @@ void FieldModel_pg_query_CreateDomainStmt::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + type_name.fbe_size()) <= fbe_struct_size)
         {
-            type_name.get(fbe_value.type_name);
+            type_name.get(&fbe_value.type_name);
         }
     else
-        fbe_value.type_name = ::pg_query::TypeName();
+        fbe_value.type_name = nullptr;
     fbe_current_size += type_name.fbe_size();
 
     if ((fbe_current_size + coll_clause.fbe_size()) <= fbe_struct_size)
         {
-            coll_clause.get(fbe_value.coll_clause);
+            coll_clause.get(&fbe_value.coll_clause);
         }
     else
-        fbe_value.coll_clause = ::pg_query::CollateClause();
+        fbe_value.coll_clause = nullptr;
     fbe_current_size += coll_clause.fbe_size();
 
     if ((fbe_current_size + constraints.fbe_size()) <= fbe_struct_size)
@@ -46461,8 +45739,8 @@ void FieldModel_pg_query_CreateDomainStmt::set_fields(const ::FBE::Base& base_fb
 {
     const ::pg_query::CreateDomainStmt& fbe_value = static_cast<const ::pg_query::CreateDomainStmt&>(base_fbe_value);
     domainname.set(fbe_value.domainname);
-    type_name.set(static_cast<const ::pg_query::TypeName&>(fbe_value.type_name));
-    coll_clause.set(static_cast<const ::pg_query::CollateClause&>(fbe_value.coll_clause));
+    type_name.set(fbe_value.type_name);
+    coll_clause.set(fbe_value.coll_clause);
     constraints.set(fbe_value.constraints);
 }
 
@@ -48285,10 +47563,10 @@ void FieldModel_pg_query_CreateTableAsStmt::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + into.fbe_size()) <= fbe_struct_size)
         {
-            into.get(fbe_value.into);
+            into.get(&fbe_value.into);
         }
     else
-        fbe_value.into = ::pg_query::IntoClause();
+        fbe_value.into = nullptr;
     fbe_current_size += into.fbe_size();
 
     if ((fbe_current_size + relkind.fbe_size()) <= fbe_struct_size)
@@ -48355,7 +47633,7 @@ void FieldModel_pg_query_CreateTableAsStmt::set_fields(const ::FBE::Base& base_f
 {
     const ::pg_query::CreateTableAsStmt& fbe_value = static_cast<const ::pg_query::CreateTableAsStmt&>(base_fbe_value);
     query.set(fbe_value.query);
-    into.set(static_cast<const ::pg_query::IntoClause&>(fbe_value.into));
+    into.set(fbe_value.into);
     relkind.set(fbe_value.relkind);
     is_select_into.set(fbe_value.is_select_into);
     if_not_exists.set(fbe_value.if_not_exists);
@@ -48692,10 +47970,10 @@ void FieldModel_pg_query_CreateSeqStmt::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + sequence.fbe_size()) <= fbe_struct_size)
         {
-            sequence.get(fbe_value.sequence);
+            sequence.get(&fbe_value.sequence);
         }
     else
-        fbe_value.sequence = ::pg_query::RangeVar();
+        fbe_value.sequence = nullptr;
     fbe_current_size += sequence.fbe_size();
 
     if ((fbe_current_size + options.fbe_size()) <= fbe_struct_size)
@@ -48769,7 +48047,7 @@ void FieldModel_pg_query_CreateSeqStmt::set(const ::FBE::Base& fbe_value) noexce
 void FieldModel_pg_query_CreateSeqStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::CreateSeqStmt& fbe_value = static_cast<const ::pg_query::CreateSeqStmt&>(base_fbe_value);
-    sequence.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.sequence));
+    sequence.set(fbe_value.sequence);
     options.set(fbe_value.options);
     owner_id.set(fbe_value.owner_id);
     for_identity.set(fbe_value.for_identity);
@@ -49098,10 +48376,10 @@ void FieldModel_pg_query_AlterSeqStmt::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + sequence.fbe_size()) <= fbe_struct_size)
         {
-            sequence.get(fbe_value.sequence);
+            sequence.get(&fbe_value.sequence);
         }
     else
-        fbe_value.sequence = ::pg_query::RangeVar();
+        fbe_value.sequence = nullptr;
     fbe_current_size += sequence.fbe_size();
 
     if ((fbe_current_size + options.fbe_size()) <= fbe_struct_size)
@@ -49167,7 +48445,7 @@ void FieldModel_pg_query_AlterSeqStmt::set(const ::FBE::Base& fbe_value) noexcep
 void FieldModel_pg_query_AlterSeqStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::AlterSeqStmt& fbe_value = static_cast<const ::pg_query::AlterSeqStmt&>(base_fbe_value);
-    sequence.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.sequence));
+    sequence.set(fbe_value.sequence);
     options.set(fbe_value.options);
     for_identity.set(fbe_value.for_identity);
     missing_ok.set(fbe_value.missing_ok);
@@ -50676,10 +49954,10 @@ void FieldModel_pg_query_CreateTrigStmt::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + funcname.fbe_size()) <= fbe_struct_size)
@@ -50772,10 +50050,10 @@ void FieldModel_pg_query_CreateTrigStmt::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + constrrel.fbe_size()) <= fbe_struct_size)
         {
-            constrrel.get(fbe_value.constrrel);
+            constrrel.get(&fbe_value.constrrel);
         }
     else
-        fbe_value.constrrel = ::pg_query::RangeVar();
+        fbe_value.constrrel = nullptr;
     fbe_current_size += constrrel.fbe_size();
 }
 
@@ -50818,7 +50096,7 @@ void FieldModel_pg_query_CreateTrigStmt::set_fields(const ::FBE::Base& base_fbe_
 {
     const ::pg_query::CreateTrigStmt& fbe_value = static_cast<const ::pg_query::CreateTrigStmt&>(base_fbe_value);
     trigname.set(fbe_value.trigname);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     funcname.set(fbe_value.funcname);
     args.set(fbe_value.args);
     row.set(fbe_value.row);
@@ -50830,7 +50108,7 @@ void FieldModel_pg_query_CreateTrigStmt::set_fields(const ::FBE::Base& base_fbe_
     transition_rels.set(fbe_value.transition_rels);
     deferrable.set(fbe_value.deferrable);
     initdeferred.set(fbe_value.initdeferred);
-    constrrel.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.constrrel));
+    constrrel.set(fbe_value.constrrel);
 }
 
 namespace pg_query {
@@ -51958,10 +51236,10 @@ void FieldModel_pg_query_AlterRoleStmt::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + role.fbe_size()) <= fbe_struct_size)
         {
-            role.get(fbe_value.role);
+            role.get(&fbe_value.role);
         }
     else
-        fbe_value.role = ::pg_query::RoleSpec();
+        fbe_value.role = nullptr;
     fbe_current_size += role.fbe_size();
 
     if ((fbe_current_size + options.fbe_size()) <= fbe_struct_size)
@@ -52019,7 +51297,7 @@ void FieldModel_pg_query_AlterRoleStmt::set(const ::FBE::Base& fbe_value) noexce
 void FieldModel_pg_query_AlterRoleStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::AlterRoleStmt& fbe_value = static_cast<const ::pg_query::AlterRoleStmt&>(base_fbe_value);
-    role.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.role));
+    role.set(fbe_value.role);
     options.set(fbe_value.options);
     action.set(fbe_value.action);
 }
@@ -53464,10 +52742,10 @@ void FieldModel_pg_query_ReindexStmt::get_fields(::FBE::Base& base_fbe_value, si
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + name.fbe_size()) <= fbe_struct_size)
@@ -53534,7 +52812,7 @@ void FieldModel_pg_query_ReindexStmt::set_fields(const ::FBE::Base& base_fbe_val
 {
     const ::pg_query::ReindexStmt& fbe_value = static_cast<const ::pg_query::ReindexStmt&>(base_fbe_value);
     kind.set(fbe_value.kind);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     name.set(fbe_value.name);
     options.set(fbe_value.options);
     concurrent.set(fbe_value.concurrent);
@@ -54191,10 +53469,10 @@ void FieldModel_pg_query_CreateSchemaStmt::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + authrole.fbe_size()) <= fbe_struct_size)
         {
-            authrole.get(fbe_value.authrole);
+            authrole.get(&fbe_value.authrole);
         }
     else
-        fbe_value.authrole = ::pg_query::RoleSpec();
+        fbe_value.authrole = nullptr;
     fbe_current_size += authrole.fbe_size();
 
     if ((fbe_current_size + schema_elts.fbe_size()) <= fbe_struct_size)
@@ -54253,7 +53531,7 @@ void FieldModel_pg_query_CreateSchemaStmt::set_fields(const ::FBE::Base& base_fb
 {
     const ::pg_query::CreateSchemaStmt& fbe_value = static_cast<const ::pg_query::CreateSchemaStmt&>(base_fbe_value);
     schemaname.set(fbe_value.schemaname);
-    authrole.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.authrole));
+    authrole.set(fbe_value.authrole);
     schema_elts.set(fbe_value.schema_elts);
     if_not_exists.set(fbe_value.if_not_exists);
 }
@@ -54931,10 +54209,10 @@ void FieldModel_pg_query_AlterDatabaseSetStmt::get_fields(::FBE::Base& base_fbe_
 
     if ((fbe_current_size + setstmt.fbe_size()) <= fbe_struct_size)
         {
-            setstmt.get(fbe_value.setstmt);
+            setstmt.get(&fbe_value.setstmt);
         }
     else
-        fbe_value.setstmt = ::pg_query::VariableSetStmt();
+        fbe_value.setstmt = nullptr;
     fbe_current_size += setstmt.fbe_size();
 }
 
@@ -54977,7 +54255,7 @@ void FieldModel_pg_query_AlterDatabaseSetStmt::set_fields(const ::FBE::Base& bas
 {
     const ::pg_query::AlterDatabaseSetStmt& fbe_value = static_cast<const ::pg_query::AlterDatabaseSetStmt&>(base_fbe_value);
     dbname.set(fbe_value.dbname);
-    setstmt.set(static_cast<const ::pg_query::VariableSetStmt&>(fbe_value.setstmt));
+    setstmt.set(fbe_value.setstmt);
 }
 
 namespace pg_query {
@@ -55293,10 +54571,10 @@ void FieldModel_pg_query_AlterRoleSetStmt::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + role.fbe_size()) <= fbe_struct_size)
         {
-            role.get(fbe_value.role);
+            role.get(&fbe_value.role);
         }
     else
-        fbe_value.role = ::pg_query::RoleSpec();
+        fbe_value.role = nullptr;
     fbe_current_size += role.fbe_size();
 
     if ((fbe_current_size + database.fbe_size()) <= fbe_struct_size)
@@ -55309,10 +54587,10 @@ void FieldModel_pg_query_AlterRoleSetStmt::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + setstmt.fbe_size()) <= fbe_struct_size)
         {
-            setstmt.get(fbe_value.setstmt);
+            setstmt.get(&fbe_value.setstmt);
         }
     else
-        fbe_value.setstmt = ::pg_query::VariableSetStmt();
+        fbe_value.setstmt = nullptr;
     fbe_current_size += setstmt.fbe_size();
 }
 
@@ -55354,9 +54632,9 @@ void FieldModel_pg_query_AlterRoleSetStmt::set(const ::FBE::Base& fbe_value) noe
 void FieldModel_pg_query_AlterRoleSetStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::AlterRoleSetStmt& fbe_value = static_cast<const ::pg_query::AlterRoleSetStmt&>(base_fbe_value);
-    role.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.role));
+    role.set(fbe_value.role);
     database.set(fbe_value.database);
-    setstmt.set(static_cast<const ::pg_query::VariableSetStmt&>(fbe_value.setstmt));
+    setstmt.set(fbe_value.setstmt);
 }
 
 namespace pg_query {
@@ -56105,26 +55383,26 @@ void FieldModel_pg_query_CreateCastStmt::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + sourcetype.fbe_size()) <= fbe_struct_size)
         {
-            sourcetype.get(fbe_value.sourcetype);
+            sourcetype.get(&fbe_value.sourcetype);
         }
     else
-        fbe_value.sourcetype = ::pg_query::TypeName();
+        fbe_value.sourcetype = nullptr;
     fbe_current_size += sourcetype.fbe_size();
 
     if ((fbe_current_size + targettype.fbe_size()) <= fbe_struct_size)
         {
-            targettype.get(fbe_value.targettype);
+            targettype.get(&fbe_value.targettype);
         }
     else
-        fbe_value.targettype = ::pg_query::TypeName();
+        fbe_value.targettype = nullptr;
     fbe_current_size += targettype.fbe_size();
 
     if ((fbe_current_size + func.fbe_size()) <= fbe_struct_size)
         {
-            func.get(fbe_value.func);
+            func.get(&fbe_value.func);
         }
     else
-        fbe_value.func = ::pg_query::ObjectWithArgs();
+        fbe_value.func = nullptr;
     fbe_current_size += func.fbe_size();
 
     if ((fbe_current_size + context.fbe_size()) <= fbe_struct_size)
@@ -56182,9 +55460,9 @@ void FieldModel_pg_query_CreateCastStmt::set(const ::FBE::Base& fbe_value) noexc
 void FieldModel_pg_query_CreateCastStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::CreateCastStmt& fbe_value = static_cast<const ::pg_query::CreateCastStmt&>(base_fbe_value);
-    sourcetype.set(static_cast<const ::pg_query::TypeName&>(fbe_value.sourcetype));
-    targettype.set(static_cast<const ::pg_query::TypeName&>(fbe_value.targettype));
-    func.set(static_cast<const ::pg_query::ObjectWithArgs&>(fbe_value.func));
+    sourcetype.set(fbe_value.sourcetype);
+    targettype.set(fbe_value.targettype);
+    func.set(fbe_value.func);
     context.set(fbe_value.context);
     inout.set(fbe_value.inout);
 }
@@ -56553,10 +55831,10 @@ void FieldModel_pg_query_CreateOpClassStmt::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + datatype.fbe_size()) <= fbe_struct_size)
         {
-            datatype.get(fbe_value.datatype);
+            datatype.get(&fbe_value.datatype);
         }
     else
-        fbe_value.datatype = ::pg_query::TypeName();
+        fbe_value.datatype = nullptr;
     fbe_current_size += datatype.fbe_size();
 
     if ((fbe_current_size + items.fbe_size()) <= fbe_struct_size)
@@ -56617,7 +55895,7 @@ void FieldModel_pg_query_CreateOpClassStmt::set_fields(const ::FBE::Base& base_f
     opclassname.set(fbe_value.opclassname);
     opfamilyname.set(fbe_value.opfamilyname);
     amname.set(fbe_value.amname);
-    datatype.set(static_cast<const ::pg_query::TypeName&>(fbe_value.datatype));
+    datatype.set(fbe_value.datatype);
     items.set(fbe_value.items);
     is_default.set(fbe_value.is_default);
 }
@@ -59172,10 +58450,10 @@ void FieldModel_pg_query_CreateTableSpaceStmt::get_fields(::FBE::Base& base_fbe_
 
     if ((fbe_current_size + owner.fbe_size()) <= fbe_struct_size)
         {
-            owner.get(fbe_value.owner);
+            owner.get(&fbe_value.owner);
         }
     else
-        fbe_value.owner = ::pg_query::RoleSpec();
+        fbe_value.owner = nullptr;
     fbe_current_size += owner.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -59234,7 +58512,7 @@ void FieldModel_pg_query_CreateTableSpaceStmt::set_fields(const ::FBE::Base& bas
 {
     const ::pg_query::CreateTableSpaceStmt& fbe_value = static_cast<const ::pg_query::CreateTableSpaceStmt&>(base_fbe_value);
     tablespacename.set(fbe_value.tablespacename);
-    owner.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.owner));
+    owner.set(fbe_value.owner);
     location.set(fbe_value.location);
     options.set(fbe_value.options);
 }
@@ -59939,10 +59217,10 @@ void FieldModel_pg_query_AlterObjectDependsStmt::get_fields(::FBE::Base& base_fb
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
@@ -60009,7 +59287,7 @@ void FieldModel_pg_query_AlterObjectDependsStmt::set_fields(const ::FBE::Base& b
 {
     const ::pg_query::AlterObjectDependsStmt& fbe_value = static_cast<const ::pg_query::AlterObjectDependsStmt&>(base_fbe_value);
     object_type.set(fbe_value.object_type);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     object.set(fbe_value.object);
     extname.set(fbe_value.extname);
     remove.set(fbe_value.remove);
@@ -60354,10 +59632,10 @@ void FieldModel_pg_query_AlterObjectSchemaStmt::get_fields(::FBE::Base& base_fbe
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
@@ -60424,7 +59702,7 @@ void FieldModel_pg_query_AlterObjectSchemaStmt::set_fields(const ::FBE::Base& ba
 {
     const ::pg_query::AlterObjectSchemaStmt& fbe_value = static_cast<const ::pg_query::AlterObjectSchemaStmt&>(base_fbe_value);
     object_type.set(fbe_value.object_type);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     object.set(fbe_value.object);
     newschema.set(fbe_value.newschema);
     missing_ok.set(fbe_value.missing_ok);
@@ -60760,10 +60038,10 @@ void FieldModel_pg_query_AlterOwnerStmt::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + object.fbe_size()) <= fbe_struct_size)
@@ -60776,10 +60054,10 @@ void FieldModel_pg_query_AlterOwnerStmt::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + newowner.fbe_size()) <= fbe_struct_size)
         {
-            newowner.get(fbe_value.newowner);
+            newowner.get(&fbe_value.newowner);
         }
     else
-        fbe_value.newowner = ::pg_query::RoleSpec();
+        fbe_value.newowner = nullptr;
     fbe_current_size += newowner.fbe_size();
 }
 
@@ -60822,9 +60100,9 @@ void FieldModel_pg_query_AlterOwnerStmt::set_fields(const ::FBE::Base& base_fbe_
 {
     const ::pg_query::AlterOwnerStmt& fbe_value = static_cast<const ::pg_query::AlterOwnerStmt&>(base_fbe_value);
     object_type.set(fbe_value.object_type);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     object.set(fbe_value.object);
-    newowner.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.newowner));
+    newowner.set(fbe_value.newowner);
 }
 
 namespace pg_query {
@@ -61131,10 +60409,10 @@ void FieldModel_pg_query_AlterOperatorStmt::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + opername.fbe_size()) <= fbe_struct_size)
         {
-            opername.get(fbe_value.opername);
+            opername.get(&fbe_value.opername);
         }
     else
-        fbe_value.opername = ::pg_query::ObjectWithArgs();
+        fbe_value.opername = nullptr;
     fbe_current_size += opername.fbe_size();
 
     if ((fbe_current_size + options.fbe_size()) <= fbe_struct_size)
@@ -61184,7 +60462,7 @@ void FieldModel_pg_query_AlterOperatorStmt::set(const ::FBE::Base& fbe_value) no
 void FieldModel_pg_query_AlterOperatorStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::AlterOperatorStmt& fbe_value = static_cast<const ::pg_query::AlterOperatorStmt&>(base_fbe_value);
-    opername.set(static_cast<const ::pg_query::ObjectWithArgs&>(fbe_value.opername));
+    opername.set(fbe_value.opername);
     options.set(fbe_value.options);
 }
 
@@ -62222,10 +61500,10 @@ void FieldModel_pg_query_ReassignOwnedStmt::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + newrole.fbe_size()) <= fbe_struct_size)
         {
-            newrole.get(fbe_value.newrole);
+            newrole.get(&fbe_value.newrole);
         }
     else
-        fbe_value.newrole = ::pg_query::RoleSpec();
+        fbe_value.newrole = nullptr;
     fbe_current_size += newrole.fbe_size();
 }
 
@@ -62268,7 +61546,7 @@ void FieldModel_pg_query_ReassignOwnedStmt::set_fields(const ::FBE::Base& base_f
 {
     const ::pg_query::ReassignOwnedStmt& fbe_value = static_cast<const ::pg_query::ReassignOwnedStmt&>(base_fbe_value);
     roles.set(fbe_value.roles);
-    newrole.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.newrole));
+    newrole.set(fbe_value.newrole);
 }
 
 namespace pg_query {
@@ -62575,10 +61853,10 @@ void FieldModel_pg_query_CompositeTypeStmt::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + typevar.fbe_size()) <= fbe_struct_size)
         {
-            typevar.get(fbe_value.typevar);
+            typevar.get(&fbe_value.typevar);
         }
     else
-        fbe_value.typevar = ::pg_query::RangeVar();
+        fbe_value.typevar = nullptr;
     fbe_current_size += typevar.fbe_size();
 
     if ((fbe_current_size + coldeflist.fbe_size()) <= fbe_struct_size)
@@ -62628,7 +61906,7 @@ void FieldModel_pg_query_CompositeTypeStmt::set(const ::FBE::Base& fbe_value) no
 void FieldModel_pg_query_CompositeTypeStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::CompositeTypeStmt& fbe_value = static_cast<const ::pg_query::CompositeTypeStmt&>(base_fbe_value);
-    typevar.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.typevar));
+    typevar.set(fbe_value.typevar);
     coldeflist.set(fbe_value.coldeflist);
 }
 
@@ -66509,10 +65787,10 @@ void FieldModel_pg_query_CreateUserMappingStmt::get_fields(::FBE::Base& base_fbe
 
     if ((fbe_current_size + user.fbe_size()) <= fbe_struct_size)
         {
-            user.get(fbe_value.user);
+            user.get(&fbe_value.user);
         }
     else
-        fbe_value.user = ::pg_query::RoleSpec();
+        fbe_value.user = nullptr;
     fbe_current_size += user.fbe_size();
 
     if ((fbe_current_size + servername.fbe_size()) <= fbe_struct_size)
@@ -66578,7 +65856,7 @@ void FieldModel_pg_query_CreateUserMappingStmt::set(const ::FBE::Base& fbe_value
 void FieldModel_pg_query_CreateUserMappingStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::CreateUserMappingStmt& fbe_value = static_cast<const ::pg_query::CreateUserMappingStmt&>(base_fbe_value);
-    user.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.user));
+    user.set(fbe_value.user);
     servername.set(fbe_value.servername);
     if_not_exists.set(fbe_value.if_not_exists);
     options.set(fbe_value.options);
@@ -66897,10 +66175,10 @@ void FieldModel_pg_query_AlterUserMappingStmt::get_fields(::FBE::Base& base_fbe_
 
     if ((fbe_current_size + user.fbe_size()) <= fbe_struct_size)
         {
-            user.get(fbe_value.user);
+            user.get(&fbe_value.user);
         }
     else
-        fbe_value.user = ::pg_query::RoleSpec();
+        fbe_value.user = nullptr;
     fbe_current_size += user.fbe_size();
 
     if ((fbe_current_size + servername.fbe_size()) <= fbe_struct_size)
@@ -66958,7 +66236,7 @@ void FieldModel_pg_query_AlterUserMappingStmt::set(const ::FBE::Base& fbe_value)
 void FieldModel_pg_query_AlterUserMappingStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::AlterUserMappingStmt& fbe_value = static_cast<const ::pg_query::AlterUserMappingStmt&>(base_fbe_value);
-    user.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.user));
+    user.set(fbe_value.user);
     servername.set(fbe_value.servername);
     options.set(fbe_value.options);
 }
@@ -67276,10 +66554,10 @@ void FieldModel_pg_query_DropUserMappingStmt::get_fields(::FBE::Base& base_fbe_v
 
     if ((fbe_current_size + user.fbe_size()) <= fbe_struct_size)
         {
-            user.get(fbe_value.user);
+            user.get(&fbe_value.user);
         }
     else
-        fbe_value.user = ::pg_query::RoleSpec();
+        fbe_value.user = nullptr;
     fbe_current_size += user.fbe_size();
 
     if ((fbe_current_size + servername.fbe_size()) <= fbe_struct_size)
@@ -67337,7 +66615,7 @@ void FieldModel_pg_query_DropUserMappingStmt::set(const ::FBE::Base& fbe_value) 
 void FieldModel_pg_query_DropUserMappingStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::DropUserMappingStmt& fbe_value = static_cast<const ::pg_query::DropUserMappingStmt&>(base_fbe_value);
-    user.set(static_cast<const ::pg_query::RoleSpec&>(fbe_value.user));
+    user.set(fbe_value.user);
     servername.set(fbe_value.servername);
     missing_ok.set(fbe_value.missing_ok);
 }
@@ -71569,10 +70847,10 @@ void FieldModel_pg_query_RefreshMatViewStmt::get_fields(::FBE::Base& base_fbe_va
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 }
 
@@ -71616,7 +70894,7 @@ void FieldModel_pg_query_RefreshMatViewStmt::set_fields(const ::FBE::Base& base_
     const ::pg_query::RefreshMatViewStmt& fbe_value = static_cast<const ::pg_query::RefreshMatViewStmt&>(base_fbe_value);
     concurrent.set(fbe_value.concurrent);
     skip_data.set(fbe_value.skip_data);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
 }
 
 namespace pg_query {
@@ -72275,10 +71553,10 @@ void FieldModel_pg_query_AlterSystemStmt::get_fields(::FBE::Base& base_fbe_value
 
     if ((fbe_current_size + setstmt.fbe_size()) <= fbe_struct_size)
         {
-            setstmt.get(fbe_value.setstmt);
+            setstmt.get(&fbe_value.setstmt);
         }
     else
-        fbe_value.setstmt = ::pg_query::VariableSetStmt();
+        fbe_value.setstmt = nullptr;
     fbe_current_size += setstmt.fbe_size();
 }
 
@@ -72320,7 +71598,7 @@ void FieldModel_pg_query_AlterSystemStmt::set(const ::FBE::Base& fbe_value) noex
 void FieldModel_pg_query_AlterSystemStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::AlterSystemStmt& fbe_value = static_cast<const ::pg_query::AlterSystemStmt&>(base_fbe_value);
-    setstmt.set(static_cast<const ::pg_query::VariableSetStmt&>(fbe_value.setstmt));
+    setstmt.set(fbe_value.setstmt);
 }
 
 namespace pg_query {
@@ -72680,10 +71958,10 @@ void FieldModel_pg_query_CreatePolicyStmt::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + table.fbe_size()) <= fbe_struct_size)
         {
-            table.get(fbe_value.table);
+            table.get(&fbe_value.table);
         }
     else
-        fbe_value.table = ::pg_query::RangeVar();
+        fbe_value.table = nullptr;
     fbe_current_size += table.fbe_size();
 
     if ((fbe_current_size + cmd_name.fbe_size()) <= fbe_struct_size)
@@ -72766,7 +72044,7 @@ void FieldModel_pg_query_CreatePolicyStmt::set_fields(const ::FBE::Base& base_fb
 {
     const ::pg_query::CreatePolicyStmt& fbe_value = static_cast<const ::pg_query::CreatePolicyStmt&>(base_fbe_value);
     policy_name.set(fbe_value.policy_name);
-    table.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.table));
+    table.set(fbe_value.table);
     cmd_name.set(fbe_value.cmd_name);
     permissive.set(fbe_value.permissive);
     roles.set(fbe_value.roles);
@@ -73113,10 +72391,10 @@ void FieldModel_pg_query_AlterPolicyStmt::get_fields(::FBE::Base& base_fbe_value
 
     if ((fbe_current_size + table.fbe_size()) <= fbe_struct_size)
         {
-            table.get(fbe_value.table);
+            table.get(&fbe_value.table);
         }
     else
-        fbe_value.table = ::pg_query::RangeVar();
+        fbe_value.table = nullptr;
     fbe_current_size += table.fbe_size();
 
     if ((fbe_current_size + roles.fbe_size()) <= fbe_struct_size)
@@ -73183,7 +72461,7 @@ void FieldModel_pg_query_AlterPolicyStmt::set_fields(const ::FBE::Base& base_fbe
 {
     const ::pg_query::AlterPolicyStmt& fbe_value = static_cast<const ::pg_query::AlterPolicyStmt&>(base_fbe_value);
     policy_name.set(fbe_value.policy_name);
-    table.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.table));
+    table.set(fbe_value.table);
     roles.set(fbe_value.roles);
     qual.set(fbe_value.qual);
     with_check.set(fbe_value.with_check);
@@ -73528,10 +72806,10 @@ void FieldModel_pg_query_CreateTransformStmt::get_fields(::FBE::Base& base_fbe_v
 
     if ((fbe_current_size + type_name.fbe_size()) <= fbe_struct_size)
         {
-            type_name.get(fbe_value.type_name);
+            type_name.get(&fbe_value.type_name);
         }
     else
-        fbe_value.type_name = ::pg_query::TypeName();
+        fbe_value.type_name = nullptr;
     fbe_current_size += type_name.fbe_size();
 
     if ((fbe_current_size + lang.fbe_size()) <= fbe_struct_size)
@@ -73544,18 +72822,18 @@ void FieldModel_pg_query_CreateTransformStmt::get_fields(::FBE::Base& base_fbe_v
 
     if ((fbe_current_size + fromsql.fbe_size()) <= fbe_struct_size)
         {
-            fromsql.get(fbe_value.fromsql);
+            fromsql.get(&fbe_value.fromsql);
         }
     else
-        fbe_value.fromsql = ::pg_query::ObjectWithArgs();
+        fbe_value.fromsql = nullptr;
     fbe_current_size += fromsql.fbe_size();
 
     if ((fbe_current_size + tosql.fbe_size()) <= fbe_struct_size)
         {
-            tosql.get(fbe_value.tosql);
+            tosql.get(&fbe_value.tosql);
         }
     else
-        fbe_value.tosql = ::pg_query::ObjectWithArgs();
+        fbe_value.tosql = nullptr;
     fbe_current_size += tosql.fbe_size();
 }
 
@@ -73598,10 +72876,10 @@ void FieldModel_pg_query_CreateTransformStmt::set_fields(const ::FBE::Base& base
 {
     const ::pg_query::CreateTransformStmt& fbe_value = static_cast<const ::pg_query::CreateTransformStmt&>(base_fbe_value);
     replace.set(fbe_value.replace);
-    type_name.set(static_cast<const ::pg_query::TypeName&>(fbe_value.type_name));
+    type_name.set(fbe_value.type_name);
     lang.set(fbe_value.lang);
-    fromsql.set(static_cast<const ::pg_query::ObjectWithArgs&>(fbe_value.fromsql));
-    tosql.set(static_cast<const ::pg_query::ObjectWithArgs&>(fbe_value.tosql));
+    fromsql.set(fbe_value.fromsql);
+    tosql.set(fbe_value.tosql);
 }
 
 namespace pg_query {
@@ -77066,18 +76344,18 @@ void FieldModel_pg_query_CallStmt::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + funccall.fbe_size()) <= fbe_struct_size)
         {
-            funccall.get(fbe_value.funccall);
+            funccall.get(&fbe_value.funccall);
         }
     else
-        fbe_value.funccall = ::pg_query::FuncCall();
+        fbe_value.funccall = nullptr;
     fbe_current_size += funccall.fbe_size();
 
     if ((fbe_current_size + funcexpr.fbe_size()) <= fbe_struct_size)
         {
-            funcexpr.get(fbe_value.funcexpr);
+            funcexpr.get(&fbe_value.funcexpr);
         }
     else
-        fbe_value.funcexpr = ::pg_query::FuncExpr();
+        fbe_value.funcexpr = nullptr;
     fbe_current_size += funcexpr.fbe_size();
 }
 
@@ -77119,8 +76397,8 @@ void FieldModel_pg_query_CallStmt::set(const ::FBE::Base& fbe_value) noexcept
 void FieldModel_pg_query_CallStmt::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::CallStmt& fbe_value = static_cast<const ::pg_query::CallStmt&>(base_fbe_value);
-    funccall.set(static_cast<const ::pg_query::FuncCall&>(fbe_value.funccall));
-    funcexpr.set(static_cast<const ::pg_query::FuncExpr&>(fbe_value.funcexpr));
+    funccall.set(fbe_value.funccall);
+    funcexpr.set(fbe_value.funcexpr);
 }
 
 namespace pg_query {
@@ -79440,10 +78718,10 @@ void FieldModel_pg_query_FuncCall::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + over.fbe_size()) <= fbe_struct_size)
         {
-            over.get(fbe_value.over);
+            over.get(&fbe_value.over);
         }
     else
-        fbe_value.over = ::pg_query::WindowDef();
+        fbe_value.over = nullptr;
     fbe_current_size += over.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -79501,7 +78779,7 @@ void FieldModel_pg_query_FuncCall::set_fields(const ::FBE::Base& base_fbe_value)
     agg_star.set(fbe_value.agg_star);
     agg_distinct.set(fbe_value.agg_distinct);
     func_variadic.set(fbe_value.func_variadic);
-    over.set(static_cast<const ::pg_query::WindowDef&>(fbe_value.over));
+    over.set(fbe_value.over);
     location.set(fbe_value.location);
 }
 
@@ -82024,10 +81302,10 @@ void FieldModel_pg_query_TypeCast::get_fields(::FBE::Base& base_fbe_value, size_
 
     if ((fbe_current_size + type_name.fbe_size()) <= fbe_struct_size)
         {
-            type_name.get(fbe_value.type_name);
+            type_name.get(&fbe_value.type_name);
         }
     else
-        fbe_value.type_name = ::pg_query::TypeName();
+        fbe_value.type_name = nullptr;
     fbe_current_size += type_name.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -82078,7 +81356,7 @@ void FieldModel_pg_query_TypeCast::set_fields(const ::FBE::Base& base_fbe_value)
 {
     const ::pg_query::TypeCast& fbe_value = static_cast<const ::pg_query::TypeCast&>(base_fbe_value);
     arg.set(fbe_value.arg);
-    type_name.set(static_cast<const ::pg_query::TypeName&>(fbe_value.type_name));
+    type_name.set(fbe_value.type_name);
     location.set(fbe_value.location);
 }
 
@@ -83674,10 +82952,10 @@ void FieldModel_pg_query_RangeSubselect::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + alias.fbe_size()) <= fbe_struct_size)
         {
-            alias.get(fbe_value.alias);
+            alias.get(&fbe_value.alias);
         }
     else
-        fbe_value.alias = ::pg_query::Alias();
+        fbe_value.alias = nullptr;
     fbe_current_size += alias.fbe_size();
 }
 
@@ -83721,7 +82999,7 @@ void FieldModel_pg_query_RangeSubselect::set_fields(const ::FBE::Base& base_fbe_
     const ::pg_query::RangeSubselect& fbe_value = static_cast<const ::pg_query::RangeSubselect&>(base_fbe_value);
     lateral.set(fbe_value.lateral);
     subquery.set(fbe_value.subquery);
-    alias.set(static_cast<const ::pg_query::Alias&>(fbe_value.alias));
+    alias.set(fbe_value.alias);
 }
 
 namespace pg_query {
@@ -84096,10 +83374,10 @@ void FieldModel_pg_query_RangeFunction::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + alias.fbe_size()) <= fbe_struct_size)
         {
-            alias.get(fbe_value.alias);
+            alias.get(&fbe_value.alias);
         }
     else
-        fbe_value.alias = ::pg_query::Alias();
+        fbe_value.alias = nullptr;
     fbe_current_size += alias.fbe_size();
 
     if ((fbe_current_size + coldeflist.fbe_size()) <= fbe_struct_size)
@@ -84153,7 +83431,7 @@ void FieldModel_pg_query_RangeFunction::set_fields(const ::FBE::Base& base_fbe_v
     ordinality.set(fbe_value.ordinality);
     is_rowsfrom.set(fbe_value.is_rowsfrom);
     functions.set(fbe_value.functions);
-    alias.set(static_cast<const ::pg_query::Alias&>(fbe_value.alias));
+    alias.set(fbe_value.alias);
     coldeflist.set(fbe_value.coldeflist);
 }
 
@@ -84961,10 +84239,10 @@ void FieldModel_pg_query_RangeTableFunc::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + alias.fbe_size()) <= fbe_struct_size)
         {
-            alias.get(fbe_value.alias);
+            alias.get(&fbe_value.alias);
         }
     else
-        fbe_value.alias = ::pg_query::Alias();
+        fbe_value.alias = nullptr;
     fbe_current_size += alias.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -85019,7 +84297,7 @@ void FieldModel_pg_query_RangeTableFunc::set_fields(const ::FBE::Base& base_fbe_
     rowexpr.set(fbe_value.rowexpr);
     namespaces.set(fbe_value.namespaces);
     columns.set(fbe_value.columns);
-    alias.set(static_cast<const ::pg_query::Alias&>(fbe_value.alias));
+    alias.set(fbe_value.alias);
     location.set(fbe_value.location);
 }
 
@@ -85380,10 +84658,10 @@ void FieldModel_pg_query_RangeTableFuncCol::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + type_name.fbe_size()) <= fbe_struct_size)
         {
-            type_name.get(fbe_value.type_name);
+            type_name.get(&fbe_value.type_name);
         }
     else
-        fbe_value.type_name = ::pg_query::TypeName();
+        fbe_value.type_name = nullptr;
     fbe_current_size += type_name.fbe_size();
 
     if ((fbe_current_size + for_ordinality.fbe_size()) <= fbe_struct_size)
@@ -85466,7 +84744,7 @@ void FieldModel_pg_query_RangeTableFuncCol::set_fields(const ::FBE::Base& base_f
 {
     const ::pg_query::RangeTableFuncCol& fbe_value = static_cast<const ::pg_query::RangeTableFuncCol&>(base_fbe_value);
     colname.set(fbe_value.colname);
-    type_name.set(static_cast<const ::pg_query::TypeName&>(fbe_value.type_name));
+    type_name.set(fbe_value.type_name);
     for_ordinality.set(fbe_value.for_ordinality);
     is_not_null.set(fbe_value.is_not_null);
     colexpr.set(fbe_value.colexpr);
@@ -86390,10 +85668,10 @@ void FieldModel_pg_query_ColumnDef::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + type_name.fbe_size()) <= fbe_struct_size)
         {
-            type_name.get(fbe_value.type_name);
+            type_name.get(&fbe_value.type_name);
         }
     else
-        fbe_value.type_name = ::pg_query::TypeName();
+        fbe_value.type_name = nullptr;
     fbe_current_size += type_name.fbe_size();
 
     if ((fbe_current_size + inhcount.fbe_size()) <= fbe_struct_size)
@@ -86462,10 +85740,10 @@ void FieldModel_pg_query_ColumnDef::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + identity_sequence.fbe_size()) <= fbe_struct_size)
         {
-            identity_sequence.get(fbe_value.identity_sequence);
+            identity_sequence.get(&fbe_value.identity_sequence);
         }
     else
-        fbe_value.identity_sequence = ::pg_query::RangeVar();
+        fbe_value.identity_sequence = nullptr;
     fbe_current_size += identity_sequence.fbe_size();
 
     if ((fbe_current_size + generated.fbe_size()) <= fbe_struct_size)
@@ -86478,10 +85756,10 @@ void FieldModel_pg_query_ColumnDef::get_fields(::FBE::Base& base_fbe_value, size
 
     if ((fbe_current_size + coll_clause.fbe_size()) <= fbe_struct_size)
         {
-            coll_clause.get(fbe_value.coll_clause);
+            coll_clause.get(&fbe_value.coll_clause);
         }
     else
-        fbe_value.coll_clause = ::pg_query::CollateClause();
+        fbe_value.coll_clause = nullptr;
     fbe_current_size += coll_clause.fbe_size();
 
     if ((fbe_current_size + coll_oid.fbe_size()) <= fbe_struct_size)
@@ -86556,7 +85834,7 @@ void FieldModel_pg_query_ColumnDef::set_fields(const ::FBE::Base& base_fbe_value
 {
     const ::pg_query::ColumnDef& fbe_value = static_cast<const ::pg_query::ColumnDef&>(base_fbe_value);
     colname.set(fbe_value.colname);
-    type_name.set(static_cast<const ::pg_query::TypeName&>(fbe_value.type_name));
+    type_name.set(fbe_value.type_name);
     inhcount.set(fbe_value.inhcount);
     is_local.set(fbe_value.is_local);
     is_not_null.set(fbe_value.is_not_null);
@@ -86565,9 +85843,9 @@ void FieldModel_pg_query_ColumnDef::set_fields(const ::FBE::Base& base_fbe_value
     raw_default.set(fbe_value.raw_default);
     cooked_default.set(fbe_value.cooked_default);
     identity.set(fbe_value.identity);
-    identity_sequence.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.identity_sequence));
+    identity_sequence.set(fbe_value.identity_sequence);
     generated.set(fbe_value.generated);
-    coll_clause.set(static_cast<const ::pg_query::CollateClause&>(fbe_value.coll_clause));
+    coll_clause.set(fbe_value.coll_clause);
     coll_oid.set(fbe_value.coll_oid);
     constraints.set(fbe_value.constraints);
     fdwoptions.set(fbe_value.fdwoptions);
@@ -87725,10 +87003,10 @@ void FieldModel_pg_query_Constraint::get_fields(::FBE::Base& base_fbe_value, siz
 
     if ((fbe_current_size + pktable.fbe_size()) <= fbe_struct_size)
         {
-            pktable.get(fbe_value.pktable);
+            pktable.get(&fbe_value.pktable);
         }
     else
-        fbe_value.pktable = ::pg_query::RangeVar();
+        fbe_value.pktable = nullptr;
     fbe_current_size += pktable.fbe_size();
 
     if ((fbe_current_size + fk_attrs.fbe_size()) <= fbe_struct_size)
@@ -87860,7 +87138,7 @@ void FieldModel_pg_query_Constraint::set_fields(const ::FBE::Base& base_fbe_valu
     reset_default_tblspc.set(fbe_value.reset_default_tblspc);
     access_method.set(fbe_value.access_method);
     where_clause.set(fbe_value.where_clause);
-    pktable.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.pktable));
+    pktable.set(fbe_value.pktable);
     fk_attrs.set(fbe_value.fk_attrs);
     pk_attrs.set(fbe_value.pk_attrs);
     fk_matchtype.set(fbe_value.fk_matchtype);
@@ -88929,18 +88207,18 @@ void FieldModel_pg_query_RangeTblEntry::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + tablesample.fbe_size()) <= fbe_struct_size)
         {
-            tablesample.get(fbe_value.tablesample);
+            tablesample.get(&fbe_value.tablesample);
         }
     else
-        fbe_value.tablesample = ::pg_query::TableSampleClause();
+        fbe_value.tablesample = nullptr;
     fbe_current_size += tablesample.fbe_size();
 
     if ((fbe_current_size + subquery.fbe_size()) <= fbe_struct_size)
         {
-            subquery.get(fbe_value.subquery);
+            subquery.get(&fbe_value.subquery);
         }
     else
-        fbe_value.subquery = ::pg_query::Query();
+        fbe_value.subquery = nullptr;
     fbe_current_size += subquery.fbe_size();
 
     if ((fbe_current_size + security_barrier.fbe_size()) <= fbe_struct_size)
@@ -89009,10 +88287,10 @@ void FieldModel_pg_query_RangeTblEntry::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + tablefunc.fbe_size()) <= fbe_struct_size)
         {
-            tablefunc.get(fbe_value.tablefunc);
+            tablefunc.get(&fbe_value.tablefunc);
         }
     else
-        fbe_value.tablefunc = ::pg_query::TableFunc();
+        fbe_value.tablefunc = nullptr;
     fbe_current_size += tablefunc.fbe_size();
 
     if ((fbe_current_size + values_lists.fbe_size()) <= fbe_struct_size)
@@ -89089,18 +88367,18 @@ void FieldModel_pg_query_RangeTblEntry::get_fields(::FBE::Base& base_fbe_value, 
 
     if ((fbe_current_size + alias.fbe_size()) <= fbe_struct_size)
         {
-            alias.get(fbe_value.alias);
+            alias.get(&fbe_value.alias);
         }
     else
-        fbe_value.alias = ::pg_query::Alias();
+        fbe_value.alias = nullptr;
     fbe_current_size += alias.fbe_size();
 
     if ((fbe_current_size + eref.fbe_size()) <= fbe_struct_size)
         {
-            eref.get(fbe_value.eref);
+            eref.get(&fbe_value.eref);
         }
     else
-        fbe_value.eref = ::pg_query::Alias();
+        fbe_value.eref = nullptr;
     fbe_current_size += eref.fbe_size();
 
     if ((fbe_current_size + lateral.fbe_size()) <= fbe_struct_size)
@@ -89226,8 +88504,8 @@ void FieldModel_pg_query_RangeTblEntry::set_fields(const ::FBE::Base& base_fbe_v
     relid.set(fbe_value.relid);
     relkind.set(fbe_value.relkind);
     rellockmode.set(fbe_value.rellockmode);
-    tablesample.set(static_cast<const ::pg_query::TableSampleClause&>(fbe_value.tablesample));
-    subquery.set(static_cast<const ::pg_query::Query&>(fbe_value.subquery));
+    tablesample.set(fbe_value.tablesample);
+    subquery.set(fbe_value.subquery);
     security_barrier.set(fbe_value.security_barrier);
     jointype.set(fbe_value.jointype);
     joinmergedcols.set(fbe_value.joinmergedcols);
@@ -89236,7 +88514,7 @@ void FieldModel_pg_query_RangeTblEntry::set_fields(const ::FBE::Base& base_fbe_v
     joinrightcols.set(fbe_value.joinrightcols);
     functions.set(fbe_value.functions);
     funcordinality.set(fbe_value.funcordinality);
-    tablefunc.set(static_cast<const ::pg_query::TableFunc&>(fbe_value.tablefunc));
+    tablefunc.set(fbe_value.tablefunc);
     values_lists.set(fbe_value.values_lists);
     ctename.set(fbe_value.ctename);
     ctelevelsup.set(fbe_value.ctelevelsup);
@@ -89246,8 +88524,8 @@ void FieldModel_pg_query_RangeTblEntry::set_fields(const ::FBE::Base& base_fbe_v
     colcollations.set(fbe_value.colcollations);
     enrname.set(fbe_value.enrname);
     enrtuples.set(fbe_value.enrtuples);
-    alias.set(static_cast<const ::pg_query::Alias&>(fbe_value.alias));
-    eref.set(static_cast<const ::pg_query::Alias&>(fbe_value.eref));
+    alias.set(fbe_value.alias);
+    eref.set(fbe_value.eref);
     lateral.set(fbe_value.lateral);
     inh.set(fbe_value.inh);
     in_from_cl.set(fbe_value.in_from_cl);
@@ -92964,10 +92242,10 @@ void FieldModel_pg_query_CreateOpClassItem::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + name.fbe_size()) <= fbe_struct_size)
         {
-            name.get(fbe_value.name);
+            name.get(&fbe_value.name);
         }
     else
-        fbe_value.name = ::pg_query::ObjectWithArgs();
+        fbe_value.name = nullptr;
     fbe_current_size += name.fbe_size();
 
     if ((fbe_current_size + number.fbe_size()) <= fbe_struct_size)
@@ -92996,10 +92274,10 @@ void FieldModel_pg_query_CreateOpClassItem::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + storedtype.fbe_size()) <= fbe_struct_size)
         {
-            storedtype.get(fbe_value.storedtype);
+            storedtype.get(&fbe_value.storedtype);
         }
     else
-        fbe_value.storedtype = ::pg_query::TypeName();
+        fbe_value.storedtype = nullptr;
     fbe_current_size += storedtype.fbe_size();
 }
 
@@ -93042,11 +92320,11 @@ void FieldModel_pg_query_CreateOpClassItem::set_fields(const ::FBE::Base& base_f
 {
     const ::pg_query::CreateOpClassItem& fbe_value = static_cast<const ::pg_query::CreateOpClassItem&>(base_fbe_value);
     itemtype.set(fbe_value.itemtype);
-    name.set(static_cast<const ::pg_query::ObjectWithArgs&>(fbe_value.name));
+    name.set(fbe_value.name);
     number.set(fbe_value.number);
     order_family.set(fbe_value.order_family);
     class_args.set(fbe_value.class_args);
-    storedtype.set(static_cast<const ::pg_query::TypeName&>(fbe_value.storedtype));
+    storedtype.set(fbe_value.storedtype);
 }
 
 namespace pg_query {
@@ -93362,10 +92640,10 @@ void FieldModel_pg_query_TableLikeClause::get_fields(::FBE::Base& base_fbe_value
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + options.fbe_size()) <= fbe_struct_size)
@@ -93423,7 +92701,7 @@ void FieldModel_pg_query_TableLikeClause::set(const ::FBE::Base& fbe_value) noex
 void FieldModel_pg_query_TableLikeClause::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::TableLikeClause& fbe_value = static_cast<const ::pg_query::TableLikeClause&>(base_fbe_value);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     options.set(fbe_value.options);
     relation_oid.set(fbe_value.relation_oid);
 }
@@ -93758,10 +93036,10 @@ void FieldModel_pg_query_FunctionParameter::get_fields(::FBE::Base& base_fbe_val
 
     if ((fbe_current_size + arg_type.fbe_size()) <= fbe_struct_size)
         {
-            arg_type.get(fbe_value.arg_type);
+            arg_type.get(&fbe_value.arg_type);
         }
     else
-        fbe_value.arg_type = ::pg_query::TypeName();
+        fbe_value.arg_type = nullptr;
     fbe_current_size += arg_type.fbe_size();
 
     if ((fbe_current_size + mode.fbe_size()) <= fbe_struct_size)
@@ -93820,7 +93098,7 @@ void FieldModel_pg_query_FunctionParameter::set_fields(const ::FBE::Base& base_f
 {
     const ::pg_query::FunctionParameter& fbe_value = static_cast<const ::pg_query::FunctionParameter&>(base_fbe_value);
     name.set(fbe_value.name);
-    arg_type.set(static_cast<const ::pg_query::TypeName&>(fbe_value.arg_type));
+    arg_type.set(fbe_value.arg_type);
     mode.set(fbe_value.mode);
     defexpr.set(fbe_value.defexpr);
 }
@@ -94939,10 +94217,10 @@ void FieldModel_pg_query_XmlSerialize::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + type_name.fbe_size()) <= fbe_struct_size)
         {
-            type_name.get(fbe_value.type_name);
+            type_name.get(&fbe_value.type_name);
         }
     else
-        fbe_value.type_name = ::pg_query::TypeName();
+        fbe_value.type_name = nullptr;
     fbe_current_size += type_name.fbe_size();
 
     if ((fbe_current_size + location.fbe_size()) <= fbe_struct_size)
@@ -94994,7 +94272,7 @@ void FieldModel_pg_query_XmlSerialize::set_fields(const ::FBE::Base& base_fbe_va
     const ::pg_query::XmlSerialize& fbe_value = static_cast<const ::pg_query::XmlSerialize&>(base_fbe_value);
     xmloption.set(fbe_value.xmloption);
     expr.set(fbe_value.expr);
-    type_name.set(static_cast<const ::pg_query::TypeName&>(fbe_value.type_name));
+    type_name.set(fbe_value.type_name);
     location.set(fbe_value.location);
 }
 
@@ -96113,10 +95391,10 @@ void FieldModel_pg_query_OnConflictClause::get_fields(::FBE::Base& base_fbe_valu
 
     if ((fbe_current_size + infer.fbe_size()) <= fbe_struct_size)
         {
-            infer.get(fbe_value.infer);
+            infer.get(&fbe_value.infer);
         }
     else
-        fbe_value.infer = ::pg_query::InferClause();
+        fbe_value.infer = nullptr;
     fbe_current_size += infer.fbe_size();
 
     if ((fbe_current_size + target_list.fbe_size()) <= fbe_struct_size)
@@ -96183,7 +95461,7 @@ void FieldModel_pg_query_OnConflictClause::set_fields(const ::FBE::Base& base_fb
 {
     const ::pg_query::OnConflictClause& fbe_value = static_cast<const ::pg_query::OnConflictClause&>(base_fbe_value);
     action.set(fbe_value.action);
-    infer.set(static_cast<const ::pg_query::InferClause&>(fbe_value.infer));
+    infer.set(fbe_value.infer);
     target_list.set(fbe_value.target_list);
     where_clause.set(fbe_value.where_clause);
     location.set(fbe_value.location);
@@ -99416,18 +98694,18 @@ void FieldModel_pg_query_PartitionCmd::get_fields(::FBE::Base& base_fbe_value, s
 
     if ((fbe_current_size + name.fbe_size()) <= fbe_struct_size)
         {
-            name.get(fbe_value.name);
+            name.get(&fbe_value.name);
         }
     else
-        fbe_value.name = ::pg_query::RangeVar();
+        fbe_value.name = nullptr;
     fbe_current_size += name.fbe_size();
 
     if ((fbe_current_size + bound.fbe_size()) <= fbe_struct_size)
         {
-            bound.get(fbe_value.bound);
+            bound.get(&fbe_value.bound);
         }
     else
-        fbe_value.bound = ::pg_query::PartitionBoundSpec();
+        fbe_value.bound = nullptr;
     fbe_current_size += bound.fbe_size();
 }
 
@@ -99469,8 +98747,8 @@ void FieldModel_pg_query_PartitionCmd::set(const ::FBE::Base& fbe_value) noexcep
 void FieldModel_pg_query_PartitionCmd::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::PartitionCmd& fbe_value = static_cast<const ::pg_query::PartitionCmd&>(base_fbe_value);
-    name.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.name));
-    bound.set(static_cast<const ::pg_query::PartitionBoundSpec&>(fbe_value.bound));
+    name.set(fbe_value.name);
+    bound.set(fbe_value.bound);
 }
 
 namespace pg_query {
@@ -99786,10 +99064,10 @@ void FieldModel_pg_query_VacuumRelation::get_fields(::FBE::Base& base_fbe_value,
 
     if ((fbe_current_size + relation.fbe_size()) <= fbe_struct_size)
         {
-            relation.get(fbe_value.relation);
+            relation.get(&fbe_value.relation);
         }
     else
-        fbe_value.relation = ::pg_query::RangeVar();
+        fbe_value.relation = nullptr;
     fbe_current_size += relation.fbe_size();
 
     if ((fbe_current_size + oid.fbe_size()) <= fbe_struct_size)
@@ -99847,7 +99125,7 @@ void FieldModel_pg_query_VacuumRelation::set(const ::FBE::Base& fbe_value) noexc
 void FieldModel_pg_query_VacuumRelation::set_fields(const ::FBE::Base& base_fbe_value) noexcept
 {
     const ::pg_query::VacuumRelation& fbe_value = static_cast<const ::pg_query::VacuumRelation&>(base_fbe_value);
-    relation.set(static_cast<const ::pg_query::RangeVar&>(fbe_value.relation));
+    relation.set(fbe_value.relation);
     oid.set(fbe_value.oid);
     va_cols.set(fbe_value.va_cols);
 }
@@ -101026,6 +100304,728 @@ size_t ScanTokenModel::serialize(const ::pg_query::ScanToken& value)
 }
 
 size_t ScanTokenModel::deserialize(::pg_query::ScanToken& value) noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value);
+    return fbe_full_size;
+}
+
+} // namespace pg_query
+
+FieldModelPtr_pg_query_ParseResult::FieldModelPtr_pg_query_ParseResult(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+{}
+
+FieldModelPtr_pg_query_ParseResult::~FieldModelPtr_pg_query_ParseResult()
+{
+    if (ptr) delete ptr;
+}
+
+size_t FieldModelPtr_pg_query_ParseResult::fbe_extra() const noexcept
+{
+    if (!ptr) return 0;
+
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_ptr_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
+    if ((fbe_ptr_offset == 0) || ((_buffer.offset() + fbe_ptr_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_ptr_offset);
+    size_t fbe_result = ptr->fbe_size() + ptr->fbe_extra();
+    _buffer.unshift(fbe_ptr_offset);
+
+    return fbe_result;
+}
+
+bool FieldModelPtr_pg_query_ParseResult::verify() const noexcept
+{
+    if (!ptr) return true;
+
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint8_t fbe_has_value = *((const uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    if (fbe_has_value == 0)
+        return true;
+
+    uint32_t fbe_optional_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
+    if (fbe_optional_offset == 0)
+        return false;
+
+    _buffer.shift(fbe_optional_offset);
+    bool fbe_result = ptr->verify();
+    _buffer.unshift(fbe_optional_offset);
+    return fbe_result;
+}
+
+bool FieldModelPtr_pg_query_ParseResult::has_value() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return false;
+
+    uint8_t fbe_has_value = *((const uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    return (fbe_has_value != 0);
+}
+
+size_t FieldModelPtr_pg_query_ParseResult::get_begin() const noexcept
+{
+    if (!has_value())
+        return 0;
+
+    uint32_t fbe_ptr_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
+    assert((fbe_ptr_offset > 0) && "Model is broken!");
+    if (fbe_ptr_offset == 0)
+        return 0;
+
+    _buffer.shift(fbe_ptr_offset);
+    return fbe_ptr_offset;
+}
+
+void FieldModelPtr_pg_query_ParseResult::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModelPtr_pg_query_ParseResult::get(::pg_query::ParseResult** fbe_value) noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    ptr = new FieldModel_pg_query_ParseResult(_buffer, 0);
+
+    ::pg_query::ParseResult *tempModel = new ::pg_query::ParseResult();
+    ptr->get(*tempModel);
+    *fbe_value = tempModel;
+
+    get_end(fbe_begin);
+}
+
+size_t FieldModelPtr_pg_query_ParseResult::set_begin(bool has_value)
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint8_t fbe_has_value = has_value ? 1 : 0;
+    *((uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_has_value;
+    if (fbe_has_value == 0)
+        return 0;
+
+    uint32_t fbe_ptr_size = 4;
+    uint32_t fbe_ptr_offset = (uint32_t)(_buffer.allocate(fbe_ptr_size) - _buffer.offset());
+    assert(((fbe_ptr_offset > 0) && ((_buffer.offset() + fbe_ptr_offset + fbe_ptr_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_ptr_offset == 0) || ((_buffer.offset() + fbe_ptr_offset + fbe_ptr_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1, fbe_ptr_offset);
+
+    _buffer.shift(fbe_ptr_offset);
+    return fbe_ptr_offset;
+}
+
+void FieldModelPtr_pg_query_ParseResult::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModelPtr_pg_query_ParseResult::set(const ::pg_query::ParseResult* fbe_value) noexcept
+{
+    size_t fbe_begin = set_begin(fbe_value != nullptr);
+    if (fbe_begin == 0)
+        return;
+
+    if (fbe_value != nullptr) {
+        BaseFieldModel* temp = new FieldModel_pg_query_ParseResult(_buffer, 0);
+        ptr = temp;
+        ptr->set(*fbe_value);
+    }
+
+    set_end(fbe_begin);
+}
+
+FieldModel_pg_query_ParseResult::FieldModel_pg_query_ParseResult(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , version(buffer, 4 + 4)
+    , stmts(buffer, version.fbe_offset() + version.fbe_size())
+{}
+
+size_t FieldModel_pg_query_ParseResult::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + version.fbe_size()
+        + stmts.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel_pg_query_ParseResult::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + version.fbe_extra()
+        + stmts.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel_pg_query_ParseResult::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel_pg_query_ParseResult::verify_fields(size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + version.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!version.verify())
+        return false;
+    fbe_current_size += version.fbe_size();
+
+    if ((fbe_current_size + stmts.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!stmts.verify())
+        return false;
+    fbe_current_size += stmts.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel_pg_query_ParseResult::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel_pg_query_ParseResult::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel_pg_query_ParseResult::get(::FBE::Base& fbe_value) noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size);
+    get_end(fbe_begin);
+}
+
+void FieldModel_pg_query_ParseResult::get_fields(::FBE::Base& base_fbe_value, size_t fbe_struct_size) noexcept
+{
+    ::pg_query::ParseResult& fbe_value = static_cast<::pg_query::ParseResult&>(base_fbe_value);
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + version.fbe_size()) <= fbe_struct_size)
+        {
+            version.get(fbe_value.version);
+        }
+    else
+        fbe_value.version = (int32_t)0ll;
+    fbe_current_size += version.fbe_size();
+
+    if ((fbe_current_size + stmts.fbe_size()) <= fbe_struct_size)
+        {
+            stmts.get(fbe_value.stmts);
+        }
+    else
+        fbe_value.stmts.clear();
+    fbe_current_size += stmts.fbe_size();
+}
+
+size_t FieldModel_pg_query_ParseResult::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel_pg_query_ParseResult::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel_pg_query_ParseResult::set(const ::FBE::Base& fbe_value) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value);
+    set_end(fbe_begin);
+}
+
+void FieldModel_pg_query_ParseResult::set_fields(const ::FBE::Base& base_fbe_value) noexcept
+{
+    const ::pg_query::ParseResult& fbe_value = static_cast<const ::pg_query::ParseResult&>(base_fbe_value);
+    version.set(fbe_value.version);
+    stmts.set(fbe_value.stmts);
+}
+
+namespace pg_query {
+
+bool ParseResultModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t ParseResultModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t ParseResultModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    return fbe_full_size;
+}
+
+size_t ParseResultModel::serialize(const ::pg_query::ParseResult& value)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t ParseResultModel::deserialize(::pg_query::ParseResult& value) noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value);
+    return fbe_full_size;
+}
+
+} // namespace pg_query
+
+FieldModelPtr_pg_query_ScanResult::FieldModelPtr_pg_query_ScanResult(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+{}
+
+FieldModelPtr_pg_query_ScanResult::~FieldModelPtr_pg_query_ScanResult()
+{
+    if (ptr) delete ptr;
+}
+
+size_t FieldModelPtr_pg_query_ScanResult::fbe_extra() const noexcept
+{
+    if (!ptr) return 0;
+
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_ptr_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
+    if ((fbe_ptr_offset == 0) || ((_buffer.offset() + fbe_ptr_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_ptr_offset);
+    size_t fbe_result = ptr->fbe_size() + ptr->fbe_extra();
+    _buffer.unshift(fbe_ptr_offset);
+
+    return fbe_result;
+}
+
+bool FieldModelPtr_pg_query_ScanResult::verify() const noexcept
+{
+    if (!ptr) return true;
+
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint8_t fbe_has_value = *((const uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    if (fbe_has_value == 0)
+        return true;
+
+    uint32_t fbe_optional_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
+    if (fbe_optional_offset == 0)
+        return false;
+
+    _buffer.shift(fbe_optional_offset);
+    bool fbe_result = ptr->verify();
+    _buffer.unshift(fbe_optional_offset);
+    return fbe_result;
+}
+
+bool FieldModelPtr_pg_query_ScanResult::has_value() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return false;
+
+    uint8_t fbe_has_value = *((const uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    return (fbe_has_value != 0);
+}
+
+size_t FieldModelPtr_pg_query_ScanResult::get_begin() const noexcept
+{
+    if (!has_value())
+        return 0;
+
+    uint32_t fbe_ptr_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
+    assert((fbe_ptr_offset > 0) && "Model is broken!");
+    if (fbe_ptr_offset == 0)
+        return 0;
+
+    _buffer.shift(fbe_ptr_offset);
+    return fbe_ptr_offset;
+}
+
+void FieldModelPtr_pg_query_ScanResult::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModelPtr_pg_query_ScanResult::get(::pg_query::ScanResult** fbe_value) noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    ptr = new FieldModel_pg_query_ScanResult(_buffer, 0);
+
+    ::pg_query::ScanResult *tempModel = new ::pg_query::ScanResult();
+    ptr->get(*tempModel);
+    *fbe_value = tempModel;
+
+    get_end(fbe_begin);
+}
+
+size_t FieldModelPtr_pg_query_ScanResult::set_begin(bool has_value)
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint8_t fbe_has_value = has_value ? 1 : 0;
+    *((uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_has_value;
+    if (fbe_has_value == 0)
+        return 0;
+
+    uint32_t fbe_ptr_size = 4;
+    uint32_t fbe_ptr_offset = (uint32_t)(_buffer.allocate(fbe_ptr_size) - _buffer.offset());
+    assert(((fbe_ptr_offset > 0) && ((_buffer.offset() + fbe_ptr_offset + fbe_ptr_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_ptr_offset == 0) || ((_buffer.offset() + fbe_ptr_offset + fbe_ptr_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1, fbe_ptr_offset);
+
+    _buffer.shift(fbe_ptr_offset);
+    return fbe_ptr_offset;
+}
+
+void FieldModelPtr_pg_query_ScanResult::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModelPtr_pg_query_ScanResult::set(const ::pg_query::ScanResult* fbe_value) noexcept
+{
+    size_t fbe_begin = set_begin(fbe_value != nullptr);
+    if (fbe_begin == 0)
+        return;
+
+    if (fbe_value != nullptr) {
+        BaseFieldModel* temp = new FieldModel_pg_query_ScanResult(_buffer, 0);
+        ptr = temp;
+        ptr->set(*fbe_value);
+    }
+
+    set_end(fbe_begin);
+}
+
+FieldModel_pg_query_ScanResult::FieldModel_pg_query_ScanResult(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , version(buffer, 4 + 4)
+    , tokens(buffer, version.fbe_offset() + version.fbe_size())
+{}
+
+size_t FieldModel_pg_query_ScanResult::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + version.fbe_size()
+        + tokens.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel_pg_query_ScanResult::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + version.fbe_extra()
+        + tokens.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel_pg_query_ScanResult::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel_pg_query_ScanResult::verify_fields(size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + version.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!version.verify())
+        return false;
+    fbe_current_size += version.fbe_size();
+
+    if ((fbe_current_size + tokens.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!tokens.verify())
+        return false;
+    fbe_current_size += tokens.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel_pg_query_ScanResult::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel_pg_query_ScanResult::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel_pg_query_ScanResult::get(::FBE::Base& fbe_value) noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size);
+    get_end(fbe_begin);
+}
+
+void FieldModel_pg_query_ScanResult::get_fields(::FBE::Base& base_fbe_value, size_t fbe_struct_size) noexcept
+{
+    ::pg_query::ScanResult& fbe_value = static_cast<::pg_query::ScanResult&>(base_fbe_value);
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + version.fbe_size()) <= fbe_struct_size)
+        {
+            version.get(fbe_value.version);
+        }
+    else
+        fbe_value.version = (int32_t)0ll;
+    fbe_current_size += version.fbe_size();
+
+    if ((fbe_current_size + tokens.fbe_size()) <= fbe_struct_size)
+        {
+            tokens.get(fbe_value.tokens);
+        }
+    else
+        fbe_value.tokens.clear();
+    fbe_current_size += tokens.fbe_size();
+}
+
+size_t FieldModel_pg_query_ScanResult::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel_pg_query_ScanResult::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel_pg_query_ScanResult::set(const ::FBE::Base& fbe_value) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value);
+    set_end(fbe_begin);
+}
+
+void FieldModel_pg_query_ScanResult::set_fields(const ::FBE::Base& base_fbe_value) noexcept
+{
+    const ::pg_query::ScanResult& fbe_value = static_cast<const ::pg_query::ScanResult&>(base_fbe_value);
+    version.set(fbe_value.version);
+    tokens.set(fbe_value.tokens);
+}
+
+namespace pg_query {
+
+bool ScanResultModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t ScanResultModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t ScanResultModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    return fbe_full_size;
+}
+
+size_t ScanResultModel::serialize(const ::pg_query::ScanResult& value)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t ScanResultModel::deserialize(::pg_query::ScanResult& value) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
