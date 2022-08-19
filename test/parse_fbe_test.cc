@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <iostream>
+
 #include "parse_tests.c"
 #include "pg_query_parse_fbe.hpp"
 
@@ -16,7 +18,8 @@ int main() {
             ret_code = -1;
             printf("%s\n", result.error->message);
         } else {
-            printf(".");
+            printf("SQL: %s\n", tests[i]);
+            std::cout << result.parse_tree << std::endl;
         }
 
         pg_query_free_fbe_parse_result(result);

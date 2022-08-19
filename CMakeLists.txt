@@ -56,6 +56,9 @@ list(APPEND CXX_FLAGS_LIST
   -frtti
   -fexceptions
   -fsized-deallocation
+
+  # https://github.com/vadimcn/vscode-lldb/issues/415
+  -fstandalone-debug
 )
 
 string(JOIN " " BASE_CXX_FLAGS ${CXX_FLAGS_LIST})
