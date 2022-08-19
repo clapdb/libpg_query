@@ -12904,7 +12904,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> str;
+    FieldModel<std::pmr::string> str;
 };
 
 namespace pg_query {
@@ -12995,7 +12995,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> str;
+    FieldModel<std::pmr::string> str;
 };
 
 namespace pg_query {
@@ -13086,7 +13086,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> str;
+    FieldModel<std::pmr::string> str;
 };
 
 namespace pg_query {
@@ -13540,7 +13540,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> aliasname;
+    FieldModel<std::pmr::string> aliasname;
     FieldModelVector<::pg_query::Node> colnames;
 };
 
@@ -13632,11 +13632,11 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> catalogname;
-    FieldModel<std::string> schemaname;
-    FieldModel<std::string> relname;
+    FieldModel<std::pmr::string> catalogname;
+    FieldModel<std::pmr::string> schemaname;
+    FieldModel<std::pmr::string> relname;
     FieldModel<bool> inh;
-    FieldModel<std::string> relpersistence;
+    FieldModel<std::pmr::string> relpersistence;
     FieldModelPtr_pg_query_Alias alias;
     FieldModel<int32_t> location;
 };
@@ -14133,7 +14133,7 @@ public:
     FieldModel<::pg_query::Node> aggfilter;
     FieldModel<bool> aggstar;
     FieldModel<bool> aggvariadic;
-    FieldModel<std::string> aggkind;
+    FieldModel<std::pmr::string> aggkind;
     FieldModel<uint32_t> agglevelsup;
     FieldModel<::pg_query::AggSplit> aggsplit;
     FieldModel<int32_t> location;
@@ -14625,7 +14625,7 @@ private:
 public:
     FieldModel<::pg_query::Node> xpr;
     FieldModel<::pg_query::Node> arg;
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModel<int32_t> argnumber;
     FieldModel<int32_t> location;
 };
@@ -15308,7 +15308,7 @@ public:
     FieldModel<::pg_query::Node> testexpr;
     FieldModelVector<::pg_query::Node> param_ids;
     FieldModel<int32_t> plan_id;
-    FieldModel<std::string> plan_name;
+    FieldModel<std::pmr::string> plan_name;
     FieldModel<uint32_t> first_col_type;
     FieldModel<int32_t> first_col_typmod;
     FieldModel<uint32_t> first_col_collation;
@@ -17037,7 +17037,7 @@ private:
 public:
     FieldModel<::pg_query::Node> xpr;
     FieldModel<::pg_query::XmlExprOp> op;
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModelVector<::pg_query::Node> named_args;
     FieldModelVector<::pg_query::Node> arg_names;
     FieldModelVector<::pg_query::Node> args;
@@ -17613,7 +17613,7 @@ private:
 public:
     FieldModel<::pg_query::Node> xpr;
     FieldModel<uint32_t> cvarno;
-    FieldModel<std::string> cursor_name;
+    FieldModel<std::pmr::string> cursor_name;
     FieldModel<int32_t> cursor_param;
 };
 
@@ -17895,7 +17895,7 @@ public:
     FieldModel<::pg_query::Node> xpr;
     FieldModel<::pg_query::Node> expr;
     FieldModel<int32_t> resno;
-    FieldModel<std::string> resname;
+    FieldModel<std::pmr::string> resname;
     FieldModel<uint32_t> ressortgroupref;
     FieldModel<uint32_t> resorigtbl;
     FieldModel<int32_t> resorigcol;
@@ -18371,10 +18371,10 @@ private:
 public:
     FieldModelPtr_pg_query_RangeVar rel;
     FieldModelVector<::pg_query::Node> col_names;
-    FieldModel<std::string> access_method;
+    FieldModel<std::pmr::string> access_method;
     FieldModelVector<::pg_query::Node> options;
     FieldModel<::pg_query::OnCommitAction> on_commit;
-    FieldModel<std::string> table_space_name;
+    FieldModel<std::pmr::string> table_space_name;
     FieldModel<::pg_query::Node> view_query;
     FieldModel<bool> skip_data;
 };
@@ -19178,7 +19178,7 @@ private:
 
 public:
     FieldModel<::pg_query::AlterTableType> subtype;
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModel<int32_t> num;
     FieldModelPtr_pg_query_RoleSpec newowner;
     FieldModel<::pg_query::Node> def;
@@ -19274,9 +19274,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> subtype;
+    FieldModel<std::pmr::string> subtype;
     FieldModelVector<::pg_query::Node> type_name;
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModel<::pg_query::Node> def;
     FieldModel<::pg_query::DropBehavior> behavior;
     FieldModel<bool> missing_ok;
@@ -19754,7 +19754,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> portalname;
+    FieldModel<std::pmr::string> portalname;
 };
 
 namespace pg_query {
@@ -19846,7 +19846,7 @@ private:
 
 public:
     FieldModelPtr_pg_query_RangeVar relation;
-    FieldModel<std::string> indexname;
+    FieldModel<std::pmr::string> indexname;
     FieldModel<int32_t> options;
 };
 
@@ -19943,7 +19943,7 @@ public:
     FieldModelVector<::pg_query::Node> attlist;
     FieldModel<bool> is_from;
     FieldModel<bool> is_program;
-    FieldModel<std::string> filename;
+    FieldModel<std::pmr::string> filename;
     FieldModelVector<::pg_query::Node> options;
     FieldModel<::pg_query::Node> where_clause;
 };
@@ -20045,8 +20045,8 @@ public:
     FieldModelVector<::pg_query::Node> constraints;
     FieldModelVector<::pg_query::Node> options;
     FieldModel<::pg_query::OnCommitAction> oncommit;
-    FieldModel<std::string> tablespacename;
-    FieldModel<std::string> access_method;
+    FieldModel<std::pmr::string> tablespacename;
+    FieldModel<std::pmr::string> access_method;
     FieldModel<bool> if_not_exists;
 };
 
@@ -20425,7 +20425,7 @@ private:
 public:
     FieldModel<::pg_query::ObjectType> objtype;
     FieldModel<::pg_query::Node> object;
-    FieldModel<std::string> comment;
+    FieldModel<std::pmr::string> comment;
 };
 
 namespace pg_query {
@@ -20518,7 +20518,7 @@ private:
 public:
     FieldModel<::pg_query::FetchDirection> direction;
     FieldModel<int64_t> how_many;
-    FieldModel<std::string> portalname;
+    FieldModel<std::pmr::string> portalname;
     FieldModel<bool> ismove;
 };
 
@@ -20610,16 +20610,16 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> idxname;
+    FieldModel<std::pmr::string> idxname;
     FieldModelPtr_pg_query_RangeVar relation;
-    FieldModel<std::string> access_method;
-    FieldModel<std::string> table_space;
+    FieldModel<std::pmr::string> access_method;
+    FieldModel<std::pmr::string> table_space;
     FieldModelVector<::pg_query::Node> index_params;
     FieldModelVector<::pg_query::Node> index_including_params;
     FieldModelVector<::pg_query::Node> options;
     FieldModel<::pg_query::Node> where_clause;
     FieldModelVector<::pg_query::Node> exclude_op_names;
-    FieldModel<std::string> idxcomment;
+    FieldModel<std::pmr::string> idxcomment;
     FieldModel<uint32_t> index_oid;
     FieldModel<uint32_t> old_node;
     FieldModel<uint32_t> old_create_subid;
@@ -21007,8 +21007,8 @@ public:
     FieldModel<::pg_query::ObjectType> relation_type;
     FieldModelPtr_pg_query_RangeVar relation;
     FieldModel<::pg_query::Node> object;
-    FieldModel<std::string> subname;
-    FieldModel<std::string> newname;
+    FieldModel<std::pmr::string> subname;
+    FieldModel<std::pmr::string> newname;
     FieldModel<::pg_query::DropBehavior> behavior;
     FieldModel<bool> missing_ok;
 };
@@ -21102,7 +21102,7 @@ private:
 
 public:
     FieldModelPtr_pg_query_RangeVar relation;
-    FieldModel<std::string> rulename;
+    FieldModel<std::pmr::string> rulename;
     FieldModel<::pg_query::Node> where_clause;
     FieldModel<::pg_query::CmdType> event;
     FieldModel<bool> instead;
@@ -21198,8 +21198,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> conditionname;
-    FieldModel<std::string> payload;
+    FieldModel<std::pmr::string> conditionname;
+    FieldModel<std::pmr::string> payload;
 };
 
 namespace pg_query {
@@ -21290,7 +21290,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> conditionname;
+    FieldModel<std::pmr::string> conditionname;
 };
 
 namespace pg_query {
@@ -21381,7 +21381,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> conditionname;
+    FieldModel<std::pmr::string> conditionname;
 };
 
 namespace pg_query {
@@ -21474,8 +21474,8 @@ private:
 public:
     FieldModel<::pg_query::TransactionStmtKind> kind;
     FieldModelVector<::pg_query::Node> options;
-    FieldModel<std::string> savepoint_name;
-    FieldModel<std::string> gid;
+    FieldModel<std::pmr::string> savepoint_name;
+    FieldModel<std::pmr::string> gid;
     FieldModel<bool> chain;
 };
 
@@ -21663,7 +21663,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> filename;
+    FieldModel<std::pmr::string> filename;
 };
 
 namespace pg_query {
@@ -21848,7 +21848,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> dbname;
+    FieldModel<std::pmr::string> dbname;
     FieldModelVector<::pg_query::Node> options;
 };
 
@@ -21940,7 +21940,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> dbname;
+    FieldModel<std::pmr::string> dbname;
     FieldModel<bool> missing_ok;
     FieldModelVector<::pg_query::Node> options;
 };
@@ -22503,7 +22503,7 @@ private:
 
 public:
     FieldModel<::pg_query::VariableSetKind> kind;
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModelVector<::pg_query::Node> args;
     FieldModel<bool> is_local;
 };
@@ -22596,7 +22596,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
 };
 
 namespace pg_query {
@@ -22778,7 +22778,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> trigname;
+    FieldModel<std::pmr::string> trigname;
     FieldModelPtr_pg_query_RangeVar relation;
     FieldModelVector<::pg_query::Node> funcname;
     FieldModelVector<::pg_query::Node> args;
@@ -22883,7 +22883,7 @@ private:
 
 public:
     FieldModel<bool> replace;
-    FieldModel<std::string> plname;
+    FieldModel<std::pmr::string> plname;
     FieldModelVector<::pg_query::Node> plhandler;
     FieldModelVector<::pg_query::Node> plinline;
     FieldModelVector<::pg_query::Node> plvalidator;
@@ -22979,7 +22979,7 @@ private:
 
 public:
     FieldModel<::pg_query::RoleStmtType> stmt_type;
-    FieldModel<std::string> role;
+    FieldModel<std::pmr::string> role;
     FieldModelVector<::pg_query::Node> options;
 };
 
@@ -23443,7 +23443,7 @@ private:
 public:
     FieldModel<::pg_query::ReindexObjectType> kind;
     FieldModelPtr_pg_query_RangeVar relation;
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModel<int32_t> options;
     FieldModel<bool> concurrent;
 };
@@ -23626,7 +23626,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> schemaname;
+    FieldModel<std::pmr::string> schemaname;
     FieldModelPtr_pg_query_RoleSpec authrole;
     FieldModelVector<::pg_query::Node> schema_elts;
     FieldModel<bool> if_not_exists;
@@ -23720,7 +23720,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> dbname;
+    FieldModel<std::pmr::string> dbname;
     FieldModelVector<::pg_query::Node> options;
 };
 
@@ -23812,7 +23812,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> dbname;
+    FieldModel<std::pmr::string> dbname;
     FieldModelPtr_pg_query_VariableSetStmt setstmt;
 };
 
@@ -23905,7 +23905,7 @@ private:
 
 public:
     FieldModelPtr_pg_query_RoleSpec role;
-    FieldModel<std::string> database;
+    FieldModel<std::pmr::string> database;
     FieldModelPtr_pg_query_VariableSetStmt setstmt;
 };
 
@@ -23998,8 +23998,8 @@ private:
 
 public:
     FieldModelVector<::pg_query::Node> conversion_name;
-    FieldModel<std::string> for_encoding_name;
-    FieldModel<std::string> to_encoding_name;
+    FieldModel<std::pmr::string> for_encoding_name;
+    FieldModel<std::pmr::string> to_encoding_name;
     FieldModelVector<::pg_query::Node> func_name;
     FieldModel<bool> def;
 };
@@ -24189,7 +24189,7 @@ private:
 public:
     FieldModelVector<::pg_query::Node> opclassname;
     FieldModelVector<::pg_query::Node> opfamilyname;
-    FieldModel<std::string> amname;
+    FieldModel<std::pmr::string> amname;
     FieldModelPtr_pg_query_TypeName datatype;
     FieldModelVector<::pg_query::Node> items;
     FieldModel<bool> is_default;
@@ -24284,7 +24284,7 @@ private:
 
 public:
     FieldModelVector<::pg_query::Node> opfamilyname;
-    FieldModel<std::string> amname;
+    FieldModel<std::pmr::string> amname;
 };
 
 namespace pg_query {
@@ -24376,7 +24376,7 @@ private:
 
 public:
     FieldModelVector<::pg_query::Node> opfamilyname;
-    FieldModel<std::string> amname;
+    FieldModel<std::pmr::string> amname;
     FieldModel<bool> is_drop;
     FieldModelVector<::pg_query::Node> items;
 };
@@ -24469,7 +24469,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModelVector<::pg_query::Node> argtypes;
     FieldModel<::pg_query::Node> query;
 };
@@ -24562,7 +24562,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModelVector<::pg_query::Node> params;
 };
 
@@ -24654,7 +24654,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
 };
 
 namespace pg_query {
@@ -24745,7 +24745,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> portalname;
+    FieldModel<std::pmr::string> portalname;
     FieldModel<int32_t> options;
     FieldModel<::pg_query::Node> query;
 };
@@ -24838,9 +24838,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> tablespacename;
+    FieldModel<std::pmr::string> tablespacename;
     FieldModelPtr_pg_query_RoleSpec owner;
-    FieldModel<std::string> location;
+    FieldModel<std::pmr::string> location;
     FieldModelVector<::pg_query::Node> options;
 };
 
@@ -24932,7 +24932,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> tablespacename;
+    FieldModel<std::pmr::string> tablespacename;
     FieldModel<bool> missing_ok;
 };
 
@@ -25122,7 +25122,7 @@ public:
     FieldModel<::pg_query::ObjectType> object_type;
     FieldModelPtr_pg_query_RangeVar relation;
     FieldModel<::pg_query::Node> object;
-    FieldModel<std::string> newschema;
+    FieldModel<std::pmr::string> newschema;
     FieldModel<bool> missing_ok;
 };
 
@@ -25953,9 +25953,9 @@ private:
 
 public:
     FieldModelVector<::pg_query::Node> type_name;
-    FieldModel<std::string> old_val;
-    FieldModel<std::string> new_val;
-    FieldModel<std::string> new_val_neighbor;
+    FieldModel<std::pmr::string> old_val;
+    FieldModel<std::pmr::string> new_val;
+    FieldModel<std::pmr::string> new_val_neighbor;
     FieldModel<bool> new_val_is_after;
     FieldModel<bool> skip_if_new_val_exists;
 };
@@ -26237,7 +26237,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> fdwname;
+    FieldModel<std::pmr::string> fdwname;
     FieldModelVector<::pg_query::Node> func_options;
     FieldModelVector<::pg_query::Node> options;
 };
@@ -26330,7 +26330,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> fdwname;
+    FieldModel<std::pmr::string> fdwname;
     FieldModelVector<::pg_query::Node> func_options;
     FieldModelVector<::pg_query::Node> options;
 };
@@ -26423,10 +26423,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> servername;
-    FieldModel<std::string> servertype;
-    FieldModel<std::string> version;
-    FieldModel<std::string> fdwname;
+    FieldModel<std::pmr::string> servername;
+    FieldModel<std::pmr::string> servertype;
+    FieldModel<std::pmr::string> version;
+    FieldModel<std::pmr::string> fdwname;
     FieldModel<bool> if_not_exists;
     FieldModelVector<::pg_query::Node> options;
 };
@@ -26519,8 +26519,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> servername;
-    FieldModel<std::string> version;
+    FieldModel<std::pmr::string> servername;
+    FieldModel<std::pmr::string> version;
     FieldModelVector<::pg_query::Node> options;
     FieldModel<bool> has_version;
 };
@@ -26614,7 +26614,7 @@ private:
 
 public:
     FieldModelPtr_pg_query_RoleSpec user;
-    FieldModel<std::string> servername;
+    FieldModel<std::pmr::string> servername;
     FieldModel<bool> if_not_exists;
     FieldModelVector<::pg_query::Node> options;
 };
@@ -26708,7 +26708,7 @@ private:
 
 public:
     FieldModelPtr_pg_query_RoleSpec user;
-    FieldModel<std::string> servername;
+    FieldModel<std::pmr::string> servername;
     FieldModelVector<::pg_query::Node> options;
 };
 
@@ -26801,7 +26801,7 @@ private:
 
 public:
     FieldModelPtr_pg_query_RoleSpec user;
-    FieldModel<std::string> servername;
+    FieldModel<std::pmr::string> servername;
     FieldModel<bool> missing_ok;
 };
 
@@ -26893,7 +26893,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> tablespacename;
+    FieldModel<std::pmr::string> tablespacename;
     FieldModelVector<::pg_query::Node> options;
     FieldModel<bool> is_reset;
 };
@@ -26986,10 +26986,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> orig_tablespacename;
+    FieldModel<std::pmr::string> orig_tablespacename;
     FieldModel<::pg_query::ObjectType> objtype;
     FieldModelVector<::pg_query::Node> roles;
-    FieldModel<std::string> new_tablespacename;
+    FieldModel<std::pmr::string> new_tablespacename;
     FieldModel<bool> nowait;
 };
 
@@ -27083,8 +27083,8 @@ private:
 public:
     FieldModel<::pg_query::ObjectType> objtype;
     FieldModel<::pg_query::Node> object;
-    FieldModel<std::string> provider;
-    FieldModel<std::string> label;
+    FieldModel<std::pmr::string> provider;
+    FieldModel<std::pmr::string> label;
 };
 
 namespace pg_query {
@@ -27176,7 +27176,7 @@ private:
 
 public:
     FieldModel_pg_query_CreateStmt base_stmt;
-    FieldModel<std::string> servername;
+    FieldModel<std::pmr::string> servername;
     FieldModelVector<::pg_query::Node> options;
 };
 
@@ -27268,9 +27268,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> server_name;
-    FieldModel<std::string> remote_schema;
-    FieldModel<std::string> local_schema;
+    FieldModel<std::pmr::string> server_name;
+    FieldModel<std::pmr::string> remote_schema;
+    FieldModel<std::pmr::string> local_schema;
     FieldModel<::pg_query::ImportForeignSchemaType> list_type;
     FieldModelVector<::pg_query::Node> table_list;
     FieldModelVector<::pg_query::Node> options;
@@ -27364,7 +27364,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> extname;
+    FieldModel<std::pmr::string> extname;
     FieldModel<bool> if_not_exists;
     FieldModelVector<::pg_query::Node> options;
 };
@@ -27457,7 +27457,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> extname;
+    FieldModel<std::pmr::string> extname;
     FieldModelVector<::pg_query::Node> options;
 };
 
@@ -27549,7 +27549,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> extname;
+    FieldModel<std::pmr::string> extname;
     FieldModel<int32_t> action;
     FieldModel<::pg_query::ObjectType> objtype;
     FieldModel<::pg_query::Node> object;
@@ -27643,8 +27643,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> trigname;
-    FieldModel<std::string> eventname;
+    FieldModel<std::pmr::string> trigname;
+    FieldModel<std::pmr::string> eventname;
     FieldModelVector<::pg_query::Node> whenclause;
     FieldModelVector<::pg_query::Node> funcname;
 };
@@ -27737,8 +27737,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> trigname;
-    FieldModel<std::string> tgenabled;
+    FieldModel<std::pmr::string> trigname;
+    FieldModel<std::pmr::string> tgenabled;
 };
 
 namespace pg_query {
@@ -27922,8 +27922,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> identity_type;
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> identity_type;
+    FieldModel<std::pmr::string> name;
 };
 
 namespace pg_query {
@@ -28105,9 +28105,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> policy_name;
+    FieldModel<std::pmr::string> policy_name;
     FieldModelPtr_pg_query_RangeVar table;
-    FieldModel<std::string> cmd_name;
+    FieldModel<std::pmr::string> cmd_name;
     FieldModel<bool> permissive;
     FieldModelVector<::pg_query::Node> roles;
     FieldModel<::pg_query::Node> qual;
@@ -28202,7 +28202,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> policy_name;
+    FieldModel<std::pmr::string> policy_name;
     FieldModelPtr_pg_query_RangeVar table;
     FieldModelVector<::pg_query::Node> roles;
     FieldModel<::pg_query::Node> qual;
@@ -28299,7 +28299,7 @@ private:
 public:
     FieldModel<bool> replace;
     FieldModelPtr_pg_query_TypeName type_name;
-    FieldModel<std::string> lang;
+    FieldModel<std::pmr::string> lang;
     FieldModelPtr_pg_query_ObjectWithArgs fromsql;
     FieldModelPtr_pg_query_ObjectWithArgs tosql;
 };
@@ -28392,9 +28392,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> amname;
+    FieldModel<std::pmr::string> amname;
     FieldModelVector<::pg_query::Node> handler_name;
-    FieldModel<std::string> amtype;
+    FieldModel<std::pmr::string> amtype;
 };
 
 namespace pg_query {
@@ -28485,7 +28485,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> pubname;
+    FieldModel<std::pmr::string> pubname;
     FieldModelVector<::pg_query::Node> options;
     FieldModelVector<::pg_query::Node> tables;
     FieldModel<bool> for_all_tables;
@@ -28579,7 +28579,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> pubname;
+    FieldModel<std::pmr::string> pubname;
     FieldModelVector<::pg_query::Node> options;
     FieldModelVector<::pg_query::Node> tables;
     FieldModel<bool> for_all_tables;
@@ -28674,8 +28674,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> subname;
-    FieldModel<std::string> conninfo;
+    FieldModel<std::pmr::string> subname;
+    FieldModel<std::pmr::string> conninfo;
     FieldModelVector<::pg_query::Node> publication;
     FieldModelVector<::pg_query::Node> options;
 };
@@ -28769,8 +28769,8 @@ private:
 
 public:
     FieldModel<::pg_query::AlterSubscriptionType> kind;
-    FieldModel<std::string> subname;
-    FieldModel<std::string> conninfo;
+    FieldModel<std::pmr::string> subname;
+    FieldModel<std::pmr::string> conninfo;
     FieldModelVector<::pg_query::Node> publication;
     FieldModelVector<::pg_query::Node> options;
 };
@@ -28863,7 +28863,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> subname;
+    FieldModel<std::pmr::string> subname;
     FieldModel<bool> missing_ok;
     FieldModel<::pg_query::DropBehavior> behavior;
 };
@@ -28960,7 +28960,7 @@ public:
     FieldModelVector<::pg_query::Node> stat_types;
     FieldModelVector<::pg_query::Node> exprs;
     FieldModelVector<::pg_query::Node> relations;
-    FieldModel<std::string> stxcomment;
+    FieldModel<std::pmr::string> stxcomment;
     FieldModel<bool> if_not_exists;
 };
 
@@ -30166,7 +30166,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModelVector<::pg_query::Node> indirection;
     FieldModel<::pg_query::Node> val;
     FieldModel<int32_t> location;
@@ -30634,8 +30634,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
-    FieldModel<std::string> refname;
+    FieldModel<std::pmr::string> name;
+    FieldModel<std::pmr::string> refname;
     FieldModelVector<::pg_query::Node> partition_clause;
     FieldModelVector<::pg_query::Node> order_clause;
     FieldModel<int32_t> frame_options;
@@ -31113,7 +31113,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> colname;
+    FieldModel<std::pmr::string> colname;
     FieldModelPtr_pg_query_TypeName type_name;
     FieldModel<bool> for_ordinality;
     FieldModel<bool> is_not_null;
@@ -31308,18 +31308,18 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> colname;
+    FieldModel<std::pmr::string> colname;
     FieldModelPtr_pg_query_TypeName type_name;
     FieldModel<int32_t> inhcount;
     FieldModel<bool> is_local;
     FieldModel<bool> is_not_null;
     FieldModel<bool> is_from_type;
-    FieldModel<std::string> storage;
+    FieldModel<std::pmr::string> storage;
     FieldModel<::pg_query::Node> raw_default;
     FieldModel<::pg_query::Node> cooked_default;
-    FieldModel<std::string> identity;
+    FieldModel<std::pmr::string> identity;
     FieldModelPtr_pg_query_RangeVar identity_sequence;
-    FieldModel<std::string> generated;
+    FieldModel<std::pmr::string> generated;
     FieldModelPtr_pg_query_CollateClause coll_clause;
     FieldModel<uint32_t> coll_oid;
     FieldModelVector<::pg_query::Node> constraints;
@@ -31415,9 +31415,9 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModel<::pg_query::Node> expr;
-    FieldModel<std::string> indexcolname;
+    FieldModel<std::pmr::string> indexcolname;
     FieldModelVector<::pg_query::Node> collation;
     FieldModelVector<::pg_query::Node> opclass;
     FieldModelVector<::pg_query::Node> opclassopts;
@@ -31514,29 +31514,29 @@ private:
 
 public:
     FieldModel<::pg_query::ConstrType> contype;
-    FieldModel<std::string> conname;
+    FieldModel<std::pmr::string> conname;
     FieldModel<bool> deferrable;
     FieldModel<bool> initdeferred;
     FieldModel<int32_t> location;
     FieldModel<bool> is_no_inherit;
     FieldModel<::pg_query::Node> raw_expr;
-    FieldModel<std::string> cooked_expr;
-    FieldModel<std::string> generated_when;
+    FieldModel<std::pmr::string> cooked_expr;
+    FieldModel<std::pmr::string> generated_when;
     FieldModelVector<::pg_query::Node> keys;
     FieldModelVector<::pg_query::Node> including;
     FieldModelVector<::pg_query::Node> exclusions;
     FieldModelVector<::pg_query::Node> options;
-    FieldModel<std::string> indexname;
-    FieldModel<std::string> indexspace;
+    FieldModel<std::pmr::string> indexname;
+    FieldModel<std::pmr::string> indexspace;
     FieldModel<bool> reset_default_tblspc;
-    FieldModel<std::string> access_method;
+    FieldModel<std::pmr::string> access_method;
     FieldModel<::pg_query::Node> where_clause;
     FieldModelPtr_pg_query_RangeVar pktable;
     FieldModelVector<::pg_query::Node> fk_attrs;
     FieldModelVector<::pg_query::Node> pk_attrs;
-    FieldModel<std::string> fk_matchtype;
-    FieldModel<std::string> fk_upd_action;
-    FieldModel<std::string> fk_del_action;
+    FieldModel<std::pmr::string> fk_matchtype;
+    FieldModel<std::pmr::string> fk_upd_action;
+    FieldModel<std::pmr::string> fk_del_action;
     FieldModelVector<::pg_query::Node> old_conpfeqop;
     FieldModel<uint32_t> old_pktable_oid;
     FieldModel<bool> skip_validation;
@@ -31631,8 +31631,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> defnamespace;
-    FieldModel<std::string> defname;
+    FieldModel<std::pmr::string> defnamespace;
+    FieldModel<std::pmr::string> defname;
     FieldModel<::pg_query::Node> arg;
     FieldModel<::pg_query::DefElemAction> defaction;
     FieldModel<int32_t> location;
@@ -31728,7 +31728,7 @@ private:
 public:
     FieldModel<::pg_query::RTEKind> rtekind;
     FieldModel<uint32_t> relid;
-    FieldModel<std::string> relkind;
+    FieldModel<std::pmr::string> relkind;
     FieldModel<int32_t> rellockmode;
     FieldModelPtr_pg_query_TableSampleClause tablesample;
     FieldModelPtr_pg_query_Query subquery;
@@ -31742,13 +31742,13 @@ public:
     FieldModel<bool> funcordinality;
     FieldModelPtr_pg_query_TableFunc tablefunc;
     FieldModelVector<::pg_query::Node> values_lists;
-    FieldModel<std::string> ctename;
+    FieldModel<std::pmr::string> ctename;
     FieldModel<uint32_t> ctelevelsup;
     FieldModel<bool> self_reference;
     FieldModelVector<::pg_query::Node> coltypes;
     FieldModelVector<::pg_query::Node> coltypmods;
     FieldModelVector<::pg_query::Node> colcollations;
-    FieldModel<std::string> enrname;
+    FieldModel<std::pmr::string> enrname;
     FieldModel<double> enrtuples;
     FieldModelPtr_pg_query_Alias alias;
     FieldModelPtr_pg_query_Alias eref;
@@ -32043,8 +32043,8 @@ private:
 
 public:
     FieldModel<::pg_query::WCOKind> kind;
-    FieldModel<std::string> relname;
-    FieldModel<std::string> polname;
+    FieldModel<std::pmr::string> relname;
+    FieldModel<std::pmr::string> polname;
     FieldModel<::pg_query::Node> qual;
     FieldModel<bool> cascaded;
 };
@@ -32325,8 +32325,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
-    FieldModel<std::string> refname;
+    FieldModel<std::pmr::string> name;
+    FieldModel<std::pmr::string> refname;
     FieldModelVector<::pg_query::Node> partition_clause;
     FieldModelVector<::pg_query::Node> order_clause;
     FieldModel<int32_t> frame_options;
@@ -32522,7 +32522,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> priv_name;
+    FieldModel<std::pmr::string> priv_name;
     FieldModelVector<::pg_query::Node> cols;
 };
 
@@ -32803,7 +32803,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModelPtr_pg_query_TypeName arg_type;
     FieldModel<::pg_query::FunctionParameterMode> mode;
     FieldModel<::pg_query::Node> defexpr;
@@ -33273,7 +33273,7 @@ private:
 public:
     FieldModelVector<::pg_query::Node> index_elems;
     FieldModel<::pg_query::Node> where_clause;
-    FieldModel<std::string> conname;
+    FieldModel<std::pmr::string> conname;
     FieldModel<int32_t> location;
 };
 
@@ -33460,7 +33460,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> ctename;
+    FieldModel<std::pmr::string> ctename;
     FieldModelVector<::pg_query::Node> aliascolnames;
     FieldModel<::pg_query::CTEMaterialize> ctematerialized;
     FieldModel<::pg_query::Node> ctequery;
@@ -33562,7 +33562,7 @@ private:
 
 public:
     FieldModel<::pg_query::RoleSpecType> roletype;
-    FieldModel<std::string> rolename;
+    FieldModel<std::pmr::string> rolename;
     FieldModel<int32_t> location;
 };
 
@@ -33654,7 +33654,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModel<bool> is_new;
     FieldModel<bool> is_table;
 };
@@ -33747,7 +33747,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> name;
+    FieldModel<std::pmr::string> name;
     FieldModel<::pg_query::Node> expr;
     FieldModelVector<::pg_query::Node> collation;
     FieldModelVector<::pg_query::Node> opclass;
@@ -33842,7 +33842,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> strategy;
+    FieldModel<std::pmr::string> strategy;
     FieldModelVector<::pg_query::Node> part_params;
     FieldModel<int32_t> location;
 };
@@ -33935,7 +33935,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> strategy;
+    FieldModel<std::pmr::string> strategy;
     FieldModel<bool> is_default;
     FieldModel<int32_t> modulus;
     FieldModel<int32_t> remainder;
@@ -34311,7 +34311,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<std::string> source_text;
+    FieldModel<std::pmr::string> source_text;
     FieldModel<uint32_t> lang_oid;
     FieldModel<bool> lang_is_trusted;
     FieldModel<bool> atomic;
