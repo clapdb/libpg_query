@@ -1240,6 +1240,10 @@ Integer::Integer()
     : ival((int32_t)0ll)
 {}
 
+Integer::Integer([[maybe_unused]] allocator_type alloc)
+    : ival((int32_t)0ll)
+{}
+
 Integer::Integer(int32_t arg_ival)
     : ival(arg_ival)
 {}
@@ -1296,7 +1300,11 @@ Float::Float()
     : str()
 {}
 
-Float::Float(const std::string& arg_str)
+Float::Float([[maybe_unused]] allocator_type alloc)
+    : str(alloc)
+{}
+
+Float::Float(const std::pmr::string& arg_str)
     : str(arg_str)
 {}
 
@@ -1352,7 +1360,11 @@ String::String()
     : str()
 {}
 
-String::String(const std::string& arg_str)
+String::String([[maybe_unused]] allocator_type alloc)
+    : str(alloc)
+{}
+
+String::String(const std::pmr::string& arg_str)
     : str(arg_str)
 {}
 
@@ -1408,7 +1420,11 @@ BitString::BitString()
     : str()
 {}
 
-BitString::BitString(const std::string& arg_str)
+BitString::BitString([[maybe_unused]] allocator_type alloc)
+    : str(alloc)
+{}
+
+BitString::BitString(const std::pmr::string& arg_str)
     : str(arg_str)
 {}
 
@@ -1463,6 +1479,9 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const BitString&
 Null::Null()
 {}
 
+Null::Null([[maybe_unused]] allocator_type alloc)
+{}
+
 Null::Null(Null&& other) noexcept
 {}
 
@@ -1511,7 +1530,11 @@ List::List()
     : items()
 {}
 
-List::List(std::vector<::pg_query::Node> arg_items)
+List::List([[maybe_unused]] allocator_type alloc)
+    : items(alloc)
+{}
+
+List::List(std::pmr::vector<::pg_query::Node> arg_items)
     : items(std::move(arg_items))
 {}
 
@@ -1576,7 +1599,11 @@ OidList::OidList()
     : items()
 {}
 
-OidList::OidList(std::vector<::pg_query::Node> arg_items)
+OidList::OidList([[maybe_unused]] allocator_type alloc)
+    : items(alloc)
+{}
+
+OidList::OidList(std::pmr::vector<::pg_query::Node> arg_items)
     : items(std::move(arg_items))
 {}
 
@@ -1641,7 +1668,11 @@ IntList::IntList()
     : items()
 {}
 
-IntList::IntList(std::vector<::pg_query::Node> arg_items)
+IntList::IntList([[maybe_unused]] allocator_type alloc)
+    : items(alloc)
+{}
+
+IntList::IntList(std::pmr::vector<::pg_query::Node> arg_items)
     : items(std::move(arg_items))
 {}
 
@@ -1707,7 +1738,12 @@ Alias::Alias()
     , colnames()
 {}
 
-Alias::Alias(const std::string& arg_aliasname, std::vector<::pg_query::Node> arg_colnames)
+Alias::Alias([[maybe_unused]] allocator_type alloc)
+    : aliasname(alloc)
+    , colnames(alloc)
+{}
+
+Alias::Alias(const std::pmr::string& arg_aliasname, std::pmr::vector<::pg_query::Node> arg_colnames)
     : aliasname(arg_aliasname)
     , colnames(std::move(arg_colnames))
 {}
@@ -1783,7 +1819,17 @@ RangeVar::RangeVar()
     , location((int32_t)0ll)
 {}
 
-RangeVar::RangeVar(const std::string& arg_catalogname, const std::string& arg_schemaname, const std::string& arg_relname, bool arg_inh, const std::string& arg_relpersistence, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_location)
+RangeVar::RangeVar([[maybe_unused]] allocator_type alloc)
+    : catalogname(alloc)
+    , schemaname(alloc)
+    , relname(alloc)
+    , inh(false)
+    , relpersistence(alloc)
+    , alias(nullptr)
+    , location((int32_t)0ll)
+{}
+
+RangeVar::RangeVar(const std::pmr::string& arg_catalogname, const std::pmr::string& arg_schemaname, const std::pmr::string& arg_relname, bool arg_inh, const std::pmr::string& arg_relpersistence, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_location)
     : catalogname(arg_catalogname)
     , schemaname(arg_schemaname)
     , relname(arg_relname)
@@ -1882,7 +1928,23 @@ TableFunc::TableFunc()
     , location((int32_t)0ll)
 {}
 
-TableFunc::TableFunc(std::vector<::pg_query::Node> arg_ns_uris, std::vector<::pg_query::Node> arg_ns_names, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::vector<::pg_query::Node> arg_colnames, std::vector<::pg_query::Node> arg_coltypes, std::vector<::pg_query::Node> arg_coltypmods, std::vector<::pg_query::Node> arg_colcollations, std::vector<::pg_query::Node> arg_colexprs, std::vector<::pg_query::Node> arg_coldefexprs, std::vector<uint64_t> arg_notnulls, int32_t arg_ordinalitycol, int32_t arg_location)
+TableFunc::TableFunc([[maybe_unused]] allocator_type alloc)
+    : ns_uris(alloc)
+    , ns_names(alloc)
+    , docexpr()
+    , rowexpr()
+    , colnames(alloc)
+    , coltypes(alloc)
+    , coltypmods(alloc)
+    , colcollations(alloc)
+    , colexprs(alloc)
+    , coldefexprs(alloc)
+    , notnulls(alloc)
+    , ordinalitycol((int32_t)0ll)
+    , location((int32_t)0ll)
+{}
+
+TableFunc::TableFunc(std::pmr::vector<::pg_query::Node> arg_ns_uris, std::pmr::vector<::pg_query::Node> arg_ns_names, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::pmr::vector<::pg_query::Node> arg_colnames, std::pmr::vector<::pg_query::Node> arg_coltypes, std::pmr::vector<::pg_query::Node> arg_coltypmods, std::pmr::vector<::pg_query::Node> arg_colcollations, std::pmr::vector<::pg_query::Node> arg_colexprs, std::pmr::vector<::pg_query::Node> arg_coldefexprs, std::pmr::vector<uint64_t> arg_notnulls, int32_t arg_ordinalitycol, int32_t arg_location)
     : ns_uris(std::move(arg_ns_uris))
     , ns_names(std::move(arg_ns_names))
     , docexpr(std::move(arg_docexpr))
@@ -2078,6 +2140,9 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const TableFunc&
 Expr::Expr()
 {}
 
+Expr::Expr([[maybe_unused]] allocator_type alloc)
+{}
+
 Expr::Expr(Expr&& other) noexcept
 {}
 
@@ -2123,6 +2188,19 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& valu
 }
 
 Var::Var()
+    : xpr()
+    , varno((uint32_t)0ull)
+    , varattno((int32_t)0ll)
+    , vartype((uint32_t)0ull)
+    , vartypmod((int32_t)0ll)
+    , varcollid((uint32_t)0ull)
+    , varlevelsup((uint32_t)0ull)
+    , varnosyn((uint32_t)0ull)
+    , varattnosyn((int32_t)0ll)
+    , location((int32_t)0ll)
+{}
+
+Var::Var([[maybe_unused]] allocator_type alloc)
     : xpr()
     , varno((uint32_t)0ull)
     , varattno((int32_t)0ll)
@@ -2242,6 +2320,16 @@ Param::Param()
     , location((int32_t)0ll)
 {}
 
+Param::Param([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , paramkind()
+    , paramid((int32_t)0ll)
+    , paramtype((uint32_t)0ull)
+    , paramtypmod((int32_t)0ll)
+    , paramcollid((uint32_t)0ull)
+    , location((int32_t)0ll)
+{}
+
 Param::Param(::pg_query::Node&& arg_xpr, ::pg_query::ParamKind&& arg_paramkind, int32_t arg_paramid, uint32_t arg_paramtype, int32_t arg_paramtypmod, uint32_t arg_paramcollid, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , paramkind(std::move(arg_paramkind))
@@ -2345,7 +2433,28 @@ Aggref::Aggref()
     , location((int32_t)0ll)
 {}
 
-Aggref::Aggref(::pg_query::Node&& arg_xpr, uint32_t arg_aggfnoid, uint32_t arg_aggtype, uint32_t arg_aggcollid, uint32_t arg_inputcollid, uint32_t arg_aggtranstype, std::vector<::pg_query::Node> arg_aggargtypes, std::vector<::pg_query::Node> arg_aggdirectargs, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_aggorder, std::vector<::pg_query::Node> arg_aggdistinct, ::pg_query::Node&& arg_aggfilter, bool arg_aggstar, bool arg_aggvariadic, const std::string& arg_aggkind, uint32_t arg_agglevelsup, ::pg_query::AggSplit&& arg_aggsplit, int32_t arg_location)
+Aggref::Aggref([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , aggfnoid((uint32_t)0ull)
+    , aggtype((uint32_t)0ull)
+    , aggcollid((uint32_t)0ull)
+    , inputcollid((uint32_t)0ull)
+    , aggtranstype((uint32_t)0ull)
+    , aggargtypes(alloc)
+    , aggdirectargs(alloc)
+    , args(alloc)
+    , aggorder(alloc)
+    , aggdistinct(alloc)
+    , aggfilter()
+    , aggstar(false)
+    , aggvariadic(false)
+    , aggkind(alloc)
+    , agglevelsup((uint32_t)0ull)
+    , aggsplit()
+    , location((int32_t)0ll)
+{}
+
+Aggref::Aggref(::pg_query::Node&& arg_xpr, uint32_t arg_aggfnoid, uint32_t arg_aggtype, uint32_t arg_aggcollid, uint32_t arg_inputcollid, uint32_t arg_aggtranstype, std::pmr::vector<::pg_query::Node> arg_aggargtypes, std::pmr::vector<::pg_query::Node> arg_aggdirectargs, std::pmr::vector<::pg_query::Node> arg_args, std::pmr::vector<::pg_query::Node> arg_aggorder, std::pmr::vector<::pg_query::Node> arg_aggdistinct, ::pg_query::Node&& arg_aggfilter, bool arg_aggstar, bool arg_aggvariadic, const std::pmr::string& arg_aggkind, uint32_t arg_agglevelsup, ::pg_query::AggSplit&& arg_aggsplit, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , aggfnoid(arg_aggfnoid)
     , aggtype(arg_aggtype)
@@ -2536,7 +2645,16 @@ GroupingFunc::GroupingFunc()
     , location((int32_t)0ll)
 {}
 
-GroupingFunc::GroupingFunc(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_refs, std::vector<::pg_query::Node> arg_cols, uint32_t arg_agglevelsup, int32_t arg_location)
+GroupingFunc::GroupingFunc([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , args(alloc)
+    , refs(alloc)
+    , cols(alloc)
+    , agglevelsup((uint32_t)0ull)
+    , location((int32_t)0ll)
+{}
+
+GroupingFunc::GroupingFunc(::pg_query::Node&& arg_xpr, std::pmr::vector<::pg_query::Node> arg_args, std::pmr::vector<::pg_query::Node> arg_refs, std::pmr::vector<::pg_query::Node> arg_cols, uint32_t arg_agglevelsup, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , args(std::move(arg_args))
     , refs(std::move(arg_refs))
@@ -2654,7 +2772,21 @@ WindowFunc::WindowFunc()
     , location((int32_t)0ll)
 {}
 
-WindowFunc::WindowFunc(::pg_query::Node&& arg_xpr, uint32_t arg_winfnoid, uint32_t arg_wintype, uint32_t arg_wincollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_aggfilter, uint32_t arg_winref, bool arg_winstar, bool arg_winagg, int32_t arg_location)
+WindowFunc::WindowFunc([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , winfnoid((uint32_t)0ull)
+    , wintype((uint32_t)0ull)
+    , wincollid((uint32_t)0ull)
+    , inputcollid((uint32_t)0ull)
+    , args(alloc)
+    , aggfilter()
+    , winref((uint32_t)0ull)
+    , winstar(false)
+    , winagg(false)
+    , location((int32_t)0ll)
+{}
+
+WindowFunc::WindowFunc(::pg_query::Node&& arg_xpr, uint32_t arg_winfnoid, uint32_t arg_wintype, uint32_t arg_wincollid, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_aggfilter, uint32_t arg_winref, bool arg_winstar, bool arg_winagg, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , winfnoid(arg_winfnoid)
     , wintype(arg_wintype)
@@ -2777,7 +2909,19 @@ SubscriptingRef::SubscriptingRef()
     , refassgnexpr()
 {}
 
-SubscriptingRef::SubscriptingRef(::pg_query::Node&& arg_xpr, uint32_t arg_refcontainertype, uint32_t arg_refelemtype, int32_t arg_reftypmod, uint32_t arg_refcollid, std::vector<::pg_query::Node> arg_refupperindexpr, std::vector<::pg_query::Node> arg_reflowerindexpr, ::pg_query::Node&& arg_refexpr, ::pg_query::Node&& arg_refassgnexpr)
+SubscriptingRef::SubscriptingRef([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , refcontainertype((uint32_t)0ull)
+    , refelemtype((uint32_t)0ull)
+    , reftypmod((int32_t)0ll)
+    , refcollid((uint32_t)0ull)
+    , refupperindexpr(alloc)
+    , reflowerindexpr(alloc)
+    , refexpr()
+    , refassgnexpr()
+{}
+
+SubscriptingRef::SubscriptingRef(::pg_query::Node&& arg_xpr, uint32_t arg_refcontainertype, uint32_t arg_refelemtype, int32_t arg_reftypmod, uint32_t arg_refcollid, std::pmr::vector<::pg_query::Node> arg_refupperindexpr, std::pmr::vector<::pg_query::Node> arg_reflowerindexpr, ::pg_query::Node&& arg_refexpr, ::pg_query::Node&& arg_refassgnexpr)
     : xpr(std::move(arg_xpr))
     , refcontainertype(arg_refcontainertype)
     , refelemtype(arg_refelemtype)
@@ -2900,7 +3044,20 @@ FuncExpr::FuncExpr()
     , location((int32_t)0ll)
 {}
 
-FuncExpr::FuncExpr(::pg_query::Node&& arg_xpr, uint32_t arg_funcid, uint32_t arg_funcresulttype, bool arg_funcretset, bool arg_funcvariadic, ::pg_query::CoercionForm&& arg_funcformat, uint32_t arg_funccollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+FuncExpr::FuncExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , funcid((uint32_t)0ull)
+    , funcresulttype((uint32_t)0ull)
+    , funcretset(false)
+    , funcvariadic(false)
+    , funcformat()
+    , funccollid((uint32_t)0ull)
+    , inputcollid((uint32_t)0ull)
+    , args(alloc)
+    , location((int32_t)0ll)
+{}
+
+FuncExpr::FuncExpr(::pg_query::Node&& arg_xpr, uint32_t arg_funcid, uint32_t arg_funcresulttype, bool arg_funcretset, bool arg_funcvariadic, ::pg_query::CoercionForm&& arg_funcformat, uint32_t arg_funccollid, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , funcid(arg_funcid)
     , funcresulttype(arg_funcresulttype)
@@ -3014,7 +3171,15 @@ NamedArgExpr::NamedArgExpr()
     , location((int32_t)0ll)
 {}
 
-NamedArgExpr::NamedArgExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, const std::string& arg_name, int32_t arg_argnumber, int32_t arg_location)
+NamedArgExpr::NamedArgExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , arg()
+    , name(alloc)
+    , argnumber((int32_t)0ll)
+    , location((int32_t)0ll)
+{}
+
+NamedArgExpr::NamedArgExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, const std::pmr::string& arg_name, int32_t arg_argnumber, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , arg(std::move(arg_arg))
     , name(arg_name)
@@ -3098,7 +3263,19 @@ OpExpr::OpExpr()
     , location((int32_t)0ll)
 {}
 
-OpExpr::OpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+OpExpr::OpExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , opno((uint32_t)0ull)
+    , opfuncid((uint32_t)0ull)
+    , opresulttype((uint32_t)0ull)
+    , opretset(false)
+    , opcollid((uint32_t)0ull)
+    , inputcollid((uint32_t)0ull)
+    , args(alloc)
+    , location((int32_t)0ll)
+{}
+
+OpExpr::OpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , opno(arg_opno)
     , opfuncid(arg_opfuncid)
@@ -3211,7 +3388,19 @@ DistinctExpr::DistinctExpr()
     , location((int32_t)0ll)
 {}
 
-DistinctExpr::DistinctExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+DistinctExpr::DistinctExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , opno((uint32_t)0ull)
+    , opfuncid((uint32_t)0ull)
+    , opresulttype((uint32_t)0ull)
+    , opretset(false)
+    , opcollid((uint32_t)0ull)
+    , inputcollid((uint32_t)0ull)
+    , args(alloc)
+    , location((int32_t)0ll)
+{}
+
+DistinctExpr::DistinctExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , opno(arg_opno)
     , opfuncid(arg_opfuncid)
@@ -3324,7 +3513,19 @@ NullIfExpr::NullIfExpr()
     , location((int32_t)0ll)
 {}
 
-NullIfExpr::NullIfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+NullIfExpr::NullIfExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , opno((uint32_t)0ull)
+    , opfuncid((uint32_t)0ull)
+    , opresulttype((uint32_t)0ull)
+    , opretset(false)
+    , opcollid((uint32_t)0ull)
+    , inputcollid((uint32_t)0ull)
+    , args(alloc)
+    , location((int32_t)0ll)
+{}
+
+NullIfExpr::NullIfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , opno(arg_opno)
     , opfuncid(arg_opfuncid)
@@ -3435,7 +3636,17 @@ ScalarArrayOpExpr::ScalarArrayOpExpr()
     , location((int32_t)0ll)
 {}
 
-ScalarArrayOpExpr::ScalarArrayOpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, bool arg_use_or, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+ScalarArrayOpExpr::ScalarArrayOpExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , opno((uint32_t)0ull)
+    , opfuncid((uint32_t)0ull)
+    , use_or(false)
+    , inputcollid((uint32_t)0ull)
+    , args(alloc)
+    , location((int32_t)0ll)
+{}
+
+ScalarArrayOpExpr::ScalarArrayOpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, bool arg_use_or, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , opno(arg_opno)
     , opfuncid(arg_opfuncid)
@@ -3533,7 +3744,14 @@ BoolExpr::BoolExpr()
     , location((int32_t)0ll)
 {}
 
-BoolExpr::BoolExpr(::pg_query::Node&& arg_xpr, ::pg_query::BoolExprType&& arg_boolop, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+BoolExpr::BoolExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , boolop()
+    , args(alloc)
+    , location((int32_t)0ll)
+{}
+
+BoolExpr::BoolExpr(::pg_query::Node&& arg_xpr, ::pg_query::BoolExprType&& arg_boolop, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , boolop(std::move(arg_boolop))
     , args(std::move(arg_args))
@@ -3619,7 +3837,17 @@ SubLink::SubLink()
     , location((int32_t)0ll)
 {}
 
-SubLink::SubLink(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, int32_t arg_sub_link_id, ::pg_query::Node&& arg_testexpr, std::vector<::pg_query::Node> arg_oper_name, ::pg_query::Node&& arg_subselect, int32_t arg_location)
+SubLink::SubLink([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , sub_link_type()
+    , sub_link_id((int32_t)0ll)
+    , testexpr()
+    , oper_name(alloc)
+    , subselect()
+    , location((int32_t)0ll)
+{}
+
+SubLink::SubLink(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, int32_t arg_sub_link_id, ::pg_query::Node&& arg_testexpr, std::pmr::vector<::pg_query::Node> arg_oper_name, ::pg_query::Node&& arg_subselect, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , sub_link_type(std::move(arg_sub_link_type))
     , sub_link_id(arg_sub_link_id)
@@ -3730,7 +3958,27 @@ SubPlan::SubPlan()
     , per_call_cost(0.0)
 {}
 
-SubPlan::SubPlan(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, ::pg_query::Node&& arg_testexpr, std::vector<::pg_query::Node> arg_param_ids, int32_t arg_plan_id, const std::string& arg_plan_name, uint32_t arg_first_col_type, int32_t arg_first_col_typmod, uint32_t arg_first_col_collation, bool arg_use_hash_table, bool arg_unknown_eq_false, bool arg_parallel_safe, std::vector<::pg_query::Node> arg_set_param, std::vector<::pg_query::Node> arg_par_param, std::vector<::pg_query::Node> arg_args, double arg_startup_cost, double arg_per_call_cost)
+SubPlan::SubPlan([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , sub_link_type()
+    , testexpr()
+    , param_ids(alloc)
+    , plan_id((int32_t)0ll)
+    , plan_name(alloc)
+    , first_col_type((uint32_t)0ull)
+    , first_col_typmod((int32_t)0ll)
+    , first_col_collation((uint32_t)0ull)
+    , use_hash_table(false)
+    , unknown_eq_false(false)
+    , parallel_safe(false)
+    , set_param(alloc)
+    , par_param(alloc)
+    , args(alloc)
+    , startup_cost(0.0)
+    , per_call_cost(0.0)
+{}
+
+SubPlan::SubPlan(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, ::pg_query::Node&& arg_testexpr, std::pmr::vector<::pg_query::Node> arg_param_ids, int32_t arg_plan_id, const std::pmr::string& arg_plan_name, uint32_t arg_first_col_type, int32_t arg_first_col_typmod, uint32_t arg_first_col_collation, bool arg_use_hash_table, bool arg_unknown_eq_false, bool arg_parallel_safe, std::pmr::vector<::pg_query::Node> arg_set_param, std::pmr::vector<::pg_query::Node> arg_par_param, std::pmr::vector<::pg_query::Node> arg_args, double arg_startup_cost, double arg_per_call_cost)
     : xpr(std::move(arg_xpr))
     , sub_link_type(std::move(arg_sub_link_type))
     , testexpr(std::move(arg_testexpr))
@@ -3903,7 +4151,12 @@ AlternativeSubPlan::AlternativeSubPlan()
     , subplans()
 {}
 
-AlternativeSubPlan::AlternativeSubPlan(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_subplans)
+AlternativeSubPlan::AlternativeSubPlan([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , subplans(alloc)
+{}
+
+AlternativeSubPlan::AlternativeSubPlan(::pg_query::Node&& arg_xpr, std::pmr::vector<::pg_query::Node> arg_subplans)
     : xpr(std::move(arg_xpr))
     , subplans(std::move(arg_subplans))
 {}
@@ -3970,6 +4223,15 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Alternativ
 }
 
 FieldSelect::FieldSelect()
+    : xpr()
+    , arg()
+    , fieldnum((int32_t)0ll)
+    , resulttype((uint32_t)0ull)
+    , resulttypmod((int32_t)0ll)
+    , resultcollid((uint32_t)0ull)
+{}
+
+FieldSelect::FieldSelect([[maybe_unused]] allocator_type alloc)
     : xpr()
     , arg()
     , fieldnum((int32_t)0ll)
@@ -4063,7 +4325,15 @@ FieldStore::FieldStore()
     , resulttype((uint32_t)0ull)
 {}
 
-FieldStore::FieldStore(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_newvals, std::vector<::pg_query::Node> arg_fieldnums, uint32_t arg_resulttype)
+FieldStore::FieldStore([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , arg()
+    , newvals(alloc)
+    , fieldnums(alloc)
+    , resulttype((uint32_t)0ull)
+{}
+
+FieldStore::FieldStore(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, std::pmr::vector<::pg_query::Node> arg_newvals, std::pmr::vector<::pg_query::Node> arg_fieldnums, uint32_t arg_resulttype)
     : xpr(std::move(arg_xpr))
     , arg(std::move(arg_arg))
     , newvals(std::move(arg_newvals))
@@ -4154,6 +4424,16 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const FieldStore
 }
 
 RelabelType::RelabelType()
+    : xpr()
+    , arg()
+    , resulttype((uint32_t)0ull)
+    , resulttypmod((int32_t)0ll)
+    , resultcollid((uint32_t)0ull)
+    , relabelformat()
+    , location((int32_t)0ll)
+{}
+
+RelabelType::RelabelType([[maybe_unused]] allocator_type alloc)
     : xpr()
     , arg()
     , resulttype((uint32_t)0ull)
@@ -4254,6 +4534,15 @@ CoerceViaIO::CoerceViaIO()
     , location((int32_t)0ll)
 {}
 
+CoerceViaIO::CoerceViaIO([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , arg()
+    , resulttype((uint32_t)0ull)
+    , resultcollid((uint32_t)0ull)
+    , coerceformat()
+    , location((int32_t)0ll)
+{}
+
 CoerceViaIO::CoerceViaIO(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , arg(std::move(arg_arg))
@@ -4332,6 +4621,17 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const CoerceViaI
 }
 
 ArrayCoerceExpr::ArrayCoerceExpr()
+    : xpr()
+    , arg()
+    , elemexpr()
+    , resulttype((uint32_t)0ull)
+    , resulttypmod((int32_t)0ll)
+    , resultcollid((uint32_t)0ull)
+    , coerceformat()
+    , location((int32_t)0ll)
+{}
+
+ArrayCoerceExpr::ArrayCoerceExpr([[maybe_unused]] allocator_type alloc)
     : xpr()
     , arg()
     , elemexpr()
@@ -4437,6 +4737,14 @@ ConvertRowtypeExpr::ConvertRowtypeExpr()
     , location((int32_t)0ll)
 {}
 
+ConvertRowtypeExpr::ConvertRowtypeExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , arg()
+    , resulttype((uint32_t)0ull)
+    , convertformat()
+    , location((int32_t)0ll)
+{}
+
 ConvertRowtypeExpr::ConvertRowtypeExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, ::pg_query::CoercionForm&& arg_convertformat, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , arg(std::move(arg_arg))
@@ -4510,6 +4818,13 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ConvertRow
 }
 
 CollateExpr::CollateExpr()
+    : xpr()
+    , arg()
+    , coll_oid((uint32_t)0ull)
+    , location((int32_t)0ll)
+{}
+
+CollateExpr::CollateExpr([[maybe_unused]] allocator_type alloc)
     : xpr()
     , arg()
     , coll_oid((uint32_t)0ull)
@@ -4593,7 +4908,17 @@ CaseExpr::CaseExpr()
     , location((int32_t)0ll)
 {}
 
-CaseExpr::CaseExpr(::pg_query::Node&& arg_xpr, uint32_t arg_casetype, uint32_t arg_casecollid, ::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_defresult, int32_t arg_location)
+CaseExpr::CaseExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , casetype((uint32_t)0ull)
+    , casecollid((uint32_t)0ull)
+    , arg()
+    , args(alloc)
+    , defresult()
+    , location((int32_t)0ll)
+{}
+
+CaseExpr::CaseExpr(::pg_query::Node&& arg_xpr, uint32_t arg_casetype, uint32_t arg_casecollid, ::pg_query::Node&& arg_arg, std::pmr::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_defresult, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , casetype(arg_casetype)
     , casecollid(arg_casecollid)
@@ -4691,6 +5016,13 @@ CaseWhen::CaseWhen()
     , location((int32_t)0ll)
 {}
 
+CaseWhen::CaseWhen([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , expr()
+    , result()
+    , location((int32_t)0ll)
+{}
+
 CaseWhen::CaseWhen(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, ::pg_query::Node&& arg_result, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , expr(std::move(arg_expr))
@@ -4759,6 +5091,13 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const CaseWhen& 
 }
 
 CaseTestExpr::CaseTestExpr()
+    : xpr()
+    , type_id((uint32_t)0ull)
+    , type_mod((int32_t)0ll)
+    , collation((uint32_t)0ull)
+{}
+
+CaseTestExpr::CaseTestExpr([[maybe_unused]] allocator_type alloc)
     : xpr()
     , type_id((uint32_t)0ull)
     , type_mod((int32_t)0ll)
@@ -4842,7 +5181,17 @@ ArrayExpr::ArrayExpr()
     , location((int32_t)0ll)
 {}
 
-ArrayExpr::ArrayExpr(::pg_query::Node&& arg_xpr, uint32_t arg_array_typeid, uint32_t arg_array_collid, uint32_t arg_element_typeid, std::vector<::pg_query::Node> arg_elements, bool arg_multidims, int32_t arg_location)
+ArrayExpr::ArrayExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , array_typeid((uint32_t)0ull)
+    , array_collid((uint32_t)0ull)
+    , element_typeid((uint32_t)0ull)
+    , elements(alloc)
+    , multidims(false)
+    , location((int32_t)0ll)
+{}
+
+ArrayExpr::ArrayExpr(::pg_query::Node&& arg_xpr, uint32_t arg_array_typeid, uint32_t arg_array_collid, uint32_t arg_element_typeid, std::pmr::vector<::pg_query::Node> arg_elements, bool arg_multidims, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , array_typeid(arg_array_typeid)
     , array_collid(arg_array_collid)
@@ -4942,7 +5291,16 @@ RowExpr::RowExpr()
     , location((int32_t)0ll)
 {}
 
-RowExpr::RowExpr(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_args, uint32_t arg_row_typeid, ::pg_query::CoercionForm&& arg_row_format, std::vector<::pg_query::Node> arg_colnames, int32_t arg_location)
+RowExpr::RowExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , args(alloc)
+    , row_typeid((uint32_t)0ull)
+    , row_format()
+    , colnames(alloc)
+    , location((int32_t)0ll)
+{}
+
+RowExpr::RowExpr(::pg_query::Node&& arg_xpr, std::pmr::vector<::pg_query::Node> arg_args, uint32_t arg_row_typeid, ::pg_query::CoercionForm&& arg_row_format, std::pmr::vector<::pg_query::Node> arg_colnames, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , args(std::move(arg_args))
     , row_typeid(arg_row_typeid)
@@ -5047,7 +5405,17 @@ RowCompareExpr::RowCompareExpr()
     , rargs()
 {}
 
-RowCompareExpr::RowCompareExpr(::pg_query::Node&& arg_xpr, ::pg_query::RowCompareType&& arg_rctype, std::vector<::pg_query::Node> arg_opnos, std::vector<::pg_query::Node> arg_opfamilies, std::vector<::pg_query::Node> arg_inputcollids, std::vector<::pg_query::Node> arg_largs, std::vector<::pg_query::Node> arg_rargs)
+RowCompareExpr::RowCompareExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , rctype()
+    , opnos(alloc)
+    , opfamilies(alloc)
+    , inputcollids(alloc)
+    , largs(alloc)
+    , rargs(alloc)
+{}
+
+RowCompareExpr::RowCompareExpr(::pg_query::Node&& arg_xpr, ::pg_query::RowCompareType&& arg_rctype, std::pmr::vector<::pg_query::Node> arg_opnos, std::pmr::vector<::pg_query::Node> arg_opfamilies, std::pmr::vector<::pg_query::Node> arg_inputcollids, std::pmr::vector<::pg_query::Node> arg_largs, std::pmr::vector<::pg_query::Node> arg_rargs)
     : xpr(std::move(arg_xpr))
     , rctype(std::move(arg_rctype))
     , opnos(std::move(arg_opnos))
@@ -5182,7 +5550,15 @@ CoalesceExpr::CoalesceExpr()
     , location((int32_t)0ll)
 {}
 
-CoalesceExpr::CoalesceExpr(::pg_query::Node&& arg_xpr, uint32_t arg_coalescetype, uint32_t arg_coalescecollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+CoalesceExpr::CoalesceExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , coalescetype((uint32_t)0ull)
+    , coalescecollid((uint32_t)0ull)
+    , args(alloc)
+    , location((int32_t)0ll)
+{}
+
+CoalesceExpr::CoalesceExpr(::pg_query::Node&& arg_xpr, uint32_t arg_coalescetype, uint32_t arg_coalescecollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , coalescetype(arg_coalescetype)
     , coalescecollid(arg_coalescecollid)
@@ -5273,7 +5649,17 @@ MinMaxExpr::MinMaxExpr()
     , location((int32_t)0ll)
 {}
 
-MinMaxExpr::MinMaxExpr(::pg_query::Node&& arg_xpr, uint32_t arg_minmaxtype, uint32_t arg_minmaxcollid, uint32_t arg_inputcollid, ::pg_query::MinMaxOp&& arg_op, std::vector<::pg_query::Node> arg_args, int32_t arg_location)
+MinMaxExpr::MinMaxExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , minmaxtype((uint32_t)0ull)
+    , minmaxcollid((uint32_t)0ull)
+    , inputcollid((uint32_t)0ull)
+    , op()
+    , args(alloc)
+    , location((int32_t)0ll)
+{}
+
+MinMaxExpr::MinMaxExpr(::pg_query::Node&& arg_xpr, uint32_t arg_minmaxtype, uint32_t arg_minmaxcollid, uint32_t arg_inputcollid, ::pg_query::MinMaxOp&& arg_op, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , minmaxtype(arg_minmaxtype)
     , minmaxcollid(arg_minmaxcollid)
@@ -5372,6 +5758,14 @@ SQLValueFunction::SQLValueFunction()
     , location((int32_t)0ll)
 {}
 
+SQLValueFunction::SQLValueFunction([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , op()
+    , type((uint32_t)0ull)
+    , typmod((int32_t)0ll)
+    , location((int32_t)0ll)
+{}
+
 SQLValueFunction::SQLValueFunction(::pg_query::Node&& arg_xpr, ::pg_query::SQLValueFunctionOp&& arg_op, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , op(std::move(arg_op))
@@ -5457,7 +5851,20 @@ XmlExpr::XmlExpr()
     , location((int32_t)0ll)
 {}
 
-XmlExpr::XmlExpr(::pg_query::Node&& arg_xpr, ::pg_query::XmlExprOp&& arg_op, const std::string& arg_name, std::vector<::pg_query::Node> arg_named_args, std::vector<::pg_query::Node> arg_arg_names, std::vector<::pg_query::Node> arg_args, ::pg_query::XmlOptionType&& arg_xmloption, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location)
+XmlExpr::XmlExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , op()
+    , name(alloc)
+    , named_args(alloc)
+    , arg_names(alloc)
+    , args(alloc)
+    , xmloption()
+    , type((uint32_t)0ull)
+    , typmod((int32_t)0ll)
+    , location((int32_t)0ll)
+{}
+
+XmlExpr::XmlExpr(::pg_query::Node&& arg_xpr, ::pg_query::XmlExprOp&& arg_op, const std::pmr::string& arg_name, std::pmr::vector<::pg_query::Node> arg_named_args, std::pmr::vector<::pg_query::Node> arg_arg_names, std::pmr::vector<::pg_query::Node> arg_args, ::pg_query::XmlOptionType&& arg_xmloption, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , op(std::move(arg_op))
     , name(arg_name)
@@ -5589,6 +5996,14 @@ NullTest::NullTest()
     , location((int32_t)0ll)
 {}
 
+NullTest::NullTest([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , arg()
+    , nulltesttype()
+    , argisrow(false)
+    , location((int32_t)0ll)
+{}
+
 NullTest::NullTest(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::NullTestType&& arg_nulltesttype, bool arg_argisrow, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , arg(std::move(arg_arg))
@@ -5668,6 +6083,13 @@ BooleanTest::BooleanTest()
     , location((int32_t)0ll)
 {}
 
+BooleanTest::BooleanTest([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , arg()
+    , booltesttype()
+    , location((int32_t)0ll)
+{}
+
 BooleanTest::BooleanTest(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::BoolTestType&& arg_booltesttype, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , arg(std::move(arg_arg))
@@ -5736,6 +6158,16 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const BooleanTes
 }
 
 CoerceToDomain::CoerceToDomain()
+    : xpr()
+    , arg()
+    , resulttype((uint32_t)0ull)
+    , resulttypmod((int32_t)0ll)
+    , resultcollid((uint32_t)0ull)
+    , coercionformat()
+    , location((int32_t)0ll)
+{}
+
+CoerceToDomain::CoerceToDomain([[maybe_unused]] allocator_type alloc)
     : xpr()
     , arg()
     , resulttype((uint32_t)0ull)
@@ -5835,6 +6267,14 @@ CoerceToDomainValue::CoerceToDomainValue()
     , location((int32_t)0ll)
 {}
 
+CoerceToDomainValue::CoerceToDomainValue([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , type_id((uint32_t)0ull)
+    , type_mod((int32_t)0ll)
+    , collation((uint32_t)0ull)
+    , location((int32_t)0ll)
+{}
+
 CoerceToDomainValue::CoerceToDomainValue(::pg_query::Node&& arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location)
     : xpr(std::move(arg_xpr))
     , type_id(arg_type_id)
@@ -5908,6 +6348,14 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const CoerceToDo
 }
 
 SetToDefault::SetToDefault()
+    : xpr()
+    , type_id((uint32_t)0ull)
+    , type_mod((int32_t)0ll)
+    , collation((uint32_t)0ull)
+    , location((int32_t)0ll)
+{}
+
+SetToDefault::SetToDefault([[maybe_unused]] allocator_type alloc)
     : xpr()
     , type_id((uint32_t)0ull)
     , type_mod((int32_t)0ll)
@@ -5994,7 +6442,14 @@ CurrentOfExpr::CurrentOfExpr()
     , cursor_param((int32_t)0ll)
 {}
 
-CurrentOfExpr::CurrentOfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_cvarno, const std::string& arg_cursor_name, int32_t arg_cursor_param)
+CurrentOfExpr::CurrentOfExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , cvarno((uint32_t)0ull)
+    , cursor_name(alloc)
+    , cursor_param((int32_t)0ll)
+{}
+
+CurrentOfExpr::CurrentOfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_cvarno, const std::pmr::string& arg_cursor_name, int32_t arg_cursor_param)
     : xpr(std::move(arg_xpr))
     , cvarno(arg_cvarno)
     , cursor_name(arg_cursor_name)
@@ -6067,6 +6522,12 @@ NextValueExpr::NextValueExpr()
     , type_id((uint32_t)0ull)
 {}
 
+NextValueExpr::NextValueExpr([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , seqid((uint32_t)0ull)
+    , type_id((uint32_t)0ull)
+{}
+
 NextValueExpr::NextValueExpr(::pg_query::Node&& arg_xpr, uint32_t arg_seqid, uint32_t arg_type_id)
     : xpr(std::move(arg_xpr))
     , seqid(arg_seqid)
@@ -6130,6 +6591,13 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const NextValueE
 }
 
 InferenceElem::InferenceElem()
+    : xpr()
+    , expr()
+    , infercollid((uint32_t)0ull)
+    , inferopclass((uint32_t)0ull)
+{}
+
+InferenceElem::InferenceElem([[maybe_unused]] allocator_type alloc)
     : xpr()
     , expr()
     , infercollid((uint32_t)0ull)
@@ -6214,7 +6682,18 @@ TargetEntry::TargetEntry()
     , resjunk(false)
 {}
 
-TargetEntry::TargetEntry(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, int32_t arg_resno, const std::string& arg_resname, uint32_t arg_ressortgroupref, uint32_t arg_resorigtbl, int32_t arg_resorigcol, bool arg_resjunk)
+TargetEntry::TargetEntry([[maybe_unused]] allocator_type alloc)
+    : xpr()
+    , expr()
+    , resno((int32_t)0ll)
+    , resname(alloc)
+    , ressortgroupref((uint32_t)0ull)
+    , resorigtbl((uint32_t)0ull)
+    , resorigcol((int32_t)0ll)
+    , resjunk(false)
+{}
+
+TargetEntry::TargetEntry(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, int32_t arg_resno, const std::pmr::string& arg_resname, uint32_t arg_ressortgroupref, uint32_t arg_resorigtbl, int32_t arg_resorigcol, bool arg_resjunk)
     : xpr(std::move(arg_xpr))
     , expr(std::move(arg_expr))
     , resno(arg_resno)
@@ -6305,6 +6784,10 @@ RangeTblRef::RangeTblRef()
     : rtindex((int32_t)0ll)
 {}
 
+RangeTblRef::RangeTblRef([[maybe_unused]] allocator_type alloc)
+    : rtindex((int32_t)0ll)
+{}
+
 RangeTblRef::RangeTblRef(int32_t arg_rtindex)
     : rtindex(arg_rtindex)
 {}
@@ -6368,7 +6851,18 @@ JoinExpr::JoinExpr()
     , rtindex((int32_t)0ll)
 {}
 
-JoinExpr::JoinExpr(::pg_query::JoinType&& arg_jointype, bool arg_is_natural, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_quals, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_rtindex)
+JoinExpr::JoinExpr([[maybe_unused]] allocator_type alloc)
+    : jointype()
+    , is_natural(false)
+    , larg()
+    , rarg()
+    , using_clause(alloc)
+    , quals()
+    , alias(nullptr)
+    , rtindex((int32_t)0ll)
+{}
+
+JoinExpr::JoinExpr(::pg_query::JoinType&& arg_jointype, bool arg_is_natural, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::pmr::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_quals, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_rtindex)
     : jointype(std::move(arg_jointype))
     , is_natural(arg_is_natural)
     , larg(std::move(arg_larg))
@@ -6470,7 +6964,12 @@ FromExpr::FromExpr()
     , quals()
 {}
 
-FromExpr::FromExpr(std::vector<::pg_query::Node> arg_fromlist, ::pg_query::Node&& arg_quals)
+FromExpr::FromExpr([[maybe_unused]] allocator_type alloc)
+    : fromlist(alloc)
+    , quals()
+{}
+
+FromExpr::FromExpr(std::pmr::vector<::pg_query::Node> arg_fromlist, ::pg_query::Node&& arg_quals)
     : fromlist(std::move(arg_fromlist))
     , quals(std::move(arg_quals))
 {}
@@ -6547,7 +7046,18 @@ OnConflictExpr::OnConflictExpr()
     , excl_rel_tlist()
 {}
 
-OnConflictExpr::OnConflictExpr(::pg_query::OnConflictAction&& arg_action, std::vector<::pg_query::Node> arg_arbiter_elems, ::pg_query::Node&& arg_arbiter_where, uint32_t arg_constraint, std::vector<::pg_query::Node> arg_on_conflict_set, ::pg_query::Node&& arg_on_conflict_where, int32_t arg_excl_rel_index, std::vector<::pg_query::Node> arg_excl_rel_tlist)
+OnConflictExpr::OnConflictExpr([[maybe_unused]] allocator_type alloc)
+    : action()
+    , arbiter_elems(alloc)
+    , arbiter_where()
+    , constraint((uint32_t)0ull)
+    , on_conflict_set(alloc)
+    , on_conflict_where()
+    , excl_rel_index((int32_t)0ll)
+    , excl_rel_tlist(alloc)
+{}
+
+OnConflictExpr::OnConflictExpr(::pg_query::OnConflictAction&& arg_action, std::pmr::vector<::pg_query::Node> arg_arbiter_elems, ::pg_query::Node&& arg_arbiter_where, uint32_t arg_constraint, std::pmr::vector<::pg_query::Node> arg_on_conflict_set, ::pg_query::Node&& arg_on_conflict_where, int32_t arg_excl_rel_index, std::pmr::vector<::pg_query::Node> arg_excl_rel_tlist)
     : action(std::move(arg_action))
     , arbiter_elems(std::move(arg_arbiter_elems))
     , arbiter_where(std::move(arg_arbiter_where))
@@ -6672,7 +7182,18 @@ IntoClause::IntoClause()
     , skip_data(false)
 {}
 
-IntoClause::IntoClause(std::unique_ptr<::pg_query::RangeVar> arg_rel, std::vector<::pg_query::Node> arg_col_names, const std::string& arg_access_method, std::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_on_commit, const std::string& arg_table_space_name, ::pg_query::Node&& arg_view_query, bool arg_skip_data)
+IntoClause::IntoClause([[maybe_unused]] allocator_type alloc)
+    : rel(nullptr)
+    , col_names(alloc)
+    , access_method(alloc)
+    , options(alloc)
+    , on_commit()
+    , table_space_name(alloc)
+    , view_query()
+    , skip_data(false)
+{}
+
+IntoClause::IntoClause(std::unique_ptr<::pg_query::RangeVar> arg_rel, std::pmr::vector<::pg_query::Node> arg_col_names, const std::pmr::string& arg_access_method, std::pmr::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_on_commit, const std::pmr::string& arg_table_space_name, ::pg_query::Node&& arg_view_query, bool arg_skip_data)
     : rel(arg_rel.release())
     , col_names(std::move(arg_col_names))
     , access_method(arg_access_method)
@@ -6784,6 +7305,12 @@ RawStmt::RawStmt()
     , stmt_len((int32_t)0ll)
 {}
 
+RawStmt::RawStmt([[maybe_unused]] allocator_type alloc)
+    : stmt()
+    , stmt_location((int32_t)0ll)
+    , stmt_len((int32_t)0ll)
+{}
+
 RawStmt::RawStmt(::pg_query::Node&& arg_stmt, int32_t arg_stmt_location, int32_t arg_stmt_len)
     : stmt(std::move(arg_stmt))
     , stmt_location(arg_stmt_location)
@@ -6885,7 +7412,46 @@ Query::Query()
     , stmt_len((int32_t)0ll)
 {}
 
-Query::Query(::pg_query::CmdType&& arg_command_type, ::pg_query::QuerySource&& arg_query_source, bool arg_can_set_tag, ::pg_query::Node&& arg_utility_stmt, int32_t arg_result_relation, bool arg_has_aggs, bool arg_has_window_funcs, bool arg_has_target_srfs, bool arg_has_sub_links, bool arg_has_distinct_on, bool arg_has_recursive, bool arg_has_modifying_cte, bool arg_has_for_update, bool arg_has_row_security, std::vector<::pg_query::Node> arg_cte_list, std::vector<::pg_query::Node> arg_rtable, std::unique_ptr<::pg_query::FromExpr> arg_jointree, std::vector<::pg_query::Node> arg_target_list, ::pg_query::OverridingKind&& arg_override, std::unique_ptr<::pg_query::OnConflictExpr> arg_on_conflict, std::vector<::pg_query::Node> arg_returning_list, std::vector<::pg_query::Node> arg_group_clause, std::vector<::pg_query::Node> arg_grouping_sets, ::pg_query::Node&& arg_having_qual, std::vector<::pg_query::Node> arg_window_clause, std::vector<::pg_query::Node> arg_distinct_clause, std::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<::pg_query::Node> arg_row_marks, ::pg_query::Node&& arg_set_operations, std::vector<::pg_query::Node> arg_constraint_deps, std::vector<::pg_query::Node> arg_with_check_options, int32_t arg_stmt_location, int32_t arg_stmt_len)
+Query::Query([[maybe_unused]] allocator_type alloc)
+    : command_type()
+    , query_source()
+    , can_set_tag(false)
+    , utility_stmt()
+    , result_relation((int32_t)0ll)
+    , has_aggs(false)
+    , has_window_funcs(false)
+    , has_target_srfs(false)
+    , has_sub_links(false)
+    , has_distinct_on(false)
+    , has_recursive(false)
+    , has_modifying_cte(false)
+    , has_for_update(false)
+    , has_row_security(false)
+    , cte_list(alloc)
+    , rtable(alloc)
+    , jointree(nullptr)
+    , target_list(alloc)
+    , override()
+    , on_conflict(nullptr)
+    , returning_list(alloc)
+    , group_clause(alloc)
+    , grouping_sets(alloc)
+    , having_qual()
+    , window_clause(alloc)
+    , distinct_clause(alloc)
+    , sort_clause(alloc)
+    , limit_offset()
+    , limit_count()
+    , limit_option()
+    , row_marks(alloc)
+    , set_operations()
+    , constraint_deps(alloc)
+    , with_check_options(alloc)
+    , stmt_location((int32_t)0ll)
+    , stmt_len((int32_t)0ll)
+{}
+
+Query::Query(::pg_query::CmdType&& arg_command_type, ::pg_query::QuerySource&& arg_query_source, bool arg_can_set_tag, ::pg_query::Node&& arg_utility_stmt, int32_t arg_result_relation, bool arg_has_aggs, bool arg_has_window_funcs, bool arg_has_target_srfs, bool arg_has_sub_links, bool arg_has_distinct_on, bool arg_has_recursive, bool arg_has_modifying_cte, bool arg_has_for_update, bool arg_has_row_security, std::pmr::vector<::pg_query::Node> arg_cte_list, std::pmr::vector<::pg_query::Node> arg_rtable, std::unique_ptr<::pg_query::FromExpr> arg_jointree, std::pmr::vector<::pg_query::Node> arg_target_list, ::pg_query::OverridingKind&& arg_override, std::unique_ptr<::pg_query::OnConflictExpr> arg_on_conflict, std::pmr::vector<::pg_query::Node> arg_returning_list, std::pmr::vector<::pg_query::Node> arg_group_clause, std::pmr::vector<::pg_query::Node> arg_grouping_sets, ::pg_query::Node&& arg_having_qual, std::pmr::vector<::pg_query::Node> arg_window_clause, std::pmr::vector<::pg_query::Node> arg_distinct_clause, std::pmr::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::pmr::vector<::pg_query::Node> arg_row_marks, ::pg_query::Node&& arg_set_operations, std::pmr::vector<::pg_query::Node> arg_constraint_deps, std::pmr::vector<::pg_query::Node> arg_with_check_options, int32_t arg_stmt_location, int32_t arg_stmt_len)
     : command_type(std::move(arg_command_type))
     , query_source(std::move(arg_query_source))
     , can_set_tag(arg_can_set_tag)
@@ -7232,7 +7798,17 @@ InsertStmt::InsertStmt()
     , override()
 {}
 
-InsertStmt::InsertStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_cols, ::pg_query::Node&& arg_select_stmt, std::unique_ptr<::pg_query::OnConflictClause> arg_on_conflict_clause, std::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause, ::pg_query::OverridingKind&& arg_override)
+InsertStmt::InsertStmt([[maybe_unused]] allocator_type alloc)
+    : relation(nullptr)
+    , cols(alloc)
+    , select_stmt()
+    , on_conflict_clause(nullptr)
+    , returning_list(alloc)
+    , with_clause(nullptr)
+    , override()
+{}
+
+InsertStmt::InsertStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_cols, ::pg_query::Node&& arg_select_stmt, std::unique_ptr<::pg_query::OnConflictClause> arg_on_conflict_clause, std::pmr::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause, ::pg_query::OverridingKind&& arg_override)
     : relation(arg_relation.release())
     , cols(std::move(arg_cols))
     , select_stmt(std::move(arg_select_stmt))
@@ -7343,7 +7919,15 @@ DeleteStmt::DeleteStmt()
     , with_clause(nullptr)
 {}
 
-DeleteStmt::DeleteStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause)
+DeleteStmt::DeleteStmt([[maybe_unused]] allocator_type alloc)
+    : relation(nullptr)
+    , using_clause(alloc)
+    , where_clause()
+    , returning_list(alloc)
+    , with_clause(nullptr)
+{}
+
+DeleteStmt::DeleteStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_where_clause, std::pmr::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause)
     : relation(arg_relation.release())
     , using_clause(std::move(arg_using_clause))
     , where_clause(std::move(arg_where_clause))
@@ -7444,7 +8028,16 @@ UpdateStmt::UpdateStmt()
     , with_clause(nullptr)
 {}
 
-UpdateStmt::UpdateStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_from_clause, std::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause)
+UpdateStmt::UpdateStmt([[maybe_unused]] allocator_type alloc)
+    : relation(nullptr)
+    , target_list(alloc)
+    , where_clause()
+    , from_clause(alloc)
+    , returning_list(alloc)
+    , with_clause(nullptr)
+{}
+
+UpdateStmt::UpdateStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, std::pmr::vector<::pg_query::Node> arg_from_clause, std::pmr::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause)
     : relation(arg_relation.release())
     , target_list(std::move(arg_target_list))
     , where_clause(std::move(arg_where_clause))
@@ -7572,7 +8165,29 @@ SelectStmt::SelectStmt()
     , rarg(nullptr)
 {}
 
-SelectStmt::SelectStmt(std::vector<::pg_query::Node> arg_distinct_clause, std::unique_ptr<::pg_query::IntoClause> arg_into_clause, std::vector<::pg_query::Node> arg_target_list, std::vector<::pg_query::Node> arg_from_clause, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_group_clause, ::pg_query::Node&& arg_having_clause, std::vector<::pg_query::Node> arg_window_clause, std::vector<::pg_query::Node> arg_values_lists, std::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<::pg_query::Node> arg_locking_clause, std::unique_ptr<::pg_query::WithClause> arg_with_clause, ::pg_query::SetOperation&& arg_op, bool arg_all, std::unique_ptr<::pg_query::SelectStmt> arg_larg, std::unique_ptr<::pg_query::SelectStmt> arg_rarg)
+SelectStmt::SelectStmt([[maybe_unused]] allocator_type alloc)
+    : distinct_clause(alloc)
+    , into_clause(nullptr)
+    , target_list(alloc)
+    , from_clause(alloc)
+    , where_clause()
+    , group_clause(alloc)
+    , having_clause()
+    , window_clause(alloc)
+    , values_lists(alloc)
+    , sort_clause(alloc)
+    , limit_offset()
+    , limit_count()
+    , limit_option()
+    , locking_clause(alloc)
+    , with_clause(nullptr)
+    , op()
+    , all(false)
+    , larg(nullptr)
+    , rarg(nullptr)
+{}
+
+SelectStmt::SelectStmt(std::pmr::vector<::pg_query::Node> arg_distinct_clause, std::unique_ptr<::pg_query::IntoClause> arg_into_clause, std::pmr::vector<::pg_query::Node> arg_target_list, std::pmr::vector<::pg_query::Node> arg_from_clause, ::pg_query::Node&& arg_where_clause, std::pmr::vector<::pg_query::Node> arg_group_clause, ::pg_query::Node&& arg_having_clause, std::pmr::vector<::pg_query::Node> arg_window_clause, std::pmr::vector<::pg_query::Node> arg_values_lists, std::pmr::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::pmr::vector<::pg_query::Node> arg_locking_clause, std::unique_ptr<::pg_query::WithClause> arg_with_clause, ::pg_query::SetOperation&& arg_op, bool arg_all, std::unique_ptr<::pg_query::SelectStmt> arg_larg, std::unique_ptr<::pg_query::SelectStmt> arg_rarg)
     : distinct_clause(std::move(arg_distinct_clause))
     , into_clause(arg_into_clause.release())
     , target_list(std::move(arg_target_list))
@@ -7797,7 +8412,14 @@ AlterTableStmt::AlterTableStmt()
     , missing_ok(false)
 {}
 
-AlterTableStmt::AlterTableStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_cmds, ::pg_query::ObjectType&& arg_relkind, bool arg_missing_ok)
+AlterTableStmt::AlterTableStmt([[maybe_unused]] allocator_type alloc)
+    : relation(nullptr)
+    , cmds(alloc)
+    , relkind()
+    , missing_ok(false)
+{}
+
+AlterTableStmt::AlterTableStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_cmds, ::pg_query::ObjectType&& arg_relkind, bool arg_missing_ok)
     : relation(arg_relation.release())
     , cmds(std::move(arg_cmds))
     , relkind(std::move(arg_relkind))
@@ -7884,7 +8506,17 @@ AlterTableCmd::AlterTableCmd()
     , missing_ok(false)
 {}
 
-AlterTableCmd::AlterTableCmd(::pg_query::AlterTableType&& arg_subtype, const std::string& arg_name, int32_t arg_num, std::unique_ptr<::pg_query::RoleSpec> arg_newowner, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
+AlterTableCmd::AlterTableCmd([[maybe_unused]] allocator_type alloc)
+    : subtype()
+    , name(alloc)
+    , num((int32_t)0ll)
+    , newowner(nullptr)
+    , def()
+    , behavior()
+    , missing_ok(false)
+{}
+
+AlterTableCmd::AlterTableCmd(::pg_query::AlterTableType&& arg_subtype, const std::pmr::string& arg_name, int32_t arg_num, std::unique_ptr<::pg_query::RoleSpec> arg_newowner, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
     : subtype(std::move(arg_subtype))
     , name(arg_name)
     , num(arg_num)
@@ -7976,7 +8608,16 @@ AlterDomainStmt::AlterDomainStmt()
     , missing_ok(false)
 {}
 
-AlterDomainStmt::AlterDomainStmt(const std::string& arg_subtype, std::vector<::pg_query::Node> arg_type_name, const std::string& arg_name, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
+AlterDomainStmt::AlterDomainStmt([[maybe_unused]] allocator_type alloc)
+    : subtype(alloc)
+    , type_name(alloc)
+    , name(alloc)
+    , def()
+    , behavior()
+    , missing_ok(false)
+{}
+
+AlterDomainStmt::AlterDomainStmt(const std::pmr::string& arg_subtype, std::pmr::vector<::pg_query::Node> arg_type_name, const std::pmr::string& arg_name, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
     : subtype(arg_subtype)
     , type_name(std::move(arg_type_name))
     , name(arg_name)
@@ -8073,7 +8714,18 @@ SetOperationStmt::SetOperationStmt()
     , group_clauses()
 {}
 
-SetOperationStmt::SetOperationStmt(::pg_query::SetOperation&& arg_op, bool arg_all, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::vector<::pg_query::Node> arg_col_types, std::vector<::pg_query::Node> arg_col_typmods, std::vector<::pg_query::Node> arg_col_collations, std::vector<::pg_query::Node> arg_group_clauses)
+SetOperationStmt::SetOperationStmt([[maybe_unused]] allocator_type alloc)
+    : op()
+    , all(false)
+    , larg()
+    , rarg()
+    , col_types(alloc)
+    , col_typmods(alloc)
+    , col_collations(alloc)
+    , group_clauses(alloc)
+{}
+
+SetOperationStmt::SetOperationStmt(::pg_query::SetOperation&& arg_op, bool arg_all, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::pmr::vector<::pg_query::Node> arg_col_types, std::pmr::vector<::pg_query::Node> arg_col_typmods, std::pmr::vector<::pg_query::Node> arg_col_collations, std::pmr::vector<::pg_query::Node> arg_group_clauses)
     : op(std::move(arg_op))
     , all(arg_all)
     , larg(std::move(arg_larg))
@@ -8207,7 +8859,18 @@ GrantStmt::GrantStmt()
     , behavior()
 {}
 
-GrantStmt::GrantStmt(bool arg_is_grant, ::pg_query::GrantTargetType&& arg_targtype, ::pg_query::ObjectType&& arg_objtype, std::vector<::pg_query::Node> arg_objects, std::vector<::pg_query::Node> arg_privileges, std::vector<::pg_query::Node> arg_grantees, bool arg_grant_option, ::pg_query::DropBehavior&& arg_behavior)
+GrantStmt::GrantStmt([[maybe_unused]] allocator_type alloc)
+    : is_grant(false)
+    , targtype()
+    , objtype()
+    , objects(alloc)
+    , privileges(alloc)
+    , grantees(alloc)
+    , grant_option(false)
+    , behavior()
+{}
+
+GrantStmt::GrantStmt(bool arg_is_grant, ::pg_query::GrantTargetType&& arg_targtype, ::pg_query::ObjectType&& arg_objtype, std::pmr::vector<::pg_query::Node> arg_objects, std::pmr::vector<::pg_query::Node> arg_privileges, std::pmr::vector<::pg_query::Node> arg_grantees, bool arg_grant_option, ::pg_query::DropBehavior&& arg_behavior)
     : is_grant(arg_is_grant)
     , targtype(std::move(arg_targtype))
     , objtype(std::move(arg_objtype))
@@ -8330,7 +8993,16 @@ GrantRoleStmt::GrantRoleStmt()
     , behavior()
 {}
 
-GrantRoleStmt::GrantRoleStmt(std::vector<::pg_query::Node> arg_granted_roles, std::vector<::pg_query::Node> arg_grantee_roles, bool arg_is_grant, bool arg_admin_opt, std::unique_ptr<::pg_query::RoleSpec> arg_grantor, ::pg_query::DropBehavior&& arg_behavior)
+GrantRoleStmt::GrantRoleStmt([[maybe_unused]] allocator_type alloc)
+    : granted_roles(alloc)
+    , grantee_roles(alloc)
+    , is_grant(false)
+    , admin_opt(false)
+    , grantor(nullptr)
+    , behavior()
+{}
+
+GrantRoleStmt::GrantRoleStmt(std::pmr::vector<::pg_query::Node> arg_granted_roles, std::pmr::vector<::pg_query::Node> arg_grantee_roles, bool arg_is_grant, bool arg_admin_opt, std::unique_ptr<::pg_query::RoleSpec> arg_grantor, ::pg_query::DropBehavior&& arg_behavior)
     : granted_roles(std::move(arg_granted_roles))
     , grantee_roles(std::move(arg_grantee_roles))
     , is_grant(arg_is_grant)
@@ -8431,7 +9103,12 @@ AlterDefaultPrivilegesStmt::AlterDefaultPrivilegesStmt()
     , action(nullptr)
 {}
 
-AlterDefaultPrivilegesStmt::AlterDefaultPrivilegesStmt(std::vector<::pg_query::Node> arg_options, std::unique_ptr<::pg_query::GrantStmt> arg_action)
+AlterDefaultPrivilegesStmt::AlterDefaultPrivilegesStmt([[maybe_unused]] allocator_type alloc)
+    : options(alloc)
+    , action(nullptr)
+{}
+
+AlterDefaultPrivilegesStmt::AlterDefaultPrivilegesStmt(std::pmr::vector<::pg_query::Node> arg_options, std::unique_ptr<::pg_query::GrantStmt> arg_action)
     : options(std::move(arg_options))
     , action(arg_action.release())
 {}
@@ -8502,7 +9179,11 @@ ClosePortalStmt::ClosePortalStmt()
     : portalname()
 {}
 
-ClosePortalStmt::ClosePortalStmt(const std::string& arg_portalname)
+ClosePortalStmt::ClosePortalStmt([[maybe_unused]] allocator_type alloc)
+    : portalname(alloc)
+{}
+
+ClosePortalStmt::ClosePortalStmt(const std::pmr::string& arg_portalname)
     : portalname(arg_portalname)
 {}
 
@@ -8560,7 +9241,13 @@ ClusterStmt::ClusterStmt()
     , options((int32_t)0ll)
 {}
 
-ClusterStmt::ClusterStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::string& arg_indexname, int32_t arg_options)
+ClusterStmt::ClusterStmt([[maybe_unused]] allocator_type alloc)
+    : relation(nullptr)
+    , indexname(alloc)
+    , options((int32_t)0ll)
+{}
+
+ClusterStmt::ClusterStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::pmr::string& arg_indexname, int32_t arg_options)
     : relation(arg_relation.release())
     , indexname(arg_indexname)
     , options(arg_options)
@@ -8634,7 +9321,18 @@ CopyStmt::CopyStmt()
     , where_clause()
 {}
 
-CopyStmt::CopyStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_query, std::vector<::pg_query::Node> arg_attlist, bool arg_is_from, bool arg_is_program, const std::string& arg_filename, std::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause)
+CopyStmt::CopyStmt([[maybe_unused]] allocator_type alloc)
+    : relation(nullptr)
+    , query()
+    , attlist(alloc)
+    , is_from(false)
+    , is_program(false)
+    , filename(alloc)
+    , options(alloc)
+    , where_clause()
+{}
+
+CopyStmt::CopyStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_query, std::pmr::vector<::pg_query::Node> arg_attlist, bool arg_is_from, bool arg_is_program, const std::pmr::string& arg_filename, std::pmr::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause)
     : relation(arg_relation.release())
     , query(std::move(arg_query))
     , attlist(std::move(arg_attlist))
@@ -8755,7 +9453,22 @@ CreateStmt::CreateStmt()
     , if_not_exists(false)
 {}
 
-CreateStmt::CreateStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_table_elts, std::vector<::pg_query::Node> arg_inh_relations, std::unique_ptr<::pg_query::PartitionBoundSpec> arg_partbound, std::unique_ptr<::pg_query::PartitionSpec> arg_partspec, std::unique_ptr<::pg_query::TypeName> arg_of_typename, std::vector<::pg_query::Node> arg_constraints, std::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_oncommit, const std::string& arg_tablespacename, const std::string& arg_access_method, bool arg_if_not_exists)
+CreateStmt::CreateStmt([[maybe_unused]] allocator_type alloc)
+    : relation(nullptr)
+    , table_elts(alloc)
+    , inh_relations(alloc)
+    , partbound(nullptr)
+    , partspec(nullptr)
+    , of_typename(nullptr)
+    , constraints(alloc)
+    , options(alloc)
+    , oncommit()
+    , tablespacename(alloc)
+    , access_method(alloc)
+    , if_not_exists(false)
+{}
+
+CreateStmt::CreateStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_table_elts, std::pmr::vector<::pg_query::Node> arg_inh_relations, std::unique_ptr<::pg_query::PartitionBoundSpec> arg_partbound, std::unique_ptr<::pg_query::PartitionSpec> arg_partspec, std::unique_ptr<::pg_query::TypeName> arg_of_typename, std::pmr::vector<::pg_query::Node> arg_constraints, std::pmr::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_oncommit, const std::pmr::string& arg_tablespacename, const std::pmr::string& arg_access_method, bool arg_if_not_exists)
     : relation(arg_relation.release())
     , table_elts(std::move(arg_table_elts))
     , inh_relations(std::move(arg_inh_relations))
@@ -8912,7 +9625,17 @@ DefineStmt::DefineStmt()
     , replace(false)
 {}
 
-DefineStmt::DefineStmt(::pg_query::ObjectType&& arg_kind, bool arg_oldstyle, std::vector<::pg_query::Node> arg_defnames, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_definition, bool arg_if_not_exists, bool arg_replace)
+DefineStmt::DefineStmt([[maybe_unused]] allocator_type alloc)
+    : kind()
+    , oldstyle(false)
+    , defnames(alloc)
+    , args(alloc)
+    , definition(alloc)
+    , if_not_exists(false)
+    , replace(false)
+{}
+
+DefineStmt::DefineStmt(::pg_query::ObjectType&& arg_kind, bool arg_oldstyle, std::pmr::vector<::pg_query::Node> arg_defnames, std::pmr::vector<::pg_query::Node> arg_args, std::pmr::vector<::pg_query::Node> arg_definition, bool arg_if_not_exists, bool arg_replace)
     : kind(std::move(arg_kind))
     , oldstyle(arg_oldstyle)
     , defnames(std::move(arg_defnames))
@@ -9029,7 +9752,15 @@ DropStmt::DropStmt()
     , concurrent(false)
 {}
 
-DropStmt::DropStmt(std::vector<::pg_query::Node> arg_objects, ::pg_query::ObjectType&& arg_remove_type, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok, bool arg_concurrent)
+DropStmt::DropStmt([[maybe_unused]] allocator_type alloc)
+    : objects(alloc)
+    , remove_type()
+    , behavior()
+    , missing_ok(false)
+    , concurrent(false)
+{}
+
+DropStmt::DropStmt(std::pmr::vector<::pg_query::Node> arg_objects, ::pg_query::ObjectType&& arg_remove_type, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok, bool arg_concurrent)
     : objects(std::move(arg_objects))
     , remove_type(std::move(arg_remove_type))
     , behavior(std::move(arg_behavior))
@@ -9116,7 +9847,13 @@ TruncateStmt::TruncateStmt()
     , behavior()
 {}
 
-TruncateStmt::TruncateStmt(std::vector<::pg_query::Node> arg_relations, bool arg_restart_seqs, ::pg_query::DropBehavior&& arg_behavior)
+TruncateStmt::TruncateStmt([[maybe_unused]] allocator_type alloc)
+    : relations(alloc)
+    , restart_seqs(false)
+    , behavior()
+{}
+
+TruncateStmt::TruncateStmt(std::pmr::vector<::pg_query::Node> arg_relations, bool arg_restart_seqs, ::pg_query::DropBehavior&& arg_behavior)
     : relations(std::move(arg_relations))
     , restart_seqs(arg_restart_seqs)
     , behavior(std::move(arg_behavior))
@@ -9193,7 +9930,13 @@ CommentStmt::CommentStmt()
     , comment()
 {}
 
-CommentStmt::CommentStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::string& arg_comment)
+CommentStmt::CommentStmt([[maybe_unused]] allocator_type alloc)
+    : objtype()
+    , object()
+    , comment(alloc)
+{}
+
+CommentStmt::CommentStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::pmr::string& arg_comment)
     : objtype(std::move(arg_objtype))
     , object(std::move(arg_object))
     , comment(arg_comment)
@@ -9262,7 +10005,14 @@ FetchStmt::FetchStmt()
     , ismove(false)
 {}
 
-FetchStmt::FetchStmt(::pg_query::FetchDirection&& arg_direction, int64_t arg_how_many, const std::string& arg_portalname, bool arg_ismove)
+FetchStmt::FetchStmt([[maybe_unused]] allocator_type alloc)
+    : direction()
+    , how_many((int64_t)0ll)
+    , portalname(alloc)
+    , ismove(false)
+{}
+
+FetchStmt::FetchStmt(::pg_query::FetchDirection&& arg_direction, int64_t arg_how_many, const std::pmr::string& arg_portalname, bool arg_ismove)
     : direction(std::move(arg_direction))
     , how_many(arg_how_many)
     , portalname(arg_portalname)
@@ -9355,7 +10105,33 @@ IndexStmt::IndexStmt()
     , reset_default_tblspc(false)
 {}
 
-IndexStmt::IndexStmt(const std::string& arg_idxname, std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::string& arg_access_method, const std::string& arg_table_space, std::vector<::pg_query::Node> arg_index_params, std::vector<::pg_query::Node> arg_index_including_params, std::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_exclude_op_names, const std::string& arg_idxcomment, uint32_t arg_index_oid, uint32_t arg_old_node, uint32_t arg_old_create_subid, uint32_t arg_old_first_relfilenode_subid, bool arg_unique, bool arg_primary, bool arg_isconstraint, bool arg_deferrable, bool arg_initdeferred, bool arg_transformed, bool arg_concurrent, bool arg_if_not_exists, bool arg_reset_default_tblspc)
+IndexStmt::IndexStmt([[maybe_unused]] allocator_type alloc)
+    : idxname(alloc)
+    , relation(nullptr)
+    , access_method(alloc)
+    , table_space(alloc)
+    , index_params(alloc)
+    , index_including_params(alloc)
+    , options(alloc)
+    , where_clause()
+    , exclude_op_names(alloc)
+    , idxcomment(alloc)
+    , index_oid((uint32_t)0ull)
+    , old_node((uint32_t)0ull)
+    , old_create_subid((uint32_t)0ull)
+    , old_first_relfilenode_subid((uint32_t)0ull)
+    , unique(false)
+    , primary(false)
+    , isconstraint(false)
+    , deferrable(false)
+    , initdeferred(false)
+    , transformed(false)
+    , concurrent(false)
+    , if_not_exists(false)
+    , reset_default_tblspc(false)
+{}
+
+IndexStmt::IndexStmt(const std::pmr::string& arg_idxname, std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::pmr::string& arg_access_method, const std::pmr::string& arg_table_space, std::pmr::vector<::pg_query::Node> arg_index_params, std::pmr::vector<::pg_query::Node> arg_index_including_params, std::pmr::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause, std::pmr::vector<::pg_query::Node> arg_exclude_op_names, const std::pmr::string& arg_idxcomment, uint32_t arg_index_oid, uint32_t arg_old_node, uint32_t arg_old_create_subid, uint32_t arg_old_first_relfilenode_subid, bool arg_unique, bool arg_primary, bool arg_isconstraint, bool arg_deferrable, bool arg_initdeferred, bool arg_transformed, bool arg_concurrent, bool arg_if_not_exists, bool arg_reset_default_tblspc)
     : idxname(arg_idxname)
     , relation(arg_relation.release())
     , access_method(arg_access_method)
@@ -9563,7 +10339,16 @@ CreateFunctionStmt::CreateFunctionStmt()
     , options()
 {}
 
-CreateFunctionStmt::CreateFunctionStmt(bool arg_is_procedure, bool arg_replace, std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_parameters, std::unique_ptr<::pg_query::TypeName> arg_return_type, std::vector<::pg_query::Node> arg_options)
+CreateFunctionStmt::CreateFunctionStmt([[maybe_unused]] allocator_type alloc)
+    : is_procedure(false)
+    , replace(false)
+    , funcname(alloc)
+    , parameters(alloc)
+    , return_type(nullptr)
+    , options(alloc)
+{}
+
+CreateFunctionStmt::CreateFunctionStmt(bool arg_is_procedure, bool arg_replace, std::pmr::vector<::pg_query::Node> arg_funcname, std::pmr::vector<::pg_query::Node> arg_parameters, std::unique_ptr<::pg_query::TypeName> arg_return_type, std::pmr::vector<::pg_query::Node> arg_options)
     : is_procedure(arg_is_procedure)
     , replace(arg_replace)
     , funcname(std::move(arg_funcname))
@@ -9674,7 +10459,13 @@ AlterFunctionStmt::AlterFunctionStmt()
     , actions()
 {}
 
-AlterFunctionStmt::AlterFunctionStmt(::pg_query::ObjectType&& arg_objtype, std::unique_ptr<::pg_query::ObjectWithArgs> arg_func, std::vector<::pg_query::Node> arg_actions)
+AlterFunctionStmt::AlterFunctionStmt([[maybe_unused]] allocator_type alloc)
+    : objtype()
+    , func(nullptr)
+    , actions(alloc)
+{}
+
+AlterFunctionStmt::AlterFunctionStmt(::pg_query::ObjectType&& arg_objtype, std::unique_ptr<::pg_query::ObjectWithArgs> arg_func, std::pmr::vector<::pg_query::Node> arg_actions)
     : objtype(std::move(arg_objtype))
     , func(arg_func.release())
     , actions(std::move(arg_actions))
@@ -9750,7 +10541,11 @@ DoStmt::DoStmt()
     : args()
 {}
 
-DoStmt::DoStmt(std::vector<::pg_query::Node> arg_args)
+DoStmt::DoStmt([[maybe_unused]] allocator_type alloc)
+    : args(alloc)
+{}
+
+DoStmt::DoStmt(std::pmr::vector<::pg_query::Node> arg_args)
     : args(std::move(arg_args))
 {}
 
@@ -9822,7 +10617,18 @@ RenameStmt::RenameStmt()
     , missing_ok(false)
 {}
 
-RenameStmt::RenameStmt(::pg_query::ObjectType&& arg_rename_type, ::pg_query::ObjectType&& arg_relation_type, std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_object, const std::string& arg_subname, const std::string& arg_newname, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
+RenameStmt::RenameStmt([[maybe_unused]] allocator_type alloc)
+    : rename_type()
+    , relation_type()
+    , relation(nullptr)
+    , object()
+    , subname(alloc)
+    , newname(alloc)
+    , behavior()
+    , missing_ok(false)
+{}
+
+RenameStmt::RenameStmt(::pg_query::ObjectType&& arg_rename_type, ::pg_query::ObjectType&& arg_relation_type, std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_object, const std::pmr::string& arg_subname, const std::pmr::string& arg_newname, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok)
     : rename_type(std::move(arg_rename_type))
     , relation_type(std::move(arg_relation_type))
     , relation(arg_relation.release())
@@ -9920,7 +10726,17 @@ RuleStmt::RuleStmt()
     , replace(false)
 {}
 
-RuleStmt::RuleStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::string& arg_rulename, ::pg_query::Node&& arg_where_clause, ::pg_query::CmdType&& arg_event, bool arg_instead, std::vector<::pg_query::Node> arg_actions, bool arg_replace)
+RuleStmt::RuleStmt([[maybe_unused]] allocator_type alloc)
+    : relation(nullptr)
+    , rulename(alloc)
+    , where_clause()
+    , event()
+    , instead(false)
+    , actions(alloc)
+    , replace(false)
+{}
+
+RuleStmt::RuleStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::pmr::string& arg_rulename, ::pg_query::Node&& arg_where_clause, ::pg_query::CmdType&& arg_event, bool arg_instead, std::pmr::vector<::pg_query::Node> arg_actions, bool arg_replace)
     : relation(arg_relation.release())
     , rulename(arg_rulename)
     , where_clause(std::move(arg_where_clause))
@@ -10017,7 +10833,12 @@ NotifyStmt::NotifyStmt()
     , payload()
 {}
 
-NotifyStmt::NotifyStmt(const std::string& arg_conditionname, const std::string& arg_payload)
+NotifyStmt::NotifyStmt([[maybe_unused]] allocator_type alloc)
+    : conditionname(alloc)
+    , payload(alloc)
+{}
+
+NotifyStmt::NotifyStmt(const std::pmr::string& arg_conditionname, const std::pmr::string& arg_payload)
     : conditionname(arg_conditionname)
     , payload(arg_payload)
 {}
@@ -10078,7 +10899,11 @@ ListenStmt::ListenStmt()
     : conditionname()
 {}
 
-ListenStmt::ListenStmt(const std::string& arg_conditionname)
+ListenStmt::ListenStmt([[maybe_unused]] allocator_type alloc)
+    : conditionname(alloc)
+{}
+
+ListenStmt::ListenStmt(const std::pmr::string& arg_conditionname)
     : conditionname(arg_conditionname)
 {}
 
@@ -10134,7 +10959,11 @@ UnlistenStmt::UnlistenStmt()
     : conditionname()
 {}
 
-UnlistenStmt::UnlistenStmt(const std::string& arg_conditionname)
+UnlistenStmt::UnlistenStmt([[maybe_unused]] allocator_type alloc)
+    : conditionname(alloc)
+{}
+
+UnlistenStmt::UnlistenStmt(const std::pmr::string& arg_conditionname)
     : conditionname(arg_conditionname)
 {}
 
@@ -10194,7 +11023,15 @@ TransactionStmt::TransactionStmt()
     , chain(false)
 {}
 
-TransactionStmt::TransactionStmt(::pg_query::TransactionStmtKind&& arg_kind, std::vector<::pg_query::Node> arg_options, const std::string& arg_savepoint_name, const std::string& arg_gid, bool arg_chain)
+TransactionStmt::TransactionStmt([[maybe_unused]] allocator_type alloc)
+    : kind()
+    , options(alloc)
+    , savepoint_name(alloc)
+    , gid(alloc)
+    , chain(false)
+{}
+
+TransactionStmt::TransactionStmt(::pg_query::TransactionStmtKind&& arg_kind, std::pmr::vector<::pg_query::Node> arg_options, const std::pmr::string& arg_savepoint_name, const std::pmr::string& arg_gid, bool arg_chain)
     : kind(std::move(arg_kind))
     , options(std::move(arg_options))
     , savepoint_name(arg_savepoint_name)
@@ -10284,7 +11121,16 @@ ViewStmt::ViewStmt()
     , with_check_option()
 {}
 
-ViewStmt::ViewStmt(std::unique_ptr<::pg_query::RangeVar> arg_view, std::vector<::pg_query::Node> arg_aliases, ::pg_query::Node&& arg_query, bool arg_replace, std::vector<::pg_query::Node> arg_options, ::pg_query::ViewCheckOption&& arg_with_check_option)
+ViewStmt::ViewStmt([[maybe_unused]] allocator_type alloc)
+    : view(nullptr)
+    , aliases(alloc)
+    , query()
+    , replace(false)
+    , options(alloc)
+    , with_check_option()
+{}
+
+ViewStmt::ViewStmt(std::unique_ptr<::pg_query::RangeVar> arg_view, std::pmr::vector<::pg_query::Node> arg_aliases, ::pg_query::Node&& arg_query, bool arg_replace, std::pmr::vector<::pg_query::Node> arg_options, ::pg_query::ViewCheckOption&& arg_with_check_option)
     : view(arg_view.release())
     , aliases(std::move(arg_aliases))
     , query(std::move(arg_query))
@@ -10384,7 +11230,11 @@ LoadStmt::LoadStmt()
     : filename()
 {}
 
-LoadStmt::LoadStmt(const std::string& arg_filename)
+LoadStmt::LoadStmt([[maybe_unused]] allocator_type alloc)
+    : filename(alloc)
+{}
+
+LoadStmt::LoadStmt(const std::pmr::string& arg_filename)
     : filename(arg_filename)
 {}
 
@@ -10443,7 +11293,14 @@ CreateDomainStmt::CreateDomainStmt()
     , constraints()
 {}
 
-CreateDomainStmt::CreateDomainStmt(std::vector<::pg_query::Node> arg_domainname, std::unique_ptr<::pg_query::TypeName> arg_type_name, std::unique_ptr<::pg_query::CollateClause> arg_coll_clause, std::vector<::pg_query::Node> arg_constraints)
+CreateDomainStmt::CreateDomainStmt([[maybe_unused]] allocator_type alloc)
+    : domainname(alloc)
+    , type_name(nullptr)
+    , coll_clause(nullptr)
+    , constraints(alloc)
+{}
+
+CreateDomainStmt::CreateDomainStmt(std::pmr::vector<::pg_query::Node> arg_domainname, std::unique_ptr<::pg_query::TypeName> arg_type_name, std::unique_ptr<::pg_query::CollateClause> arg_coll_clause, std::pmr::vector<::pg_query::Node> arg_constraints)
     : domainname(std::move(arg_domainname))
     , type_name(arg_type_name.release())
     , coll_clause(arg_coll_clause.release())
@@ -10535,7 +11392,12 @@ CreatedbStmt::CreatedbStmt()
     , options()
 {}
 
-CreatedbStmt::CreatedbStmt(const std::string& arg_dbname, std::vector<::pg_query::Node> arg_options)
+CreatedbStmt::CreatedbStmt([[maybe_unused]] allocator_type alloc)
+    : dbname(alloc)
+    , options(alloc)
+{}
+
+CreatedbStmt::CreatedbStmt(const std::pmr::string& arg_dbname, std::pmr::vector<::pg_query::Node> arg_options)
     : dbname(arg_dbname)
     , options(std::move(arg_options))
 {}
@@ -10607,7 +11469,13 @@ DropdbStmt::DropdbStmt()
     , options()
 {}
 
-DropdbStmt::DropdbStmt(const std::string& arg_dbname, bool arg_missing_ok, std::vector<::pg_query::Node> arg_options)
+DropdbStmt::DropdbStmt([[maybe_unused]] allocator_type alloc)
+    : dbname(alloc)
+    , missing_ok(false)
+    , options(alloc)
+{}
+
+DropdbStmt::DropdbStmt(const std::pmr::string& arg_dbname, bool arg_missing_ok, std::pmr::vector<::pg_query::Node> arg_options)
     : dbname(arg_dbname)
     , missing_ok(arg_missing_ok)
     , options(std::move(arg_options))
@@ -10684,7 +11552,13 @@ VacuumStmt::VacuumStmt()
     , is_vacuumcmd(false)
 {}
 
-VacuumStmt::VacuumStmt(std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_rels, bool arg_is_vacuumcmd)
+VacuumStmt::VacuumStmt([[maybe_unused]] allocator_type alloc)
+    : options(alloc)
+    , rels(alloc)
+    , is_vacuumcmd(false)
+{}
+
+VacuumStmt::VacuumStmt(std::pmr::vector<::pg_query::Node> arg_options, std::pmr::vector<::pg_query::Node> arg_rels, bool arg_is_vacuumcmd)
     : options(std::move(arg_options))
     , rels(std::move(arg_rels))
     , is_vacuumcmd(arg_is_vacuumcmd)
@@ -10769,7 +11643,12 @@ ExplainStmt::ExplainStmt()
     , options()
 {}
 
-ExplainStmt::ExplainStmt(::pg_query::Node&& arg_query, std::vector<::pg_query::Node> arg_options)
+ExplainStmt::ExplainStmt([[maybe_unused]] allocator_type alloc)
+    : query()
+    , options(alloc)
+{}
+
+ExplainStmt::ExplainStmt(::pg_query::Node&& arg_query, std::pmr::vector<::pg_query::Node> arg_options)
     : query(std::move(arg_query))
     , options(std::move(arg_options))
 {}
@@ -10836,6 +11715,14 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ExplainStm
 }
 
 CreateTableAsStmt::CreateTableAsStmt()
+    : query()
+    , into(nullptr)
+    , relkind()
+    , is_select_into(false)
+    , if_not_exists(false)
+{}
+
+CreateTableAsStmt::CreateTableAsStmt([[maybe_unused]] allocator_type alloc)
     : query()
     , into(nullptr)
     , relkind()
@@ -10924,7 +11811,15 @@ CreateSeqStmt::CreateSeqStmt()
     , if_not_exists(false)
 {}
 
-CreateSeqStmt::CreateSeqStmt(std::unique_ptr<::pg_query::RangeVar> arg_sequence, std::vector<::pg_query::Node> arg_options, uint32_t arg_owner_id, bool arg_for_identity, bool arg_if_not_exists)
+CreateSeqStmt::CreateSeqStmt([[maybe_unused]] allocator_type alloc)
+    : sequence(nullptr)
+    , options(alloc)
+    , owner_id((uint32_t)0ull)
+    , for_identity(false)
+    , if_not_exists(false)
+{}
+
+CreateSeqStmt::CreateSeqStmt(std::unique_ptr<::pg_query::RangeVar> arg_sequence, std::pmr::vector<::pg_query::Node> arg_options, uint32_t arg_owner_id, bool arg_for_identity, bool arg_if_not_exists)
     : sequence(arg_sequence.release())
     , options(std::move(arg_options))
     , owner_id(arg_owner_id)
@@ -11013,7 +11908,14 @@ AlterSeqStmt::AlterSeqStmt()
     , missing_ok(false)
 {}
 
-AlterSeqStmt::AlterSeqStmt(std::unique_ptr<::pg_query::RangeVar> arg_sequence, std::vector<::pg_query::Node> arg_options, bool arg_for_identity, bool arg_missing_ok)
+AlterSeqStmt::AlterSeqStmt([[maybe_unused]] allocator_type alloc)
+    : sequence(nullptr)
+    , options(alloc)
+    , for_identity(false)
+    , missing_ok(false)
+{}
+
+AlterSeqStmt::AlterSeqStmt(std::unique_ptr<::pg_query::RangeVar> arg_sequence, std::pmr::vector<::pg_query::Node> arg_options, bool arg_for_identity, bool arg_missing_ok)
     : sequence(arg_sequence.release())
     , options(std::move(arg_options))
     , for_identity(arg_for_identity)
@@ -11097,7 +11999,14 @@ VariableSetStmt::VariableSetStmt()
     , is_local(false)
 {}
 
-VariableSetStmt::VariableSetStmt(::pg_query::VariableSetKind&& arg_kind, const std::string& arg_name, std::vector<::pg_query::Node> arg_args, bool arg_is_local)
+VariableSetStmt::VariableSetStmt([[maybe_unused]] allocator_type alloc)
+    : kind()
+    , name(alloc)
+    , args(alloc)
+    , is_local(false)
+{}
+
+VariableSetStmt::VariableSetStmt(::pg_query::VariableSetKind&& arg_kind, const std::pmr::string& arg_name, std::pmr::vector<::pg_query::Node> arg_args, bool arg_is_local)
     : kind(std::move(arg_kind))
     , name(arg_name)
     , args(std::move(arg_args))
@@ -11177,7 +12086,11 @@ VariableShowStmt::VariableShowStmt()
     : name()
 {}
 
-VariableShowStmt::VariableShowStmt(const std::string& arg_name)
+VariableShowStmt::VariableShowStmt([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+{}
+
+VariableShowStmt::VariableShowStmt(const std::pmr::string& arg_name)
     : name(arg_name)
 {}
 
@@ -11230,6 +12143,10 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const VariableSh
 }
 
 DiscardStmt::DiscardStmt()
+    : target()
+{}
+
+DiscardStmt::DiscardStmt([[maybe_unused]] allocator_type alloc)
     : target()
 {}
 
@@ -11302,7 +12219,24 @@ CreateTrigStmt::CreateTrigStmt()
     , constrrel(nullptr)
 {}
 
-CreateTrigStmt::CreateTrigStmt(const std::string& arg_trigname, std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_args, bool arg_row, int32_t arg_timing, int32_t arg_events, std::vector<::pg_query::Node> arg_columns, ::pg_query::Node&& arg_when_clause, bool arg_isconstraint, std::vector<::pg_query::Node> arg_transition_rels, bool arg_deferrable, bool arg_initdeferred, std::unique_ptr<::pg_query::RangeVar> arg_constrrel)
+CreateTrigStmt::CreateTrigStmt([[maybe_unused]] allocator_type alloc)
+    : trigname(alloc)
+    , relation(nullptr)
+    , funcname(alloc)
+    , args(alloc)
+    , row(false)
+    , timing((int32_t)0ll)
+    , events((int32_t)0ll)
+    , columns(alloc)
+    , when_clause()
+    , isconstraint(false)
+    , transition_rels(alloc)
+    , deferrable(false)
+    , initdeferred(false)
+    , constrrel(nullptr)
+{}
+
+CreateTrigStmt::CreateTrigStmt(const std::pmr::string& arg_trigname, std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_funcname, std::pmr::vector<::pg_query::Node> arg_args, bool arg_row, int32_t arg_timing, int32_t arg_events, std::pmr::vector<::pg_query::Node> arg_columns, ::pg_query::Node&& arg_when_clause, bool arg_isconstraint, std::pmr::vector<::pg_query::Node> arg_transition_rels, bool arg_deferrable, bool arg_initdeferred, std::unique_ptr<::pg_query::RangeVar> arg_constrrel)
     : trigname(arg_trigname)
     , relation(arg_relation.release())
     , funcname(std::move(arg_funcname))
@@ -11466,7 +12400,16 @@ CreatePLangStmt::CreatePLangStmt()
     , pltrusted(false)
 {}
 
-CreatePLangStmt::CreatePLangStmt(bool arg_replace, const std::string& arg_plname, std::vector<::pg_query::Node> arg_plhandler, std::vector<::pg_query::Node> arg_plinline, std::vector<::pg_query::Node> arg_plvalidator, bool arg_pltrusted)
+CreatePLangStmt::CreatePLangStmt([[maybe_unused]] allocator_type alloc)
+    : replace(false)
+    , plname(alloc)
+    , plhandler(alloc)
+    , plinline(alloc)
+    , plvalidator(alloc)
+    , pltrusted(false)
+{}
+
+CreatePLangStmt::CreatePLangStmt(bool arg_replace, const std::pmr::string& arg_plname, std::pmr::vector<::pg_query::Node> arg_plhandler, std::pmr::vector<::pg_query::Node> arg_plinline, std::pmr::vector<::pg_query::Node> arg_plvalidator, bool arg_pltrusted)
     : replace(arg_replace)
     , plname(arg_plname)
     , plhandler(std::move(arg_plhandler))
@@ -11576,7 +12519,13 @@ CreateRoleStmt::CreateRoleStmt()
     , options()
 {}
 
-CreateRoleStmt::CreateRoleStmt(::pg_query::RoleStmtType&& arg_stmt_type, const std::string& arg_role, std::vector<::pg_query::Node> arg_options)
+CreateRoleStmt::CreateRoleStmt([[maybe_unused]] allocator_type alloc)
+    : stmt_type()
+    , role(alloc)
+    , options(alloc)
+{}
+
+CreateRoleStmt::CreateRoleStmt(::pg_query::RoleStmtType&& arg_stmt_type, const std::pmr::string& arg_role, std::pmr::vector<::pg_query::Node> arg_options)
     : stmt_type(std::move(arg_stmt_type))
     , role(arg_role)
     , options(std::move(arg_options))
@@ -11653,7 +12602,13 @@ AlterRoleStmt::AlterRoleStmt()
     , action((int32_t)0ll)
 {}
 
-AlterRoleStmt::AlterRoleStmt(std::unique_ptr<::pg_query::RoleSpec> arg_role, std::vector<::pg_query::Node> arg_options, int32_t arg_action)
+AlterRoleStmt::AlterRoleStmt([[maybe_unused]] allocator_type alloc)
+    : role(nullptr)
+    , options(alloc)
+    , action((int32_t)0ll)
+{}
+
+AlterRoleStmt::AlterRoleStmt(std::unique_ptr<::pg_query::RoleSpec> arg_role, std::pmr::vector<::pg_query::Node> arg_options, int32_t arg_action)
     : role(arg_role.release())
     , options(std::move(arg_options))
     , action(arg_action)
@@ -11730,7 +12685,12 @@ DropRoleStmt::DropRoleStmt()
     , missing_ok(false)
 {}
 
-DropRoleStmt::DropRoleStmt(std::vector<::pg_query::Node> arg_roles, bool arg_missing_ok)
+DropRoleStmt::DropRoleStmt([[maybe_unused]] allocator_type alloc)
+    : roles(alloc)
+    , missing_ok(false)
+{}
+
+DropRoleStmt::DropRoleStmt(std::pmr::vector<::pg_query::Node> arg_roles, bool arg_missing_ok)
     : roles(std::move(arg_roles))
     , missing_ok(arg_missing_ok)
 {}
@@ -11802,7 +12762,13 @@ LockStmt::LockStmt()
     , nowait(false)
 {}
 
-LockStmt::LockStmt(std::vector<::pg_query::Node> arg_relations, int32_t arg_mode, bool arg_nowait)
+LockStmt::LockStmt([[maybe_unused]] allocator_type alloc)
+    : relations(alloc)
+    , mode((int32_t)0ll)
+    , nowait(false)
+{}
+
+LockStmt::LockStmt(std::pmr::vector<::pg_query::Node> arg_relations, int32_t arg_mode, bool arg_nowait)
     : relations(std::move(arg_relations))
     , mode(arg_mode)
     , nowait(arg_nowait)
@@ -11878,7 +12844,12 @@ ConstraintsSetStmt::ConstraintsSetStmt()
     , deferred(false)
 {}
 
-ConstraintsSetStmt::ConstraintsSetStmt(std::vector<::pg_query::Node> arg_constraints, bool arg_deferred)
+ConstraintsSetStmt::ConstraintsSetStmt([[maybe_unused]] allocator_type alloc)
+    : constraints(alloc)
+    , deferred(false)
+{}
+
+ConstraintsSetStmt::ConstraintsSetStmt(std::pmr::vector<::pg_query::Node> arg_constraints, bool arg_deferred)
     : constraints(std::move(arg_constraints))
     , deferred(arg_deferred)
 {}
@@ -11952,7 +12923,15 @@ ReindexStmt::ReindexStmt()
     , concurrent(false)
 {}
 
-ReindexStmt::ReindexStmt(::pg_query::ReindexObjectType&& arg_kind, std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::string& arg_name, int32_t arg_options, bool arg_concurrent)
+ReindexStmt::ReindexStmt([[maybe_unused]] allocator_type alloc)
+    : kind()
+    , relation(nullptr)
+    , name(alloc)
+    , options((int32_t)0ll)
+    , concurrent(false)
+{}
+
+ReindexStmt::ReindexStmt(::pg_query::ReindexObjectType&& arg_kind, std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::pmr::string& arg_name, int32_t arg_options, bool arg_concurrent)
     : kind(std::move(arg_kind))
     , relation(arg_relation.release())
     , name(arg_name)
@@ -12028,6 +13007,9 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ReindexStm
 CheckPointStmt::CheckPointStmt()
 {}
 
+CheckPointStmt::CheckPointStmt([[maybe_unused]] allocator_type alloc)
+{}
+
 CheckPointStmt::CheckPointStmt(CheckPointStmt&& other) noexcept
 {}
 
@@ -12079,7 +13061,14 @@ CreateSchemaStmt::CreateSchemaStmt()
     , if_not_exists(false)
 {}
 
-CreateSchemaStmt::CreateSchemaStmt(const std::string& arg_schemaname, std::unique_ptr<::pg_query::RoleSpec> arg_authrole, std::vector<::pg_query::Node> arg_schema_elts, bool arg_if_not_exists)
+CreateSchemaStmt::CreateSchemaStmt([[maybe_unused]] allocator_type alloc)
+    : schemaname(alloc)
+    , authrole(nullptr)
+    , schema_elts(alloc)
+    , if_not_exists(false)
+{}
+
+CreateSchemaStmt::CreateSchemaStmt(const std::pmr::string& arg_schemaname, std::unique_ptr<::pg_query::RoleSpec> arg_authrole, std::pmr::vector<::pg_query::Node> arg_schema_elts, bool arg_if_not_exists)
     : schemaname(arg_schemaname)
     , authrole(arg_authrole.release())
     , schema_elts(std::move(arg_schema_elts))
@@ -12161,7 +13150,12 @@ AlterDatabaseStmt::AlterDatabaseStmt()
     , options()
 {}
 
-AlterDatabaseStmt::AlterDatabaseStmt(const std::string& arg_dbname, std::vector<::pg_query::Node> arg_options)
+AlterDatabaseStmt::AlterDatabaseStmt([[maybe_unused]] allocator_type alloc)
+    : dbname(alloc)
+    , options(alloc)
+{}
+
+AlterDatabaseStmt::AlterDatabaseStmt(const std::pmr::string& arg_dbname, std::pmr::vector<::pg_query::Node> arg_options)
     : dbname(arg_dbname)
     , options(std::move(arg_options))
 {}
@@ -12232,7 +13226,12 @@ AlterDatabaseSetStmt::AlterDatabaseSetStmt()
     , setstmt(nullptr)
 {}
 
-AlterDatabaseSetStmt::AlterDatabaseSetStmt(const std::string& arg_dbname, std::unique_ptr<::pg_query::VariableSetStmt> arg_setstmt)
+AlterDatabaseSetStmt::AlterDatabaseSetStmt([[maybe_unused]] allocator_type alloc)
+    : dbname(alloc)
+    , setstmt(nullptr)
+{}
+
+AlterDatabaseSetStmt::AlterDatabaseSetStmt(const std::pmr::string& arg_dbname, std::unique_ptr<::pg_query::VariableSetStmt> arg_setstmt)
     : dbname(arg_dbname)
     , setstmt(arg_setstmt.release())
 {}
@@ -12296,7 +13295,13 @@ AlterRoleSetStmt::AlterRoleSetStmt()
     , setstmt(nullptr)
 {}
 
-AlterRoleSetStmt::AlterRoleSetStmt(std::unique_ptr<::pg_query::RoleSpec> arg_role, const std::string& arg_database, std::unique_ptr<::pg_query::VariableSetStmt> arg_setstmt)
+AlterRoleSetStmt::AlterRoleSetStmt([[maybe_unused]] allocator_type alloc)
+    : role(nullptr)
+    , database(alloc)
+    , setstmt(nullptr)
+{}
+
+AlterRoleSetStmt::AlterRoleSetStmt(std::unique_ptr<::pg_query::RoleSpec> arg_role, const std::pmr::string& arg_database, std::unique_ptr<::pg_query::VariableSetStmt> arg_setstmt)
     : role(arg_role.release())
     , database(arg_database)
     , setstmt(arg_setstmt.release())
@@ -12368,7 +13373,15 @@ CreateConversionStmt::CreateConversionStmt()
     , def(false)
 {}
 
-CreateConversionStmt::CreateConversionStmt(std::vector<::pg_query::Node> arg_conversion_name, const std::string& arg_for_encoding_name, const std::string& arg_to_encoding_name, std::vector<::pg_query::Node> arg_func_name, bool arg_def)
+CreateConversionStmt::CreateConversionStmt([[maybe_unused]] allocator_type alloc)
+    : conversion_name(alloc)
+    , for_encoding_name(alloc)
+    , to_encoding_name(alloc)
+    , func_name(alloc)
+    , def(false)
+{}
+
+CreateConversionStmt::CreateConversionStmt(std::pmr::vector<::pg_query::Node> arg_conversion_name, const std::pmr::string& arg_for_encoding_name, const std::pmr::string& arg_to_encoding_name, std::pmr::vector<::pg_query::Node> arg_func_name, bool arg_def)
     : conversion_name(std::move(arg_conversion_name))
     , for_encoding_name(arg_for_encoding_name)
     , to_encoding_name(arg_to_encoding_name)
@@ -12466,6 +13479,14 @@ CreateCastStmt::CreateCastStmt()
     , inout(false)
 {}
 
+CreateCastStmt::CreateCastStmt([[maybe_unused]] allocator_type alloc)
+    : sourcetype(nullptr)
+    , targettype(nullptr)
+    , func(nullptr)
+    , context()
+    , inout(false)
+{}
+
 CreateCastStmt::CreateCastStmt(std::unique_ptr<::pg_query::TypeName> arg_sourcetype, std::unique_ptr<::pg_query::TypeName> arg_targettype, std::unique_ptr<::pg_query::ObjectWithArgs> arg_func, ::pg_query::CoercionContext&& arg_context, bool arg_inout)
     : sourcetype(arg_sourcetype.release())
     , targettype(arg_targettype.release())
@@ -12550,7 +13571,16 @@ CreateOpClassStmt::CreateOpClassStmt()
     , is_default(false)
 {}
 
-CreateOpClassStmt::CreateOpClassStmt(std::vector<::pg_query::Node> arg_opclassname, std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname, std::unique_ptr<::pg_query::TypeName> arg_datatype, std::vector<::pg_query::Node> arg_items, bool arg_is_default)
+CreateOpClassStmt::CreateOpClassStmt([[maybe_unused]] allocator_type alloc)
+    : opclassname(alloc)
+    , opfamilyname(alloc)
+    , amname(alloc)
+    , datatype(nullptr)
+    , items(alloc)
+    , is_default(false)
+{}
+
+CreateOpClassStmt::CreateOpClassStmt(std::pmr::vector<::pg_query::Node> arg_opclassname, std::pmr::vector<::pg_query::Node> arg_opfamilyname, const std::pmr::string& arg_amname, std::unique_ptr<::pg_query::TypeName> arg_datatype, std::pmr::vector<::pg_query::Node> arg_items, bool arg_is_default)
     : opclassname(std::move(arg_opclassname))
     , opfamilyname(std::move(arg_opfamilyname))
     , amname(arg_amname)
@@ -12660,7 +13690,12 @@ CreateOpFamilyStmt::CreateOpFamilyStmt()
     , amname()
 {}
 
-CreateOpFamilyStmt::CreateOpFamilyStmt(std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname)
+CreateOpFamilyStmt::CreateOpFamilyStmt([[maybe_unused]] allocator_type alloc)
+    : opfamilyname(alloc)
+    , amname(alloc)
+{}
+
+CreateOpFamilyStmt::CreateOpFamilyStmt(std::pmr::vector<::pg_query::Node> arg_opfamilyname, const std::pmr::string& arg_amname)
     : opfamilyname(std::move(arg_opfamilyname))
     , amname(arg_amname)
 {}
@@ -12733,7 +13768,14 @@ AlterOpFamilyStmt::AlterOpFamilyStmt()
     , items()
 {}
 
-AlterOpFamilyStmt::AlterOpFamilyStmt(std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname, bool arg_is_drop, std::vector<::pg_query::Node> arg_items)
+AlterOpFamilyStmt::AlterOpFamilyStmt([[maybe_unused]] allocator_type alloc)
+    : opfamilyname(alloc)
+    , amname(alloc)
+    , is_drop(false)
+    , items(alloc)
+{}
+
+AlterOpFamilyStmt::AlterOpFamilyStmt(std::pmr::vector<::pg_query::Node> arg_opfamilyname, const std::pmr::string& arg_amname, bool arg_is_drop, std::pmr::vector<::pg_query::Node> arg_items)
     : opfamilyname(std::move(arg_opfamilyname))
     , amname(arg_amname)
     , is_drop(arg_is_drop)
@@ -12824,7 +13866,13 @@ PrepareStmt::PrepareStmt()
     , query()
 {}
 
-PrepareStmt::PrepareStmt(const std::string& arg_name, std::vector<::pg_query::Node> arg_argtypes, ::pg_query::Node&& arg_query)
+PrepareStmt::PrepareStmt([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+    , argtypes(alloc)
+    , query()
+{}
+
+PrepareStmt::PrepareStmt(const std::pmr::string& arg_name, std::pmr::vector<::pg_query::Node> arg_argtypes, ::pg_query::Node&& arg_query)
     : name(arg_name)
     , argtypes(std::move(arg_argtypes))
     , query(std::move(arg_query))
@@ -12900,7 +13948,12 @@ ExecuteStmt::ExecuteStmt()
     , params()
 {}
 
-ExecuteStmt::ExecuteStmt(const std::string& arg_name, std::vector<::pg_query::Node> arg_params)
+ExecuteStmt::ExecuteStmt([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+    , params(alloc)
+{}
+
+ExecuteStmt::ExecuteStmt(const std::pmr::string& arg_name, std::pmr::vector<::pg_query::Node> arg_params)
     : name(arg_name)
     , params(std::move(arg_params))
 {}
@@ -12970,7 +14023,11 @@ DeallocateStmt::DeallocateStmt()
     : name()
 {}
 
-DeallocateStmt::DeallocateStmt(const std::string& arg_name)
+DeallocateStmt::DeallocateStmt([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+{}
+
+DeallocateStmt::DeallocateStmt(const std::pmr::string& arg_name)
     : name(arg_name)
 {}
 
@@ -13028,7 +14085,13 @@ DeclareCursorStmt::DeclareCursorStmt()
     , query()
 {}
 
-DeclareCursorStmt::DeclareCursorStmt(const std::string& arg_portalname, int32_t arg_options, ::pg_query::Node&& arg_query)
+DeclareCursorStmt::DeclareCursorStmt([[maybe_unused]] allocator_type alloc)
+    : portalname(alloc)
+    , options((int32_t)0ll)
+    , query()
+{}
+
+DeclareCursorStmt::DeclareCursorStmt(const std::pmr::string& arg_portalname, int32_t arg_options, ::pg_query::Node&& arg_query)
     : portalname(arg_portalname)
     , options(arg_options)
     , query(std::move(arg_query))
@@ -13097,7 +14160,14 @@ CreateTableSpaceStmt::CreateTableSpaceStmt()
     , options()
 {}
 
-CreateTableSpaceStmt::CreateTableSpaceStmt(const std::string& arg_tablespacename, std::unique_ptr<::pg_query::RoleSpec> arg_owner, const std::string& arg_location, std::vector<::pg_query::Node> arg_options)
+CreateTableSpaceStmt::CreateTableSpaceStmt([[maybe_unused]] allocator_type alloc)
+    : tablespacename(alloc)
+    , owner(nullptr)
+    , location(alloc)
+    , options(alloc)
+{}
+
+CreateTableSpaceStmt::CreateTableSpaceStmt(const std::pmr::string& arg_tablespacename, std::unique_ptr<::pg_query::RoleSpec> arg_owner, const std::pmr::string& arg_location, std::pmr::vector<::pg_query::Node> arg_options)
     : tablespacename(arg_tablespacename)
     , owner(arg_owner.release())
     , location(arg_location)
@@ -13179,7 +14249,12 @@ DropTableSpaceStmt::DropTableSpaceStmt()
     , missing_ok(false)
 {}
 
-DropTableSpaceStmt::DropTableSpaceStmt(const std::string& arg_tablespacename, bool arg_missing_ok)
+DropTableSpaceStmt::DropTableSpaceStmt([[maybe_unused]] allocator_type alloc)
+    : tablespacename(alloc)
+    , missing_ok(false)
+{}
+
+DropTableSpaceStmt::DropTableSpaceStmt(const std::pmr::string& arg_tablespacename, bool arg_missing_ok)
     : tablespacename(arg_tablespacename)
     , missing_ok(arg_missing_ok)
 {}
@@ -13237,6 +14312,14 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const DropTableS
 }
 
 AlterObjectDependsStmt::AlterObjectDependsStmt()
+    : object_type()
+    , relation(nullptr)
+    , object()
+    , extname()
+    , remove(false)
+{}
+
+AlterObjectDependsStmt::AlterObjectDependsStmt([[maybe_unused]] allocator_type alloc)
     : object_type()
     , relation(nullptr)
     , object()
@@ -13325,7 +14408,15 @@ AlterObjectSchemaStmt::AlterObjectSchemaStmt()
     , missing_ok(false)
 {}
 
-AlterObjectSchemaStmt::AlterObjectSchemaStmt(::pg_query::ObjectType&& arg_object_type, std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_object, const std::string& arg_newschema, bool arg_missing_ok)
+AlterObjectSchemaStmt::AlterObjectSchemaStmt([[maybe_unused]] allocator_type alloc)
+    : object_type()
+    , relation(nullptr)
+    , object()
+    , newschema(alloc)
+    , missing_ok(false)
+{}
+
+AlterObjectSchemaStmt::AlterObjectSchemaStmt(::pg_query::ObjectType&& arg_object_type, std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_object, const std::pmr::string& arg_newschema, bool arg_missing_ok)
     : object_type(std::move(arg_object_type))
     , relation(arg_relation.release())
     , object(std::move(arg_object))
@@ -13399,6 +14490,13 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const AlterObjec
 }
 
 AlterOwnerStmt::AlterOwnerStmt()
+    : object_type()
+    , relation(nullptr)
+    , object()
+    , newowner(nullptr)
+{}
+
+AlterOwnerStmt::AlterOwnerStmt([[maybe_unused]] allocator_type alloc)
     : object_type()
     , relation(nullptr)
     , object()
@@ -13479,7 +14577,12 @@ AlterOperatorStmt::AlterOperatorStmt()
     , options()
 {}
 
-AlterOperatorStmt::AlterOperatorStmt(std::unique_ptr<::pg_query::ObjectWithArgs> arg_opername, std::vector<::pg_query::Node> arg_options)
+AlterOperatorStmt::AlterOperatorStmt([[maybe_unused]] allocator_type alloc)
+    : opername(nullptr)
+    , options(alloc)
+{}
+
+AlterOperatorStmt::AlterOperatorStmt(std::unique_ptr<::pg_query::ObjectWithArgs> arg_opername, std::pmr::vector<::pg_query::Node> arg_options)
     : opername(arg_opername.release())
     , options(std::move(arg_options))
 {}
@@ -13551,7 +14654,12 @@ AlterTypeStmt::AlterTypeStmt()
     , options()
 {}
 
-AlterTypeStmt::AlterTypeStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_options)
+AlterTypeStmt::AlterTypeStmt([[maybe_unused]] allocator_type alloc)
+    : type_name(alloc)
+    , options(alloc)
+{}
+
+AlterTypeStmt::AlterTypeStmt(std::pmr::vector<::pg_query::Node> arg_type_name, std::pmr::vector<::pg_query::Node> arg_options)
     : type_name(std::move(arg_type_name))
     , options(std::move(arg_options))
 {}
@@ -13631,7 +14739,12 @@ DropOwnedStmt::DropOwnedStmt()
     , behavior()
 {}
 
-DropOwnedStmt::DropOwnedStmt(std::vector<::pg_query::Node> arg_roles, ::pg_query::DropBehavior&& arg_behavior)
+DropOwnedStmt::DropOwnedStmt([[maybe_unused]] allocator_type alloc)
+    : roles(alloc)
+    , behavior()
+{}
+
+DropOwnedStmt::DropOwnedStmt(std::pmr::vector<::pg_query::Node> arg_roles, ::pg_query::DropBehavior&& arg_behavior)
     : roles(std::move(arg_roles))
     , behavior(std::move(arg_behavior))
 {}
@@ -13702,7 +14815,12 @@ ReassignOwnedStmt::ReassignOwnedStmt()
     , newrole(nullptr)
 {}
 
-ReassignOwnedStmt::ReassignOwnedStmt(std::vector<::pg_query::Node> arg_roles, std::unique_ptr<::pg_query::RoleSpec> arg_newrole)
+ReassignOwnedStmt::ReassignOwnedStmt([[maybe_unused]] allocator_type alloc)
+    : roles(alloc)
+    , newrole(nullptr)
+{}
+
+ReassignOwnedStmt::ReassignOwnedStmt(std::pmr::vector<::pg_query::Node> arg_roles, std::unique_ptr<::pg_query::RoleSpec> arg_newrole)
     : roles(std::move(arg_roles))
     , newrole(arg_newrole.release())
 {}
@@ -13774,7 +14892,12 @@ CompositeTypeStmt::CompositeTypeStmt()
     , coldeflist()
 {}
 
-CompositeTypeStmt::CompositeTypeStmt(std::unique_ptr<::pg_query::RangeVar> arg_typevar, std::vector<::pg_query::Node> arg_coldeflist)
+CompositeTypeStmt::CompositeTypeStmt([[maybe_unused]] allocator_type alloc)
+    : typevar(nullptr)
+    , coldeflist(alloc)
+{}
+
+CompositeTypeStmt::CompositeTypeStmt(std::unique_ptr<::pg_query::RangeVar> arg_typevar, std::pmr::vector<::pg_query::Node> arg_coldeflist)
     : typevar(arg_typevar.release())
     , coldeflist(std::move(arg_coldeflist))
 {}
@@ -13846,7 +14969,12 @@ CreateEnumStmt::CreateEnumStmt()
     , vals()
 {}
 
-CreateEnumStmt::CreateEnumStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_vals)
+CreateEnumStmt::CreateEnumStmt([[maybe_unused]] allocator_type alloc)
+    : type_name(alloc)
+    , vals(alloc)
+{}
+
+CreateEnumStmt::CreateEnumStmt(std::pmr::vector<::pg_query::Node> arg_type_name, std::pmr::vector<::pg_query::Node> arg_vals)
     : type_name(std::move(arg_type_name))
     , vals(std::move(arg_vals))
 {}
@@ -13926,7 +15054,12 @@ CreateRangeStmt::CreateRangeStmt()
     , params()
 {}
 
-CreateRangeStmt::CreateRangeStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_params)
+CreateRangeStmt::CreateRangeStmt([[maybe_unused]] allocator_type alloc)
+    : type_name(alloc)
+    , params(alloc)
+{}
+
+CreateRangeStmt::CreateRangeStmt(std::pmr::vector<::pg_query::Node> arg_type_name, std::pmr::vector<::pg_query::Node> arg_params)
     : type_name(std::move(arg_type_name))
     , params(std::move(arg_params))
 {}
@@ -14010,7 +15143,16 @@ AlterEnumStmt::AlterEnumStmt()
     , skip_if_new_val_exists(false)
 {}
 
-AlterEnumStmt::AlterEnumStmt(std::vector<::pg_query::Node> arg_type_name, const std::string& arg_old_val, const std::string& arg_new_val, const std::string& arg_new_val_neighbor, bool arg_new_val_is_after, bool arg_skip_if_new_val_exists)
+AlterEnumStmt::AlterEnumStmt([[maybe_unused]] allocator_type alloc)
+    : type_name(alloc)
+    , old_val(alloc)
+    , new_val(alloc)
+    , new_val_neighbor(alloc)
+    , new_val_is_after(false)
+    , skip_if_new_val_exists(false)
+{}
+
+AlterEnumStmt::AlterEnumStmt(std::pmr::vector<::pg_query::Node> arg_type_name, const std::pmr::string& arg_old_val, const std::pmr::string& arg_new_val, const std::pmr::string& arg_new_val_neighbor, bool arg_new_val_is_after, bool arg_skip_if_new_val_exists)
     : type_name(std::move(arg_type_name))
     , old_val(arg_old_val)
     , new_val(arg_new_val)
@@ -14101,7 +15243,12 @@ AlterTSDictionaryStmt::AlterTSDictionaryStmt()
     , options()
 {}
 
-AlterTSDictionaryStmt::AlterTSDictionaryStmt(std::vector<::pg_query::Node> arg_dictname, std::vector<::pg_query::Node> arg_options)
+AlterTSDictionaryStmt::AlterTSDictionaryStmt([[maybe_unused]] allocator_type alloc)
+    : dictname(alloc)
+    , options(alloc)
+{}
+
+AlterTSDictionaryStmt::AlterTSDictionaryStmt(std::pmr::vector<::pg_query::Node> arg_dictname, std::pmr::vector<::pg_query::Node> arg_options)
     : dictname(std::move(arg_dictname))
     , options(std::move(arg_options))
 {}
@@ -14186,7 +15333,17 @@ AlterTSConfigurationStmt::AlterTSConfigurationStmt()
     , missing_ok(false)
 {}
 
-AlterTSConfigurationStmt::AlterTSConfigurationStmt(::pg_query::AlterTSConfigType&& arg_kind, std::vector<::pg_query::Node> arg_cfgname, std::vector<::pg_query::Node> arg_tokentype, std::vector<::pg_query::Node> arg_dicts, bool arg_override, bool arg_replace, bool arg_missing_ok)
+AlterTSConfigurationStmt::AlterTSConfigurationStmt([[maybe_unused]] allocator_type alloc)
+    : kind()
+    , cfgname(alloc)
+    , tokentype(alloc)
+    , dicts(alloc)
+    , override(false)
+    , replace(false)
+    , missing_ok(false)
+{}
+
+AlterTSConfigurationStmt::AlterTSConfigurationStmt(::pg_query::AlterTSConfigType&& arg_kind, std::pmr::vector<::pg_query::Node> arg_cfgname, std::pmr::vector<::pg_query::Node> arg_tokentype, std::pmr::vector<::pg_query::Node> arg_dicts, bool arg_override, bool arg_replace, bool arg_missing_ok)
     : kind(std::move(arg_kind))
     , cfgname(std::move(arg_cfgname))
     , tokentype(std::move(arg_tokentype))
@@ -14301,7 +15458,13 @@ CreateFdwStmt::CreateFdwStmt()
     , options()
 {}
 
-CreateFdwStmt::CreateFdwStmt(const std::string& arg_fdwname, std::vector<::pg_query::Node> arg_func_options, std::vector<::pg_query::Node> arg_options)
+CreateFdwStmt::CreateFdwStmt([[maybe_unused]] allocator_type alloc)
+    : fdwname(alloc)
+    , func_options(alloc)
+    , options(alloc)
+{}
+
+CreateFdwStmt::CreateFdwStmt(const std::pmr::string& arg_fdwname, std::pmr::vector<::pg_query::Node> arg_func_options, std::pmr::vector<::pg_query::Node> arg_options)
     : fdwname(arg_fdwname)
     , func_options(std::move(arg_func_options))
     , options(std::move(arg_options))
@@ -14387,7 +15550,13 @@ AlterFdwStmt::AlterFdwStmt()
     , options()
 {}
 
-AlterFdwStmt::AlterFdwStmt(const std::string& arg_fdwname, std::vector<::pg_query::Node> arg_func_options, std::vector<::pg_query::Node> arg_options)
+AlterFdwStmt::AlterFdwStmt([[maybe_unused]] allocator_type alloc)
+    : fdwname(alloc)
+    , func_options(alloc)
+    , options(alloc)
+{}
+
+AlterFdwStmt::AlterFdwStmt(const std::pmr::string& arg_fdwname, std::pmr::vector<::pg_query::Node> arg_func_options, std::pmr::vector<::pg_query::Node> arg_options)
     : fdwname(arg_fdwname)
     , func_options(std::move(arg_func_options))
     , options(std::move(arg_options))
@@ -14476,7 +15645,16 @@ CreateForeignServerStmt::CreateForeignServerStmt()
     , options()
 {}
 
-CreateForeignServerStmt::CreateForeignServerStmt(const std::string& arg_servername, const std::string& arg_servertype, const std::string& arg_version, const std::string& arg_fdwname, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options)
+CreateForeignServerStmt::CreateForeignServerStmt([[maybe_unused]] allocator_type alloc)
+    : servername(alloc)
+    , servertype(alloc)
+    , version(alloc)
+    , fdwname(alloc)
+    , if_not_exists(false)
+    , options(alloc)
+{}
+
+CreateForeignServerStmt::CreateForeignServerStmt(const std::pmr::string& arg_servername, const std::pmr::string& arg_servertype, const std::pmr::string& arg_version, const std::pmr::string& arg_fdwname, bool arg_if_not_exists, std::pmr::vector<::pg_query::Node> arg_options)
     : servername(arg_servername)
     , servertype(arg_servertype)
     , version(arg_version)
@@ -14569,7 +15747,14 @@ AlterForeignServerStmt::AlterForeignServerStmt()
     , has_version(false)
 {}
 
-AlterForeignServerStmt::AlterForeignServerStmt(const std::string& arg_servername, const std::string& arg_version, std::vector<::pg_query::Node> arg_options, bool arg_has_version)
+AlterForeignServerStmt::AlterForeignServerStmt([[maybe_unused]] allocator_type alloc)
+    : servername(alloc)
+    , version(alloc)
+    , options(alloc)
+    , has_version(false)
+{}
+
+AlterForeignServerStmt::AlterForeignServerStmt(const std::pmr::string& arg_servername, const std::pmr::string& arg_version, std::pmr::vector<::pg_query::Node> arg_options, bool arg_has_version)
     : servername(arg_servername)
     , version(arg_version)
     , options(std::move(arg_options))
@@ -14652,7 +15837,14 @@ CreateUserMappingStmt::CreateUserMappingStmt()
     , options()
 {}
 
-CreateUserMappingStmt::CreateUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::string& arg_servername, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options)
+CreateUserMappingStmt::CreateUserMappingStmt([[maybe_unused]] allocator_type alloc)
+    : user(nullptr)
+    , servername(alloc)
+    , if_not_exists(false)
+    , options(alloc)
+{}
+
+CreateUserMappingStmt::CreateUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::pmr::string& arg_servername, bool arg_if_not_exists, std::pmr::vector<::pg_query::Node> arg_options)
     : user(arg_user.release())
     , servername(arg_servername)
     , if_not_exists(arg_if_not_exists)
@@ -14735,7 +15927,13 @@ AlterUserMappingStmt::AlterUserMappingStmt()
     , options()
 {}
 
-AlterUserMappingStmt::AlterUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::string& arg_servername, std::vector<::pg_query::Node> arg_options)
+AlterUserMappingStmt::AlterUserMappingStmt([[maybe_unused]] allocator_type alloc)
+    : user(nullptr)
+    , servername(alloc)
+    , options(alloc)
+{}
+
+AlterUserMappingStmt::AlterUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::pmr::string& arg_servername, std::pmr::vector<::pg_query::Node> arg_options)
     : user(arg_user.release())
     , servername(arg_servername)
     , options(std::move(arg_options))
@@ -14813,7 +16011,13 @@ DropUserMappingStmt::DropUserMappingStmt()
     , missing_ok(false)
 {}
 
-DropUserMappingStmt::DropUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::string& arg_servername, bool arg_missing_ok)
+DropUserMappingStmt::DropUserMappingStmt([[maybe_unused]] allocator_type alloc)
+    : user(nullptr)
+    , servername(alloc)
+    , missing_ok(false)
+{}
+
+DropUserMappingStmt::DropUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::pmr::string& arg_servername, bool arg_missing_ok)
     : user(arg_user.release())
     , servername(arg_servername)
     , missing_ok(arg_missing_ok)
@@ -14882,7 +16086,13 @@ AlterTableSpaceOptionsStmt::AlterTableSpaceOptionsStmt()
     , is_reset(false)
 {}
 
-AlterTableSpaceOptionsStmt::AlterTableSpaceOptionsStmt(const std::string& arg_tablespacename, std::vector<::pg_query::Node> arg_options, bool arg_is_reset)
+AlterTableSpaceOptionsStmt::AlterTableSpaceOptionsStmt([[maybe_unused]] allocator_type alloc)
+    : tablespacename(alloc)
+    , options(alloc)
+    , is_reset(false)
+{}
+
+AlterTableSpaceOptionsStmt::AlterTableSpaceOptionsStmt(const std::pmr::string& arg_tablespacename, std::pmr::vector<::pg_query::Node> arg_options, bool arg_is_reset)
     : tablespacename(arg_tablespacename)
     , options(std::move(arg_options))
     , is_reset(arg_is_reset)
@@ -14961,7 +16171,15 @@ AlterTableMoveAllStmt::AlterTableMoveAllStmt()
     , nowait(false)
 {}
 
-AlterTableMoveAllStmt::AlterTableMoveAllStmt(const std::string& arg_orig_tablespacename, ::pg_query::ObjectType&& arg_objtype, std::vector<::pg_query::Node> arg_roles, const std::string& arg_new_tablespacename, bool arg_nowait)
+AlterTableMoveAllStmt::AlterTableMoveAllStmt([[maybe_unused]] allocator_type alloc)
+    : orig_tablespacename(alloc)
+    , objtype()
+    , roles(alloc)
+    , new_tablespacename(alloc)
+    , nowait(false)
+{}
+
+AlterTableMoveAllStmt::AlterTableMoveAllStmt(const std::pmr::string& arg_orig_tablespacename, ::pg_query::ObjectType&& arg_objtype, std::pmr::vector<::pg_query::Node> arg_roles, const std::pmr::string& arg_new_tablespacename, bool arg_nowait)
     : orig_tablespacename(arg_orig_tablespacename)
     , objtype(std::move(arg_objtype))
     , roles(std::move(arg_roles))
@@ -15049,7 +16267,14 @@ SecLabelStmt::SecLabelStmt()
     , label()
 {}
 
-SecLabelStmt::SecLabelStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::string& arg_provider, const std::string& arg_label)
+SecLabelStmt::SecLabelStmt([[maybe_unused]] allocator_type alloc)
+    : objtype()
+    , object()
+    , provider(alloc)
+    , label(alloc)
+{}
+
+SecLabelStmt::SecLabelStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::pmr::string& arg_provider, const std::pmr::string& arg_label)
     : objtype(std::move(arg_objtype))
     , object(std::move(arg_object))
     , provider(arg_provider)
@@ -15122,7 +16347,13 @@ CreateForeignTableStmt::CreateForeignTableStmt()
     , options()
 {}
 
-CreateForeignTableStmt::CreateForeignTableStmt(::pg_query::CreateStmt&& arg_base_stmt, const std::string& arg_servername, std::vector<::pg_query::Node> arg_options)
+CreateForeignTableStmt::CreateForeignTableStmt([[maybe_unused]] allocator_type alloc)
+    : base_stmt(alloc)
+    , servername(alloc)
+    , options(alloc)
+{}
+
+CreateForeignTableStmt::CreateForeignTableStmt(::pg_query::CreateStmt&& arg_base_stmt, const std::pmr::string& arg_servername, std::pmr::vector<::pg_query::Node> arg_options)
     : base_stmt(std::move(arg_base_stmt))
     , servername(arg_servername)
     , options(std::move(arg_options))
@@ -15202,7 +16433,16 @@ ImportForeignSchemaStmt::ImportForeignSchemaStmt()
     , options()
 {}
 
-ImportForeignSchemaStmt::ImportForeignSchemaStmt(const std::string& arg_server_name, const std::string& arg_remote_schema, const std::string& arg_local_schema, ::pg_query::ImportForeignSchemaType&& arg_list_type, std::vector<::pg_query::Node> arg_table_list, std::vector<::pg_query::Node> arg_options)
+ImportForeignSchemaStmt::ImportForeignSchemaStmt([[maybe_unused]] allocator_type alloc)
+    : server_name(alloc)
+    , remote_schema(alloc)
+    , local_schema(alloc)
+    , list_type()
+    , table_list(alloc)
+    , options(alloc)
+{}
+
+ImportForeignSchemaStmt::ImportForeignSchemaStmt(const std::pmr::string& arg_server_name, const std::pmr::string& arg_remote_schema, const std::pmr::string& arg_local_schema, ::pg_query::ImportForeignSchemaType&& arg_list_type, std::pmr::vector<::pg_query::Node> arg_table_list, std::pmr::vector<::pg_query::Node> arg_options)
     : server_name(arg_server_name)
     , remote_schema(arg_remote_schema)
     , local_schema(arg_local_schema)
@@ -15303,7 +16543,13 @@ CreateExtensionStmt::CreateExtensionStmt()
     , options()
 {}
 
-CreateExtensionStmt::CreateExtensionStmt(const std::string& arg_extname, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options)
+CreateExtensionStmt::CreateExtensionStmt([[maybe_unused]] allocator_type alloc)
+    : extname(alloc)
+    , if_not_exists(false)
+    , options(alloc)
+{}
+
+CreateExtensionStmt::CreateExtensionStmt(const std::pmr::string& arg_extname, bool arg_if_not_exists, std::pmr::vector<::pg_query::Node> arg_options)
     : extname(arg_extname)
     , if_not_exists(arg_if_not_exists)
     , options(std::move(arg_options))
@@ -15379,7 +16625,12 @@ AlterExtensionStmt::AlterExtensionStmt()
     , options()
 {}
 
-AlterExtensionStmt::AlterExtensionStmt(const std::string& arg_extname, std::vector<::pg_query::Node> arg_options)
+AlterExtensionStmt::AlterExtensionStmt([[maybe_unused]] allocator_type alloc)
+    : extname(alloc)
+    , options(alloc)
+{}
+
+AlterExtensionStmt::AlterExtensionStmt(const std::pmr::string& arg_extname, std::pmr::vector<::pg_query::Node> arg_options)
     : extname(arg_extname)
     , options(std::move(arg_options))
 {}
@@ -15452,7 +16703,14 @@ AlterExtensionContentsStmt::AlterExtensionContentsStmt()
     , object()
 {}
 
-AlterExtensionContentsStmt::AlterExtensionContentsStmt(const std::string& arg_extname, int32_t arg_action, ::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object)
+AlterExtensionContentsStmt::AlterExtensionContentsStmt([[maybe_unused]] allocator_type alloc)
+    : extname(alloc)
+    , action((int32_t)0ll)
+    , objtype()
+    , object()
+{}
+
+AlterExtensionContentsStmt::AlterExtensionContentsStmt(const std::pmr::string& arg_extname, int32_t arg_action, ::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object)
     : extname(arg_extname)
     , action(arg_action)
     , objtype(std::move(arg_objtype))
@@ -15526,7 +16784,14 @@ CreateEventTrigStmt::CreateEventTrigStmt()
     , funcname()
 {}
 
-CreateEventTrigStmt::CreateEventTrigStmt(const std::string& arg_trigname, const std::string& arg_eventname, std::vector<::pg_query::Node> arg_whenclause, std::vector<::pg_query::Node> arg_funcname)
+CreateEventTrigStmt::CreateEventTrigStmt([[maybe_unused]] allocator_type alloc)
+    : trigname(alloc)
+    , eventname(alloc)
+    , whenclause(alloc)
+    , funcname(alloc)
+{}
+
+CreateEventTrigStmt::CreateEventTrigStmt(const std::pmr::string& arg_trigname, const std::pmr::string& arg_eventname, std::pmr::vector<::pg_query::Node> arg_whenclause, std::pmr::vector<::pg_query::Node> arg_funcname)
     : trigname(arg_trigname)
     , eventname(arg_eventname)
     , whenclause(std::move(arg_whenclause))
@@ -15616,7 +16881,12 @@ AlterEventTrigStmt::AlterEventTrigStmt()
     , tgenabled()
 {}
 
-AlterEventTrigStmt::AlterEventTrigStmt(const std::string& arg_trigname, const std::string& arg_tgenabled)
+AlterEventTrigStmt::AlterEventTrigStmt([[maybe_unused]] allocator_type alloc)
+    : trigname(alloc)
+    , tgenabled(alloc)
+{}
+
+AlterEventTrigStmt::AlterEventTrigStmt(const std::pmr::string& arg_trigname, const std::pmr::string& arg_tgenabled)
     : trigname(arg_trigname)
     , tgenabled(arg_tgenabled)
 {}
@@ -15674,6 +16944,12 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const AlterEvent
 }
 
 RefreshMatViewStmt::RefreshMatViewStmt()
+    : concurrent(false)
+    , skip_data(false)
+    , relation(nullptr)
+{}
+
+RefreshMatViewStmt::RefreshMatViewStmt([[maybe_unused]] allocator_type alloc)
     : concurrent(false)
     , skip_data(false)
     , relation(nullptr)
@@ -15747,7 +17023,12 @@ ReplicaIdentityStmt::ReplicaIdentityStmt()
     , name()
 {}
 
-ReplicaIdentityStmt::ReplicaIdentityStmt(const std::string& arg_identity_type, const std::string& arg_name)
+ReplicaIdentityStmt::ReplicaIdentityStmt([[maybe_unused]] allocator_type alloc)
+    : identity_type(alloc)
+    , name(alloc)
+{}
+
+ReplicaIdentityStmt::ReplicaIdentityStmt(const std::pmr::string& arg_identity_type, const std::pmr::string& arg_name)
     : identity_type(arg_identity_type)
     , name(arg_name)
 {}
@@ -15805,6 +17086,10 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ReplicaIde
 }
 
 AlterSystemStmt::AlterSystemStmt()
+    : setstmt(nullptr)
+{}
+
+AlterSystemStmt::AlterSystemStmt([[maybe_unused]] allocator_type alloc)
     : setstmt(nullptr)
 {}
 
@@ -15871,7 +17156,17 @@ CreatePolicyStmt::CreatePolicyStmt()
     , with_check()
 {}
 
-CreatePolicyStmt::CreatePolicyStmt(const std::string& arg_policy_name, std::unique_ptr<::pg_query::RangeVar> arg_table, const std::string& arg_cmd_name, bool arg_permissive, std::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check)
+CreatePolicyStmt::CreatePolicyStmt([[maybe_unused]] allocator_type alloc)
+    : policy_name(alloc)
+    , table(nullptr)
+    , cmd_name(alloc)
+    , permissive(false)
+    , roles(alloc)
+    , qual()
+    , with_check()
+{}
+
+CreatePolicyStmt::CreatePolicyStmt(const std::pmr::string& arg_policy_name, std::unique_ptr<::pg_query::RangeVar> arg_table, const std::pmr::string& arg_cmd_name, bool arg_permissive, std::pmr::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check)
     : policy_name(arg_policy_name)
     , table(arg_table.release())
     , cmd_name(arg_cmd_name)
@@ -15971,7 +17266,15 @@ AlterPolicyStmt::AlterPolicyStmt()
     , with_check()
 {}
 
-AlterPolicyStmt::AlterPolicyStmt(const std::string& arg_policy_name, std::unique_ptr<::pg_query::RangeVar> arg_table, std::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check)
+AlterPolicyStmt::AlterPolicyStmt([[maybe_unused]] allocator_type alloc)
+    : policy_name(alloc)
+    , table(nullptr)
+    , roles(alloc)
+    , qual()
+    , with_check()
+{}
+
+AlterPolicyStmt::AlterPolicyStmt(const std::pmr::string& arg_policy_name, std::unique_ptr<::pg_query::RangeVar> arg_table, std::pmr::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check)
     : policy_name(arg_policy_name)
     , table(arg_table.release())
     , roles(std::move(arg_roles))
@@ -16061,7 +17364,15 @@ CreateTransformStmt::CreateTransformStmt()
     , tosql(nullptr)
 {}
 
-CreateTransformStmt::CreateTransformStmt(bool arg_replace, std::unique_ptr<::pg_query::TypeName> arg_type_name, const std::string& arg_lang, std::unique_ptr<::pg_query::ObjectWithArgs> arg_fromsql, std::unique_ptr<::pg_query::ObjectWithArgs> arg_tosql)
+CreateTransformStmt::CreateTransformStmt([[maybe_unused]] allocator_type alloc)
+    : replace(false)
+    , type_name(nullptr)
+    , lang(alloc)
+    , fromsql(nullptr)
+    , tosql(nullptr)
+{}
+
+CreateTransformStmt::CreateTransformStmt(bool arg_replace, std::unique_ptr<::pg_query::TypeName> arg_type_name, const std::pmr::string& arg_lang, std::unique_ptr<::pg_query::ObjectWithArgs> arg_fromsql, std::unique_ptr<::pg_query::ObjectWithArgs> arg_tosql)
     : replace(arg_replace)
     , type_name(arg_type_name.release())
     , lang(arg_lang)
@@ -16142,7 +17453,13 @@ CreateAmStmt::CreateAmStmt()
     , amtype()
 {}
 
-CreateAmStmt::CreateAmStmt(const std::string& arg_amname, std::vector<::pg_query::Node> arg_handler_name, const std::string& arg_amtype)
+CreateAmStmt::CreateAmStmt([[maybe_unused]] allocator_type alloc)
+    : amname(alloc)
+    , handler_name(alloc)
+    , amtype(alloc)
+{}
+
+CreateAmStmt::CreateAmStmt(const std::pmr::string& arg_amname, std::pmr::vector<::pg_query::Node> arg_handler_name, const std::pmr::string& arg_amtype)
     : amname(arg_amname)
     , handler_name(std::move(arg_handler_name))
     , amtype(arg_amtype)
@@ -16220,7 +17537,14 @@ CreatePublicationStmt::CreatePublicationStmt()
     , for_all_tables(false)
 {}
 
-CreatePublicationStmt::CreatePublicationStmt(const std::string& arg_pubname, std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables)
+CreatePublicationStmt::CreatePublicationStmt([[maybe_unused]] allocator_type alloc)
+    : pubname(alloc)
+    , options(alloc)
+    , tables(alloc)
+    , for_all_tables(false)
+{}
+
+CreatePublicationStmt::CreatePublicationStmt(const std::pmr::string& arg_pubname, std::pmr::vector<::pg_query::Node> arg_options, std::pmr::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables)
     : pubname(arg_pubname)
     , options(std::move(arg_options))
     , tables(std::move(arg_tables))
@@ -16313,7 +17637,15 @@ AlterPublicationStmt::AlterPublicationStmt()
     , table_action()
 {}
 
-AlterPublicationStmt::AlterPublicationStmt(const std::string& arg_pubname, std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables, ::pg_query::DefElemAction&& arg_table_action)
+AlterPublicationStmt::AlterPublicationStmt([[maybe_unused]] allocator_type alloc)
+    : pubname(alloc)
+    , options(alloc)
+    , tables(alloc)
+    , for_all_tables(false)
+    , table_action()
+{}
+
+AlterPublicationStmt::AlterPublicationStmt(const std::pmr::string& arg_pubname, std::pmr::vector<::pg_query::Node> arg_options, std::pmr::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables, ::pg_query::DefElemAction&& arg_table_action)
     : pubname(arg_pubname)
     , options(std::move(arg_options))
     , tables(std::move(arg_tables))
@@ -16410,7 +17742,14 @@ CreateSubscriptionStmt::CreateSubscriptionStmt()
     , options()
 {}
 
-CreateSubscriptionStmt::CreateSubscriptionStmt(const std::string& arg_subname, const std::string& arg_conninfo, std::vector<::pg_query::Node> arg_publication, std::vector<::pg_query::Node> arg_options)
+CreateSubscriptionStmt::CreateSubscriptionStmt([[maybe_unused]] allocator_type alloc)
+    : subname(alloc)
+    , conninfo(alloc)
+    , publication(alloc)
+    , options(alloc)
+{}
+
+CreateSubscriptionStmt::CreateSubscriptionStmt(const std::pmr::string& arg_subname, const std::pmr::string& arg_conninfo, std::pmr::vector<::pg_query::Node> arg_publication, std::pmr::vector<::pg_query::Node> arg_options)
     : subname(arg_subname)
     , conninfo(arg_conninfo)
     , publication(std::move(arg_publication))
@@ -16503,7 +17842,15 @@ AlterSubscriptionStmt::AlterSubscriptionStmt()
     , options()
 {}
 
-AlterSubscriptionStmt::AlterSubscriptionStmt(::pg_query::AlterSubscriptionType&& arg_kind, const std::string& arg_subname, const std::string& arg_conninfo, std::vector<::pg_query::Node> arg_publication, std::vector<::pg_query::Node> arg_options)
+AlterSubscriptionStmt::AlterSubscriptionStmt([[maybe_unused]] allocator_type alloc)
+    : kind()
+    , subname(alloc)
+    , conninfo(alloc)
+    , publication(alloc)
+    , options(alloc)
+{}
+
+AlterSubscriptionStmt::AlterSubscriptionStmt(::pg_query::AlterSubscriptionType&& arg_kind, const std::pmr::string& arg_subname, const std::pmr::string& arg_conninfo, std::pmr::vector<::pg_query::Node> arg_publication, std::pmr::vector<::pg_query::Node> arg_options)
     : kind(std::move(arg_kind))
     , subname(arg_subname)
     , conninfo(arg_conninfo)
@@ -16599,7 +17946,13 @@ DropSubscriptionStmt::DropSubscriptionStmt()
     , behavior()
 {}
 
-DropSubscriptionStmt::DropSubscriptionStmt(const std::string& arg_subname, bool arg_missing_ok, ::pg_query::DropBehavior&& arg_behavior)
+DropSubscriptionStmt::DropSubscriptionStmt([[maybe_unused]] allocator_type alloc)
+    : subname(alloc)
+    , missing_ok(false)
+    , behavior()
+{}
+
+DropSubscriptionStmt::DropSubscriptionStmt(const std::pmr::string& arg_subname, bool arg_missing_ok, ::pg_query::DropBehavior&& arg_behavior)
     : subname(arg_subname)
     , missing_ok(arg_missing_ok)
     , behavior(std::move(arg_behavior))
@@ -16670,7 +18023,16 @@ CreateStatsStmt::CreateStatsStmt()
     , if_not_exists(false)
 {}
 
-CreateStatsStmt::CreateStatsStmt(std::vector<::pg_query::Node> arg_defnames, std::vector<::pg_query::Node> arg_stat_types, std::vector<::pg_query::Node> arg_exprs, std::vector<::pg_query::Node> arg_relations, const std::string& arg_stxcomment, bool arg_if_not_exists)
+CreateStatsStmt::CreateStatsStmt([[maybe_unused]] allocator_type alloc)
+    : defnames(alloc)
+    , stat_types(alloc)
+    , exprs(alloc)
+    , relations(alloc)
+    , stxcomment(alloc)
+    , if_not_exists(false)
+{}
+
+CreateStatsStmt::CreateStatsStmt(std::pmr::vector<::pg_query::Node> arg_defnames, std::pmr::vector<::pg_query::Node> arg_stat_types, std::pmr::vector<::pg_query::Node> arg_exprs, std::pmr::vector<::pg_query::Node> arg_relations, const std::pmr::string& arg_stxcomment, bool arg_if_not_exists)
     : defnames(std::move(arg_defnames))
     , stat_types(std::move(arg_stat_types))
     , exprs(std::move(arg_exprs))
@@ -16787,7 +18149,11 @@ AlterCollationStmt::AlterCollationStmt()
     : collname()
 {}
 
-AlterCollationStmt::AlterCollationStmt(std::vector<::pg_query::Node> arg_collname)
+AlterCollationStmt::AlterCollationStmt([[maybe_unused]] allocator_type alloc)
+    : collname(alloc)
+{}
+
+AlterCollationStmt::AlterCollationStmt(std::pmr::vector<::pg_query::Node> arg_collname)
     : collname(std::move(arg_collname))
 {}
 
@@ -16849,6 +18215,11 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const AlterColla
 }
 
 CallStmt::CallStmt()
+    : funccall(nullptr)
+    , funcexpr(nullptr)
+{}
+
+CallStmt::CallStmt([[maybe_unused]] allocator_type alloc)
     : funccall(nullptr)
     , funcexpr(nullptr)
 {}
@@ -16918,7 +18289,13 @@ AlterStatsStmt::AlterStatsStmt()
     , missing_ok(false)
 {}
 
-AlterStatsStmt::AlterStatsStmt(std::vector<::pg_query::Node> arg_defnames, int32_t arg_stxstattarget, bool arg_missing_ok)
+AlterStatsStmt::AlterStatsStmt([[maybe_unused]] allocator_type alloc)
+    : defnames(alloc)
+    , stxstattarget((int32_t)0ll)
+    , missing_ok(false)
+{}
+
+AlterStatsStmt::AlterStatsStmt(std::pmr::vector<::pg_query::Node> arg_defnames, int32_t arg_stxstattarget, bool arg_missing_ok)
     : defnames(std::move(arg_defnames))
     , stxstattarget(arg_stxstattarget)
     , missing_ok(arg_missing_ok)
@@ -16997,7 +18374,15 @@ A_Expr::A_Expr()
     , location((int32_t)0ll)
 {}
 
-A_Expr::A_Expr(::pg_query::A_Expr_Kind&& arg_kind, std::vector<::pg_query::Node> arg_name, ::pg_query::Node&& arg_lexpr, ::pg_query::Node&& arg_rexpr, int32_t arg_location)
+A_Expr::A_Expr([[maybe_unused]] allocator_type alloc)
+    : kind()
+    , name(alloc)
+    , lexpr()
+    , rexpr()
+    , location((int32_t)0ll)
+{}
+
+A_Expr::A_Expr(::pg_query::A_Expr_Kind&& arg_kind, std::pmr::vector<::pg_query::Node> arg_name, ::pg_query::Node&& arg_lexpr, ::pg_query::Node&& arg_rexpr, int32_t arg_location)
     : kind(std::move(arg_kind))
     , name(std::move(arg_name))
     , lexpr(std::move(arg_lexpr))
@@ -17083,7 +18468,12 @@ ColumnRef::ColumnRef()
     , location((int32_t)0ll)
 {}
 
-ColumnRef::ColumnRef(std::vector<::pg_query::Node> arg_fields, int32_t arg_location)
+ColumnRef::ColumnRef([[maybe_unused]] allocator_type alloc)
+    : fields(alloc)
+    , location((int32_t)0ll)
+{}
+
+ColumnRef::ColumnRef(std::pmr::vector<::pg_query::Node> arg_fields, int32_t arg_location)
     : fields(std::move(arg_fields))
     , location(arg_location)
 {}
@@ -17154,6 +18544,11 @@ ParamRef::ParamRef()
     , location((int32_t)0ll)
 {}
 
+ParamRef::ParamRef([[maybe_unused]] allocator_type alloc)
+    : number((int32_t)0ll)
+    , location((int32_t)0ll)
+{}
+
 ParamRef::ParamRef(int32_t arg_number, int32_t arg_location)
     : number(arg_number)
     , location(arg_location)
@@ -17212,6 +18607,11 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ParamRef& 
 }
 
 A_Const::A_Const()
+    : val()
+    , location((int32_t)0ll)
+{}
+
+A_Const::A_Const([[maybe_unused]] allocator_type alloc)
     : val()
     , location((int32_t)0ll)
 {}
@@ -17286,7 +18686,20 @@ FuncCall::FuncCall()
     , location((int32_t)0ll)
 {}
 
-FuncCall::FuncCall(std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_agg_order, ::pg_query::Node&& arg_agg_filter, bool arg_agg_within_group, bool arg_agg_star, bool arg_agg_distinct, bool arg_func_variadic, std::unique_ptr<::pg_query::WindowDef> arg_over, int32_t arg_location)
+FuncCall::FuncCall([[maybe_unused]] allocator_type alloc)
+    : funcname(alloc)
+    , args(alloc)
+    , agg_order(alloc)
+    , agg_filter()
+    , agg_within_group(false)
+    , agg_star(false)
+    , agg_distinct(false)
+    , func_variadic(false)
+    , over(nullptr)
+    , location((int32_t)0ll)
+{}
+
+FuncCall::FuncCall(std::pmr::vector<::pg_query::Node> arg_funcname, std::pmr::vector<::pg_query::Node> arg_args, std::pmr::vector<::pg_query::Node> arg_agg_order, ::pg_query::Node&& arg_agg_filter, bool arg_agg_within_group, bool arg_agg_star, bool arg_agg_distinct, bool arg_func_variadic, std::unique_ptr<::pg_query::WindowDef> arg_over, int32_t arg_location)
     : funcname(std::move(arg_funcname))
     , args(std::move(arg_args))
     , agg_order(std::move(arg_agg_order))
@@ -17414,6 +18827,9 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const FuncCall& 
 A_Star::A_Star()
 {}
 
+A_Star::A_Star([[maybe_unused]] allocator_type alloc)
+{}
+
 A_Star::A_Star(A_Star&& other) noexcept
 {}
 
@@ -17459,6 +18875,12 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const A_Star& va
 }
 
 A_Indices::A_Indices()
+    : is_slice(false)
+    , lidx()
+    , uidx()
+{}
+
+A_Indices::A_Indices([[maybe_unused]] allocator_type alloc)
     : is_slice(false)
     , lidx()
     , uidx()
@@ -17531,7 +18953,12 @@ A_Indirection::A_Indirection()
     , indirection()
 {}
 
-A_Indirection::A_Indirection(::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_indirection)
+A_Indirection::A_Indirection([[maybe_unused]] allocator_type alloc)
+    : arg()
+    , indirection(alloc)
+{}
+
+A_Indirection::A_Indirection(::pg_query::Node&& arg_arg, std::pmr::vector<::pg_query::Node> arg_indirection)
     : arg(std::move(arg_arg))
     , indirection(std::move(arg_indirection))
 {}
@@ -17602,7 +19029,12 @@ A_ArrayExpr::A_ArrayExpr()
     , location((int32_t)0ll)
 {}
 
-A_ArrayExpr::A_ArrayExpr(std::vector<::pg_query::Node> arg_elements, int32_t arg_location)
+A_ArrayExpr::A_ArrayExpr([[maybe_unused]] allocator_type alloc)
+    : elements(alloc)
+    , location((int32_t)0ll)
+{}
+
+A_ArrayExpr::A_ArrayExpr(std::pmr::vector<::pg_query::Node> arg_elements, int32_t arg_location)
     : elements(std::move(arg_elements))
     , location(arg_location)
 {}
@@ -17675,7 +19107,14 @@ ResTarget::ResTarget()
     , location((int32_t)0ll)
 {}
 
-ResTarget::ResTarget(const std::string& arg_name, std::vector<::pg_query::Node> arg_indirection, ::pg_query::Node&& arg_val, int32_t arg_location)
+ResTarget::ResTarget([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+    , indirection(alloc)
+    , val()
+    , location((int32_t)0ll)
+{}
+
+ResTarget::ResTarget(const std::pmr::string& arg_name, std::pmr::vector<::pg_query::Node> arg_indirection, ::pg_query::Node&& arg_val, int32_t arg_location)
     : name(arg_name)
     , indirection(std::move(arg_indirection))
     , val(std::move(arg_val))
@@ -17757,6 +19196,12 @@ MultiAssignRef::MultiAssignRef()
     , ncolumns((int32_t)0ll)
 {}
 
+MultiAssignRef::MultiAssignRef([[maybe_unused]] allocator_type alloc)
+    : source()
+    , colno((int32_t)0ll)
+    , ncolumns((int32_t)0ll)
+{}
+
 MultiAssignRef::MultiAssignRef(::pg_query::Node&& arg_source, int32_t arg_colno, int32_t arg_ncolumns)
     : source(std::move(arg_source))
     , colno(arg_colno)
@@ -17820,6 +19265,12 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const MultiAssig
 }
 
 TypeCast::TypeCast()
+    : arg()
+    , type_name(nullptr)
+    , location((int32_t)0ll)
+{}
+
+TypeCast::TypeCast([[maybe_unused]] allocator_type alloc)
     : arg()
     , type_name(nullptr)
     , location((int32_t)0ll)
@@ -17894,7 +19345,13 @@ CollateClause::CollateClause()
     , location((int32_t)0ll)
 {}
 
-CollateClause::CollateClause(::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_collname, int32_t arg_location)
+CollateClause::CollateClause([[maybe_unused]] allocator_type alloc)
+    : arg()
+    , collname(alloc)
+    , location((int32_t)0ll)
+{}
+
+CollateClause::CollateClause(::pg_query::Node&& arg_arg, std::pmr::vector<::pg_query::Node> arg_collname, int32_t arg_location)
     : arg(std::move(arg_arg))
     , collname(std::move(arg_collname))
     , location(arg_location)
@@ -17973,7 +19430,15 @@ SortBy::SortBy()
     , location((int32_t)0ll)
 {}
 
-SortBy::SortBy(::pg_query::Node&& arg_node, ::pg_query::SortByDir&& arg_sortby_dir, ::pg_query::SortByNulls&& arg_sortby_nulls, std::vector<::pg_query::Node> arg_use_op, int32_t arg_location)
+SortBy::SortBy([[maybe_unused]] allocator_type alloc)
+    : node()
+    , sortby_dir()
+    , sortby_nulls()
+    , use_op(alloc)
+    , location((int32_t)0ll)
+{}
+
+SortBy::SortBy(::pg_query::Node&& arg_node, ::pg_query::SortByDir&& arg_sortby_dir, ::pg_query::SortByNulls&& arg_sortby_nulls, std::pmr::vector<::pg_query::Node> arg_use_op, int32_t arg_location)
     : node(std::move(arg_node))
     , sortby_dir(std::move(arg_sortby_dir))
     , sortby_nulls(std::move(arg_sortby_nulls))
@@ -18065,7 +19530,18 @@ WindowDef::WindowDef()
     , location((int32_t)0ll)
 {}
 
-WindowDef::WindowDef(const std::string& arg_name, const std::string& arg_refname, std::vector<::pg_query::Node> arg_partition_clause, std::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, int32_t arg_location)
+WindowDef::WindowDef([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+    , refname(alloc)
+    , partition_clause(alloc)
+    , order_clause(alloc)
+    , frame_options((int32_t)0ll)
+    , start_offset()
+    , end_offset()
+    , location((int32_t)0ll)
+{}
+
+WindowDef::WindowDef(const std::pmr::string& arg_name, const std::pmr::string& arg_refname, std::pmr::vector<::pg_query::Node> arg_partition_clause, std::pmr::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, int32_t arg_location)
     : name(arg_name)
     , refname(arg_refname)
     , partition_clause(std::move(arg_partition_clause))
@@ -18176,6 +19652,12 @@ RangeSubselect::RangeSubselect()
     , alias(nullptr)
 {}
 
+RangeSubselect::RangeSubselect([[maybe_unused]] allocator_type alloc)
+    : lateral(false)
+    , subquery()
+    , alias(nullptr)
+{}
+
 RangeSubselect::RangeSubselect(bool arg_lateral, ::pg_query::Node&& arg_subquery, std::unique_ptr<::pg_query::Alias> arg_alias)
     : lateral(arg_lateral)
     , subquery(std::move(arg_subquery))
@@ -18248,7 +19730,16 @@ RangeFunction::RangeFunction()
     , coldeflist()
 {}
 
-RangeFunction::RangeFunction(bool arg_lateral, bool arg_ordinality, bool arg_is_rowsfrom, std::vector<::pg_query::Node> arg_functions, std::unique_ptr<::pg_query::Alias> arg_alias, std::vector<::pg_query::Node> arg_coldeflist)
+RangeFunction::RangeFunction([[maybe_unused]] allocator_type alloc)
+    : lateral(false)
+    , ordinality(false)
+    , is_rowsfrom(false)
+    , functions(alloc)
+    , alias(nullptr)
+    , coldeflist(alloc)
+{}
+
+RangeFunction::RangeFunction(bool arg_lateral, bool arg_ordinality, bool arg_is_rowsfrom, std::pmr::vector<::pg_query::Node> arg_functions, std::unique_ptr<::pg_query::Alias> arg_alias, std::pmr::vector<::pg_query::Node> arg_coldeflist)
     : lateral(arg_lateral)
     , ordinality(arg_ordinality)
     , is_rowsfrom(arg_is_rowsfrom)
@@ -18352,7 +19843,15 @@ RangeTableSample::RangeTableSample()
     , location((int32_t)0ll)
 {}
 
-RangeTableSample::RangeTableSample(::pg_query::Node&& arg_relation, std::vector<::pg_query::Node> arg_method, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable, int32_t arg_location)
+RangeTableSample::RangeTableSample([[maybe_unused]] allocator_type alloc)
+    : relation()
+    , method(alloc)
+    , args(alloc)
+    , repeatable()
+    , location((int32_t)0ll)
+{}
+
+RangeTableSample::RangeTableSample(::pg_query::Node&& arg_relation, std::pmr::vector<::pg_query::Node> arg_method, std::pmr::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable, int32_t arg_location)
     : relation(std::move(arg_relation))
     , method(std::move(arg_method))
     , args(std::move(arg_args))
@@ -18452,7 +19951,17 @@ RangeTableFunc::RangeTableFunc()
     , location((int32_t)0ll)
 {}
 
-RangeTableFunc::RangeTableFunc(bool arg_lateral, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::vector<::pg_query::Node> arg_namespaces, std::vector<::pg_query::Node> arg_columns, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_location)
+RangeTableFunc::RangeTableFunc([[maybe_unused]] allocator_type alloc)
+    : lateral(false)
+    , docexpr()
+    , rowexpr()
+    , namespaces(alloc)
+    , columns(alloc)
+    , alias(nullptr)
+    , location((int32_t)0ll)
+{}
+
+RangeTableFunc::RangeTableFunc(bool arg_lateral, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::pmr::vector<::pg_query::Node> arg_namespaces, std::pmr::vector<::pg_query::Node> arg_columns, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_location)
     : lateral(arg_lateral)
     , docexpr(std::move(arg_docexpr))
     , rowexpr(std::move(arg_rowexpr))
@@ -18563,7 +20072,17 @@ RangeTableFuncCol::RangeTableFuncCol()
     , location((int32_t)0ll)
 {}
 
-RangeTableFuncCol::RangeTableFuncCol(const std::string& arg_colname, std::unique_ptr<::pg_query::TypeName> arg_type_name, bool arg_for_ordinality, bool arg_is_not_null, ::pg_query::Node&& arg_colexpr, ::pg_query::Node&& arg_coldefexpr, int32_t arg_location)
+RangeTableFuncCol::RangeTableFuncCol([[maybe_unused]] allocator_type alloc)
+    : colname(alloc)
+    , type_name(nullptr)
+    , for_ordinality(false)
+    , is_not_null(false)
+    , colexpr()
+    , coldefexpr()
+    , location((int32_t)0ll)
+{}
+
+RangeTableFuncCol::RangeTableFuncCol(const std::pmr::string& arg_colname, std::unique_ptr<::pg_query::TypeName> arg_type_name, bool arg_for_ordinality, bool arg_is_not_null, ::pg_query::Node&& arg_colexpr, ::pg_query::Node&& arg_coldefexpr, int32_t arg_location)
     : colname(arg_colname)
     , type_name(arg_type_name.release())
     , for_ordinality(arg_for_ordinality)
@@ -18657,7 +20176,18 @@ TypeName::TypeName()
     , location((int32_t)0ll)
 {}
 
-TypeName::TypeName(std::vector<::pg_query::Node> arg_names, uint32_t arg_type_oid, bool arg_setof, bool arg_pct_type, std::vector<::pg_query::Node> arg_typmods, int32_t arg_typemod, std::vector<::pg_query::Node> arg_array_bounds, int32_t arg_location)
+TypeName::TypeName([[maybe_unused]] allocator_type alloc)
+    : names(alloc)
+    , type_oid((uint32_t)0ull)
+    , setof(false)
+    , pct_type(false)
+    , typmods(alloc)
+    , typemod((int32_t)0ll)
+    , array_bounds(alloc)
+    , location((int32_t)0ll)
+{}
+
+TypeName::TypeName(std::pmr::vector<::pg_query::Node> arg_names, uint32_t arg_type_oid, bool arg_setof, bool arg_pct_type, std::pmr::vector<::pg_query::Node> arg_typmods, int32_t arg_typemod, std::pmr::vector<::pg_query::Node> arg_array_bounds, int32_t arg_location)
     : names(std::move(arg_names))
     , type_oid(arg_type_oid)
     , setof(arg_setof)
@@ -18791,7 +20321,27 @@ ColumnDef::ColumnDef()
     , location((int32_t)0ll)
 {}
 
-ColumnDef::ColumnDef(const std::string& arg_colname, std::unique_ptr<::pg_query::TypeName> arg_type_name, int32_t arg_inhcount, bool arg_is_local, bool arg_is_not_null, bool arg_is_from_type, const std::string& arg_storage, ::pg_query::Node&& arg_raw_default, ::pg_query::Node&& arg_cooked_default, const std::string& arg_identity, std::unique_ptr<::pg_query::RangeVar> arg_identity_sequence, const std::string& arg_generated, std::unique_ptr<::pg_query::CollateClause> arg_coll_clause, uint32_t arg_coll_oid, std::vector<::pg_query::Node> arg_constraints, std::vector<::pg_query::Node> arg_fdwoptions, int32_t arg_location)
+ColumnDef::ColumnDef([[maybe_unused]] allocator_type alloc)
+    : colname(alloc)
+    , type_name(nullptr)
+    , inhcount((int32_t)0ll)
+    , is_local(false)
+    , is_not_null(false)
+    , is_from_type(false)
+    , storage(alloc)
+    , raw_default()
+    , cooked_default()
+    , identity(alloc)
+    , identity_sequence(nullptr)
+    , generated(alloc)
+    , coll_clause(nullptr)
+    , coll_oid((uint32_t)0ull)
+    , constraints(alloc)
+    , fdwoptions(alloc)
+    , location((int32_t)0ll)
+{}
+
+ColumnDef::ColumnDef(const std::pmr::string& arg_colname, std::unique_ptr<::pg_query::TypeName> arg_type_name, int32_t arg_inhcount, bool arg_is_local, bool arg_is_not_null, bool arg_is_from_type, const std::pmr::string& arg_storage, ::pg_query::Node&& arg_raw_default, ::pg_query::Node&& arg_cooked_default, const std::pmr::string& arg_identity, std::unique_ptr<::pg_query::RangeVar> arg_identity_sequence, const std::pmr::string& arg_generated, std::unique_ptr<::pg_query::CollateClause> arg_coll_clause, uint32_t arg_coll_oid, std::pmr::vector<::pg_query::Node> arg_constraints, std::pmr::vector<::pg_query::Node> arg_fdwoptions, int32_t arg_location)
     : colname(arg_colname)
     , type_name(arg_type_name.release())
     , inhcount(arg_inhcount)
@@ -18955,7 +20505,18 @@ IndexElem::IndexElem()
     , nulls_ordering()
 {}
 
-IndexElem::IndexElem(const std::string& arg_name, ::pg_query::Node&& arg_expr, const std::string& arg_indexcolname, std::vector<::pg_query::Node> arg_collation, std::vector<::pg_query::Node> arg_opclass, std::vector<::pg_query::Node> arg_opclassopts, ::pg_query::SortByDir&& arg_ordering, ::pg_query::SortByNulls&& arg_nulls_ordering)
+IndexElem::IndexElem([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+    , expr()
+    , indexcolname(alloc)
+    , collation(alloc)
+    , opclass(alloc)
+    , opclassopts(alloc)
+    , ordering()
+    , nulls_ordering()
+{}
+
+IndexElem::IndexElem(const std::pmr::string& arg_name, ::pg_query::Node&& arg_expr, const std::pmr::string& arg_indexcolname, std::pmr::vector<::pg_query::Node> arg_collation, std::pmr::vector<::pg_query::Node> arg_opclass, std::pmr::vector<::pg_query::Node> arg_opclassopts, ::pg_query::SortByDir&& arg_ordering, ::pg_query::SortByNulls&& arg_nulls_ordering)
     : name(arg_name)
     , expr(std::move(arg_expr))
     , indexcolname(arg_indexcolname)
@@ -19100,7 +20661,38 @@ Constraint::Constraint()
     , initially_valid(false)
 {}
 
-Constraint::Constraint(::pg_query::ConstrType&& arg_contype, const std::string& arg_conname, bool arg_deferrable, bool arg_initdeferred, int32_t arg_location, bool arg_is_no_inherit, ::pg_query::Node&& arg_raw_expr, const std::string& arg_cooked_expr, const std::string& arg_generated_when, std::vector<::pg_query::Node> arg_keys, std::vector<::pg_query::Node> arg_including, std::vector<::pg_query::Node> arg_exclusions, std::vector<::pg_query::Node> arg_options, const std::string& arg_indexname, const std::string& arg_indexspace, bool arg_reset_default_tblspc, const std::string& arg_access_method, ::pg_query::Node&& arg_where_clause, std::unique_ptr<::pg_query::RangeVar> arg_pktable, std::vector<::pg_query::Node> arg_fk_attrs, std::vector<::pg_query::Node> arg_pk_attrs, const std::string& arg_fk_matchtype, const std::string& arg_fk_upd_action, const std::string& arg_fk_del_action, std::vector<::pg_query::Node> arg_old_conpfeqop, uint32_t arg_old_pktable_oid, bool arg_skip_validation, bool arg_initially_valid)
+Constraint::Constraint([[maybe_unused]] allocator_type alloc)
+    : contype()
+    , conname(alloc)
+    , deferrable(false)
+    , initdeferred(false)
+    , location((int32_t)0ll)
+    , is_no_inherit(false)
+    , raw_expr()
+    , cooked_expr(alloc)
+    , generated_when(alloc)
+    , keys(alloc)
+    , including(alloc)
+    , exclusions(alloc)
+    , options(alloc)
+    , indexname(alloc)
+    , indexspace(alloc)
+    , reset_default_tblspc(false)
+    , access_method(alloc)
+    , where_clause()
+    , pktable(nullptr)
+    , fk_attrs(alloc)
+    , pk_attrs(alloc)
+    , fk_matchtype(alloc)
+    , fk_upd_action(alloc)
+    , fk_del_action(alloc)
+    , old_conpfeqop(alloc)
+    , old_pktable_oid((uint32_t)0ull)
+    , skip_validation(false)
+    , initially_valid(false)
+{}
+
+Constraint::Constraint(::pg_query::ConstrType&& arg_contype, const std::pmr::string& arg_conname, bool arg_deferrable, bool arg_initdeferred, int32_t arg_location, bool arg_is_no_inherit, ::pg_query::Node&& arg_raw_expr, const std::pmr::string& arg_cooked_expr, const std::pmr::string& arg_generated_when, std::pmr::vector<::pg_query::Node> arg_keys, std::pmr::vector<::pg_query::Node> arg_including, std::pmr::vector<::pg_query::Node> arg_exclusions, std::pmr::vector<::pg_query::Node> arg_options, const std::pmr::string& arg_indexname, const std::pmr::string& arg_indexspace, bool arg_reset_default_tblspc, const std::pmr::string& arg_access_method, ::pg_query::Node&& arg_where_clause, std::unique_ptr<::pg_query::RangeVar> arg_pktable, std::pmr::vector<::pg_query::Node> arg_fk_attrs, std::pmr::vector<::pg_query::Node> arg_pk_attrs, const std::pmr::string& arg_fk_matchtype, const std::pmr::string& arg_fk_upd_action, const std::pmr::string& arg_fk_del_action, std::pmr::vector<::pg_query::Node> arg_old_conpfeqop, uint32_t arg_old_pktable_oid, bool arg_skip_validation, bool arg_initially_valid)
     : contype(std::move(arg_contype))
     , conname(arg_conname)
     , deferrable(arg_deferrable)
@@ -19359,7 +20951,15 @@ DefElem::DefElem()
     , location((int32_t)0ll)
 {}
 
-DefElem::DefElem(const std::string& arg_defnamespace, const std::string& arg_defname, ::pg_query::Node&& arg_arg, ::pg_query::DefElemAction&& arg_defaction, int32_t arg_location)
+DefElem::DefElem([[maybe_unused]] allocator_type alloc)
+    : defnamespace(alloc)
+    , defname(alloc)
+    , arg()
+    , defaction()
+    , location((int32_t)0ll)
+{}
+
+DefElem::DefElem(const std::pmr::string& arg_defnamespace, const std::pmr::string& arg_defname, ::pg_query::Node&& arg_arg, ::pg_query::DefElemAction&& arg_defaction, int32_t arg_location)
     : defnamespace(arg_defnamespace)
     , defname(arg_defname)
     , arg(std::move(arg_arg))
@@ -19470,7 +21070,46 @@ RangeTblEntry::RangeTblEntry()
     , security_quals()
 {}
 
-RangeTblEntry::RangeTblEntry(::pg_query::RTEKind&& arg_rtekind, uint32_t arg_relid, const std::string& arg_relkind, int32_t arg_rellockmode, std::unique_ptr<::pg_query::TableSampleClause> arg_tablesample, std::unique_ptr<::pg_query::Query> arg_subquery, bool arg_security_barrier, ::pg_query::JoinType&& arg_jointype, int32_t arg_joinmergedcols, std::vector<::pg_query::Node> arg_joinaliasvars, std::vector<::pg_query::Node> arg_joinleftcols, std::vector<::pg_query::Node> arg_joinrightcols, std::vector<::pg_query::Node> arg_functions, bool arg_funcordinality, std::unique_ptr<::pg_query::TableFunc> arg_tablefunc, std::vector<::pg_query::Node> arg_values_lists, const std::string& arg_ctename, uint32_t arg_ctelevelsup, bool arg_self_reference, std::vector<::pg_query::Node> arg_coltypes, std::vector<::pg_query::Node> arg_coltypmods, std::vector<::pg_query::Node> arg_colcollations, const std::string& arg_enrname, double arg_enrtuples, std::unique_ptr<::pg_query::Alias> arg_alias, std::unique_ptr<::pg_query::Alias> arg_eref, bool arg_lateral, bool arg_inh, bool arg_in_from_cl, uint32_t arg_required_perms, uint32_t arg_check_as_user, std::vector<uint64_t> arg_selected_cols, std::vector<uint64_t> arg_inserted_cols, std::vector<uint64_t> arg_updated_cols, std::vector<uint64_t> arg_extra_updated_cols, std::vector<::pg_query::Node> arg_security_quals)
+RangeTblEntry::RangeTblEntry([[maybe_unused]] allocator_type alloc)
+    : rtekind()
+    , relid((uint32_t)0ull)
+    , relkind(alloc)
+    , rellockmode((int32_t)0ll)
+    , tablesample(nullptr)
+    , subquery(nullptr)
+    , security_barrier(false)
+    , jointype()
+    , joinmergedcols((int32_t)0ll)
+    , joinaliasvars(alloc)
+    , joinleftcols(alloc)
+    , joinrightcols(alloc)
+    , functions(alloc)
+    , funcordinality(false)
+    , tablefunc(nullptr)
+    , values_lists(alloc)
+    , ctename(alloc)
+    , ctelevelsup((uint32_t)0ull)
+    , self_reference(false)
+    , coltypes(alloc)
+    , coltypmods(alloc)
+    , colcollations(alloc)
+    , enrname(alloc)
+    , enrtuples(0.0)
+    , alias(nullptr)
+    , eref(nullptr)
+    , lateral(false)
+    , inh(false)
+    , in_from_cl(false)
+    , required_perms((uint32_t)0ull)
+    , check_as_user((uint32_t)0ull)
+    , selected_cols(alloc)
+    , inserted_cols(alloc)
+    , updated_cols(alloc)
+    , extra_updated_cols(alloc)
+    , security_quals(alloc)
+{}
+
+RangeTblEntry::RangeTblEntry(::pg_query::RTEKind&& arg_rtekind, uint32_t arg_relid, const std::pmr::string& arg_relkind, int32_t arg_rellockmode, std::unique_ptr<::pg_query::TableSampleClause> arg_tablesample, std::unique_ptr<::pg_query::Query> arg_subquery, bool arg_security_barrier, ::pg_query::JoinType&& arg_jointype, int32_t arg_joinmergedcols, std::pmr::vector<::pg_query::Node> arg_joinaliasvars, std::pmr::vector<::pg_query::Node> arg_joinleftcols, std::pmr::vector<::pg_query::Node> arg_joinrightcols, std::pmr::vector<::pg_query::Node> arg_functions, bool arg_funcordinality, std::unique_ptr<::pg_query::TableFunc> arg_tablefunc, std::pmr::vector<::pg_query::Node> arg_values_lists, const std::pmr::string& arg_ctename, uint32_t arg_ctelevelsup, bool arg_self_reference, std::pmr::vector<::pg_query::Node> arg_coltypes, std::pmr::vector<::pg_query::Node> arg_coltypmods, std::pmr::vector<::pg_query::Node> arg_colcollations, const std::pmr::string& arg_enrname, double arg_enrtuples, std::unique_ptr<::pg_query::Alias> arg_alias, std::unique_ptr<::pg_query::Alias> arg_eref, bool arg_lateral, bool arg_inh, bool arg_in_from_cl, uint32_t arg_required_perms, uint32_t arg_check_as_user, std::pmr::vector<uint64_t> arg_selected_cols, std::pmr::vector<uint64_t> arg_inserted_cols, std::pmr::vector<uint64_t> arg_updated_cols, std::pmr::vector<uint64_t> arg_extra_updated_cols, std::pmr::vector<::pg_query::Node> arg_security_quals)
     : rtekind(std::move(arg_rtekind))
     , relid(arg_relid)
     , relkind(arg_relkind)
@@ -19829,7 +21468,17 @@ RangeTblFunction::RangeTblFunction()
     , funcparams()
 {}
 
-RangeTblFunction::RangeTblFunction(::pg_query::Node&& arg_funcexpr, int32_t arg_funccolcount, std::vector<::pg_query::Node> arg_funccolnames, std::vector<::pg_query::Node> arg_funccoltypes, std::vector<::pg_query::Node> arg_funccoltypmods, std::vector<::pg_query::Node> arg_funccolcollations, std::vector<uint64_t> arg_funcparams)
+RangeTblFunction::RangeTblFunction([[maybe_unused]] allocator_type alloc)
+    : funcexpr()
+    , funccolcount((int32_t)0ll)
+    , funccolnames(alloc)
+    , funccoltypes(alloc)
+    , funccoltypmods(alloc)
+    , funccolcollations(alloc)
+    , funcparams(alloc)
+{}
+
+RangeTblFunction::RangeTblFunction(::pg_query::Node&& arg_funcexpr, int32_t arg_funccolcount, std::pmr::vector<::pg_query::Node> arg_funccolnames, std::pmr::vector<::pg_query::Node> arg_funccoltypes, std::pmr::vector<::pg_query::Node> arg_funccoltypmods, std::pmr::vector<::pg_query::Node> arg_funccolcollations, std::pmr::vector<uint64_t> arg_funcparams)
     : funcexpr(std::move(arg_funcexpr))
     , funccolcount(arg_funccolcount)
     , funccolnames(std::move(arg_funccolnames))
@@ -19962,7 +21611,13 @@ TableSampleClause::TableSampleClause()
     , repeatable()
 {}
 
-TableSampleClause::TableSampleClause(uint32_t arg_tsmhandler, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable)
+TableSampleClause::TableSampleClause([[maybe_unused]] allocator_type alloc)
+    : tsmhandler((uint32_t)0ull)
+    , args(alloc)
+    , repeatable()
+{}
+
+TableSampleClause::TableSampleClause(uint32_t arg_tsmhandler, std::pmr::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable)
     : tsmhandler(arg_tsmhandler)
     , args(std::move(arg_args))
     , repeatable(std::move(arg_repeatable))
@@ -20041,7 +21696,15 @@ WithCheckOption::WithCheckOption()
     , cascaded(false)
 {}
 
-WithCheckOption::WithCheckOption(::pg_query::WCOKind&& arg_kind, const std::string& arg_relname, const std::string& arg_polname, ::pg_query::Node&& arg_qual, bool arg_cascaded)
+WithCheckOption::WithCheckOption([[maybe_unused]] allocator_type alloc)
+    : kind()
+    , relname(alloc)
+    , polname(alloc)
+    , qual()
+    , cascaded(false)
+{}
+
+WithCheckOption::WithCheckOption(::pg_query::WCOKind&& arg_kind, const std::pmr::string& arg_relname, const std::pmr::string& arg_polname, ::pg_query::Node&& arg_qual, bool arg_cascaded)
     : kind(std::move(arg_kind))
     , relname(arg_relname)
     , polname(arg_polname)
@@ -20114,6 +21777,14 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const WithCheckO
 }
 
 SortGroupClause::SortGroupClause()
+    : tle_sort_group_ref((uint32_t)0ull)
+    , eqop((uint32_t)0ull)
+    , sortop((uint32_t)0ull)
+    , nulls_first(false)
+    , hashable(false)
+{}
+
+SortGroupClause::SortGroupClause([[maybe_unused]] allocator_type alloc)
     : tle_sort_group_ref((uint32_t)0ull)
     , eqop((uint32_t)0ull)
     , sortop((uint32_t)0ull)
@@ -20199,7 +21870,13 @@ GroupingSet::GroupingSet()
     , location((int32_t)0ll)
 {}
 
-GroupingSet::GroupingSet(::pg_query::GroupingSetKind&& arg_kind, std::vector<::pg_query::Node> arg_content, int32_t arg_location)
+GroupingSet::GroupingSet([[maybe_unused]] allocator_type alloc)
+    : kind()
+    , content(alloc)
+    , location((int32_t)0ll)
+{}
+
+GroupingSet::GroupingSet(::pg_query::GroupingSetKind&& arg_kind, std::pmr::vector<::pg_query::Node> arg_content, int32_t arg_location)
     : kind(std::move(arg_kind))
     , content(std::move(arg_content))
     , location(arg_location)
@@ -20287,7 +21964,24 @@ WindowClause::WindowClause()
     , copied_order(false)
 {}
 
-WindowClause::WindowClause(const std::string& arg_name, const std::string& arg_refname, std::vector<::pg_query::Node> arg_partition_clause, std::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, uint32_t arg_start_in_range_func, uint32_t arg_end_in_range_func, uint32_t arg_in_range_coll, bool arg_in_range_asc, bool arg_in_range_nulls_first, uint32_t arg_winref, bool arg_copied_order)
+WindowClause::WindowClause([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+    , refname(alloc)
+    , partition_clause(alloc)
+    , order_clause(alloc)
+    , frame_options((int32_t)0ll)
+    , start_offset()
+    , end_offset()
+    , start_in_range_func((uint32_t)0ull)
+    , end_in_range_func((uint32_t)0ull)
+    , in_range_coll((uint32_t)0ull)
+    , in_range_asc(false)
+    , in_range_nulls_first(false)
+    , winref((uint32_t)0ull)
+    , copied_order(false)
+{}
+
+WindowClause::WindowClause(const std::pmr::string& arg_name, const std::pmr::string& arg_refname, std::pmr::vector<::pg_query::Node> arg_partition_clause, std::pmr::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, uint32_t arg_start_in_range_func, uint32_t arg_end_in_range_func, uint32_t arg_in_range_coll, bool arg_in_range_asc, bool arg_in_range_nulls_first, uint32_t arg_winref, bool arg_copied_order)
     : name(arg_name)
     , refname(arg_refname)
     , partition_clause(std::move(arg_partition_clause))
@@ -20428,7 +22122,13 @@ ObjectWithArgs::ObjectWithArgs()
     , args_unspecified(false)
 {}
 
-ObjectWithArgs::ObjectWithArgs(std::vector<::pg_query::Node> arg_objname, std::vector<::pg_query::Node> arg_objargs, bool arg_args_unspecified)
+ObjectWithArgs::ObjectWithArgs([[maybe_unused]] allocator_type alloc)
+    : objname(alloc)
+    , objargs(alloc)
+    , args_unspecified(false)
+{}
+
+ObjectWithArgs::ObjectWithArgs(std::pmr::vector<::pg_query::Node> arg_objname, std::pmr::vector<::pg_query::Node> arg_objargs, bool arg_args_unspecified)
     : objname(std::move(arg_objname))
     , objargs(std::move(arg_objargs))
     , args_unspecified(arg_args_unspecified)
@@ -20513,7 +22213,12 @@ AccessPriv::AccessPriv()
     , cols()
 {}
 
-AccessPriv::AccessPriv(const std::string& arg_priv_name, std::vector<::pg_query::Node> arg_cols)
+AccessPriv::AccessPriv([[maybe_unused]] allocator_type alloc)
+    : priv_name(alloc)
+    , cols(alloc)
+{}
+
+AccessPriv::AccessPriv(const std::pmr::string& arg_priv_name, std::pmr::vector<::pg_query::Node> arg_cols)
     : priv_name(arg_priv_name)
     , cols(std::move(arg_cols))
 {}
@@ -20588,7 +22293,16 @@ CreateOpClassItem::CreateOpClassItem()
     , storedtype(nullptr)
 {}
 
-CreateOpClassItem::CreateOpClassItem(int32_t arg_itemtype, std::unique_ptr<::pg_query::ObjectWithArgs> arg_name, int32_t arg_number, std::vector<::pg_query::Node> arg_order_family, std::vector<::pg_query::Node> arg_class_args, std::unique_ptr<::pg_query::TypeName> arg_storedtype)
+CreateOpClassItem::CreateOpClassItem([[maybe_unused]] allocator_type alloc)
+    : itemtype((int32_t)0ll)
+    , name(nullptr)
+    , number((int32_t)0ll)
+    , order_family(alloc)
+    , class_args(alloc)
+    , storedtype(nullptr)
+{}
+
+CreateOpClassItem::CreateOpClassItem(int32_t arg_itemtype, std::unique_ptr<::pg_query::ObjectWithArgs> arg_name, int32_t arg_number, std::pmr::vector<::pg_query::Node> arg_order_family, std::pmr::vector<::pg_query::Node> arg_class_args, std::unique_ptr<::pg_query::TypeName> arg_storedtype)
     : itemtype(arg_itemtype)
     , name(arg_name.release())
     , number(arg_number)
@@ -20691,6 +22405,12 @@ TableLikeClause::TableLikeClause()
     , relation_oid((uint32_t)0ull)
 {}
 
+TableLikeClause::TableLikeClause([[maybe_unused]] allocator_type alloc)
+    : relation(nullptr)
+    , options((uint32_t)0ull)
+    , relation_oid((uint32_t)0ull)
+{}
+
 TableLikeClause::TableLikeClause(std::unique_ptr<::pg_query::RangeVar> arg_relation, uint32_t arg_options, uint32_t arg_relation_oid)
     : relation(arg_relation.release())
     , options(arg_options)
@@ -20761,7 +22481,14 @@ FunctionParameter::FunctionParameter()
     , defexpr()
 {}
 
-FunctionParameter::FunctionParameter(const std::string& arg_name, std::unique_ptr<::pg_query::TypeName> arg_arg_type, ::pg_query::FunctionParameterMode&& arg_mode, ::pg_query::Node&& arg_defexpr)
+FunctionParameter::FunctionParameter([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+    , arg_type(nullptr)
+    , mode()
+    , defexpr()
+{}
+
+FunctionParameter::FunctionParameter(const std::pmr::string& arg_name, std::unique_ptr<::pg_query::TypeName> arg_arg_type, ::pg_query::FunctionParameterMode&& arg_mode, ::pg_query::Node&& arg_defexpr)
     : name(arg_name)
     , arg_type(arg_arg_type.release())
     , mode(std::move(arg_mode))
@@ -20835,7 +22562,13 @@ LockingClause::LockingClause()
     , wait_policy()
 {}
 
-LockingClause::LockingClause(std::vector<::pg_query::Node> arg_locked_rels, ::pg_query::LockClauseStrength&& arg_strength, ::pg_query::LockWaitPolicy&& arg_wait_policy)
+LockingClause::LockingClause([[maybe_unused]] allocator_type alloc)
+    : locked_rels(alloc)
+    , strength()
+    , wait_policy()
+{}
+
+LockingClause::LockingClause(std::pmr::vector<::pg_query::Node> arg_locked_rels, ::pg_query::LockClauseStrength&& arg_strength, ::pg_query::LockWaitPolicy&& arg_wait_policy)
     : locked_rels(std::move(arg_locked_rels))
     , strength(std::move(arg_strength))
     , wait_policy(std::move(arg_wait_policy))
@@ -20907,6 +22640,13 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const LockingCla
 }
 
 RowMarkClause::RowMarkClause()
+    : rti((uint32_t)0ull)
+    , strength()
+    , wait_policy()
+    , pushed_down(false)
+{}
+
+RowMarkClause::RowMarkClause([[maybe_unused]] allocator_type alloc)
     : rti((uint32_t)0ull)
     , strength()
     , wait_policy()
@@ -20987,6 +22727,13 @@ XmlSerialize::XmlSerialize()
     , location((int32_t)0ll)
 {}
 
+XmlSerialize::XmlSerialize([[maybe_unused]] allocator_type alloc)
+    : xmloption()
+    , expr()
+    , type_name(nullptr)
+    , location((int32_t)0ll)
+{}
+
 XmlSerialize::XmlSerialize(::pg_query::XmlOptionType&& arg_xmloption, ::pg_query::Node&& arg_expr, std::unique_ptr<::pg_query::TypeName> arg_type_name, int32_t arg_location)
     : xmloption(std::move(arg_xmloption))
     , expr(std::move(arg_expr))
@@ -21061,7 +22808,13 @@ WithClause::WithClause()
     , location((int32_t)0ll)
 {}
 
-WithClause::WithClause(std::vector<::pg_query::Node> arg_ctes, bool arg_recursive, int32_t arg_location)
+WithClause::WithClause([[maybe_unused]] allocator_type alloc)
+    : ctes(alloc)
+    , recursive(false)
+    , location((int32_t)0ll)
+{}
+
+WithClause::WithClause(std::pmr::vector<::pg_query::Node> arg_ctes, bool arg_recursive, int32_t arg_location)
     : ctes(std::move(arg_ctes))
     , recursive(arg_recursive)
     , location(arg_location)
@@ -21139,7 +22892,14 @@ InferClause::InferClause()
     , location((int32_t)0ll)
 {}
 
-InferClause::InferClause(std::vector<::pg_query::Node> arg_index_elems, ::pg_query::Node&& arg_where_clause, const std::string& arg_conname, int32_t arg_location)
+InferClause::InferClause([[maybe_unused]] allocator_type alloc)
+    : index_elems(alloc)
+    , where_clause()
+    , conname(alloc)
+    , location((int32_t)0ll)
+{}
+
+InferClause::InferClause(std::pmr::vector<::pg_query::Node> arg_index_elems, ::pg_query::Node&& arg_where_clause, const std::pmr::string& arg_conname, int32_t arg_location)
     : index_elems(std::move(arg_index_elems))
     , where_clause(std::move(arg_where_clause))
     , conname(arg_conname)
@@ -21223,7 +22983,15 @@ OnConflictClause::OnConflictClause()
     , location((int32_t)0ll)
 {}
 
-OnConflictClause::OnConflictClause(::pg_query::OnConflictAction&& arg_action, std::unique_ptr<::pg_query::InferClause> arg_infer, std::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, int32_t arg_location)
+OnConflictClause::OnConflictClause([[maybe_unused]] allocator_type alloc)
+    : action()
+    , infer(nullptr)
+    , target_list(alloc)
+    , where_clause()
+    , location((int32_t)0ll)
+{}
+
+OnConflictClause::OnConflictClause(::pg_query::OnConflictAction&& arg_action, std::unique_ptr<::pg_query::InferClause> arg_infer, std::pmr::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, int32_t arg_location)
     : action(std::move(arg_action))
     , infer(arg_infer.release())
     , target_list(std::move(arg_target_list))
@@ -21319,7 +23087,21 @@ CommonTableExpr::CommonTableExpr()
     , ctecolcollations()
 {}
 
-CommonTableExpr::CommonTableExpr(const std::string& arg_ctename, std::vector<::pg_query::Node> arg_aliascolnames, ::pg_query::CTEMaterialize&& arg_ctematerialized, ::pg_query::Node&& arg_ctequery, int32_t arg_location, bool arg_cterecursive, int32_t arg_cterefcount, std::vector<::pg_query::Node> arg_ctecolnames, std::vector<::pg_query::Node> arg_ctecoltypes, std::vector<::pg_query::Node> arg_ctecoltypmods, std::vector<::pg_query::Node> arg_ctecolcollations)
+CommonTableExpr::CommonTableExpr([[maybe_unused]] allocator_type alloc)
+    : ctename(alloc)
+    , aliascolnames(alloc)
+    , ctematerialized()
+    , ctequery()
+    , location((int32_t)0ll)
+    , cterecursive(false)
+    , cterefcount((int32_t)0ll)
+    , ctecolnames(alloc)
+    , ctecoltypes(alloc)
+    , ctecoltypmods(alloc)
+    , ctecolcollations(alloc)
+{}
+
+CommonTableExpr::CommonTableExpr(const std::pmr::string& arg_ctename, std::pmr::vector<::pg_query::Node> arg_aliascolnames, ::pg_query::CTEMaterialize&& arg_ctematerialized, ::pg_query::Node&& arg_ctequery, int32_t arg_location, bool arg_cterecursive, int32_t arg_cterefcount, std::pmr::vector<::pg_query::Node> arg_ctecolnames, std::pmr::vector<::pg_query::Node> arg_ctecoltypes, std::pmr::vector<::pg_query::Node> arg_ctecoltypmods, std::pmr::vector<::pg_query::Node> arg_ctecolcollations)
     : ctename(arg_ctename)
     , aliascolnames(std::move(arg_aliascolnames))
     , ctematerialized(std::move(arg_ctematerialized))
@@ -21472,7 +23254,13 @@ RoleSpec::RoleSpec()
     , location((int32_t)0ll)
 {}
 
-RoleSpec::RoleSpec(::pg_query::RoleSpecType&& arg_roletype, const std::string& arg_rolename, int32_t arg_location)
+RoleSpec::RoleSpec([[maybe_unused]] allocator_type alloc)
+    : roletype()
+    , rolename(alloc)
+    , location((int32_t)0ll)
+{}
+
+RoleSpec::RoleSpec(::pg_query::RoleSpecType&& arg_roletype, const std::pmr::string& arg_rolename, int32_t arg_location)
     : roletype(std::move(arg_roletype))
     , rolename(arg_rolename)
     , location(arg_location)
@@ -21540,7 +23328,13 @@ TriggerTransition::TriggerTransition()
     , is_table(false)
 {}
 
-TriggerTransition::TriggerTransition(const std::string& arg_name, bool arg_is_new, bool arg_is_table)
+TriggerTransition::TriggerTransition([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+    , is_new(false)
+    , is_table(false)
+{}
+
+TriggerTransition::TriggerTransition(const std::pmr::string& arg_name, bool arg_is_new, bool arg_is_table)
     : name(arg_name)
     , is_new(arg_is_new)
     , is_table(arg_is_table)
@@ -21610,7 +23404,15 @@ PartitionElem::PartitionElem()
     , location((int32_t)0ll)
 {}
 
-PartitionElem::PartitionElem(const std::string& arg_name, ::pg_query::Node&& arg_expr, std::vector<::pg_query::Node> arg_collation, std::vector<::pg_query::Node> arg_opclass, int32_t arg_location)
+PartitionElem::PartitionElem([[maybe_unused]] allocator_type alloc)
+    : name(alloc)
+    , expr()
+    , collation(alloc)
+    , opclass(alloc)
+    , location((int32_t)0ll)
+{}
+
+PartitionElem::PartitionElem(const std::pmr::string& arg_name, ::pg_query::Node&& arg_expr, std::pmr::vector<::pg_query::Node> arg_collation, std::pmr::vector<::pg_query::Node> arg_opclass, int32_t arg_location)
     : name(arg_name)
     , expr(std::move(arg_expr))
     , collation(std::move(arg_collation))
@@ -21706,7 +23508,13 @@ PartitionSpec::PartitionSpec()
     , location((int32_t)0ll)
 {}
 
-PartitionSpec::PartitionSpec(const std::string& arg_strategy, std::vector<::pg_query::Node> arg_part_params, int32_t arg_location)
+PartitionSpec::PartitionSpec([[maybe_unused]] allocator_type alloc)
+    : strategy(alloc)
+    , part_params(alloc)
+    , location((int32_t)0ll)
+{}
+
+PartitionSpec::PartitionSpec(const std::pmr::string& arg_strategy, std::pmr::vector<::pg_query::Node> arg_part_params, int32_t arg_location)
     : strategy(arg_strategy)
     , part_params(std::move(arg_part_params))
     , location(arg_location)
@@ -21788,7 +23596,18 @@ PartitionBoundSpec::PartitionBoundSpec()
     , location((int32_t)0ll)
 {}
 
-PartitionBoundSpec::PartitionBoundSpec(const std::string& arg_strategy, bool arg_is_default, int32_t arg_modulus, int32_t arg_remainder, std::vector<::pg_query::Node> arg_listdatums, std::vector<::pg_query::Node> arg_lowerdatums, std::vector<::pg_query::Node> arg_upperdatums, int32_t arg_location)
+PartitionBoundSpec::PartitionBoundSpec([[maybe_unused]] allocator_type alloc)
+    : strategy(alloc)
+    , is_default(false)
+    , modulus((int32_t)0ll)
+    , remainder((int32_t)0ll)
+    , listdatums(alloc)
+    , lowerdatums(alloc)
+    , upperdatums(alloc)
+    , location((int32_t)0ll)
+{}
+
+PartitionBoundSpec::PartitionBoundSpec(const std::pmr::string& arg_strategy, bool arg_is_default, int32_t arg_modulus, int32_t arg_remainder, std::pmr::vector<::pg_query::Node> arg_listdatums, std::pmr::vector<::pg_query::Node> arg_lowerdatums, std::pmr::vector<::pg_query::Node> arg_upperdatums, int32_t arg_location)
     : strategy(arg_strategy)
     , is_default(arg_is_default)
     , modulus(arg_modulus)
@@ -21908,6 +23727,12 @@ PartitionRangeDatum::PartitionRangeDatum()
     , location((int32_t)0ll)
 {}
 
+PartitionRangeDatum::PartitionRangeDatum([[maybe_unused]] allocator_type alloc)
+    : kind()
+    , value()
+    , location((int32_t)0ll)
+{}
+
 PartitionRangeDatum::PartitionRangeDatum(::pg_query::PartitionRangeDatumKind&& arg_kind, ::pg_query::Node&& arg_value, int32_t arg_location)
     : kind(std::move(arg_kind))
     , value(std::move(arg_value))
@@ -21971,6 +23796,11 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const PartitionR
 }
 
 PartitionCmd::PartitionCmd()
+    : name(nullptr)
+    , bound(nullptr)
+{}
+
+PartitionCmd::PartitionCmd([[maybe_unused]] allocator_type alloc)
     : name(nullptr)
     , bound(nullptr)
 {}
@@ -22040,7 +23870,13 @@ VacuumRelation::VacuumRelation()
     , va_cols()
 {}
 
-VacuumRelation::VacuumRelation(std::unique_ptr<::pg_query::RangeVar> arg_relation, uint32_t arg_oid, std::vector<::pg_query::Node> arg_va_cols)
+VacuumRelation::VacuumRelation([[maybe_unused]] allocator_type alloc)
+    : relation(nullptr)
+    , oid((uint32_t)0ull)
+    , va_cols(alloc)
+{}
+
+VacuumRelation::VacuumRelation(std::unique_ptr<::pg_query::RangeVar> arg_relation, uint32_t arg_oid, std::pmr::vector<::pg_query::Node> arg_va_cols)
     : relation(arg_relation.release())
     , oid(arg_oid)
     , va_cols(std::move(arg_va_cols))
@@ -22119,7 +23955,14 @@ InlineCodeBlock::InlineCodeBlock()
     , atomic(false)
 {}
 
-InlineCodeBlock::InlineCodeBlock(const std::string& arg_source_text, uint32_t arg_lang_oid, bool arg_lang_is_trusted, bool arg_atomic)
+InlineCodeBlock::InlineCodeBlock([[maybe_unused]] allocator_type alloc)
+    : source_text(alloc)
+    , lang_oid((uint32_t)0ull)
+    , lang_is_trusted(false)
+    , atomic(false)
+{}
+
+InlineCodeBlock::InlineCodeBlock(const std::pmr::string& arg_source_text, uint32_t arg_lang_oid, bool arg_lang_is_trusted, bool arg_atomic)
     : source_text(arg_source_text)
     , lang_oid(arg_lang_oid)
     , lang_is_trusted(arg_lang_is_trusted)
@@ -22190,6 +24033,10 @@ CallContext::CallContext()
     : atomic(false)
 {}
 
+CallContext::CallContext([[maybe_unused]] allocator_type alloc)
+    : atomic(false)
+{}
+
 CallContext::CallContext(bool arg_atomic)
     : atomic(arg_atomic)
 {}
@@ -22243,6 +24090,13 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const CallContex
 }
 
 ScanToken::ScanToken()
+    : start((int32_t)0ll)
+    , end((int32_t)0ll)
+    , token()
+    , keyword_kind()
+{}
+
+ScanToken::ScanToken([[maybe_unused]] allocator_type alloc)
     : start((int32_t)0ll)
     , end((int32_t)0ll)
     , token()
@@ -22321,7 +24175,12 @@ ParseResult::ParseResult()
     , stmts()
 {}
 
-ParseResult::ParseResult(int32_t arg_version, std::vector<::pg_query::RawStmt> arg_stmts)
+ParseResult::ParseResult([[maybe_unused]] allocator_type alloc)
+    : version((int32_t)0ll)
+    , stmts(alloc)
+{}
+
+ParseResult::ParseResult(int32_t arg_version, std::pmr::vector<::pg_query::RawStmt> arg_stmts)
     : version(arg_version)
     , stmts(std::move(arg_stmts))
 {}
@@ -22392,7 +24251,12 @@ ScanResult::ScanResult()
     , tokens()
 {}
 
-ScanResult::ScanResult(int32_t arg_version, std::vector<::pg_query::ScanToken> arg_tokens)
+ScanResult::ScanResult([[maybe_unused]] allocator_type alloc)
+    : version((int32_t)0ll)
+    , tokens(alloc)
+{}
+
+ScanResult::ScanResult(int32_t arg_version, std::pmr::vector<::pg_query::ScanToken> arg_tokens)
     : version(arg_version)
     , tokens(std::move(arg_tokens))
 {}
