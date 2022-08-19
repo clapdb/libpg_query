@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <unistd.h>
 
+#include <arena/arena.hpp>
+
 #include "fbe/pg_query_ptr.h"
 
 extern "C"
@@ -15,7 +17,7 @@ extern "C"
 #include "postgres/include/utils/palloc.h"
 }
 // NOLINTNEXTLINE
-PgQueryFBEParseResult pg_query_parse_fbe(const char* input) {
+PgQueryFBEParseResult pg_query_parse_fbe(stdb::memory::Arena& arena, const char* input) {
     MemoryContext ctx = nullptr;
     PgQueryInternalParsetreeAndError parsetree_and_error;
     PgQueryFBEParseResult result = {};
@@ -27,7 +29,7 @@ PgQueryFBEParseResult pg_query_parse_fbe(const char* input) {
     // These are all malloc-ed and will survive exiting the memory context, the caller is responsible to free them now
     result.stderr_buffer = parsetree_and_error.stderr_buffer;
     result.error = parsetree_and_error.error;
-    result.parse_tree = pg_query_nodes_to_fbe(parsetree_and_error.tree);
+    result.parse_tree = pg_query_nodes_to_fbe(arena, parsetree_and_error.tree);
 
     pg_query_exit_memory_context(ctx);
 
