@@ -18,9 +18,11 @@
 #endif
 
 #include "fbe.h"
+#include "arena/arena.hpp"
 
 namespace pg_query {
 using namespace FBE;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace pg_query
 
 namespace FBE {
@@ -1771,11 +1773,14 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Node& valu
 
 struct Integer : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     int32_t ival;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Integer();
+    explicit Integer(allocator_type alloc);
     explicit Integer(int32_t arg_ival);
     Integer(const Integer& other) = delete;
     Integer(Integer&& other) noexcept;
@@ -1822,12 +1827,15 @@ namespace pg_query {
 
 struct Float : FBE::Base
 {
-    std::string str;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string str;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Float();
-    explicit Float(const std::string& arg_str);
+    explicit Float(allocator_type alloc);
+    explicit Float(const std::pmr::string& arg_str);
     Float(const Float& other) = delete;
     Float(Float&& other) noexcept;
     ~Float() override;
@@ -1873,12 +1881,15 @@ namespace pg_query {
 
 struct String : FBE::Base
 {
-    std::string str;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string str;
 
     size_t fbe_type() const noexcept { return 3; }
 
     String();
-    explicit String(const std::string& arg_str);
+    explicit String(allocator_type alloc);
+    explicit String(const std::pmr::string& arg_str);
     String(const String& other) = delete;
     String(String&& other) noexcept;
     ~String() override;
@@ -1924,12 +1935,15 @@ namespace pg_query {
 
 struct BitString : FBE::Base
 {
-    std::string str;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string str;
 
     size_t fbe_type() const noexcept { return 4; }
 
     BitString();
-    explicit BitString(const std::string& arg_str);
+    explicit BitString(allocator_type alloc);
+    explicit BitString(const std::pmr::string& arg_str);
     BitString(const BitString& other) = delete;
     BitString(BitString&& other) noexcept;
     ~BitString() override;
@@ -1975,9 +1989,12 @@ namespace pg_query {
 
 struct Null : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     size_t fbe_type() const noexcept { return 5; }
 
     Null();
+    explicit Null(allocator_type alloc);
     Null(const Null& other) = delete;
     Null(Null&& other) noexcept;
     ~Null() override;
@@ -2023,12 +2040,15 @@ namespace pg_query {
 
 struct List : FBE::Base
 {
-    std::vector<::pg_query::Node> items;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> items;
 
     size_t fbe_type() const noexcept { return 6; }
 
     List();
-    explicit List(std::vector<::pg_query::Node> arg_items);
+    explicit List(allocator_type alloc);
+    explicit List(std::pmr::vector<::pg_query::Node> arg_items);
     List(const List& other) = delete;
     List(List&& other) noexcept;
     ~List() override;
@@ -2074,12 +2094,15 @@ namespace pg_query {
 
 struct OidList : FBE::Base
 {
-    std::vector<::pg_query::Node> items;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> items;
 
     size_t fbe_type() const noexcept { return 7; }
 
     OidList();
-    explicit OidList(std::vector<::pg_query::Node> arg_items);
+    explicit OidList(allocator_type alloc);
+    explicit OidList(std::pmr::vector<::pg_query::Node> arg_items);
     OidList(const OidList& other) = delete;
     OidList(OidList&& other) noexcept;
     ~OidList() override;
@@ -2125,12 +2148,15 @@ namespace pg_query {
 
 struct IntList : FBE::Base
 {
-    std::vector<::pg_query::Node> items;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> items;
 
     size_t fbe_type() const noexcept { return 8; }
 
     IntList();
-    explicit IntList(std::vector<::pg_query::Node> arg_items);
+    explicit IntList(allocator_type alloc);
+    explicit IntList(std::pmr::vector<::pg_query::Node> arg_items);
     IntList(const IntList& other) = delete;
     IntList(IntList&& other) noexcept;
     ~IntList() override;
@@ -2176,13 +2202,16 @@ namespace pg_query {
 
 struct Alias : FBE::Base
 {
-    std::string aliasname;
-    std::vector<::pg_query::Node> colnames;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string aliasname;
+    std::pmr::vector<::pg_query::Node> colnames;
 
     size_t fbe_type() const noexcept { return 9; }
 
     Alias();
-    Alias(const std::string& arg_aliasname, std::vector<::pg_query::Node> arg_colnames);
+    explicit Alias(allocator_type alloc);
+    Alias(const std::pmr::string& arg_aliasname, std::pmr::vector<::pg_query::Node> arg_colnames);
     Alias(const Alias& other) = delete;
     Alias(Alias&& other) noexcept;
     ~Alias() override;
@@ -2230,18 +2259,21 @@ struct Alias;
 
 struct RangeVar : FBE::Base
 {
-    std::string catalogname;
-    std::string schemaname;
-    std::string relname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string catalogname;
+    std::pmr::string schemaname;
+    std::pmr::string relname;
     bool inh;
-    std::string relpersistence;
+    std::pmr::string relpersistence;
     ::pg_query::Alias* alias;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 10; }
 
     RangeVar();
-    RangeVar(const std::string& arg_catalogname, const std::string& arg_schemaname, const std::string& arg_relname, bool arg_inh, const std::string& arg_relpersistence, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_location);
+    explicit RangeVar(allocator_type alloc);
+    RangeVar(const std::pmr::string& arg_catalogname, const std::pmr::string& arg_schemaname, const std::pmr::string& arg_relname, bool arg_inh, const std::pmr::string& arg_relpersistence, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_location);
     RangeVar(const RangeVar& other) = delete;
     RangeVar(RangeVar&& other) noexcept;
     ~RangeVar() override;
@@ -2287,24 +2319,27 @@ namespace pg_query {
 
 struct TableFunc : FBE::Base
 {
-    std::vector<::pg_query::Node> ns_uris;
-    std::vector<::pg_query::Node> ns_names;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> ns_uris;
+    std::pmr::vector<::pg_query::Node> ns_names;
     ::pg_query::Node docexpr;
     ::pg_query::Node rowexpr;
-    std::vector<::pg_query::Node> colnames;
-    std::vector<::pg_query::Node> coltypes;
-    std::vector<::pg_query::Node> coltypmods;
-    std::vector<::pg_query::Node> colcollations;
-    std::vector<::pg_query::Node> colexprs;
-    std::vector<::pg_query::Node> coldefexprs;
-    std::vector<uint64_t> notnulls;
+    std::pmr::vector<::pg_query::Node> colnames;
+    std::pmr::vector<::pg_query::Node> coltypes;
+    std::pmr::vector<::pg_query::Node> coltypmods;
+    std::pmr::vector<::pg_query::Node> colcollations;
+    std::pmr::vector<::pg_query::Node> colexprs;
+    std::pmr::vector<::pg_query::Node> coldefexprs;
+    std::pmr::vector<uint64_t> notnulls;
     int32_t ordinalitycol;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 11; }
 
     TableFunc();
-    TableFunc(std::vector<::pg_query::Node> arg_ns_uris, std::vector<::pg_query::Node> arg_ns_names, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::vector<::pg_query::Node> arg_colnames, std::vector<::pg_query::Node> arg_coltypes, std::vector<::pg_query::Node> arg_coltypmods, std::vector<::pg_query::Node> arg_colcollations, std::vector<::pg_query::Node> arg_colexprs, std::vector<::pg_query::Node> arg_coldefexprs, std::vector<uint64_t> arg_notnulls, int32_t arg_ordinalitycol, int32_t arg_location);
+    explicit TableFunc(allocator_type alloc);
+    TableFunc(std::pmr::vector<::pg_query::Node> arg_ns_uris, std::pmr::vector<::pg_query::Node> arg_ns_names, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::pmr::vector<::pg_query::Node> arg_colnames, std::pmr::vector<::pg_query::Node> arg_coltypes, std::pmr::vector<::pg_query::Node> arg_coltypmods, std::pmr::vector<::pg_query::Node> arg_colcollations, std::pmr::vector<::pg_query::Node> arg_colexprs, std::pmr::vector<::pg_query::Node> arg_coldefexprs, std::pmr::vector<uint64_t> arg_notnulls, int32_t arg_ordinalitycol, int32_t arg_location);
     TableFunc(const TableFunc& other) = delete;
     TableFunc(TableFunc&& other) noexcept;
     ~TableFunc() override;
@@ -2350,9 +2385,12 @@ namespace pg_query {
 
 struct Expr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     size_t fbe_type() const noexcept { return 12; }
 
     Expr();
+    explicit Expr(allocator_type alloc);
     Expr(const Expr& other) = delete;
     Expr(Expr&& other) noexcept;
     ~Expr() override;
@@ -2398,6 +2436,8 @@ namespace pg_query {
 
 struct Var : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t varno;
     int32_t varattno;
@@ -2412,6 +2452,7 @@ struct Var : FBE::Base
     size_t fbe_type() const noexcept { return 13; }
 
     Var();
+    explicit Var(allocator_type alloc);
     Var(::pg_query::Node&& arg_xpr, uint32_t arg_varno, int32_t arg_varattno, uint32_t arg_vartype, int32_t arg_vartypmod, uint32_t arg_varcollid, uint32_t arg_varlevelsup, uint32_t arg_varnosyn, int32_t arg_varattnosyn, int32_t arg_location);
     Var(const Var& other) = delete;
     Var(Var&& other) noexcept;
@@ -2458,6 +2499,8 @@ namespace pg_query {
 
 struct Param : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::ParamKind paramkind;
     int32_t paramid;
@@ -2469,6 +2512,7 @@ struct Param : FBE::Base
     size_t fbe_type() const noexcept { return 14; }
 
     Param();
+    explicit Param(allocator_type alloc);
     Param(::pg_query::Node&& arg_xpr, ::pg_query::ParamKind&& arg_paramkind, int32_t arg_paramid, uint32_t arg_paramtype, int32_t arg_paramtypmod, uint32_t arg_paramcollid, int32_t arg_location);
     Param(const Param& other) = delete;
     Param(Param&& other) noexcept;
@@ -2515,21 +2559,23 @@ namespace pg_query {
 
 struct Aggref : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t aggfnoid;
     uint32_t aggtype;
     uint32_t aggcollid;
     uint32_t inputcollid;
     uint32_t aggtranstype;
-    std::vector<::pg_query::Node> aggargtypes;
-    std::vector<::pg_query::Node> aggdirectargs;
-    std::vector<::pg_query::Node> args;
-    std::vector<::pg_query::Node> aggorder;
-    std::vector<::pg_query::Node> aggdistinct;
+    std::pmr::vector<::pg_query::Node> aggargtypes;
+    std::pmr::vector<::pg_query::Node> aggdirectargs;
+    std::pmr::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> aggorder;
+    std::pmr::vector<::pg_query::Node> aggdistinct;
     ::pg_query::Node aggfilter;
     bool aggstar;
     bool aggvariadic;
-    std::string aggkind;
+    std::pmr::string aggkind;
     uint32_t agglevelsup;
     ::pg_query::AggSplit aggsplit;
     int32_t location;
@@ -2537,7 +2583,8 @@ struct Aggref : FBE::Base
     size_t fbe_type() const noexcept { return 15; }
 
     Aggref();
-    Aggref(::pg_query::Node&& arg_xpr, uint32_t arg_aggfnoid, uint32_t arg_aggtype, uint32_t arg_aggcollid, uint32_t arg_inputcollid, uint32_t arg_aggtranstype, std::vector<::pg_query::Node> arg_aggargtypes, std::vector<::pg_query::Node> arg_aggdirectargs, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_aggorder, std::vector<::pg_query::Node> arg_aggdistinct, ::pg_query::Node&& arg_aggfilter, bool arg_aggstar, bool arg_aggvariadic, const std::string& arg_aggkind, uint32_t arg_agglevelsup, ::pg_query::AggSplit&& arg_aggsplit, int32_t arg_location);
+    explicit Aggref(allocator_type alloc);
+    Aggref(::pg_query::Node&& arg_xpr, uint32_t arg_aggfnoid, uint32_t arg_aggtype, uint32_t arg_aggcollid, uint32_t arg_inputcollid, uint32_t arg_aggtranstype, std::pmr::vector<::pg_query::Node> arg_aggargtypes, std::pmr::vector<::pg_query::Node> arg_aggdirectargs, std::pmr::vector<::pg_query::Node> arg_args, std::pmr::vector<::pg_query::Node> arg_aggorder, std::pmr::vector<::pg_query::Node> arg_aggdistinct, ::pg_query::Node&& arg_aggfilter, bool arg_aggstar, bool arg_aggvariadic, const std::pmr::string& arg_aggkind, uint32_t arg_agglevelsup, ::pg_query::AggSplit&& arg_aggsplit, int32_t arg_location);
     Aggref(const Aggref& other) = delete;
     Aggref(Aggref&& other) noexcept;
     ~Aggref() override;
@@ -2583,17 +2630,20 @@ namespace pg_query {
 
 struct GroupingFunc : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
-    std::vector<::pg_query::Node> args;
-    std::vector<::pg_query::Node> refs;
-    std::vector<::pg_query::Node> cols;
+    std::pmr::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> refs;
+    std::pmr::vector<::pg_query::Node> cols;
     uint32_t agglevelsup;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 16; }
 
     GroupingFunc();
-    GroupingFunc(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_refs, std::vector<::pg_query::Node> arg_cols, uint32_t arg_agglevelsup, int32_t arg_location);
+    explicit GroupingFunc(allocator_type alloc);
+    GroupingFunc(::pg_query::Node&& arg_xpr, std::pmr::vector<::pg_query::Node> arg_args, std::pmr::vector<::pg_query::Node> arg_refs, std::pmr::vector<::pg_query::Node> arg_cols, uint32_t arg_agglevelsup, int32_t arg_location);
     GroupingFunc(const GroupingFunc& other) = delete;
     GroupingFunc(GroupingFunc&& other) noexcept;
     ~GroupingFunc() override;
@@ -2639,12 +2689,14 @@ namespace pg_query {
 
 struct WindowFunc : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t winfnoid;
     uint32_t wintype;
     uint32_t wincollid;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     ::pg_query::Node aggfilter;
     uint32_t winref;
     bool winstar;
@@ -2654,7 +2706,8 @@ struct WindowFunc : FBE::Base
     size_t fbe_type() const noexcept { return 17; }
 
     WindowFunc();
-    WindowFunc(::pg_query::Node&& arg_xpr, uint32_t arg_winfnoid, uint32_t arg_wintype, uint32_t arg_wincollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_aggfilter, uint32_t arg_winref, bool arg_winstar, bool arg_winagg, int32_t arg_location);
+    explicit WindowFunc(allocator_type alloc);
+    WindowFunc(::pg_query::Node&& arg_xpr, uint32_t arg_winfnoid, uint32_t arg_wintype, uint32_t arg_wincollid, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_aggfilter, uint32_t arg_winref, bool arg_winstar, bool arg_winagg, int32_t arg_location);
     WindowFunc(const WindowFunc& other) = delete;
     WindowFunc(WindowFunc&& other) noexcept;
     ~WindowFunc() override;
@@ -2700,20 +2753,23 @@ namespace pg_query {
 
 struct SubscriptingRef : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t refcontainertype;
     uint32_t refelemtype;
     int32_t reftypmod;
     uint32_t refcollid;
-    std::vector<::pg_query::Node> refupperindexpr;
-    std::vector<::pg_query::Node> reflowerindexpr;
+    std::pmr::vector<::pg_query::Node> refupperindexpr;
+    std::pmr::vector<::pg_query::Node> reflowerindexpr;
     ::pg_query::Node refexpr;
     ::pg_query::Node refassgnexpr;
 
     size_t fbe_type() const noexcept { return 18; }
 
     SubscriptingRef();
-    SubscriptingRef(::pg_query::Node&& arg_xpr, uint32_t arg_refcontainertype, uint32_t arg_refelemtype, int32_t arg_reftypmod, uint32_t arg_refcollid, std::vector<::pg_query::Node> arg_refupperindexpr, std::vector<::pg_query::Node> arg_reflowerindexpr, ::pg_query::Node&& arg_refexpr, ::pg_query::Node&& arg_refassgnexpr);
+    explicit SubscriptingRef(allocator_type alloc);
+    SubscriptingRef(::pg_query::Node&& arg_xpr, uint32_t arg_refcontainertype, uint32_t arg_refelemtype, int32_t arg_reftypmod, uint32_t arg_refcollid, std::pmr::vector<::pg_query::Node> arg_refupperindexpr, std::pmr::vector<::pg_query::Node> arg_reflowerindexpr, ::pg_query::Node&& arg_refexpr, ::pg_query::Node&& arg_refassgnexpr);
     SubscriptingRef(const SubscriptingRef& other) = delete;
     SubscriptingRef(SubscriptingRef&& other) noexcept;
     ~SubscriptingRef() override;
@@ -2759,6 +2815,8 @@ namespace pg_query {
 
 struct FuncExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t funcid;
     uint32_t funcresulttype;
@@ -2767,13 +2825,14 @@ struct FuncExpr : FBE::Base
     ::pg_query::CoercionForm funcformat;
     uint32_t funccollid;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 19; }
 
     FuncExpr();
-    FuncExpr(::pg_query::Node&& arg_xpr, uint32_t arg_funcid, uint32_t arg_funcresulttype, bool arg_funcretset, bool arg_funcvariadic, ::pg_query::CoercionForm&& arg_funcformat, uint32_t arg_funccollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
+    explicit FuncExpr(allocator_type alloc);
+    FuncExpr(::pg_query::Node&& arg_xpr, uint32_t arg_funcid, uint32_t arg_funcresulttype, bool arg_funcretset, bool arg_funcvariadic, ::pg_query::CoercionForm&& arg_funcformat, uint32_t arg_funccollid, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location);
     FuncExpr(const FuncExpr& other) = delete;
     FuncExpr(FuncExpr&& other) noexcept;
     ~FuncExpr() override;
@@ -2819,16 +2878,19 @@ namespace pg_query {
 
 struct NamedArgExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
-    std::string name;
+    std::pmr::string name;
     int32_t argnumber;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 20; }
 
     NamedArgExpr();
-    NamedArgExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, const std::string& arg_name, int32_t arg_argnumber, int32_t arg_location);
+    explicit NamedArgExpr(allocator_type alloc);
+    NamedArgExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, const std::pmr::string& arg_name, int32_t arg_argnumber, int32_t arg_location);
     NamedArgExpr(const NamedArgExpr& other) = delete;
     NamedArgExpr(NamedArgExpr&& other) noexcept;
     ~NamedArgExpr() override;
@@ -2874,6 +2936,8 @@ namespace pg_query {
 
 struct OpExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t opno;
     uint32_t opfuncid;
@@ -2881,13 +2945,14 @@ struct OpExpr : FBE::Base
     bool opretset;
     uint32_t opcollid;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 21; }
 
     OpExpr();
-    OpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
+    explicit OpExpr(allocator_type alloc);
+    OpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location);
     OpExpr(const OpExpr& other) = delete;
     OpExpr(OpExpr&& other) noexcept;
     ~OpExpr() override;
@@ -2933,6 +2998,8 @@ namespace pg_query {
 
 struct DistinctExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t opno;
     uint32_t opfuncid;
@@ -2940,13 +3007,14 @@ struct DistinctExpr : FBE::Base
     bool opretset;
     uint32_t opcollid;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 22; }
 
     DistinctExpr();
-    DistinctExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
+    explicit DistinctExpr(allocator_type alloc);
+    DistinctExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location);
     DistinctExpr(const DistinctExpr& other) = delete;
     DistinctExpr(DistinctExpr&& other) noexcept;
     ~DistinctExpr() override;
@@ -2992,6 +3060,8 @@ namespace pg_query {
 
 struct NullIfExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t opno;
     uint32_t opfuncid;
@@ -2999,13 +3069,14 @@ struct NullIfExpr : FBE::Base
     bool opretset;
     uint32_t opcollid;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 23; }
 
     NullIfExpr();
-    NullIfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
+    explicit NullIfExpr(allocator_type alloc);
+    NullIfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, uint32_t arg_opresulttype, bool arg_opretset, uint32_t arg_opcollid, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location);
     NullIfExpr(const NullIfExpr& other) = delete;
     NullIfExpr(NullIfExpr&& other) noexcept;
     ~NullIfExpr() override;
@@ -3051,18 +3122,21 @@ namespace pg_query {
 
 struct ScalarArrayOpExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t opno;
     uint32_t opfuncid;
     bool use_or;
     uint32_t inputcollid;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 24; }
 
     ScalarArrayOpExpr();
-    ScalarArrayOpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, bool arg_use_or, uint32_t arg_inputcollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
+    explicit ScalarArrayOpExpr(allocator_type alloc);
+    ScalarArrayOpExpr(::pg_query::Node&& arg_xpr, uint32_t arg_opno, uint32_t arg_opfuncid, bool arg_use_or, uint32_t arg_inputcollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location);
     ScalarArrayOpExpr(const ScalarArrayOpExpr& other) = delete;
     ScalarArrayOpExpr(ScalarArrayOpExpr&& other) noexcept;
     ~ScalarArrayOpExpr() override;
@@ -3108,15 +3182,18 @@ namespace pg_query {
 
 struct BoolExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::BoolExprType boolop;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 25; }
 
     BoolExpr();
-    BoolExpr(::pg_query::Node&& arg_xpr, ::pg_query::BoolExprType&& arg_boolop, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
+    explicit BoolExpr(allocator_type alloc);
+    BoolExpr(::pg_query::Node&& arg_xpr, ::pg_query::BoolExprType&& arg_boolop, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location);
     BoolExpr(const BoolExpr& other) = delete;
     BoolExpr(BoolExpr&& other) noexcept;
     ~BoolExpr() override;
@@ -3162,18 +3239,21 @@ namespace pg_query {
 
 struct SubLink : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::SubLinkType sub_link_type;
     int32_t sub_link_id;
     ::pg_query::Node testexpr;
-    std::vector<::pg_query::Node> oper_name;
+    std::pmr::vector<::pg_query::Node> oper_name;
     ::pg_query::Node subselect;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 26; }
 
     SubLink();
-    SubLink(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, int32_t arg_sub_link_id, ::pg_query::Node&& arg_testexpr, std::vector<::pg_query::Node> arg_oper_name, ::pg_query::Node&& arg_subselect, int32_t arg_location);
+    explicit SubLink(allocator_type alloc);
+    SubLink(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, int32_t arg_sub_link_id, ::pg_query::Node&& arg_testexpr, std::pmr::vector<::pg_query::Node> arg_oper_name, ::pg_query::Node&& arg_subselect, int32_t arg_location);
     SubLink(const SubLink& other) = delete;
     SubLink(SubLink&& other) noexcept;
     ~SubLink() override;
@@ -3219,28 +3299,31 @@ namespace pg_query {
 
 struct SubPlan : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::SubLinkType sub_link_type;
     ::pg_query::Node testexpr;
-    std::vector<::pg_query::Node> param_ids;
+    std::pmr::vector<::pg_query::Node> param_ids;
     int32_t plan_id;
-    std::string plan_name;
+    std::pmr::string plan_name;
     uint32_t first_col_type;
     int32_t first_col_typmod;
     uint32_t first_col_collation;
     bool use_hash_table;
     bool unknown_eq_false;
     bool parallel_safe;
-    std::vector<::pg_query::Node> set_param;
-    std::vector<::pg_query::Node> par_param;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> set_param;
+    std::pmr::vector<::pg_query::Node> par_param;
+    std::pmr::vector<::pg_query::Node> args;
     double startup_cost;
     double per_call_cost;
 
     size_t fbe_type() const noexcept { return 27; }
 
     SubPlan();
-    SubPlan(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, ::pg_query::Node&& arg_testexpr, std::vector<::pg_query::Node> arg_param_ids, int32_t arg_plan_id, const std::string& arg_plan_name, uint32_t arg_first_col_type, int32_t arg_first_col_typmod, uint32_t arg_first_col_collation, bool arg_use_hash_table, bool arg_unknown_eq_false, bool arg_parallel_safe, std::vector<::pg_query::Node> arg_set_param, std::vector<::pg_query::Node> arg_par_param, std::vector<::pg_query::Node> arg_args, double arg_startup_cost, double arg_per_call_cost);
+    explicit SubPlan(allocator_type alloc);
+    SubPlan(::pg_query::Node&& arg_xpr, ::pg_query::SubLinkType&& arg_sub_link_type, ::pg_query::Node&& arg_testexpr, std::pmr::vector<::pg_query::Node> arg_param_ids, int32_t arg_plan_id, const std::pmr::string& arg_plan_name, uint32_t arg_first_col_type, int32_t arg_first_col_typmod, uint32_t arg_first_col_collation, bool arg_use_hash_table, bool arg_unknown_eq_false, bool arg_parallel_safe, std::pmr::vector<::pg_query::Node> arg_set_param, std::pmr::vector<::pg_query::Node> arg_par_param, std::pmr::vector<::pg_query::Node> arg_args, double arg_startup_cost, double arg_per_call_cost);
     SubPlan(const SubPlan& other) = delete;
     SubPlan(SubPlan&& other) noexcept;
     ~SubPlan() override;
@@ -3286,13 +3369,16 @@ namespace pg_query {
 
 struct AlternativeSubPlan : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
-    std::vector<::pg_query::Node> subplans;
+    std::pmr::vector<::pg_query::Node> subplans;
 
     size_t fbe_type() const noexcept { return 28; }
 
     AlternativeSubPlan();
-    AlternativeSubPlan(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_subplans);
+    explicit AlternativeSubPlan(allocator_type alloc);
+    AlternativeSubPlan(::pg_query::Node&& arg_xpr, std::pmr::vector<::pg_query::Node> arg_subplans);
     AlternativeSubPlan(const AlternativeSubPlan& other) = delete;
     AlternativeSubPlan(AlternativeSubPlan&& other) noexcept;
     ~AlternativeSubPlan() override;
@@ -3338,6 +3424,8 @@ namespace pg_query {
 
 struct FieldSelect : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
     int32_t fieldnum;
@@ -3348,6 +3436,7 @@ struct FieldSelect : FBE::Base
     size_t fbe_type() const noexcept { return 29; }
 
     FieldSelect();
+    explicit FieldSelect(allocator_type alloc);
     FieldSelect(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, int32_t arg_fieldnum, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid);
     FieldSelect(const FieldSelect& other) = delete;
     FieldSelect(FieldSelect&& other) noexcept;
@@ -3394,16 +3483,19 @@ namespace pg_query {
 
 struct FieldStore : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
-    std::vector<::pg_query::Node> newvals;
-    std::vector<::pg_query::Node> fieldnums;
+    std::pmr::vector<::pg_query::Node> newvals;
+    std::pmr::vector<::pg_query::Node> fieldnums;
     uint32_t resulttype;
 
     size_t fbe_type() const noexcept { return 30; }
 
     FieldStore();
-    FieldStore(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_newvals, std::vector<::pg_query::Node> arg_fieldnums, uint32_t arg_resulttype);
+    explicit FieldStore(allocator_type alloc);
+    FieldStore(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, std::pmr::vector<::pg_query::Node> arg_newvals, std::pmr::vector<::pg_query::Node> arg_fieldnums, uint32_t arg_resulttype);
     FieldStore(const FieldStore& other) = delete;
     FieldStore(FieldStore&& other) noexcept;
     ~FieldStore() override;
@@ -3449,6 +3541,8 @@ namespace pg_query {
 
 struct RelabelType : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
     uint32_t resulttype;
@@ -3460,6 +3554,7 @@ struct RelabelType : FBE::Base
     size_t fbe_type() const noexcept { return 31; }
 
     RelabelType();
+    explicit RelabelType(allocator_type alloc);
     RelabelType(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_relabelformat, int32_t arg_location);
     RelabelType(const RelabelType& other) = delete;
     RelabelType(RelabelType&& other) noexcept;
@@ -3506,6 +3601,8 @@ namespace pg_query {
 
 struct CoerceViaIO : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
     uint32_t resulttype;
@@ -3516,6 +3613,7 @@ struct CoerceViaIO : FBE::Base
     size_t fbe_type() const noexcept { return 32; }
 
     CoerceViaIO();
+    explicit CoerceViaIO(allocator_type alloc);
     CoerceViaIO(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location);
     CoerceViaIO(const CoerceViaIO& other) = delete;
     CoerceViaIO(CoerceViaIO&& other) noexcept;
@@ -3562,6 +3660,8 @@ namespace pg_query {
 
 struct ArrayCoerceExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
     ::pg_query::Node elemexpr;
@@ -3574,6 +3674,7 @@ struct ArrayCoerceExpr : FBE::Base
     size_t fbe_type() const noexcept { return 33; }
 
     ArrayCoerceExpr();
+    explicit ArrayCoerceExpr(allocator_type alloc);
     ArrayCoerceExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::Node&& arg_elemexpr, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coerceformat, int32_t arg_location);
     ArrayCoerceExpr(const ArrayCoerceExpr& other) = delete;
     ArrayCoerceExpr(ArrayCoerceExpr&& other) noexcept;
@@ -3620,6 +3721,8 @@ namespace pg_query {
 
 struct ConvertRowtypeExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
     uint32_t resulttype;
@@ -3629,6 +3732,7 @@ struct ConvertRowtypeExpr : FBE::Base
     size_t fbe_type() const noexcept { return 34; }
 
     ConvertRowtypeExpr();
+    explicit ConvertRowtypeExpr(allocator_type alloc);
     ConvertRowtypeExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, ::pg_query::CoercionForm&& arg_convertformat, int32_t arg_location);
     ConvertRowtypeExpr(const ConvertRowtypeExpr& other) = delete;
     ConvertRowtypeExpr(ConvertRowtypeExpr&& other) noexcept;
@@ -3675,6 +3779,8 @@ namespace pg_query {
 
 struct CollateExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
     uint32_t coll_oid;
@@ -3683,6 +3789,7 @@ struct CollateExpr : FBE::Base
     size_t fbe_type() const noexcept { return 35; }
 
     CollateExpr();
+    explicit CollateExpr(allocator_type alloc);
     CollateExpr(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_coll_oid, int32_t arg_location);
     CollateExpr(const CollateExpr& other) = delete;
     CollateExpr(CollateExpr&& other) noexcept;
@@ -3729,18 +3836,21 @@ namespace pg_query {
 
 struct CaseExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t casetype;
     uint32_t casecollid;
     ::pg_query::Node arg;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     ::pg_query::Node defresult;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 36; }
 
     CaseExpr();
-    CaseExpr(::pg_query::Node&& arg_xpr, uint32_t arg_casetype, uint32_t arg_casecollid, ::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_defresult, int32_t arg_location);
+    explicit CaseExpr(allocator_type alloc);
+    CaseExpr(::pg_query::Node&& arg_xpr, uint32_t arg_casetype, uint32_t arg_casecollid, ::pg_query::Node&& arg_arg, std::pmr::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_defresult, int32_t arg_location);
     CaseExpr(const CaseExpr& other) = delete;
     CaseExpr(CaseExpr&& other) noexcept;
     ~CaseExpr() override;
@@ -3786,6 +3896,8 @@ namespace pg_query {
 
 struct CaseWhen : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node expr;
     ::pg_query::Node result;
@@ -3794,6 +3906,7 @@ struct CaseWhen : FBE::Base
     size_t fbe_type() const noexcept { return 37; }
 
     CaseWhen();
+    explicit CaseWhen(allocator_type alloc);
     CaseWhen(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, ::pg_query::Node&& arg_result, int32_t arg_location);
     CaseWhen(const CaseWhen& other) = delete;
     CaseWhen(CaseWhen&& other) noexcept;
@@ -3840,6 +3953,8 @@ namespace pg_query {
 
 struct CaseTestExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t type_id;
     int32_t type_mod;
@@ -3848,6 +3963,7 @@ struct CaseTestExpr : FBE::Base
     size_t fbe_type() const noexcept { return 38; }
 
     CaseTestExpr();
+    explicit CaseTestExpr(allocator_type alloc);
     CaseTestExpr(::pg_query::Node&& arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation);
     CaseTestExpr(const CaseTestExpr& other) = delete;
     CaseTestExpr(CaseTestExpr&& other) noexcept;
@@ -3894,18 +4010,21 @@ namespace pg_query {
 
 struct ArrayExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t array_typeid;
     uint32_t array_collid;
     uint32_t element_typeid;
-    std::vector<::pg_query::Node> elements;
+    std::pmr::vector<::pg_query::Node> elements;
     bool multidims;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 39; }
 
     ArrayExpr();
-    ArrayExpr(::pg_query::Node&& arg_xpr, uint32_t arg_array_typeid, uint32_t arg_array_collid, uint32_t arg_element_typeid, std::vector<::pg_query::Node> arg_elements, bool arg_multidims, int32_t arg_location);
+    explicit ArrayExpr(allocator_type alloc);
+    ArrayExpr(::pg_query::Node&& arg_xpr, uint32_t arg_array_typeid, uint32_t arg_array_collid, uint32_t arg_element_typeid, std::pmr::vector<::pg_query::Node> arg_elements, bool arg_multidims, int32_t arg_location);
     ArrayExpr(const ArrayExpr& other) = delete;
     ArrayExpr(ArrayExpr&& other) noexcept;
     ~ArrayExpr() override;
@@ -3951,17 +4070,20 @@ namespace pg_query {
 
 struct RowExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     uint32_t row_typeid;
     ::pg_query::CoercionForm row_format;
-    std::vector<::pg_query::Node> colnames;
+    std::pmr::vector<::pg_query::Node> colnames;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 40; }
 
     RowExpr();
-    RowExpr(::pg_query::Node&& arg_xpr, std::vector<::pg_query::Node> arg_args, uint32_t arg_row_typeid, ::pg_query::CoercionForm&& arg_row_format, std::vector<::pg_query::Node> arg_colnames, int32_t arg_location);
+    explicit RowExpr(allocator_type alloc);
+    RowExpr(::pg_query::Node&& arg_xpr, std::pmr::vector<::pg_query::Node> arg_args, uint32_t arg_row_typeid, ::pg_query::CoercionForm&& arg_row_format, std::pmr::vector<::pg_query::Node> arg_colnames, int32_t arg_location);
     RowExpr(const RowExpr& other) = delete;
     RowExpr(RowExpr&& other) noexcept;
     ~RowExpr() override;
@@ -4007,18 +4129,21 @@ namespace pg_query {
 
 struct RowCompareExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::RowCompareType rctype;
-    std::vector<::pg_query::Node> opnos;
-    std::vector<::pg_query::Node> opfamilies;
-    std::vector<::pg_query::Node> inputcollids;
-    std::vector<::pg_query::Node> largs;
-    std::vector<::pg_query::Node> rargs;
+    std::pmr::vector<::pg_query::Node> opnos;
+    std::pmr::vector<::pg_query::Node> opfamilies;
+    std::pmr::vector<::pg_query::Node> inputcollids;
+    std::pmr::vector<::pg_query::Node> largs;
+    std::pmr::vector<::pg_query::Node> rargs;
 
     size_t fbe_type() const noexcept { return 41; }
 
     RowCompareExpr();
-    RowCompareExpr(::pg_query::Node&& arg_xpr, ::pg_query::RowCompareType&& arg_rctype, std::vector<::pg_query::Node> arg_opnos, std::vector<::pg_query::Node> arg_opfamilies, std::vector<::pg_query::Node> arg_inputcollids, std::vector<::pg_query::Node> arg_largs, std::vector<::pg_query::Node> arg_rargs);
+    explicit RowCompareExpr(allocator_type alloc);
+    RowCompareExpr(::pg_query::Node&& arg_xpr, ::pg_query::RowCompareType&& arg_rctype, std::pmr::vector<::pg_query::Node> arg_opnos, std::pmr::vector<::pg_query::Node> arg_opfamilies, std::pmr::vector<::pg_query::Node> arg_inputcollids, std::pmr::vector<::pg_query::Node> arg_largs, std::pmr::vector<::pg_query::Node> arg_rargs);
     RowCompareExpr(const RowCompareExpr& other) = delete;
     RowCompareExpr(RowCompareExpr&& other) noexcept;
     ~RowCompareExpr() override;
@@ -4064,16 +4189,19 @@ namespace pg_query {
 
 struct CoalesceExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t coalescetype;
     uint32_t coalescecollid;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 42; }
 
     CoalesceExpr();
-    CoalesceExpr(::pg_query::Node&& arg_xpr, uint32_t arg_coalescetype, uint32_t arg_coalescecollid, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
+    explicit CoalesceExpr(allocator_type alloc);
+    CoalesceExpr(::pg_query::Node&& arg_xpr, uint32_t arg_coalescetype, uint32_t arg_coalescecollid, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location);
     CoalesceExpr(const CoalesceExpr& other) = delete;
     CoalesceExpr(CoalesceExpr&& other) noexcept;
     ~CoalesceExpr() override;
@@ -4119,18 +4247,21 @@ namespace pg_query {
 
 struct MinMaxExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t minmaxtype;
     uint32_t minmaxcollid;
     uint32_t inputcollid;
     ::pg_query::MinMaxOp op;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 43; }
 
     MinMaxExpr();
-    MinMaxExpr(::pg_query::Node&& arg_xpr, uint32_t arg_minmaxtype, uint32_t arg_minmaxcollid, uint32_t arg_inputcollid, ::pg_query::MinMaxOp&& arg_op, std::vector<::pg_query::Node> arg_args, int32_t arg_location);
+    explicit MinMaxExpr(allocator_type alloc);
+    MinMaxExpr(::pg_query::Node&& arg_xpr, uint32_t arg_minmaxtype, uint32_t arg_minmaxcollid, uint32_t arg_inputcollid, ::pg_query::MinMaxOp&& arg_op, std::pmr::vector<::pg_query::Node> arg_args, int32_t arg_location);
     MinMaxExpr(const MinMaxExpr& other) = delete;
     MinMaxExpr(MinMaxExpr&& other) noexcept;
     ~MinMaxExpr() override;
@@ -4176,6 +4307,8 @@ namespace pg_query {
 
 struct SQLValueFunction : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::SQLValueFunctionOp op;
     uint32_t type;
@@ -4185,6 +4318,7 @@ struct SQLValueFunction : FBE::Base
     size_t fbe_type() const noexcept { return 44; }
 
     SQLValueFunction();
+    explicit SQLValueFunction(allocator_type alloc);
     SQLValueFunction(::pg_query::Node&& arg_xpr, ::pg_query::SQLValueFunctionOp&& arg_op, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location);
     SQLValueFunction(const SQLValueFunction& other) = delete;
     SQLValueFunction(SQLValueFunction&& other) noexcept;
@@ -4231,12 +4365,14 @@ namespace pg_query {
 
 struct XmlExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::XmlExprOp op;
-    std::string name;
-    std::vector<::pg_query::Node> named_args;
-    std::vector<::pg_query::Node> arg_names;
-    std::vector<::pg_query::Node> args;
+    std::pmr::string name;
+    std::pmr::vector<::pg_query::Node> named_args;
+    std::pmr::vector<::pg_query::Node> arg_names;
+    std::pmr::vector<::pg_query::Node> args;
     ::pg_query::XmlOptionType xmloption;
     uint32_t type;
     int32_t typmod;
@@ -4245,7 +4381,8 @@ struct XmlExpr : FBE::Base
     size_t fbe_type() const noexcept { return 45; }
 
     XmlExpr();
-    XmlExpr(::pg_query::Node&& arg_xpr, ::pg_query::XmlExprOp&& arg_op, const std::string& arg_name, std::vector<::pg_query::Node> arg_named_args, std::vector<::pg_query::Node> arg_arg_names, std::vector<::pg_query::Node> arg_args, ::pg_query::XmlOptionType&& arg_xmloption, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location);
+    explicit XmlExpr(allocator_type alloc);
+    XmlExpr(::pg_query::Node&& arg_xpr, ::pg_query::XmlExprOp&& arg_op, const std::pmr::string& arg_name, std::pmr::vector<::pg_query::Node> arg_named_args, std::pmr::vector<::pg_query::Node> arg_arg_names, std::pmr::vector<::pg_query::Node> arg_args, ::pg_query::XmlOptionType&& arg_xmloption, uint32_t arg_type, int32_t arg_typmod, int32_t arg_location);
     XmlExpr(const XmlExpr& other) = delete;
     XmlExpr(XmlExpr&& other) noexcept;
     ~XmlExpr() override;
@@ -4291,6 +4428,8 @@ namespace pg_query {
 
 struct NullTest : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
     ::pg_query::NullTestType nulltesttype;
@@ -4300,6 +4439,7 @@ struct NullTest : FBE::Base
     size_t fbe_type() const noexcept { return 46; }
 
     NullTest();
+    explicit NullTest(allocator_type alloc);
     NullTest(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::NullTestType&& arg_nulltesttype, bool arg_argisrow, int32_t arg_location);
     NullTest(const NullTest& other) = delete;
     NullTest(NullTest&& other) noexcept;
@@ -4346,6 +4486,8 @@ namespace pg_query {
 
 struct BooleanTest : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
     ::pg_query::BoolTestType booltesttype;
@@ -4354,6 +4496,7 @@ struct BooleanTest : FBE::Base
     size_t fbe_type() const noexcept { return 47; }
 
     BooleanTest();
+    explicit BooleanTest(allocator_type alloc);
     BooleanTest(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, ::pg_query::BoolTestType&& arg_booltesttype, int32_t arg_location);
     BooleanTest(const BooleanTest& other) = delete;
     BooleanTest(BooleanTest&& other) noexcept;
@@ -4400,6 +4543,8 @@ namespace pg_query {
 
 struct CoerceToDomain : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node arg;
     uint32_t resulttype;
@@ -4411,6 +4556,7 @@ struct CoerceToDomain : FBE::Base
     size_t fbe_type() const noexcept { return 48; }
 
     CoerceToDomain();
+    explicit CoerceToDomain(allocator_type alloc);
     CoerceToDomain(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_arg, uint32_t arg_resulttype, int32_t arg_resulttypmod, uint32_t arg_resultcollid, ::pg_query::CoercionForm&& arg_coercionformat, int32_t arg_location);
     CoerceToDomain(const CoerceToDomain& other) = delete;
     CoerceToDomain(CoerceToDomain&& other) noexcept;
@@ -4457,6 +4603,8 @@ namespace pg_query {
 
 struct CoerceToDomainValue : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t type_id;
     int32_t type_mod;
@@ -4466,6 +4614,7 @@ struct CoerceToDomainValue : FBE::Base
     size_t fbe_type() const noexcept { return 49; }
 
     CoerceToDomainValue();
+    explicit CoerceToDomainValue(allocator_type alloc);
     CoerceToDomainValue(::pg_query::Node&& arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location);
     CoerceToDomainValue(const CoerceToDomainValue& other) = delete;
     CoerceToDomainValue(CoerceToDomainValue&& other) noexcept;
@@ -4512,6 +4661,8 @@ namespace pg_query {
 
 struct SetToDefault : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t type_id;
     int32_t type_mod;
@@ -4521,6 +4672,7 @@ struct SetToDefault : FBE::Base
     size_t fbe_type() const noexcept { return 50; }
 
     SetToDefault();
+    explicit SetToDefault(allocator_type alloc);
     SetToDefault(::pg_query::Node&& arg_xpr, uint32_t arg_type_id, int32_t arg_type_mod, uint32_t arg_collation, int32_t arg_location);
     SetToDefault(const SetToDefault& other) = delete;
     SetToDefault(SetToDefault&& other) noexcept;
@@ -4567,15 +4719,18 @@ namespace pg_query {
 
 struct CurrentOfExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t cvarno;
-    std::string cursor_name;
+    std::pmr::string cursor_name;
     int32_t cursor_param;
 
     size_t fbe_type() const noexcept { return 51; }
 
     CurrentOfExpr();
-    CurrentOfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_cvarno, const std::string& arg_cursor_name, int32_t arg_cursor_param);
+    explicit CurrentOfExpr(allocator_type alloc);
+    CurrentOfExpr(::pg_query::Node&& arg_xpr, uint32_t arg_cvarno, const std::pmr::string& arg_cursor_name, int32_t arg_cursor_param);
     CurrentOfExpr(const CurrentOfExpr& other) = delete;
     CurrentOfExpr(CurrentOfExpr&& other) noexcept;
     ~CurrentOfExpr() override;
@@ -4621,6 +4776,8 @@ namespace pg_query {
 
 struct NextValueExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     uint32_t seqid;
     uint32_t type_id;
@@ -4628,6 +4785,7 @@ struct NextValueExpr : FBE::Base
     size_t fbe_type() const noexcept { return 52; }
 
     NextValueExpr();
+    explicit NextValueExpr(allocator_type alloc);
     NextValueExpr(::pg_query::Node&& arg_xpr, uint32_t arg_seqid, uint32_t arg_type_id);
     NextValueExpr(const NextValueExpr& other) = delete;
     NextValueExpr(NextValueExpr&& other) noexcept;
@@ -4674,6 +4832,8 @@ namespace pg_query {
 
 struct InferenceElem : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node expr;
     uint32_t infercollid;
@@ -4682,6 +4842,7 @@ struct InferenceElem : FBE::Base
     size_t fbe_type() const noexcept { return 53; }
 
     InferenceElem();
+    explicit InferenceElem(allocator_type alloc);
     InferenceElem(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, uint32_t arg_infercollid, uint32_t arg_inferopclass);
     InferenceElem(const InferenceElem& other) = delete;
     InferenceElem(InferenceElem&& other) noexcept;
@@ -4728,10 +4889,12 @@ namespace pg_query {
 
 struct TargetEntry : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node xpr;
     ::pg_query::Node expr;
     int32_t resno;
-    std::string resname;
+    std::pmr::string resname;
     uint32_t ressortgroupref;
     uint32_t resorigtbl;
     int32_t resorigcol;
@@ -4740,7 +4903,8 @@ struct TargetEntry : FBE::Base
     size_t fbe_type() const noexcept { return 54; }
 
     TargetEntry();
-    TargetEntry(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, int32_t arg_resno, const std::string& arg_resname, uint32_t arg_ressortgroupref, uint32_t arg_resorigtbl, int32_t arg_resorigcol, bool arg_resjunk);
+    explicit TargetEntry(allocator_type alloc);
+    TargetEntry(::pg_query::Node&& arg_xpr, ::pg_query::Node&& arg_expr, int32_t arg_resno, const std::pmr::string& arg_resname, uint32_t arg_ressortgroupref, uint32_t arg_resorigtbl, int32_t arg_resorigcol, bool arg_resjunk);
     TargetEntry(const TargetEntry& other) = delete;
     TargetEntry(TargetEntry&& other) noexcept;
     ~TargetEntry() override;
@@ -4786,11 +4950,14 @@ namespace pg_query {
 
 struct RangeTblRef : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     int32_t rtindex;
 
     size_t fbe_type() const noexcept { return 55; }
 
     RangeTblRef();
+    explicit RangeTblRef(allocator_type alloc);
     explicit RangeTblRef(int32_t arg_rtindex);
     RangeTblRef(const RangeTblRef& other) = delete;
     RangeTblRef(RangeTblRef&& other) noexcept;
@@ -4839,11 +5006,13 @@ struct Alias;
 
 struct JoinExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::JoinType jointype;
     bool is_natural;
     ::pg_query::Node larg;
     ::pg_query::Node rarg;
-    std::vector<::pg_query::Node> using_clause;
+    std::pmr::vector<::pg_query::Node> using_clause;
     ::pg_query::Node quals;
     ::pg_query::Alias* alias;
     int32_t rtindex;
@@ -4851,7 +5020,8 @@ struct JoinExpr : FBE::Base
     size_t fbe_type() const noexcept { return 56; }
 
     JoinExpr();
-    JoinExpr(::pg_query::JoinType&& arg_jointype, bool arg_is_natural, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_quals, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_rtindex);
+    explicit JoinExpr(allocator_type alloc);
+    JoinExpr(::pg_query::JoinType&& arg_jointype, bool arg_is_natural, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::pmr::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_quals, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_rtindex);
     JoinExpr(const JoinExpr& other) = delete;
     JoinExpr(JoinExpr&& other) noexcept;
     ~JoinExpr() override;
@@ -4897,13 +5067,16 @@ namespace pg_query {
 
 struct FromExpr : FBE::Base
 {
-    std::vector<::pg_query::Node> fromlist;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> fromlist;
     ::pg_query::Node quals;
 
     size_t fbe_type() const noexcept { return 57; }
 
     FromExpr();
-    FromExpr(std::vector<::pg_query::Node> arg_fromlist, ::pg_query::Node&& arg_quals);
+    explicit FromExpr(allocator_type alloc);
+    FromExpr(std::pmr::vector<::pg_query::Node> arg_fromlist, ::pg_query::Node&& arg_quals);
     FromExpr(const FromExpr& other) = delete;
     FromExpr(FromExpr&& other) noexcept;
     ~FromExpr() override;
@@ -4949,19 +5122,22 @@ namespace pg_query {
 
 struct OnConflictExpr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::OnConflictAction action;
-    std::vector<::pg_query::Node> arbiter_elems;
+    std::pmr::vector<::pg_query::Node> arbiter_elems;
     ::pg_query::Node arbiter_where;
     uint32_t constraint;
-    std::vector<::pg_query::Node> on_conflict_set;
+    std::pmr::vector<::pg_query::Node> on_conflict_set;
     ::pg_query::Node on_conflict_where;
     int32_t excl_rel_index;
-    std::vector<::pg_query::Node> excl_rel_tlist;
+    std::pmr::vector<::pg_query::Node> excl_rel_tlist;
 
     size_t fbe_type() const noexcept { return 58; }
 
     OnConflictExpr();
-    OnConflictExpr(::pg_query::OnConflictAction&& arg_action, std::vector<::pg_query::Node> arg_arbiter_elems, ::pg_query::Node&& arg_arbiter_where, uint32_t arg_constraint, std::vector<::pg_query::Node> arg_on_conflict_set, ::pg_query::Node&& arg_on_conflict_where, int32_t arg_excl_rel_index, std::vector<::pg_query::Node> arg_excl_rel_tlist);
+    explicit OnConflictExpr(allocator_type alloc);
+    OnConflictExpr(::pg_query::OnConflictAction&& arg_action, std::pmr::vector<::pg_query::Node> arg_arbiter_elems, ::pg_query::Node&& arg_arbiter_where, uint32_t arg_constraint, std::pmr::vector<::pg_query::Node> arg_on_conflict_set, ::pg_query::Node&& arg_on_conflict_where, int32_t arg_excl_rel_index, std::pmr::vector<::pg_query::Node> arg_excl_rel_tlist);
     OnConflictExpr(const OnConflictExpr& other) = delete;
     OnConflictExpr(OnConflictExpr&& other) noexcept;
     ~OnConflictExpr() override;
@@ -5009,19 +5185,22 @@ struct RangeVar;
 
 struct IntoClause : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* rel;
-    std::vector<::pg_query::Node> col_names;
-    std::string access_method;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> col_names;
+    std::pmr::string access_method;
+    std::pmr::vector<::pg_query::Node> options;
     ::pg_query::OnCommitAction on_commit;
-    std::string table_space_name;
+    std::pmr::string table_space_name;
     ::pg_query::Node view_query;
     bool skip_data;
 
     size_t fbe_type() const noexcept { return 59; }
 
     IntoClause();
-    IntoClause(std::unique_ptr<::pg_query::RangeVar> arg_rel, std::vector<::pg_query::Node> arg_col_names, const std::string& arg_access_method, std::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_on_commit, const std::string& arg_table_space_name, ::pg_query::Node&& arg_view_query, bool arg_skip_data);
+    explicit IntoClause(allocator_type alloc);
+    IntoClause(std::unique_ptr<::pg_query::RangeVar> arg_rel, std::pmr::vector<::pg_query::Node> arg_col_names, const std::pmr::string& arg_access_method, std::pmr::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_on_commit, const std::pmr::string& arg_table_space_name, ::pg_query::Node&& arg_view_query, bool arg_skip_data);
     IntoClause(const IntoClause& other) = delete;
     IntoClause(IntoClause&& other) noexcept;
     ~IntoClause() override;
@@ -5067,6 +5246,8 @@ namespace pg_query {
 
 struct RawStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node stmt;
     int32_t stmt_location;
     int32_t stmt_len;
@@ -5074,6 +5255,7 @@ struct RawStmt : FBE::Base
     size_t fbe_type() const noexcept { return 60; }
 
     RawStmt();
+    explicit RawStmt(allocator_type alloc);
     RawStmt(::pg_query::Node&& arg_stmt, int32_t arg_stmt_location, int32_t arg_stmt_len);
     RawStmt(const RawStmt& other) = delete;
     RawStmt(RawStmt&& other) noexcept;
@@ -5124,6 +5306,8 @@ struct OnConflictExpr;
 
 struct Query : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::CmdType command_type;
     ::pg_query::QuerySource query_source;
     bool can_set_tag;
@@ -5138,33 +5322,34 @@ struct Query : FBE::Base
     bool has_modifying_cte;
     bool has_for_update;
     bool has_row_security;
-    std::vector<::pg_query::Node> cte_list;
-    std::vector<::pg_query::Node> rtable;
+    std::pmr::vector<::pg_query::Node> cte_list;
+    std::pmr::vector<::pg_query::Node> rtable;
     ::pg_query::FromExpr* jointree;
-    std::vector<::pg_query::Node> target_list;
+    std::pmr::vector<::pg_query::Node> target_list;
     ::pg_query::OverridingKind override;
     ::pg_query::OnConflictExpr* on_conflict;
-    std::vector<::pg_query::Node> returning_list;
-    std::vector<::pg_query::Node> group_clause;
-    std::vector<::pg_query::Node> grouping_sets;
+    std::pmr::vector<::pg_query::Node> returning_list;
+    std::pmr::vector<::pg_query::Node> group_clause;
+    std::pmr::vector<::pg_query::Node> grouping_sets;
     ::pg_query::Node having_qual;
-    std::vector<::pg_query::Node> window_clause;
-    std::vector<::pg_query::Node> distinct_clause;
-    std::vector<::pg_query::Node> sort_clause;
+    std::pmr::vector<::pg_query::Node> window_clause;
+    std::pmr::vector<::pg_query::Node> distinct_clause;
+    std::pmr::vector<::pg_query::Node> sort_clause;
     ::pg_query::Node limit_offset;
     ::pg_query::Node limit_count;
     ::pg_query::LimitOption limit_option;
-    std::vector<::pg_query::Node> row_marks;
+    std::pmr::vector<::pg_query::Node> row_marks;
     ::pg_query::Node set_operations;
-    std::vector<::pg_query::Node> constraint_deps;
-    std::vector<::pg_query::Node> with_check_options;
+    std::pmr::vector<::pg_query::Node> constraint_deps;
+    std::pmr::vector<::pg_query::Node> with_check_options;
     int32_t stmt_location;
     int32_t stmt_len;
 
     size_t fbe_type() const noexcept { return 61; }
 
     Query();
-    Query(::pg_query::CmdType&& arg_command_type, ::pg_query::QuerySource&& arg_query_source, bool arg_can_set_tag, ::pg_query::Node&& arg_utility_stmt, int32_t arg_result_relation, bool arg_has_aggs, bool arg_has_window_funcs, bool arg_has_target_srfs, bool arg_has_sub_links, bool arg_has_distinct_on, bool arg_has_recursive, bool arg_has_modifying_cte, bool arg_has_for_update, bool arg_has_row_security, std::vector<::pg_query::Node> arg_cte_list, std::vector<::pg_query::Node> arg_rtable, std::unique_ptr<::pg_query::FromExpr> arg_jointree, std::vector<::pg_query::Node> arg_target_list, ::pg_query::OverridingKind&& arg_override, std::unique_ptr<::pg_query::OnConflictExpr> arg_on_conflict, std::vector<::pg_query::Node> arg_returning_list, std::vector<::pg_query::Node> arg_group_clause, std::vector<::pg_query::Node> arg_grouping_sets, ::pg_query::Node&& arg_having_qual, std::vector<::pg_query::Node> arg_window_clause, std::vector<::pg_query::Node> arg_distinct_clause, std::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<::pg_query::Node> arg_row_marks, ::pg_query::Node&& arg_set_operations, std::vector<::pg_query::Node> arg_constraint_deps, std::vector<::pg_query::Node> arg_with_check_options, int32_t arg_stmt_location, int32_t arg_stmt_len);
+    explicit Query(allocator_type alloc);
+    Query(::pg_query::CmdType&& arg_command_type, ::pg_query::QuerySource&& arg_query_source, bool arg_can_set_tag, ::pg_query::Node&& arg_utility_stmt, int32_t arg_result_relation, bool arg_has_aggs, bool arg_has_window_funcs, bool arg_has_target_srfs, bool arg_has_sub_links, bool arg_has_distinct_on, bool arg_has_recursive, bool arg_has_modifying_cte, bool arg_has_for_update, bool arg_has_row_security, std::pmr::vector<::pg_query::Node> arg_cte_list, std::pmr::vector<::pg_query::Node> arg_rtable, std::unique_ptr<::pg_query::FromExpr> arg_jointree, std::pmr::vector<::pg_query::Node> arg_target_list, ::pg_query::OverridingKind&& arg_override, std::unique_ptr<::pg_query::OnConflictExpr> arg_on_conflict, std::pmr::vector<::pg_query::Node> arg_returning_list, std::pmr::vector<::pg_query::Node> arg_group_clause, std::pmr::vector<::pg_query::Node> arg_grouping_sets, ::pg_query::Node&& arg_having_qual, std::pmr::vector<::pg_query::Node> arg_window_clause, std::pmr::vector<::pg_query::Node> arg_distinct_clause, std::pmr::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::pmr::vector<::pg_query::Node> arg_row_marks, ::pg_query::Node&& arg_set_operations, std::pmr::vector<::pg_query::Node> arg_constraint_deps, std::pmr::vector<::pg_query::Node> arg_with_check_options, int32_t arg_stmt_location, int32_t arg_stmt_len);
     Query(const Query& other) = delete;
     Query(Query&& other) noexcept;
     ~Query() override;
@@ -5216,18 +5401,21 @@ struct WithClause;
 
 struct InsertStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* relation;
-    std::vector<::pg_query::Node> cols;
+    std::pmr::vector<::pg_query::Node> cols;
     ::pg_query::Node select_stmt;
     ::pg_query::OnConflictClause* on_conflict_clause;
-    std::vector<::pg_query::Node> returning_list;
+    std::pmr::vector<::pg_query::Node> returning_list;
     ::pg_query::WithClause* with_clause;
     ::pg_query::OverridingKind override;
 
     size_t fbe_type() const noexcept { return 62; }
 
     InsertStmt();
-    InsertStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_cols, ::pg_query::Node&& arg_select_stmt, std::unique_ptr<::pg_query::OnConflictClause> arg_on_conflict_clause, std::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause, ::pg_query::OverridingKind&& arg_override);
+    explicit InsertStmt(allocator_type alloc);
+    InsertStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_cols, ::pg_query::Node&& arg_select_stmt, std::unique_ptr<::pg_query::OnConflictClause> arg_on_conflict_clause, std::pmr::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause, ::pg_query::OverridingKind&& arg_override);
     InsertStmt(const InsertStmt& other) = delete;
     InsertStmt(InsertStmt&& other) noexcept;
     ~InsertStmt() override;
@@ -5277,16 +5465,19 @@ struct WithClause;
 
 struct DeleteStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* relation;
-    std::vector<::pg_query::Node> using_clause;
+    std::pmr::vector<::pg_query::Node> using_clause;
     ::pg_query::Node where_clause;
-    std::vector<::pg_query::Node> returning_list;
+    std::pmr::vector<::pg_query::Node> returning_list;
     ::pg_query::WithClause* with_clause;
 
     size_t fbe_type() const noexcept { return 63; }
 
     DeleteStmt();
-    DeleteStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause);
+    explicit DeleteStmt(allocator_type alloc);
+    DeleteStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_using_clause, ::pg_query::Node&& arg_where_clause, std::pmr::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause);
     DeleteStmt(const DeleteStmt& other) = delete;
     DeleteStmt(DeleteStmt&& other) noexcept;
     ~DeleteStmt() override;
@@ -5336,17 +5527,20 @@ struct WithClause;
 
 struct UpdateStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* relation;
-    std::vector<::pg_query::Node> target_list;
+    std::pmr::vector<::pg_query::Node> target_list;
     ::pg_query::Node where_clause;
-    std::vector<::pg_query::Node> from_clause;
-    std::vector<::pg_query::Node> returning_list;
+    std::pmr::vector<::pg_query::Node> from_clause;
+    std::pmr::vector<::pg_query::Node> returning_list;
     ::pg_query::WithClause* with_clause;
 
     size_t fbe_type() const noexcept { return 64; }
 
     UpdateStmt();
-    UpdateStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_from_clause, std::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause);
+    explicit UpdateStmt(allocator_type alloc);
+    UpdateStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, std::pmr::vector<::pg_query::Node> arg_from_clause, std::pmr::vector<::pg_query::Node> arg_returning_list, std::unique_ptr<::pg_query::WithClause> arg_with_clause);
     UpdateStmt(const UpdateStmt& other) = delete;
     UpdateStmt(UpdateStmt&& other) noexcept;
     ~UpdateStmt() override;
@@ -5396,20 +5590,22 @@ struct WithClause;
 
 struct SelectStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> distinct_clause;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> distinct_clause;
     ::pg_query::IntoClause* into_clause;
-    std::vector<::pg_query::Node> target_list;
-    std::vector<::pg_query::Node> from_clause;
+    std::pmr::vector<::pg_query::Node> target_list;
+    std::pmr::vector<::pg_query::Node> from_clause;
     ::pg_query::Node where_clause;
-    std::vector<::pg_query::Node> group_clause;
+    std::pmr::vector<::pg_query::Node> group_clause;
     ::pg_query::Node having_clause;
-    std::vector<::pg_query::Node> window_clause;
-    std::vector<::pg_query::Node> values_lists;
-    std::vector<::pg_query::Node> sort_clause;
+    std::pmr::vector<::pg_query::Node> window_clause;
+    std::pmr::vector<::pg_query::Node> values_lists;
+    std::pmr::vector<::pg_query::Node> sort_clause;
     ::pg_query::Node limit_offset;
     ::pg_query::Node limit_count;
     ::pg_query::LimitOption limit_option;
-    std::vector<::pg_query::Node> locking_clause;
+    std::pmr::vector<::pg_query::Node> locking_clause;
     ::pg_query::WithClause* with_clause;
     ::pg_query::SetOperation op;
     bool all;
@@ -5419,7 +5615,8 @@ struct SelectStmt : FBE::Base
     size_t fbe_type() const noexcept { return 65; }
 
     SelectStmt();
-    SelectStmt(std::vector<::pg_query::Node> arg_distinct_clause, std::unique_ptr<::pg_query::IntoClause> arg_into_clause, std::vector<::pg_query::Node> arg_target_list, std::vector<::pg_query::Node> arg_from_clause, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_group_clause, ::pg_query::Node&& arg_having_clause, std::vector<::pg_query::Node> arg_window_clause, std::vector<::pg_query::Node> arg_values_lists, std::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::vector<::pg_query::Node> arg_locking_clause, std::unique_ptr<::pg_query::WithClause> arg_with_clause, ::pg_query::SetOperation&& arg_op, bool arg_all, std::unique_ptr<::pg_query::SelectStmt> arg_larg, std::unique_ptr<::pg_query::SelectStmt> arg_rarg);
+    explicit SelectStmt(allocator_type alloc);
+    SelectStmt(std::pmr::vector<::pg_query::Node> arg_distinct_clause, std::unique_ptr<::pg_query::IntoClause> arg_into_clause, std::pmr::vector<::pg_query::Node> arg_target_list, std::pmr::vector<::pg_query::Node> arg_from_clause, ::pg_query::Node&& arg_where_clause, std::pmr::vector<::pg_query::Node> arg_group_clause, ::pg_query::Node&& arg_having_clause, std::pmr::vector<::pg_query::Node> arg_window_clause, std::pmr::vector<::pg_query::Node> arg_values_lists, std::pmr::vector<::pg_query::Node> arg_sort_clause, ::pg_query::Node&& arg_limit_offset, ::pg_query::Node&& arg_limit_count, ::pg_query::LimitOption&& arg_limit_option, std::pmr::vector<::pg_query::Node> arg_locking_clause, std::unique_ptr<::pg_query::WithClause> arg_with_clause, ::pg_query::SetOperation&& arg_op, bool arg_all, std::unique_ptr<::pg_query::SelectStmt> arg_larg, std::unique_ptr<::pg_query::SelectStmt> arg_rarg);
     SelectStmt(const SelectStmt& other) = delete;
     SelectStmt(SelectStmt&& other) noexcept;
     ~SelectStmt() override;
@@ -5467,15 +5664,18 @@ struct RangeVar;
 
 struct AlterTableStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* relation;
-    std::vector<::pg_query::Node> cmds;
+    std::pmr::vector<::pg_query::Node> cmds;
     ::pg_query::ObjectType relkind;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 66; }
 
     AlterTableStmt();
-    AlterTableStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_cmds, ::pg_query::ObjectType&& arg_relkind, bool arg_missing_ok);
+    explicit AlterTableStmt(allocator_type alloc);
+    AlterTableStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_cmds, ::pg_query::ObjectType&& arg_relkind, bool arg_missing_ok);
     AlterTableStmt(const AlterTableStmt& other) = delete;
     AlterTableStmt(AlterTableStmt&& other) noexcept;
     ~AlterTableStmt() override;
@@ -5523,8 +5723,10 @@ struct RoleSpec;
 
 struct AlterTableCmd : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::AlterTableType subtype;
-    std::string name;
+    std::pmr::string name;
     int32_t num;
     ::pg_query::RoleSpec* newowner;
     ::pg_query::Node def;
@@ -5534,7 +5736,8 @@ struct AlterTableCmd : FBE::Base
     size_t fbe_type() const noexcept { return 67; }
 
     AlterTableCmd();
-    AlterTableCmd(::pg_query::AlterTableType&& arg_subtype, const std::string& arg_name, int32_t arg_num, std::unique_ptr<::pg_query::RoleSpec> arg_newowner, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
+    explicit AlterTableCmd(allocator_type alloc);
+    AlterTableCmd(::pg_query::AlterTableType&& arg_subtype, const std::pmr::string& arg_name, int32_t arg_num, std::unique_ptr<::pg_query::RoleSpec> arg_newowner, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
     AlterTableCmd(const AlterTableCmd& other) = delete;
     AlterTableCmd(AlterTableCmd&& other) noexcept;
     ~AlterTableCmd() override;
@@ -5580,9 +5783,11 @@ namespace pg_query {
 
 struct AlterDomainStmt : FBE::Base
 {
-    std::string subtype;
-    std::vector<::pg_query::Node> type_name;
-    std::string name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string subtype;
+    std::pmr::vector<::pg_query::Node> type_name;
+    std::pmr::string name;
     ::pg_query::Node def;
     ::pg_query::DropBehavior behavior;
     bool missing_ok;
@@ -5590,7 +5795,8 @@ struct AlterDomainStmt : FBE::Base
     size_t fbe_type() const noexcept { return 68; }
 
     AlterDomainStmt();
-    AlterDomainStmt(const std::string& arg_subtype, std::vector<::pg_query::Node> arg_type_name, const std::string& arg_name, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
+    explicit AlterDomainStmt(allocator_type alloc);
+    AlterDomainStmt(const std::pmr::string& arg_subtype, std::pmr::vector<::pg_query::Node> arg_type_name, const std::pmr::string& arg_name, ::pg_query::Node&& arg_def, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
     AlterDomainStmt(const AlterDomainStmt& other) = delete;
     AlterDomainStmt(AlterDomainStmt&& other) noexcept;
     ~AlterDomainStmt() override;
@@ -5636,19 +5842,22 @@ namespace pg_query {
 
 struct SetOperationStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::SetOperation op;
     bool all;
     ::pg_query::Node larg;
     ::pg_query::Node rarg;
-    std::vector<::pg_query::Node> col_types;
-    std::vector<::pg_query::Node> col_typmods;
-    std::vector<::pg_query::Node> col_collations;
-    std::vector<::pg_query::Node> group_clauses;
+    std::pmr::vector<::pg_query::Node> col_types;
+    std::pmr::vector<::pg_query::Node> col_typmods;
+    std::pmr::vector<::pg_query::Node> col_collations;
+    std::pmr::vector<::pg_query::Node> group_clauses;
 
     size_t fbe_type() const noexcept { return 69; }
 
     SetOperationStmt();
-    SetOperationStmt(::pg_query::SetOperation&& arg_op, bool arg_all, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::vector<::pg_query::Node> arg_col_types, std::vector<::pg_query::Node> arg_col_typmods, std::vector<::pg_query::Node> arg_col_collations, std::vector<::pg_query::Node> arg_group_clauses);
+    explicit SetOperationStmt(allocator_type alloc);
+    SetOperationStmt(::pg_query::SetOperation&& arg_op, bool arg_all, ::pg_query::Node&& arg_larg, ::pg_query::Node&& arg_rarg, std::pmr::vector<::pg_query::Node> arg_col_types, std::pmr::vector<::pg_query::Node> arg_col_typmods, std::pmr::vector<::pg_query::Node> arg_col_collations, std::pmr::vector<::pg_query::Node> arg_group_clauses);
     SetOperationStmt(const SetOperationStmt& other) = delete;
     SetOperationStmt(SetOperationStmt&& other) noexcept;
     ~SetOperationStmt() override;
@@ -5694,19 +5903,22 @@ namespace pg_query {
 
 struct GrantStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     bool is_grant;
     ::pg_query::GrantTargetType targtype;
     ::pg_query::ObjectType objtype;
-    std::vector<::pg_query::Node> objects;
-    std::vector<::pg_query::Node> privileges;
-    std::vector<::pg_query::Node> grantees;
+    std::pmr::vector<::pg_query::Node> objects;
+    std::pmr::vector<::pg_query::Node> privileges;
+    std::pmr::vector<::pg_query::Node> grantees;
     bool grant_option;
     ::pg_query::DropBehavior behavior;
 
     size_t fbe_type() const noexcept { return 70; }
 
     GrantStmt();
-    GrantStmt(bool arg_is_grant, ::pg_query::GrantTargetType&& arg_targtype, ::pg_query::ObjectType&& arg_objtype, std::vector<::pg_query::Node> arg_objects, std::vector<::pg_query::Node> arg_privileges, std::vector<::pg_query::Node> arg_grantees, bool arg_grant_option, ::pg_query::DropBehavior&& arg_behavior);
+    explicit GrantStmt(allocator_type alloc);
+    GrantStmt(bool arg_is_grant, ::pg_query::GrantTargetType&& arg_targtype, ::pg_query::ObjectType&& arg_objtype, std::pmr::vector<::pg_query::Node> arg_objects, std::pmr::vector<::pg_query::Node> arg_privileges, std::pmr::vector<::pg_query::Node> arg_grantees, bool arg_grant_option, ::pg_query::DropBehavior&& arg_behavior);
     GrantStmt(const GrantStmt& other) = delete;
     GrantStmt(GrantStmt&& other) noexcept;
     ~GrantStmt() override;
@@ -5754,8 +5966,10 @@ struct RoleSpec;
 
 struct GrantRoleStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> granted_roles;
-    std::vector<::pg_query::Node> grantee_roles;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> granted_roles;
+    std::pmr::vector<::pg_query::Node> grantee_roles;
     bool is_grant;
     bool admin_opt;
     ::pg_query::RoleSpec* grantor;
@@ -5764,7 +5978,8 @@ struct GrantRoleStmt : FBE::Base
     size_t fbe_type() const noexcept { return 71; }
 
     GrantRoleStmt();
-    GrantRoleStmt(std::vector<::pg_query::Node> arg_granted_roles, std::vector<::pg_query::Node> arg_grantee_roles, bool arg_is_grant, bool arg_admin_opt, std::unique_ptr<::pg_query::RoleSpec> arg_grantor, ::pg_query::DropBehavior&& arg_behavior);
+    explicit GrantRoleStmt(allocator_type alloc);
+    GrantRoleStmt(std::pmr::vector<::pg_query::Node> arg_granted_roles, std::pmr::vector<::pg_query::Node> arg_grantee_roles, bool arg_is_grant, bool arg_admin_opt, std::unique_ptr<::pg_query::RoleSpec> arg_grantor, ::pg_query::DropBehavior&& arg_behavior);
     GrantRoleStmt(const GrantRoleStmt& other) = delete;
     GrantRoleStmt(GrantRoleStmt&& other) noexcept;
     ~GrantRoleStmt() override;
@@ -5812,13 +6027,16 @@ struct GrantStmt;
 
 struct AlterDefaultPrivilegesStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> options;
     ::pg_query::GrantStmt* action;
 
     size_t fbe_type() const noexcept { return 72; }
 
     AlterDefaultPrivilegesStmt();
-    AlterDefaultPrivilegesStmt(std::vector<::pg_query::Node> arg_options, std::unique_ptr<::pg_query::GrantStmt> arg_action);
+    explicit AlterDefaultPrivilegesStmt(allocator_type alloc);
+    AlterDefaultPrivilegesStmt(std::pmr::vector<::pg_query::Node> arg_options, std::unique_ptr<::pg_query::GrantStmt> arg_action);
     AlterDefaultPrivilegesStmt(const AlterDefaultPrivilegesStmt& other) = delete;
     AlterDefaultPrivilegesStmt(AlterDefaultPrivilegesStmt&& other) noexcept;
     ~AlterDefaultPrivilegesStmt() override;
@@ -5864,12 +6082,15 @@ namespace pg_query {
 
 struct ClosePortalStmt : FBE::Base
 {
-    std::string portalname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string portalname;
 
     size_t fbe_type() const noexcept { return 73; }
 
     ClosePortalStmt();
-    explicit ClosePortalStmt(const std::string& arg_portalname);
+    explicit ClosePortalStmt(allocator_type alloc);
+    explicit ClosePortalStmt(const std::pmr::string& arg_portalname);
     ClosePortalStmt(const ClosePortalStmt& other) = delete;
     ClosePortalStmt(ClosePortalStmt&& other) noexcept;
     ~ClosePortalStmt() override;
@@ -5917,14 +6138,17 @@ struct RangeVar;
 
 struct ClusterStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* relation;
-    std::string indexname;
+    std::pmr::string indexname;
     int32_t options;
 
     size_t fbe_type() const noexcept { return 74; }
 
     ClusterStmt();
-    ClusterStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::string& arg_indexname, int32_t arg_options);
+    explicit ClusterStmt(allocator_type alloc);
+    ClusterStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::pmr::string& arg_indexname, int32_t arg_options);
     ClusterStmt(const ClusterStmt& other) = delete;
     ClusterStmt(ClusterStmt&& other) noexcept;
     ~ClusterStmt() override;
@@ -5972,19 +6196,22 @@ struct RangeVar;
 
 struct CopyStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* relation;
     ::pg_query::Node query;
-    std::vector<::pg_query::Node> attlist;
+    std::pmr::vector<::pg_query::Node> attlist;
     bool is_from;
     bool is_program;
-    std::string filename;
-    std::vector<::pg_query::Node> options;
+    std::pmr::string filename;
+    std::pmr::vector<::pg_query::Node> options;
     ::pg_query::Node where_clause;
 
     size_t fbe_type() const noexcept { return 75; }
 
     CopyStmt();
-    CopyStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_query, std::vector<::pg_query::Node> arg_attlist, bool arg_is_from, bool arg_is_program, const std::string& arg_filename, std::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause);
+    explicit CopyStmt(allocator_type alloc);
+    CopyStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_query, std::pmr::vector<::pg_query::Node> arg_attlist, bool arg_is_from, bool arg_is_program, const std::pmr::string& arg_filename, std::pmr::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause);
     CopyStmt(const CopyStmt& other) = delete;
     CopyStmt(CopyStmt&& other) noexcept;
     ~CopyStmt() override;
@@ -6038,23 +6265,26 @@ struct TypeName;
 
 struct CreateStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* relation;
-    std::vector<::pg_query::Node> table_elts;
-    std::vector<::pg_query::Node> inh_relations;
+    std::pmr::vector<::pg_query::Node> table_elts;
+    std::pmr::vector<::pg_query::Node> inh_relations;
     ::pg_query::PartitionBoundSpec* partbound;
     ::pg_query::PartitionSpec* partspec;
     ::pg_query::TypeName* of_typename;
-    std::vector<::pg_query::Node> constraints;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> constraints;
+    std::pmr::vector<::pg_query::Node> options;
     ::pg_query::OnCommitAction oncommit;
-    std::string tablespacename;
-    std::string access_method;
+    std::pmr::string tablespacename;
+    std::pmr::string access_method;
     bool if_not_exists;
 
     size_t fbe_type() const noexcept { return 76; }
 
     CreateStmt();
-    CreateStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_table_elts, std::vector<::pg_query::Node> arg_inh_relations, std::unique_ptr<::pg_query::PartitionBoundSpec> arg_partbound, std::unique_ptr<::pg_query::PartitionSpec> arg_partspec, std::unique_ptr<::pg_query::TypeName> arg_of_typename, std::vector<::pg_query::Node> arg_constraints, std::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_oncommit, const std::string& arg_tablespacename, const std::string& arg_access_method, bool arg_if_not_exists);
+    explicit CreateStmt(allocator_type alloc);
+    CreateStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_table_elts, std::pmr::vector<::pg_query::Node> arg_inh_relations, std::unique_ptr<::pg_query::PartitionBoundSpec> arg_partbound, std::unique_ptr<::pg_query::PartitionSpec> arg_partspec, std::unique_ptr<::pg_query::TypeName> arg_of_typename, std::pmr::vector<::pg_query::Node> arg_constraints, std::pmr::vector<::pg_query::Node> arg_options, ::pg_query::OnCommitAction&& arg_oncommit, const std::pmr::string& arg_tablespacename, const std::pmr::string& arg_access_method, bool arg_if_not_exists);
     CreateStmt(const CreateStmt& other) = delete;
     CreateStmt(CreateStmt&& other) noexcept;
     ~CreateStmt() override;
@@ -6100,18 +6330,21 @@ namespace pg_query {
 
 struct DefineStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ObjectType kind;
     bool oldstyle;
-    std::vector<::pg_query::Node> defnames;
-    std::vector<::pg_query::Node> args;
-    std::vector<::pg_query::Node> definition;
+    std::pmr::vector<::pg_query::Node> defnames;
+    std::pmr::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> definition;
     bool if_not_exists;
     bool replace;
 
     size_t fbe_type() const noexcept { return 77; }
 
     DefineStmt();
-    DefineStmt(::pg_query::ObjectType&& arg_kind, bool arg_oldstyle, std::vector<::pg_query::Node> arg_defnames, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_definition, bool arg_if_not_exists, bool arg_replace);
+    explicit DefineStmt(allocator_type alloc);
+    DefineStmt(::pg_query::ObjectType&& arg_kind, bool arg_oldstyle, std::pmr::vector<::pg_query::Node> arg_defnames, std::pmr::vector<::pg_query::Node> arg_args, std::pmr::vector<::pg_query::Node> arg_definition, bool arg_if_not_exists, bool arg_replace);
     DefineStmt(const DefineStmt& other) = delete;
     DefineStmt(DefineStmt&& other) noexcept;
     ~DefineStmt() override;
@@ -6157,7 +6390,9 @@ namespace pg_query {
 
 struct DropStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> objects;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> objects;
     ::pg_query::ObjectType remove_type;
     ::pg_query::DropBehavior behavior;
     bool missing_ok;
@@ -6166,7 +6401,8 @@ struct DropStmt : FBE::Base
     size_t fbe_type() const noexcept { return 78; }
 
     DropStmt();
-    DropStmt(std::vector<::pg_query::Node> arg_objects, ::pg_query::ObjectType&& arg_remove_type, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok, bool arg_concurrent);
+    explicit DropStmt(allocator_type alloc);
+    DropStmt(std::pmr::vector<::pg_query::Node> arg_objects, ::pg_query::ObjectType&& arg_remove_type, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok, bool arg_concurrent);
     DropStmt(const DropStmt& other) = delete;
     DropStmt(DropStmt&& other) noexcept;
     ~DropStmt() override;
@@ -6212,14 +6448,17 @@ namespace pg_query {
 
 struct TruncateStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> relations;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> relations;
     bool restart_seqs;
     ::pg_query::DropBehavior behavior;
 
     size_t fbe_type() const noexcept { return 79; }
 
     TruncateStmt();
-    TruncateStmt(std::vector<::pg_query::Node> arg_relations, bool arg_restart_seqs, ::pg_query::DropBehavior&& arg_behavior);
+    explicit TruncateStmt(allocator_type alloc);
+    TruncateStmt(std::pmr::vector<::pg_query::Node> arg_relations, bool arg_restart_seqs, ::pg_query::DropBehavior&& arg_behavior);
     TruncateStmt(const TruncateStmt& other) = delete;
     TruncateStmt(TruncateStmt&& other) noexcept;
     ~TruncateStmt() override;
@@ -6265,14 +6504,17 @@ namespace pg_query {
 
 struct CommentStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ObjectType objtype;
     ::pg_query::Node object;
-    std::string comment;
+    std::pmr::string comment;
 
     size_t fbe_type() const noexcept { return 80; }
 
     CommentStmt();
-    CommentStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::string& arg_comment);
+    explicit CommentStmt(allocator_type alloc);
+    CommentStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::pmr::string& arg_comment);
     CommentStmt(const CommentStmt& other) = delete;
     CommentStmt(CommentStmt&& other) noexcept;
     ~CommentStmt() override;
@@ -6318,15 +6560,18 @@ namespace pg_query {
 
 struct FetchStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::FetchDirection direction;
     int64_t how_many;
-    std::string portalname;
+    std::pmr::string portalname;
     bool ismove;
 
     size_t fbe_type() const noexcept { return 81; }
 
     FetchStmt();
-    FetchStmt(::pg_query::FetchDirection&& arg_direction, int64_t arg_how_many, const std::string& arg_portalname, bool arg_ismove);
+    explicit FetchStmt(allocator_type alloc);
+    FetchStmt(::pg_query::FetchDirection&& arg_direction, int64_t arg_how_many, const std::pmr::string& arg_portalname, bool arg_ismove);
     FetchStmt(const FetchStmt& other) = delete;
     FetchStmt(FetchStmt&& other) noexcept;
     ~FetchStmt() override;
@@ -6374,16 +6619,18 @@ struct RangeVar;
 
 struct IndexStmt : FBE::Base
 {
-    std::string idxname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string idxname;
     ::pg_query::RangeVar* relation;
-    std::string access_method;
-    std::string table_space;
-    std::vector<::pg_query::Node> index_params;
-    std::vector<::pg_query::Node> index_including_params;
-    std::vector<::pg_query::Node> options;
+    std::pmr::string access_method;
+    std::pmr::string table_space;
+    std::pmr::vector<::pg_query::Node> index_params;
+    std::pmr::vector<::pg_query::Node> index_including_params;
+    std::pmr::vector<::pg_query::Node> options;
     ::pg_query::Node where_clause;
-    std::vector<::pg_query::Node> exclude_op_names;
-    std::string idxcomment;
+    std::pmr::vector<::pg_query::Node> exclude_op_names;
+    std::pmr::string idxcomment;
     uint32_t index_oid;
     uint32_t old_node;
     uint32_t old_create_subid;
@@ -6401,7 +6648,8 @@ struct IndexStmt : FBE::Base
     size_t fbe_type() const noexcept { return 82; }
 
     IndexStmt();
-    IndexStmt(const std::string& arg_idxname, std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::string& arg_access_method, const std::string& arg_table_space, std::vector<::pg_query::Node> arg_index_params, std::vector<::pg_query::Node> arg_index_including_params, std::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause, std::vector<::pg_query::Node> arg_exclude_op_names, const std::string& arg_idxcomment, uint32_t arg_index_oid, uint32_t arg_old_node, uint32_t arg_old_create_subid, uint32_t arg_old_first_relfilenode_subid, bool arg_unique, bool arg_primary, bool arg_isconstraint, bool arg_deferrable, bool arg_initdeferred, bool arg_transformed, bool arg_concurrent, bool arg_if_not_exists, bool arg_reset_default_tblspc);
+    explicit IndexStmt(allocator_type alloc);
+    IndexStmt(const std::pmr::string& arg_idxname, std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::pmr::string& arg_access_method, const std::pmr::string& arg_table_space, std::pmr::vector<::pg_query::Node> arg_index_params, std::pmr::vector<::pg_query::Node> arg_index_including_params, std::pmr::vector<::pg_query::Node> arg_options, ::pg_query::Node&& arg_where_clause, std::pmr::vector<::pg_query::Node> arg_exclude_op_names, const std::pmr::string& arg_idxcomment, uint32_t arg_index_oid, uint32_t arg_old_node, uint32_t arg_old_create_subid, uint32_t arg_old_first_relfilenode_subid, bool arg_unique, bool arg_primary, bool arg_isconstraint, bool arg_deferrable, bool arg_initdeferred, bool arg_transformed, bool arg_concurrent, bool arg_if_not_exists, bool arg_reset_default_tblspc);
     IndexStmt(const IndexStmt& other) = delete;
     IndexStmt(IndexStmt&& other) noexcept;
     ~IndexStmt() override;
@@ -6449,17 +6697,20 @@ struct TypeName;
 
 struct CreateFunctionStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     bool is_procedure;
     bool replace;
-    std::vector<::pg_query::Node> funcname;
-    std::vector<::pg_query::Node> parameters;
+    std::pmr::vector<::pg_query::Node> funcname;
+    std::pmr::vector<::pg_query::Node> parameters;
     ::pg_query::TypeName* return_type;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 83; }
 
     CreateFunctionStmt();
-    CreateFunctionStmt(bool arg_is_procedure, bool arg_replace, std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_parameters, std::unique_ptr<::pg_query::TypeName> arg_return_type, std::vector<::pg_query::Node> arg_options);
+    explicit CreateFunctionStmt(allocator_type alloc);
+    CreateFunctionStmt(bool arg_is_procedure, bool arg_replace, std::pmr::vector<::pg_query::Node> arg_funcname, std::pmr::vector<::pg_query::Node> arg_parameters, std::unique_ptr<::pg_query::TypeName> arg_return_type, std::pmr::vector<::pg_query::Node> arg_options);
     CreateFunctionStmt(const CreateFunctionStmt& other) = delete;
     CreateFunctionStmt(CreateFunctionStmt&& other) noexcept;
     ~CreateFunctionStmt() override;
@@ -6507,14 +6758,17 @@ struct ObjectWithArgs;
 
 struct AlterFunctionStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ObjectType objtype;
     ::pg_query::ObjectWithArgs* func;
-    std::vector<::pg_query::Node> actions;
+    std::pmr::vector<::pg_query::Node> actions;
 
     size_t fbe_type() const noexcept { return 84; }
 
     AlterFunctionStmt();
-    AlterFunctionStmt(::pg_query::ObjectType&& arg_objtype, std::unique_ptr<::pg_query::ObjectWithArgs> arg_func, std::vector<::pg_query::Node> arg_actions);
+    explicit AlterFunctionStmt(allocator_type alloc);
+    AlterFunctionStmt(::pg_query::ObjectType&& arg_objtype, std::unique_ptr<::pg_query::ObjectWithArgs> arg_func, std::pmr::vector<::pg_query::Node> arg_actions);
     AlterFunctionStmt(const AlterFunctionStmt& other) = delete;
     AlterFunctionStmt(AlterFunctionStmt&& other) noexcept;
     ~AlterFunctionStmt() override;
@@ -6560,12 +6814,15 @@ namespace pg_query {
 
 struct DoStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> args;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> args;
 
     size_t fbe_type() const noexcept { return 85; }
 
     DoStmt();
-    explicit DoStmt(std::vector<::pg_query::Node> arg_args);
+    explicit DoStmt(allocator_type alloc);
+    explicit DoStmt(std::pmr::vector<::pg_query::Node> arg_args);
     DoStmt(const DoStmt& other) = delete;
     DoStmt(DoStmt&& other) noexcept;
     ~DoStmt() override;
@@ -6613,19 +6870,22 @@ struct RangeVar;
 
 struct RenameStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ObjectType rename_type;
     ::pg_query::ObjectType relation_type;
     ::pg_query::RangeVar* relation;
     ::pg_query::Node object;
-    std::string subname;
-    std::string newname;
+    std::pmr::string subname;
+    std::pmr::string newname;
     ::pg_query::DropBehavior behavior;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 86; }
 
     RenameStmt();
-    RenameStmt(::pg_query::ObjectType&& arg_rename_type, ::pg_query::ObjectType&& arg_relation_type, std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_object, const std::string& arg_subname, const std::string& arg_newname, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
+    explicit RenameStmt(allocator_type alloc);
+    RenameStmt(::pg_query::ObjectType&& arg_rename_type, ::pg_query::ObjectType&& arg_relation_type, std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_object, const std::pmr::string& arg_subname, const std::pmr::string& arg_newname, ::pg_query::DropBehavior&& arg_behavior, bool arg_missing_ok);
     RenameStmt(const RenameStmt& other) = delete;
     RenameStmt(RenameStmt&& other) noexcept;
     ~RenameStmt() override;
@@ -6673,18 +6933,21 @@ struct RangeVar;
 
 struct RuleStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* relation;
-    std::string rulename;
+    std::pmr::string rulename;
     ::pg_query::Node where_clause;
     ::pg_query::CmdType event;
     bool instead;
-    std::vector<::pg_query::Node> actions;
+    std::pmr::vector<::pg_query::Node> actions;
     bool replace;
 
     size_t fbe_type() const noexcept { return 87; }
 
     RuleStmt();
-    RuleStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::string& arg_rulename, ::pg_query::Node&& arg_where_clause, ::pg_query::CmdType&& arg_event, bool arg_instead, std::vector<::pg_query::Node> arg_actions, bool arg_replace);
+    explicit RuleStmt(allocator_type alloc);
+    RuleStmt(std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::pmr::string& arg_rulename, ::pg_query::Node&& arg_where_clause, ::pg_query::CmdType&& arg_event, bool arg_instead, std::pmr::vector<::pg_query::Node> arg_actions, bool arg_replace);
     RuleStmt(const RuleStmt& other) = delete;
     RuleStmt(RuleStmt&& other) noexcept;
     ~RuleStmt() override;
@@ -6730,13 +6993,16 @@ namespace pg_query {
 
 struct NotifyStmt : FBE::Base
 {
-    std::string conditionname;
-    std::string payload;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string conditionname;
+    std::pmr::string payload;
 
     size_t fbe_type() const noexcept { return 88; }
 
     NotifyStmt();
-    NotifyStmt(const std::string& arg_conditionname, const std::string& arg_payload);
+    explicit NotifyStmt(allocator_type alloc);
+    NotifyStmt(const std::pmr::string& arg_conditionname, const std::pmr::string& arg_payload);
     NotifyStmt(const NotifyStmt& other) = delete;
     NotifyStmt(NotifyStmt&& other) noexcept;
     ~NotifyStmt() override;
@@ -6782,12 +7048,15 @@ namespace pg_query {
 
 struct ListenStmt : FBE::Base
 {
-    std::string conditionname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string conditionname;
 
     size_t fbe_type() const noexcept { return 89; }
 
     ListenStmt();
-    explicit ListenStmt(const std::string& arg_conditionname);
+    explicit ListenStmt(allocator_type alloc);
+    explicit ListenStmt(const std::pmr::string& arg_conditionname);
     ListenStmt(const ListenStmt& other) = delete;
     ListenStmt(ListenStmt&& other) noexcept;
     ~ListenStmt() override;
@@ -6833,12 +7102,15 @@ namespace pg_query {
 
 struct UnlistenStmt : FBE::Base
 {
-    std::string conditionname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string conditionname;
 
     size_t fbe_type() const noexcept { return 90; }
 
     UnlistenStmt();
-    explicit UnlistenStmt(const std::string& arg_conditionname);
+    explicit UnlistenStmt(allocator_type alloc);
+    explicit UnlistenStmt(const std::pmr::string& arg_conditionname);
     UnlistenStmt(const UnlistenStmt& other) = delete;
     UnlistenStmt(UnlistenStmt&& other) noexcept;
     ~UnlistenStmt() override;
@@ -6884,16 +7156,19 @@ namespace pg_query {
 
 struct TransactionStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::TransactionStmtKind kind;
-    std::vector<::pg_query::Node> options;
-    std::string savepoint_name;
-    std::string gid;
+    std::pmr::vector<::pg_query::Node> options;
+    std::pmr::string savepoint_name;
+    std::pmr::string gid;
     bool chain;
 
     size_t fbe_type() const noexcept { return 91; }
 
     TransactionStmt();
-    TransactionStmt(::pg_query::TransactionStmtKind&& arg_kind, std::vector<::pg_query::Node> arg_options, const std::string& arg_savepoint_name, const std::string& arg_gid, bool arg_chain);
+    explicit TransactionStmt(allocator_type alloc);
+    TransactionStmt(::pg_query::TransactionStmtKind&& arg_kind, std::pmr::vector<::pg_query::Node> arg_options, const std::pmr::string& arg_savepoint_name, const std::pmr::string& arg_gid, bool arg_chain);
     TransactionStmt(const TransactionStmt& other) = delete;
     TransactionStmt(TransactionStmt&& other) noexcept;
     ~TransactionStmt() override;
@@ -6941,17 +7216,20 @@ struct RangeVar;
 
 struct ViewStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* view;
-    std::vector<::pg_query::Node> aliases;
+    std::pmr::vector<::pg_query::Node> aliases;
     ::pg_query::Node query;
     bool replace;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
     ::pg_query::ViewCheckOption with_check_option;
 
     size_t fbe_type() const noexcept { return 92; }
 
     ViewStmt();
-    ViewStmt(std::unique_ptr<::pg_query::RangeVar> arg_view, std::vector<::pg_query::Node> arg_aliases, ::pg_query::Node&& arg_query, bool arg_replace, std::vector<::pg_query::Node> arg_options, ::pg_query::ViewCheckOption&& arg_with_check_option);
+    explicit ViewStmt(allocator_type alloc);
+    ViewStmt(std::unique_ptr<::pg_query::RangeVar> arg_view, std::pmr::vector<::pg_query::Node> arg_aliases, ::pg_query::Node&& arg_query, bool arg_replace, std::pmr::vector<::pg_query::Node> arg_options, ::pg_query::ViewCheckOption&& arg_with_check_option);
     ViewStmt(const ViewStmt& other) = delete;
     ViewStmt(ViewStmt&& other) noexcept;
     ~ViewStmt() override;
@@ -6997,12 +7275,15 @@ namespace pg_query {
 
 struct LoadStmt : FBE::Base
 {
-    std::string filename;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string filename;
 
     size_t fbe_type() const noexcept { return 93; }
 
     LoadStmt();
-    explicit LoadStmt(const std::string& arg_filename);
+    explicit LoadStmt(allocator_type alloc);
+    explicit LoadStmt(const std::pmr::string& arg_filename);
     LoadStmt(const LoadStmt& other) = delete;
     LoadStmt(LoadStmt&& other) noexcept;
     ~LoadStmt() override;
@@ -7052,15 +7333,18 @@ struct CollateClause;
 
 struct CreateDomainStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> domainname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> domainname;
     ::pg_query::TypeName* type_name;
     ::pg_query::CollateClause* coll_clause;
-    std::vector<::pg_query::Node> constraints;
+    std::pmr::vector<::pg_query::Node> constraints;
 
     size_t fbe_type() const noexcept { return 94; }
 
     CreateDomainStmt();
-    CreateDomainStmt(std::vector<::pg_query::Node> arg_domainname, std::unique_ptr<::pg_query::TypeName> arg_type_name, std::unique_ptr<::pg_query::CollateClause> arg_coll_clause, std::vector<::pg_query::Node> arg_constraints);
+    explicit CreateDomainStmt(allocator_type alloc);
+    CreateDomainStmt(std::pmr::vector<::pg_query::Node> arg_domainname, std::unique_ptr<::pg_query::TypeName> arg_type_name, std::unique_ptr<::pg_query::CollateClause> arg_coll_clause, std::pmr::vector<::pg_query::Node> arg_constraints);
     CreateDomainStmt(const CreateDomainStmt& other) = delete;
     CreateDomainStmt(CreateDomainStmt&& other) noexcept;
     ~CreateDomainStmt() override;
@@ -7106,13 +7390,16 @@ namespace pg_query {
 
 struct CreatedbStmt : FBE::Base
 {
-    std::string dbname;
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string dbname;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 95; }
 
     CreatedbStmt();
-    CreatedbStmt(const std::string& arg_dbname, std::vector<::pg_query::Node> arg_options);
+    explicit CreatedbStmt(allocator_type alloc);
+    CreatedbStmt(const std::pmr::string& arg_dbname, std::pmr::vector<::pg_query::Node> arg_options);
     CreatedbStmt(const CreatedbStmt& other) = delete;
     CreatedbStmt(CreatedbStmt&& other) noexcept;
     ~CreatedbStmt() override;
@@ -7158,14 +7445,17 @@ namespace pg_query {
 
 struct DropdbStmt : FBE::Base
 {
-    std::string dbname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string dbname;
     bool missing_ok;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 96; }
 
     DropdbStmt();
-    DropdbStmt(const std::string& arg_dbname, bool arg_missing_ok, std::vector<::pg_query::Node> arg_options);
+    explicit DropdbStmt(allocator_type alloc);
+    DropdbStmt(const std::pmr::string& arg_dbname, bool arg_missing_ok, std::pmr::vector<::pg_query::Node> arg_options);
     DropdbStmt(const DropdbStmt& other) = delete;
     DropdbStmt(DropdbStmt&& other) noexcept;
     ~DropdbStmt() override;
@@ -7211,14 +7501,17 @@ namespace pg_query {
 
 struct VacuumStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> options;
-    std::vector<::pg_query::Node> rels;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> rels;
     bool is_vacuumcmd;
 
     size_t fbe_type() const noexcept { return 97; }
 
     VacuumStmt();
-    VacuumStmt(std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_rels, bool arg_is_vacuumcmd);
+    explicit VacuumStmt(allocator_type alloc);
+    VacuumStmt(std::pmr::vector<::pg_query::Node> arg_options, std::pmr::vector<::pg_query::Node> arg_rels, bool arg_is_vacuumcmd);
     VacuumStmt(const VacuumStmt& other) = delete;
     VacuumStmt(VacuumStmt&& other) noexcept;
     ~VacuumStmt() override;
@@ -7264,13 +7557,16 @@ namespace pg_query {
 
 struct ExplainStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node query;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 98; }
 
     ExplainStmt();
-    ExplainStmt(::pg_query::Node&& arg_query, std::vector<::pg_query::Node> arg_options);
+    explicit ExplainStmt(allocator_type alloc);
+    ExplainStmt(::pg_query::Node&& arg_query, std::pmr::vector<::pg_query::Node> arg_options);
     ExplainStmt(const ExplainStmt& other) = delete;
     ExplainStmt(ExplainStmt&& other) noexcept;
     ~ExplainStmt() override;
@@ -7318,6 +7614,8 @@ struct IntoClause;
 
 struct CreateTableAsStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node query;
     ::pg_query::IntoClause* into;
     ::pg_query::ObjectType relkind;
@@ -7327,6 +7625,7 @@ struct CreateTableAsStmt : FBE::Base
     size_t fbe_type() const noexcept { return 99; }
 
     CreateTableAsStmt();
+    explicit CreateTableAsStmt(allocator_type alloc);
     CreateTableAsStmt(::pg_query::Node&& arg_query, std::unique_ptr<::pg_query::IntoClause> arg_into, ::pg_query::ObjectType&& arg_relkind, bool arg_is_select_into, bool arg_if_not_exists);
     CreateTableAsStmt(const CreateTableAsStmt& other) = delete;
     CreateTableAsStmt(CreateTableAsStmt&& other) noexcept;
@@ -7375,8 +7674,10 @@ struct RangeVar;
 
 struct CreateSeqStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* sequence;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
     uint32_t owner_id;
     bool for_identity;
     bool if_not_exists;
@@ -7384,7 +7685,8 @@ struct CreateSeqStmt : FBE::Base
     size_t fbe_type() const noexcept { return 100; }
 
     CreateSeqStmt();
-    CreateSeqStmt(std::unique_ptr<::pg_query::RangeVar> arg_sequence, std::vector<::pg_query::Node> arg_options, uint32_t arg_owner_id, bool arg_for_identity, bool arg_if_not_exists);
+    explicit CreateSeqStmt(allocator_type alloc);
+    CreateSeqStmt(std::unique_ptr<::pg_query::RangeVar> arg_sequence, std::pmr::vector<::pg_query::Node> arg_options, uint32_t arg_owner_id, bool arg_for_identity, bool arg_if_not_exists);
     CreateSeqStmt(const CreateSeqStmt& other) = delete;
     CreateSeqStmt(CreateSeqStmt&& other) noexcept;
     ~CreateSeqStmt() override;
@@ -7432,15 +7734,18 @@ struct RangeVar;
 
 struct AlterSeqStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* sequence;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
     bool for_identity;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 101; }
 
     AlterSeqStmt();
-    AlterSeqStmt(std::unique_ptr<::pg_query::RangeVar> arg_sequence, std::vector<::pg_query::Node> arg_options, bool arg_for_identity, bool arg_missing_ok);
+    explicit AlterSeqStmt(allocator_type alloc);
+    AlterSeqStmt(std::unique_ptr<::pg_query::RangeVar> arg_sequence, std::pmr::vector<::pg_query::Node> arg_options, bool arg_for_identity, bool arg_missing_ok);
     AlterSeqStmt(const AlterSeqStmt& other) = delete;
     AlterSeqStmt(AlterSeqStmt&& other) noexcept;
     ~AlterSeqStmt() override;
@@ -7486,15 +7791,18 @@ namespace pg_query {
 
 struct VariableSetStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::VariableSetKind kind;
-    std::string name;
-    std::vector<::pg_query::Node> args;
+    std::pmr::string name;
+    std::pmr::vector<::pg_query::Node> args;
     bool is_local;
 
     size_t fbe_type() const noexcept { return 102; }
 
     VariableSetStmt();
-    VariableSetStmt(::pg_query::VariableSetKind&& arg_kind, const std::string& arg_name, std::vector<::pg_query::Node> arg_args, bool arg_is_local);
+    explicit VariableSetStmt(allocator_type alloc);
+    VariableSetStmt(::pg_query::VariableSetKind&& arg_kind, const std::pmr::string& arg_name, std::pmr::vector<::pg_query::Node> arg_args, bool arg_is_local);
     VariableSetStmt(const VariableSetStmt& other) = delete;
     VariableSetStmt(VariableSetStmt&& other) noexcept;
     ~VariableSetStmt() override;
@@ -7540,12 +7848,15 @@ namespace pg_query {
 
 struct VariableShowStmt : FBE::Base
 {
-    std::string name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
 
     size_t fbe_type() const noexcept { return 103; }
 
     VariableShowStmt();
-    explicit VariableShowStmt(const std::string& arg_name);
+    explicit VariableShowStmt(allocator_type alloc);
+    explicit VariableShowStmt(const std::pmr::string& arg_name);
     VariableShowStmt(const VariableShowStmt& other) = delete;
     VariableShowStmt(VariableShowStmt&& other) noexcept;
     ~VariableShowStmt() override;
@@ -7591,11 +7902,14 @@ namespace pg_query {
 
 struct DiscardStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::DiscardMode target;
 
     size_t fbe_type() const noexcept { return 104; }
 
     DiscardStmt();
+    explicit DiscardStmt(allocator_type alloc);
     explicit DiscardStmt(::pg_query::DiscardMode&& arg_target);
     DiscardStmt(const DiscardStmt& other) = delete;
     DiscardStmt(DiscardStmt&& other) noexcept;
@@ -7644,17 +7958,19 @@ struct RangeVar;
 
 struct CreateTrigStmt : FBE::Base
 {
-    std::string trigname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string trigname;
     ::pg_query::RangeVar* relation;
-    std::vector<::pg_query::Node> funcname;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> funcname;
+    std::pmr::vector<::pg_query::Node> args;
     bool row;
     int32_t timing;
     int32_t events;
-    std::vector<::pg_query::Node> columns;
+    std::pmr::vector<::pg_query::Node> columns;
     ::pg_query::Node when_clause;
     bool isconstraint;
-    std::vector<::pg_query::Node> transition_rels;
+    std::pmr::vector<::pg_query::Node> transition_rels;
     bool deferrable;
     bool initdeferred;
     ::pg_query::RangeVar* constrrel;
@@ -7662,7 +7978,8 @@ struct CreateTrigStmt : FBE::Base
     size_t fbe_type() const noexcept { return 105; }
 
     CreateTrigStmt();
-    CreateTrigStmt(const std::string& arg_trigname, std::unique_ptr<::pg_query::RangeVar> arg_relation, std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_args, bool arg_row, int32_t arg_timing, int32_t arg_events, std::vector<::pg_query::Node> arg_columns, ::pg_query::Node&& arg_when_clause, bool arg_isconstraint, std::vector<::pg_query::Node> arg_transition_rels, bool arg_deferrable, bool arg_initdeferred, std::unique_ptr<::pg_query::RangeVar> arg_constrrel);
+    explicit CreateTrigStmt(allocator_type alloc);
+    CreateTrigStmt(const std::pmr::string& arg_trigname, std::unique_ptr<::pg_query::RangeVar> arg_relation, std::pmr::vector<::pg_query::Node> arg_funcname, std::pmr::vector<::pg_query::Node> arg_args, bool arg_row, int32_t arg_timing, int32_t arg_events, std::pmr::vector<::pg_query::Node> arg_columns, ::pg_query::Node&& arg_when_clause, bool arg_isconstraint, std::pmr::vector<::pg_query::Node> arg_transition_rels, bool arg_deferrable, bool arg_initdeferred, std::unique_ptr<::pg_query::RangeVar> arg_constrrel);
     CreateTrigStmt(const CreateTrigStmt& other) = delete;
     CreateTrigStmt(CreateTrigStmt&& other) noexcept;
     ~CreateTrigStmt() override;
@@ -7708,17 +8025,20 @@ namespace pg_query {
 
 struct CreatePLangStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     bool replace;
-    std::string plname;
-    std::vector<::pg_query::Node> plhandler;
-    std::vector<::pg_query::Node> plinline;
-    std::vector<::pg_query::Node> plvalidator;
+    std::pmr::string plname;
+    std::pmr::vector<::pg_query::Node> plhandler;
+    std::pmr::vector<::pg_query::Node> plinline;
+    std::pmr::vector<::pg_query::Node> plvalidator;
     bool pltrusted;
 
     size_t fbe_type() const noexcept { return 106; }
 
     CreatePLangStmt();
-    CreatePLangStmt(bool arg_replace, const std::string& arg_plname, std::vector<::pg_query::Node> arg_plhandler, std::vector<::pg_query::Node> arg_plinline, std::vector<::pg_query::Node> arg_plvalidator, bool arg_pltrusted);
+    explicit CreatePLangStmt(allocator_type alloc);
+    CreatePLangStmt(bool arg_replace, const std::pmr::string& arg_plname, std::pmr::vector<::pg_query::Node> arg_plhandler, std::pmr::vector<::pg_query::Node> arg_plinline, std::pmr::vector<::pg_query::Node> arg_plvalidator, bool arg_pltrusted);
     CreatePLangStmt(const CreatePLangStmt& other) = delete;
     CreatePLangStmt(CreatePLangStmt&& other) noexcept;
     ~CreatePLangStmt() override;
@@ -7764,14 +8084,17 @@ namespace pg_query {
 
 struct CreateRoleStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RoleStmtType stmt_type;
-    std::string role;
-    std::vector<::pg_query::Node> options;
+    std::pmr::string role;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 107; }
 
     CreateRoleStmt();
-    CreateRoleStmt(::pg_query::RoleStmtType&& arg_stmt_type, const std::string& arg_role, std::vector<::pg_query::Node> arg_options);
+    explicit CreateRoleStmt(allocator_type alloc);
+    CreateRoleStmt(::pg_query::RoleStmtType&& arg_stmt_type, const std::pmr::string& arg_role, std::pmr::vector<::pg_query::Node> arg_options);
     CreateRoleStmt(const CreateRoleStmt& other) = delete;
     CreateRoleStmt(CreateRoleStmt&& other) noexcept;
     ~CreateRoleStmt() override;
@@ -7819,14 +8142,17 @@ struct RoleSpec;
 
 struct AlterRoleStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RoleSpec* role;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
     int32_t action;
 
     size_t fbe_type() const noexcept { return 108; }
 
     AlterRoleStmt();
-    AlterRoleStmt(std::unique_ptr<::pg_query::RoleSpec> arg_role, std::vector<::pg_query::Node> arg_options, int32_t arg_action);
+    explicit AlterRoleStmt(allocator_type alloc);
+    AlterRoleStmt(std::unique_ptr<::pg_query::RoleSpec> arg_role, std::pmr::vector<::pg_query::Node> arg_options, int32_t arg_action);
     AlterRoleStmt(const AlterRoleStmt& other) = delete;
     AlterRoleStmt(AlterRoleStmt&& other) noexcept;
     ~AlterRoleStmt() override;
@@ -7872,13 +8198,16 @@ namespace pg_query {
 
 struct DropRoleStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> roles;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> roles;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 109; }
 
     DropRoleStmt();
-    DropRoleStmt(std::vector<::pg_query::Node> arg_roles, bool arg_missing_ok);
+    explicit DropRoleStmt(allocator_type alloc);
+    DropRoleStmt(std::pmr::vector<::pg_query::Node> arg_roles, bool arg_missing_ok);
     DropRoleStmt(const DropRoleStmt& other) = delete;
     DropRoleStmt(DropRoleStmt&& other) noexcept;
     ~DropRoleStmt() override;
@@ -7924,14 +8253,17 @@ namespace pg_query {
 
 struct LockStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> relations;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> relations;
     int32_t mode;
     bool nowait;
 
     size_t fbe_type() const noexcept { return 110; }
 
     LockStmt();
-    LockStmt(std::vector<::pg_query::Node> arg_relations, int32_t arg_mode, bool arg_nowait);
+    explicit LockStmt(allocator_type alloc);
+    LockStmt(std::pmr::vector<::pg_query::Node> arg_relations, int32_t arg_mode, bool arg_nowait);
     LockStmt(const LockStmt& other) = delete;
     LockStmt(LockStmt&& other) noexcept;
     ~LockStmt() override;
@@ -7977,13 +8309,16 @@ namespace pg_query {
 
 struct ConstraintsSetStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> constraints;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> constraints;
     bool deferred;
 
     size_t fbe_type() const noexcept { return 111; }
 
     ConstraintsSetStmt();
-    ConstraintsSetStmt(std::vector<::pg_query::Node> arg_constraints, bool arg_deferred);
+    explicit ConstraintsSetStmt(allocator_type alloc);
+    ConstraintsSetStmt(std::pmr::vector<::pg_query::Node> arg_constraints, bool arg_deferred);
     ConstraintsSetStmt(const ConstraintsSetStmt& other) = delete;
     ConstraintsSetStmt(ConstraintsSetStmt&& other) noexcept;
     ~ConstraintsSetStmt() override;
@@ -8031,16 +8366,19 @@ struct RangeVar;
 
 struct ReindexStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ReindexObjectType kind;
     ::pg_query::RangeVar* relation;
-    std::string name;
+    std::pmr::string name;
     int32_t options;
     bool concurrent;
 
     size_t fbe_type() const noexcept { return 112; }
 
     ReindexStmt();
-    ReindexStmt(::pg_query::ReindexObjectType&& arg_kind, std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::string& arg_name, int32_t arg_options, bool arg_concurrent);
+    explicit ReindexStmt(allocator_type alloc);
+    ReindexStmt(::pg_query::ReindexObjectType&& arg_kind, std::unique_ptr<::pg_query::RangeVar> arg_relation, const std::pmr::string& arg_name, int32_t arg_options, bool arg_concurrent);
     ReindexStmt(const ReindexStmt& other) = delete;
     ReindexStmt(ReindexStmt&& other) noexcept;
     ~ReindexStmt() override;
@@ -8086,9 +8424,12 @@ namespace pg_query {
 
 struct CheckPointStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     size_t fbe_type() const noexcept { return 113; }
 
     CheckPointStmt();
+    explicit CheckPointStmt(allocator_type alloc);
     CheckPointStmt(const CheckPointStmt& other) = delete;
     CheckPointStmt(CheckPointStmt&& other) noexcept;
     ~CheckPointStmt() override;
@@ -8136,15 +8477,18 @@ struct RoleSpec;
 
 struct CreateSchemaStmt : FBE::Base
 {
-    std::string schemaname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string schemaname;
     ::pg_query::RoleSpec* authrole;
-    std::vector<::pg_query::Node> schema_elts;
+    std::pmr::vector<::pg_query::Node> schema_elts;
     bool if_not_exists;
 
     size_t fbe_type() const noexcept { return 114; }
 
     CreateSchemaStmt();
-    CreateSchemaStmt(const std::string& arg_schemaname, std::unique_ptr<::pg_query::RoleSpec> arg_authrole, std::vector<::pg_query::Node> arg_schema_elts, bool arg_if_not_exists);
+    explicit CreateSchemaStmt(allocator_type alloc);
+    CreateSchemaStmt(const std::pmr::string& arg_schemaname, std::unique_ptr<::pg_query::RoleSpec> arg_authrole, std::pmr::vector<::pg_query::Node> arg_schema_elts, bool arg_if_not_exists);
     CreateSchemaStmt(const CreateSchemaStmt& other) = delete;
     CreateSchemaStmt(CreateSchemaStmt&& other) noexcept;
     ~CreateSchemaStmt() override;
@@ -8190,13 +8534,16 @@ namespace pg_query {
 
 struct AlterDatabaseStmt : FBE::Base
 {
-    std::string dbname;
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string dbname;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 115; }
 
     AlterDatabaseStmt();
-    AlterDatabaseStmt(const std::string& arg_dbname, std::vector<::pg_query::Node> arg_options);
+    explicit AlterDatabaseStmt(allocator_type alloc);
+    AlterDatabaseStmt(const std::pmr::string& arg_dbname, std::pmr::vector<::pg_query::Node> arg_options);
     AlterDatabaseStmt(const AlterDatabaseStmt& other) = delete;
     AlterDatabaseStmt(AlterDatabaseStmt&& other) noexcept;
     ~AlterDatabaseStmt() override;
@@ -8244,13 +8591,16 @@ struct VariableSetStmt;
 
 struct AlterDatabaseSetStmt : FBE::Base
 {
-    std::string dbname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string dbname;
     ::pg_query::VariableSetStmt* setstmt;
 
     size_t fbe_type() const noexcept { return 116; }
 
     AlterDatabaseSetStmt();
-    AlterDatabaseSetStmt(const std::string& arg_dbname, std::unique_ptr<::pg_query::VariableSetStmt> arg_setstmt);
+    explicit AlterDatabaseSetStmt(allocator_type alloc);
+    AlterDatabaseSetStmt(const std::pmr::string& arg_dbname, std::unique_ptr<::pg_query::VariableSetStmt> arg_setstmt);
     AlterDatabaseSetStmt(const AlterDatabaseSetStmt& other) = delete;
     AlterDatabaseSetStmt(AlterDatabaseSetStmt&& other) noexcept;
     ~AlterDatabaseSetStmt() override;
@@ -8300,14 +8650,17 @@ struct VariableSetStmt;
 
 struct AlterRoleSetStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RoleSpec* role;
-    std::string database;
+    std::pmr::string database;
     ::pg_query::VariableSetStmt* setstmt;
 
     size_t fbe_type() const noexcept { return 117; }
 
     AlterRoleSetStmt();
-    AlterRoleSetStmt(std::unique_ptr<::pg_query::RoleSpec> arg_role, const std::string& arg_database, std::unique_ptr<::pg_query::VariableSetStmt> arg_setstmt);
+    explicit AlterRoleSetStmt(allocator_type alloc);
+    AlterRoleSetStmt(std::unique_ptr<::pg_query::RoleSpec> arg_role, const std::pmr::string& arg_database, std::unique_ptr<::pg_query::VariableSetStmt> arg_setstmt);
     AlterRoleSetStmt(const AlterRoleSetStmt& other) = delete;
     AlterRoleSetStmt(AlterRoleSetStmt&& other) noexcept;
     ~AlterRoleSetStmt() override;
@@ -8353,16 +8706,19 @@ namespace pg_query {
 
 struct CreateConversionStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> conversion_name;
-    std::string for_encoding_name;
-    std::string to_encoding_name;
-    std::vector<::pg_query::Node> func_name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> conversion_name;
+    std::pmr::string for_encoding_name;
+    std::pmr::string to_encoding_name;
+    std::pmr::vector<::pg_query::Node> func_name;
     bool def;
 
     size_t fbe_type() const noexcept { return 118; }
 
     CreateConversionStmt();
-    CreateConversionStmt(std::vector<::pg_query::Node> arg_conversion_name, const std::string& arg_for_encoding_name, const std::string& arg_to_encoding_name, std::vector<::pg_query::Node> arg_func_name, bool arg_def);
+    explicit CreateConversionStmt(allocator_type alloc);
+    CreateConversionStmt(std::pmr::vector<::pg_query::Node> arg_conversion_name, const std::pmr::string& arg_for_encoding_name, const std::pmr::string& arg_to_encoding_name, std::pmr::vector<::pg_query::Node> arg_func_name, bool arg_def);
     CreateConversionStmt(const CreateConversionStmt& other) = delete;
     CreateConversionStmt(CreateConversionStmt&& other) noexcept;
     ~CreateConversionStmt() override;
@@ -8412,6 +8768,8 @@ struct ObjectWithArgs;
 
 struct CreateCastStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::TypeName* sourcetype;
     ::pg_query::TypeName* targettype;
     ::pg_query::ObjectWithArgs* func;
@@ -8421,6 +8779,7 @@ struct CreateCastStmt : FBE::Base
     size_t fbe_type() const noexcept { return 119; }
 
     CreateCastStmt();
+    explicit CreateCastStmt(allocator_type alloc);
     CreateCastStmt(std::unique_ptr<::pg_query::TypeName> arg_sourcetype, std::unique_ptr<::pg_query::TypeName> arg_targettype, std::unique_ptr<::pg_query::ObjectWithArgs> arg_func, ::pg_query::CoercionContext&& arg_context, bool arg_inout);
     CreateCastStmt(const CreateCastStmt& other) = delete;
     CreateCastStmt(CreateCastStmt&& other) noexcept;
@@ -8469,17 +8828,20 @@ struct TypeName;
 
 struct CreateOpClassStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> opclassname;
-    std::vector<::pg_query::Node> opfamilyname;
-    std::string amname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> opclassname;
+    std::pmr::vector<::pg_query::Node> opfamilyname;
+    std::pmr::string amname;
     ::pg_query::TypeName* datatype;
-    std::vector<::pg_query::Node> items;
+    std::pmr::vector<::pg_query::Node> items;
     bool is_default;
 
     size_t fbe_type() const noexcept { return 120; }
 
     CreateOpClassStmt();
-    CreateOpClassStmt(std::vector<::pg_query::Node> arg_opclassname, std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname, std::unique_ptr<::pg_query::TypeName> arg_datatype, std::vector<::pg_query::Node> arg_items, bool arg_is_default);
+    explicit CreateOpClassStmt(allocator_type alloc);
+    CreateOpClassStmt(std::pmr::vector<::pg_query::Node> arg_opclassname, std::pmr::vector<::pg_query::Node> arg_opfamilyname, const std::pmr::string& arg_amname, std::unique_ptr<::pg_query::TypeName> arg_datatype, std::pmr::vector<::pg_query::Node> arg_items, bool arg_is_default);
     CreateOpClassStmt(const CreateOpClassStmt& other) = delete;
     CreateOpClassStmt(CreateOpClassStmt&& other) noexcept;
     ~CreateOpClassStmt() override;
@@ -8525,13 +8887,16 @@ namespace pg_query {
 
 struct CreateOpFamilyStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> opfamilyname;
-    std::string amname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> opfamilyname;
+    std::pmr::string amname;
 
     size_t fbe_type() const noexcept { return 121; }
 
     CreateOpFamilyStmt();
-    CreateOpFamilyStmt(std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname);
+    explicit CreateOpFamilyStmt(allocator_type alloc);
+    CreateOpFamilyStmt(std::pmr::vector<::pg_query::Node> arg_opfamilyname, const std::pmr::string& arg_amname);
     CreateOpFamilyStmt(const CreateOpFamilyStmt& other) = delete;
     CreateOpFamilyStmt(CreateOpFamilyStmt&& other) noexcept;
     ~CreateOpFamilyStmt() override;
@@ -8577,15 +8942,18 @@ namespace pg_query {
 
 struct AlterOpFamilyStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> opfamilyname;
-    std::string amname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> opfamilyname;
+    std::pmr::string amname;
     bool is_drop;
-    std::vector<::pg_query::Node> items;
+    std::pmr::vector<::pg_query::Node> items;
 
     size_t fbe_type() const noexcept { return 122; }
 
     AlterOpFamilyStmt();
-    AlterOpFamilyStmt(std::vector<::pg_query::Node> arg_opfamilyname, const std::string& arg_amname, bool arg_is_drop, std::vector<::pg_query::Node> arg_items);
+    explicit AlterOpFamilyStmt(allocator_type alloc);
+    AlterOpFamilyStmt(std::pmr::vector<::pg_query::Node> arg_opfamilyname, const std::pmr::string& arg_amname, bool arg_is_drop, std::pmr::vector<::pg_query::Node> arg_items);
     AlterOpFamilyStmt(const AlterOpFamilyStmt& other) = delete;
     AlterOpFamilyStmt(AlterOpFamilyStmt&& other) noexcept;
     ~AlterOpFamilyStmt() override;
@@ -8631,14 +8999,17 @@ namespace pg_query {
 
 struct PrepareStmt : FBE::Base
 {
-    std::string name;
-    std::vector<::pg_query::Node> argtypes;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
+    std::pmr::vector<::pg_query::Node> argtypes;
     ::pg_query::Node query;
 
     size_t fbe_type() const noexcept { return 123; }
 
     PrepareStmt();
-    PrepareStmt(const std::string& arg_name, std::vector<::pg_query::Node> arg_argtypes, ::pg_query::Node&& arg_query);
+    explicit PrepareStmt(allocator_type alloc);
+    PrepareStmt(const std::pmr::string& arg_name, std::pmr::vector<::pg_query::Node> arg_argtypes, ::pg_query::Node&& arg_query);
     PrepareStmt(const PrepareStmt& other) = delete;
     PrepareStmt(PrepareStmt&& other) noexcept;
     ~PrepareStmt() override;
@@ -8684,13 +9055,16 @@ namespace pg_query {
 
 struct ExecuteStmt : FBE::Base
 {
-    std::string name;
-    std::vector<::pg_query::Node> params;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
+    std::pmr::vector<::pg_query::Node> params;
 
     size_t fbe_type() const noexcept { return 124; }
 
     ExecuteStmt();
-    ExecuteStmt(const std::string& arg_name, std::vector<::pg_query::Node> arg_params);
+    explicit ExecuteStmt(allocator_type alloc);
+    ExecuteStmt(const std::pmr::string& arg_name, std::pmr::vector<::pg_query::Node> arg_params);
     ExecuteStmt(const ExecuteStmt& other) = delete;
     ExecuteStmt(ExecuteStmt&& other) noexcept;
     ~ExecuteStmt() override;
@@ -8736,12 +9110,15 @@ namespace pg_query {
 
 struct DeallocateStmt : FBE::Base
 {
-    std::string name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
 
     size_t fbe_type() const noexcept { return 125; }
 
     DeallocateStmt();
-    explicit DeallocateStmt(const std::string& arg_name);
+    explicit DeallocateStmt(allocator_type alloc);
+    explicit DeallocateStmt(const std::pmr::string& arg_name);
     DeallocateStmt(const DeallocateStmt& other) = delete;
     DeallocateStmt(DeallocateStmt&& other) noexcept;
     ~DeallocateStmt() override;
@@ -8787,14 +9164,17 @@ namespace pg_query {
 
 struct DeclareCursorStmt : FBE::Base
 {
-    std::string portalname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string portalname;
     int32_t options;
     ::pg_query::Node query;
 
     size_t fbe_type() const noexcept { return 126; }
 
     DeclareCursorStmt();
-    DeclareCursorStmt(const std::string& arg_portalname, int32_t arg_options, ::pg_query::Node&& arg_query);
+    explicit DeclareCursorStmt(allocator_type alloc);
+    DeclareCursorStmt(const std::pmr::string& arg_portalname, int32_t arg_options, ::pg_query::Node&& arg_query);
     DeclareCursorStmt(const DeclareCursorStmt& other) = delete;
     DeclareCursorStmt(DeclareCursorStmt&& other) noexcept;
     ~DeclareCursorStmt() override;
@@ -8842,15 +9222,18 @@ struct RoleSpec;
 
 struct CreateTableSpaceStmt : FBE::Base
 {
-    std::string tablespacename;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string tablespacename;
     ::pg_query::RoleSpec* owner;
-    std::string location;
-    std::vector<::pg_query::Node> options;
+    std::pmr::string location;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 127; }
 
     CreateTableSpaceStmt();
-    CreateTableSpaceStmt(const std::string& arg_tablespacename, std::unique_ptr<::pg_query::RoleSpec> arg_owner, const std::string& arg_location, std::vector<::pg_query::Node> arg_options);
+    explicit CreateTableSpaceStmt(allocator_type alloc);
+    CreateTableSpaceStmt(const std::pmr::string& arg_tablespacename, std::unique_ptr<::pg_query::RoleSpec> arg_owner, const std::pmr::string& arg_location, std::pmr::vector<::pg_query::Node> arg_options);
     CreateTableSpaceStmt(const CreateTableSpaceStmt& other) = delete;
     CreateTableSpaceStmt(CreateTableSpaceStmt&& other) noexcept;
     ~CreateTableSpaceStmt() override;
@@ -8896,13 +9279,16 @@ namespace pg_query {
 
 struct DropTableSpaceStmt : FBE::Base
 {
-    std::string tablespacename;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string tablespacename;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 128; }
 
     DropTableSpaceStmt();
-    DropTableSpaceStmt(const std::string& arg_tablespacename, bool arg_missing_ok);
+    explicit DropTableSpaceStmt(allocator_type alloc);
+    DropTableSpaceStmt(const std::pmr::string& arg_tablespacename, bool arg_missing_ok);
     DropTableSpaceStmt(const DropTableSpaceStmt& other) = delete;
     DropTableSpaceStmt(DropTableSpaceStmt&& other) noexcept;
     ~DropTableSpaceStmt() override;
@@ -8950,6 +9336,8 @@ struct RangeVar;
 
 struct AlterObjectDependsStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ObjectType object_type;
     ::pg_query::RangeVar* relation;
     ::pg_query::Node object;
@@ -8959,6 +9347,7 @@ struct AlterObjectDependsStmt : FBE::Base
     size_t fbe_type() const noexcept { return 129; }
 
     AlterObjectDependsStmt();
+    explicit AlterObjectDependsStmt(allocator_type alloc);
     AlterObjectDependsStmt(::pg_query::ObjectType&& arg_object_type, std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_object, ::pg_query::Node&& arg_extname, bool arg_remove);
     AlterObjectDependsStmt(const AlterObjectDependsStmt& other) = delete;
     AlterObjectDependsStmt(AlterObjectDependsStmt&& other) noexcept;
@@ -9007,16 +9396,19 @@ struct RangeVar;
 
 struct AlterObjectSchemaStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ObjectType object_type;
     ::pg_query::RangeVar* relation;
     ::pg_query::Node object;
-    std::string newschema;
+    std::pmr::string newschema;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 130; }
 
     AlterObjectSchemaStmt();
-    AlterObjectSchemaStmt(::pg_query::ObjectType&& arg_object_type, std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_object, const std::string& arg_newschema, bool arg_missing_ok);
+    explicit AlterObjectSchemaStmt(allocator_type alloc);
+    AlterObjectSchemaStmt(::pg_query::ObjectType&& arg_object_type, std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_object, const std::pmr::string& arg_newschema, bool arg_missing_ok);
     AlterObjectSchemaStmt(const AlterObjectSchemaStmt& other) = delete;
     AlterObjectSchemaStmt(AlterObjectSchemaStmt&& other) noexcept;
     ~AlterObjectSchemaStmt() override;
@@ -9066,6 +9458,8 @@ struct RoleSpec;
 
 struct AlterOwnerStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ObjectType object_type;
     ::pg_query::RangeVar* relation;
     ::pg_query::Node object;
@@ -9074,6 +9468,7 @@ struct AlterOwnerStmt : FBE::Base
     size_t fbe_type() const noexcept { return 131; }
 
     AlterOwnerStmt();
+    explicit AlterOwnerStmt(allocator_type alloc);
     AlterOwnerStmt(::pg_query::ObjectType&& arg_object_type, std::unique_ptr<::pg_query::RangeVar> arg_relation, ::pg_query::Node&& arg_object, std::unique_ptr<::pg_query::RoleSpec> arg_newowner);
     AlterOwnerStmt(const AlterOwnerStmt& other) = delete;
     AlterOwnerStmt(AlterOwnerStmt&& other) noexcept;
@@ -9122,13 +9517,16 @@ struct ObjectWithArgs;
 
 struct AlterOperatorStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ObjectWithArgs* opername;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 132; }
 
     AlterOperatorStmt();
-    AlterOperatorStmt(std::unique_ptr<::pg_query::ObjectWithArgs> arg_opername, std::vector<::pg_query::Node> arg_options);
+    explicit AlterOperatorStmt(allocator_type alloc);
+    AlterOperatorStmt(std::unique_ptr<::pg_query::ObjectWithArgs> arg_opername, std::pmr::vector<::pg_query::Node> arg_options);
     AlterOperatorStmt(const AlterOperatorStmt& other) = delete;
     AlterOperatorStmt(AlterOperatorStmt&& other) noexcept;
     ~AlterOperatorStmt() override;
@@ -9174,13 +9572,16 @@ namespace pg_query {
 
 struct AlterTypeStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> type_name;
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> type_name;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 133; }
 
     AlterTypeStmt();
-    AlterTypeStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_options);
+    explicit AlterTypeStmt(allocator_type alloc);
+    AlterTypeStmt(std::pmr::vector<::pg_query::Node> arg_type_name, std::pmr::vector<::pg_query::Node> arg_options);
     AlterTypeStmt(const AlterTypeStmt& other) = delete;
     AlterTypeStmt(AlterTypeStmt&& other) noexcept;
     ~AlterTypeStmt() override;
@@ -9226,13 +9627,16 @@ namespace pg_query {
 
 struct DropOwnedStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> roles;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> roles;
     ::pg_query::DropBehavior behavior;
 
     size_t fbe_type() const noexcept { return 134; }
 
     DropOwnedStmt();
-    DropOwnedStmt(std::vector<::pg_query::Node> arg_roles, ::pg_query::DropBehavior&& arg_behavior);
+    explicit DropOwnedStmt(allocator_type alloc);
+    DropOwnedStmt(std::pmr::vector<::pg_query::Node> arg_roles, ::pg_query::DropBehavior&& arg_behavior);
     DropOwnedStmt(const DropOwnedStmt& other) = delete;
     DropOwnedStmt(DropOwnedStmt&& other) noexcept;
     ~DropOwnedStmt() override;
@@ -9280,13 +9684,16 @@ struct RoleSpec;
 
 struct ReassignOwnedStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> roles;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> roles;
     ::pg_query::RoleSpec* newrole;
 
     size_t fbe_type() const noexcept { return 135; }
 
     ReassignOwnedStmt();
-    ReassignOwnedStmt(std::vector<::pg_query::Node> arg_roles, std::unique_ptr<::pg_query::RoleSpec> arg_newrole);
+    explicit ReassignOwnedStmt(allocator_type alloc);
+    ReassignOwnedStmt(std::pmr::vector<::pg_query::Node> arg_roles, std::unique_ptr<::pg_query::RoleSpec> arg_newrole);
     ReassignOwnedStmt(const ReassignOwnedStmt& other) = delete;
     ReassignOwnedStmt(ReassignOwnedStmt&& other) noexcept;
     ~ReassignOwnedStmt() override;
@@ -9334,13 +9741,16 @@ struct RangeVar;
 
 struct CompositeTypeStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* typevar;
-    std::vector<::pg_query::Node> coldeflist;
+    std::pmr::vector<::pg_query::Node> coldeflist;
 
     size_t fbe_type() const noexcept { return 136; }
 
     CompositeTypeStmt();
-    CompositeTypeStmt(std::unique_ptr<::pg_query::RangeVar> arg_typevar, std::vector<::pg_query::Node> arg_coldeflist);
+    explicit CompositeTypeStmt(allocator_type alloc);
+    CompositeTypeStmt(std::unique_ptr<::pg_query::RangeVar> arg_typevar, std::pmr::vector<::pg_query::Node> arg_coldeflist);
     CompositeTypeStmt(const CompositeTypeStmt& other) = delete;
     CompositeTypeStmt(CompositeTypeStmt&& other) noexcept;
     ~CompositeTypeStmt() override;
@@ -9386,13 +9796,16 @@ namespace pg_query {
 
 struct CreateEnumStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> type_name;
-    std::vector<::pg_query::Node> vals;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> type_name;
+    std::pmr::vector<::pg_query::Node> vals;
 
     size_t fbe_type() const noexcept { return 137; }
 
     CreateEnumStmt();
-    CreateEnumStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_vals);
+    explicit CreateEnumStmt(allocator_type alloc);
+    CreateEnumStmt(std::pmr::vector<::pg_query::Node> arg_type_name, std::pmr::vector<::pg_query::Node> arg_vals);
     CreateEnumStmt(const CreateEnumStmt& other) = delete;
     CreateEnumStmt(CreateEnumStmt&& other) noexcept;
     ~CreateEnumStmt() override;
@@ -9438,13 +9851,16 @@ namespace pg_query {
 
 struct CreateRangeStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> type_name;
-    std::vector<::pg_query::Node> params;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> type_name;
+    std::pmr::vector<::pg_query::Node> params;
 
     size_t fbe_type() const noexcept { return 138; }
 
     CreateRangeStmt();
-    CreateRangeStmt(std::vector<::pg_query::Node> arg_type_name, std::vector<::pg_query::Node> arg_params);
+    explicit CreateRangeStmt(allocator_type alloc);
+    CreateRangeStmt(std::pmr::vector<::pg_query::Node> arg_type_name, std::pmr::vector<::pg_query::Node> arg_params);
     CreateRangeStmt(const CreateRangeStmt& other) = delete;
     CreateRangeStmt(CreateRangeStmt&& other) noexcept;
     ~CreateRangeStmt() override;
@@ -9490,17 +9906,20 @@ namespace pg_query {
 
 struct AlterEnumStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> type_name;
-    std::string old_val;
-    std::string new_val;
-    std::string new_val_neighbor;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> type_name;
+    std::pmr::string old_val;
+    std::pmr::string new_val;
+    std::pmr::string new_val_neighbor;
     bool new_val_is_after;
     bool skip_if_new_val_exists;
 
     size_t fbe_type() const noexcept { return 139; }
 
     AlterEnumStmt();
-    AlterEnumStmt(std::vector<::pg_query::Node> arg_type_name, const std::string& arg_old_val, const std::string& arg_new_val, const std::string& arg_new_val_neighbor, bool arg_new_val_is_after, bool arg_skip_if_new_val_exists);
+    explicit AlterEnumStmt(allocator_type alloc);
+    AlterEnumStmt(std::pmr::vector<::pg_query::Node> arg_type_name, const std::pmr::string& arg_old_val, const std::pmr::string& arg_new_val, const std::pmr::string& arg_new_val_neighbor, bool arg_new_val_is_after, bool arg_skip_if_new_val_exists);
     AlterEnumStmt(const AlterEnumStmt& other) = delete;
     AlterEnumStmt(AlterEnumStmt&& other) noexcept;
     ~AlterEnumStmt() override;
@@ -9546,13 +9965,16 @@ namespace pg_query {
 
 struct AlterTSDictionaryStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> dictname;
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> dictname;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 140; }
 
     AlterTSDictionaryStmt();
-    AlterTSDictionaryStmt(std::vector<::pg_query::Node> arg_dictname, std::vector<::pg_query::Node> arg_options);
+    explicit AlterTSDictionaryStmt(allocator_type alloc);
+    AlterTSDictionaryStmt(std::pmr::vector<::pg_query::Node> arg_dictname, std::pmr::vector<::pg_query::Node> arg_options);
     AlterTSDictionaryStmt(const AlterTSDictionaryStmt& other) = delete;
     AlterTSDictionaryStmt(AlterTSDictionaryStmt&& other) noexcept;
     ~AlterTSDictionaryStmt() override;
@@ -9598,10 +10020,12 @@ namespace pg_query {
 
 struct AlterTSConfigurationStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::AlterTSConfigType kind;
-    std::vector<::pg_query::Node> cfgname;
-    std::vector<::pg_query::Node> tokentype;
-    std::vector<::pg_query::Node> dicts;
+    std::pmr::vector<::pg_query::Node> cfgname;
+    std::pmr::vector<::pg_query::Node> tokentype;
+    std::pmr::vector<::pg_query::Node> dicts;
     bool override;
     bool replace;
     bool missing_ok;
@@ -9609,7 +10033,8 @@ struct AlterTSConfigurationStmt : FBE::Base
     size_t fbe_type() const noexcept { return 141; }
 
     AlterTSConfigurationStmt();
-    AlterTSConfigurationStmt(::pg_query::AlterTSConfigType&& arg_kind, std::vector<::pg_query::Node> arg_cfgname, std::vector<::pg_query::Node> arg_tokentype, std::vector<::pg_query::Node> arg_dicts, bool arg_override, bool arg_replace, bool arg_missing_ok);
+    explicit AlterTSConfigurationStmt(allocator_type alloc);
+    AlterTSConfigurationStmt(::pg_query::AlterTSConfigType&& arg_kind, std::pmr::vector<::pg_query::Node> arg_cfgname, std::pmr::vector<::pg_query::Node> arg_tokentype, std::pmr::vector<::pg_query::Node> arg_dicts, bool arg_override, bool arg_replace, bool arg_missing_ok);
     AlterTSConfigurationStmt(const AlterTSConfigurationStmt& other) = delete;
     AlterTSConfigurationStmt(AlterTSConfigurationStmt&& other) noexcept;
     ~AlterTSConfigurationStmt() override;
@@ -9655,14 +10080,17 @@ namespace pg_query {
 
 struct CreateFdwStmt : FBE::Base
 {
-    std::string fdwname;
-    std::vector<::pg_query::Node> func_options;
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string fdwname;
+    std::pmr::vector<::pg_query::Node> func_options;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 142; }
 
     CreateFdwStmt();
-    CreateFdwStmt(const std::string& arg_fdwname, std::vector<::pg_query::Node> arg_func_options, std::vector<::pg_query::Node> arg_options);
+    explicit CreateFdwStmt(allocator_type alloc);
+    CreateFdwStmt(const std::pmr::string& arg_fdwname, std::pmr::vector<::pg_query::Node> arg_func_options, std::pmr::vector<::pg_query::Node> arg_options);
     CreateFdwStmt(const CreateFdwStmt& other) = delete;
     CreateFdwStmt(CreateFdwStmt&& other) noexcept;
     ~CreateFdwStmt() override;
@@ -9708,14 +10136,17 @@ namespace pg_query {
 
 struct AlterFdwStmt : FBE::Base
 {
-    std::string fdwname;
-    std::vector<::pg_query::Node> func_options;
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string fdwname;
+    std::pmr::vector<::pg_query::Node> func_options;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 143; }
 
     AlterFdwStmt();
-    AlterFdwStmt(const std::string& arg_fdwname, std::vector<::pg_query::Node> arg_func_options, std::vector<::pg_query::Node> arg_options);
+    explicit AlterFdwStmt(allocator_type alloc);
+    AlterFdwStmt(const std::pmr::string& arg_fdwname, std::pmr::vector<::pg_query::Node> arg_func_options, std::pmr::vector<::pg_query::Node> arg_options);
     AlterFdwStmt(const AlterFdwStmt& other) = delete;
     AlterFdwStmt(AlterFdwStmt&& other) noexcept;
     ~AlterFdwStmt() override;
@@ -9761,17 +10192,20 @@ namespace pg_query {
 
 struct CreateForeignServerStmt : FBE::Base
 {
-    std::string servername;
-    std::string servertype;
-    std::string version;
-    std::string fdwname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string servername;
+    std::pmr::string servertype;
+    std::pmr::string version;
+    std::pmr::string fdwname;
     bool if_not_exists;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 144; }
 
     CreateForeignServerStmt();
-    CreateForeignServerStmt(const std::string& arg_servername, const std::string& arg_servertype, const std::string& arg_version, const std::string& arg_fdwname, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options);
+    explicit CreateForeignServerStmt(allocator_type alloc);
+    CreateForeignServerStmt(const std::pmr::string& arg_servername, const std::pmr::string& arg_servertype, const std::pmr::string& arg_version, const std::pmr::string& arg_fdwname, bool arg_if_not_exists, std::pmr::vector<::pg_query::Node> arg_options);
     CreateForeignServerStmt(const CreateForeignServerStmt& other) = delete;
     CreateForeignServerStmt(CreateForeignServerStmt&& other) noexcept;
     ~CreateForeignServerStmt() override;
@@ -9817,15 +10251,18 @@ namespace pg_query {
 
 struct AlterForeignServerStmt : FBE::Base
 {
-    std::string servername;
-    std::string version;
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string servername;
+    std::pmr::string version;
+    std::pmr::vector<::pg_query::Node> options;
     bool has_version;
 
     size_t fbe_type() const noexcept { return 145; }
 
     AlterForeignServerStmt();
-    AlterForeignServerStmt(const std::string& arg_servername, const std::string& arg_version, std::vector<::pg_query::Node> arg_options, bool arg_has_version);
+    explicit AlterForeignServerStmt(allocator_type alloc);
+    AlterForeignServerStmt(const std::pmr::string& arg_servername, const std::pmr::string& arg_version, std::pmr::vector<::pg_query::Node> arg_options, bool arg_has_version);
     AlterForeignServerStmt(const AlterForeignServerStmt& other) = delete;
     AlterForeignServerStmt(AlterForeignServerStmt&& other) noexcept;
     ~AlterForeignServerStmt() override;
@@ -9873,15 +10310,18 @@ struct RoleSpec;
 
 struct CreateUserMappingStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RoleSpec* user;
-    std::string servername;
+    std::pmr::string servername;
     bool if_not_exists;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 146; }
 
     CreateUserMappingStmt();
-    CreateUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::string& arg_servername, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options);
+    explicit CreateUserMappingStmt(allocator_type alloc);
+    CreateUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::pmr::string& arg_servername, bool arg_if_not_exists, std::pmr::vector<::pg_query::Node> arg_options);
     CreateUserMappingStmt(const CreateUserMappingStmt& other) = delete;
     CreateUserMappingStmt(CreateUserMappingStmt&& other) noexcept;
     ~CreateUserMappingStmt() override;
@@ -9929,14 +10369,17 @@ struct RoleSpec;
 
 struct AlterUserMappingStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RoleSpec* user;
-    std::string servername;
-    std::vector<::pg_query::Node> options;
+    std::pmr::string servername;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 147; }
 
     AlterUserMappingStmt();
-    AlterUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::string& arg_servername, std::vector<::pg_query::Node> arg_options);
+    explicit AlterUserMappingStmt(allocator_type alloc);
+    AlterUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::pmr::string& arg_servername, std::pmr::vector<::pg_query::Node> arg_options);
     AlterUserMappingStmt(const AlterUserMappingStmt& other) = delete;
     AlterUserMappingStmt(AlterUserMappingStmt&& other) noexcept;
     ~AlterUserMappingStmt() override;
@@ -9984,14 +10427,17 @@ struct RoleSpec;
 
 struct DropUserMappingStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RoleSpec* user;
-    std::string servername;
+    std::pmr::string servername;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 148; }
 
     DropUserMappingStmt();
-    DropUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::string& arg_servername, bool arg_missing_ok);
+    explicit DropUserMappingStmt(allocator_type alloc);
+    DropUserMappingStmt(std::unique_ptr<::pg_query::RoleSpec> arg_user, const std::pmr::string& arg_servername, bool arg_missing_ok);
     DropUserMappingStmt(const DropUserMappingStmt& other) = delete;
     DropUserMappingStmt(DropUserMappingStmt&& other) noexcept;
     ~DropUserMappingStmt() override;
@@ -10037,14 +10483,17 @@ namespace pg_query {
 
 struct AlterTableSpaceOptionsStmt : FBE::Base
 {
-    std::string tablespacename;
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string tablespacename;
+    std::pmr::vector<::pg_query::Node> options;
     bool is_reset;
 
     size_t fbe_type() const noexcept { return 149; }
 
     AlterTableSpaceOptionsStmt();
-    AlterTableSpaceOptionsStmt(const std::string& arg_tablespacename, std::vector<::pg_query::Node> arg_options, bool arg_is_reset);
+    explicit AlterTableSpaceOptionsStmt(allocator_type alloc);
+    AlterTableSpaceOptionsStmt(const std::pmr::string& arg_tablespacename, std::pmr::vector<::pg_query::Node> arg_options, bool arg_is_reset);
     AlterTableSpaceOptionsStmt(const AlterTableSpaceOptionsStmt& other) = delete;
     AlterTableSpaceOptionsStmt(AlterTableSpaceOptionsStmt&& other) noexcept;
     ~AlterTableSpaceOptionsStmt() override;
@@ -10090,16 +10539,19 @@ namespace pg_query {
 
 struct AlterTableMoveAllStmt : FBE::Base
 {
-    std::string orig_tablespacename;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string orig_tablespacename;
     ::pg_query::ObjectType objtype;
-    std::vector<::pg_query::Node> roles;
-    std::string new_tablespacename;
+    std::pmr::vector<::pg_query::Node> roles;
+    std::pmr::string new_tablespacename;
     bool nowait;
 
     size_t fbe_type() const noexcept { return 150; }
 
     AlterTableMoveAllStmt();
-    AlterTableMoveAllStmt(const std::string& arg_orig_tablespacename, ::pg_query::ObjectType&& arg_objtype, std::vector<::pg_query::Node> arg_roles, const std::string& arg_new_tablespacename, bool arg_nowait);
+    explicit AlterTableMoveAllStmt(allocator_type alloc);
+    AlterTableMoveAllStmt(const std::pmr::string& arg_orig_tablespacename, ::pg_query::ObjectType&& arg_objtype, std::pmr::vector<::pg_query::Node> arg_roles, const std::pmr::string& arg_new_tablespacename, bool arg_nowait);
     AlterTableMoveAllStmt(const AlterTableMoveAllStmt& other) = delete;
     AlterTableMoveAllStmt(AlterTableMoveAllStmt&& other) noexcept;
     ~AlterTableMoveAllStmt() override;
@@ -10145,15 +10597,18 @@ namespace pg_query {
 
 struct SecLabelStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ObjectType objtype;
     ::pg_query::Node object;
-    std::string provider;
-    std::string label;
+    std::pmr::string provider;
+    std::pmr::string label;
 
     size_t fbe_type() const noexcept { return 151; }
 
     SecLabelStmt();
-    SecLabelStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::string& arg_provider, const std::string& arg_label);
+    explicit SecLabelStmt(allocator_type alloc);
+    SecLabelStmt(::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object, const std::pmr::string& arg_provider, const std::pmr::string& arg_label);
     SecLabelStmt(const SecLabelStmt& other) = delete;
     SecLabelStmt(SecLabelStmt&& other) noexcept;
     ~SecLabelStmt() override;
@@ -10199,14 +10654,17 @@ namespace pg_query {
 
 struct CreateForeignTableStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::CreateStmt base_stmt;
-    std::string servername;
-    std::vector<::pg_query::Node> options;
+    std::pmr::string servername;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 152; }
 
     CreateForeignTableStmt();
-    CreateForeignTableStmt(::pg_query::CreateStmt&& arg_base_stmt, const std::string& arg_servername, std::vector<::pg_query::Node> arg_options);
+    explicit CreateForeignTableStmt(allocator_type alloc);
+    CreateForeignTableStmt(::pg_query::CreateStmt&& arg_base_stmt, const std::pmr::string& arg_servername, std::pmr::vector<::pg_query::Node> arg_options);
     CreateForeignTableStmt(const CreateForeignTableStmt& other) = delete;
     CreateForeignTableStmt(CreateForeignTableStmt&& other) noexcept;
     ~CreateForeignTableStmt() override;
@@ -10252,17 +10710,20 @@ namespace pg_query {
 
 struct ImportForeignSchemaStmt : FBE::Base
 {
-    std::string server_name;
-    std::string remote_schema;
-    std::string local_schema;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string server_name;
+    std::pmr::string remote_schema;
+    std::pmr::string local_schema;
     ::pg_query::ImportForeignSchemaType list_type;
-    std::vector<::pg_query::Node> table_list;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> table_list;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 153; }
 
     ImportForeignSchemaStmt();
-    ImportForeignSchemaStmt(const std::string& arg_server_name, const std::string& arg_remote_schema, const std::string& arg_local_schema, ::pg_query::ImportForeignSchemaType&& arg_list_type, std::vector<::pg_query::Node> arg_table_list, std::vector<::pg_query::Node> arg_options);
+    explicit ImportForeignSchemaStmt(allocator_type alloc);
+    ImportForeignSchemaStmt(const std::pmr::string& arg_server_name, const std::pmr::string& arg_remote_schema, const std::pmr::string& arg_local_schema, ::pg_query::ImportForeignSchemaType&& arg_list_type, std::pmr::vector<::pg_query::Node> arg_table_list, std::pmr::vector<::pg_query::Node> arg_options);
     ImportForeignSchemaStmt(const ImportForeignSchemaStmt& other) = delete;
     ImportForeignSchemaStmt(ImportForeignSchemaStmt&& other) noexcept;
     ~ImportForeignSchemaStmt() override;
@@ -10308,14 +10769,17 @@ namespace pg_query {
 
 struct CreateExtensionStmt : FBE::Base
 {
-    std::string extname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string extname;
     bool if_not_exists;
-    std::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 154; }
 
     CreateExtensionStmt();
-    CreateExtensionStmt(const std::string& arg_extname, bool arg_if_not_exists, std::vector<::pg_query::Node> arg_options);
+    explicit CreateExtensionStmt(allocator_type alloc);
+    CreateExtensionStmt(const std::pmr::string& arg_extname, bool arg_if_not_exists, std::pmr::vector<::pg_query::Node> arg_options);
     CreateExtensionStmt(const CreateExtensionStmt& other) = delete;
     CreateExtensionStmt(CreateExtensionStmt&& other) noexcept;
     ~CreateExtensionStmt() override;
@@ -10361,13 +10825,16 @@ namespace pg_query {
 
 struct AlterExtensionStmt : FBE::Base
 {
-    std::string extname;
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string extname;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 155; }
 
     AlterExtensionStmt();
-    AlterExtensionStmt(const std::string& arg_extname, std::vector<::pg_query::Node> arg_options);
+    explicit AlterExtensionStmt(allocator_type alloc);
+    AlterExtensionStmt(const std::pmr::string& arg_extname, std::pmr::vector<::pg_query::Node> arg_options);
     AlterExtensionStmt(const AlterExtensionStmt& other) = delete;
     AlterExtensionStmt(AlterExtensionStmt&& other) noexcept;
     ~AlterExtensionStmt() override;
@@ -10413,7 +10880,9 @@ namespace pg_query {
 
 struct AlterExtensionContentsStmt : FBE::Base
 {
-    std::string extname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string extname;
     int32_t action;
     ::pg_query::ObjectType objtype;
     ::pg_query::Node object;
@@ -10421,7 +10890,8 @@ struct AlterExtensionContentsStmt : FBE::Base
     size_t fbe_type() const noexcept { return 156; }
 
     AlterExtensionContentsStmt();
-    AlterExtensionContentsStmt(const std::string& arg_extname, int32_t arg_action, ::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object);
+    explicit AlterExtensionContentsStmt(allocator_type alloc);
+    AlterExtensionContentsStmt(const std::pmr::string& arg_extname, int32_t arg_action, ::pg_query::ObjectType&& arg_objtype, ::pg_query::Node&& arg_object);
     AlterExtensionContentsStmt(const AlterExtensionContentsStmt& other) = delete;
     AlterExtensionContentsStmt(AlterExtensionContentsStmt&& other) noexcept;
     ~AlterExtensionContentsStmt() override;
@@ -10467,15 +10937,18 @@ namespace pg_query {
 
 struct CreateEventTrigStmt : FBE::Base
 {
-    std::string trigname;
-    std::string eventname;
-    std::vector<::pg_query::Node> whenclause;
-    std::vector<::pg_query::Node> funcname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string trigname;
+    std::pmr::string eventname;
+    std::pmr::vector<::pg_query::Node> whenclause;
+    std::pmr::vector<::pg_query::Node> funcname;
 
     size_t fbe_type() const noexcept { return 157; }
 
     CreateEventTrigStmt();
-    CreateEventTrigStmt(const std::string& arg_trigname, const std::string& arg_eventname, std::vector<::pg_query::Node> arg_whenclause, std::vector<::pg_query::Node> arg_funcname);
+    explicit CreateEventTrigStmt(allocator_type alloc);
+    CreateEventTrigStmt(const std::pmr::string& arg_trigname, const std::pmr::string& arg_eventname, std::pmr::vector<::pg_query::Node> arg_whenclause, std::pmr::vector<::pg_query::Node> arg_funcname);
     CreateEventTrigStmt(const CreateEventTrigStmt& other) = delete;
     CreateEventTrigStmt(CreateEventTrigStmt&& other) noexcept;
     ~CreateEventTrigStmt() override;
@@ -10521,13 +10994,16 @@ namespace pg_query {
 
 struct AlterEventTrigStmt : FBE::Base
 {
-    std::string trigname;
-    std::string tgenabled;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string trigname;
+    std::pmr::string tgenabled;
 
     size_t fbe_type() const noexcept { return 158; }
 
     AlterEventTrigStmt();
-    AlterEventTrigStmt(const std::string& arg_trigname, const std::string& arg_tgenabled);
+    explicit AlterEventTrigStmt(allocator_type alloc);
+    AlterEventTrigStmt(const std::pmr::string& arg_trigname, const std::pmr::string& arg_tgenabled);
     AlterEventTrigStmt(const AlterEventTrigStmt& other) = delete;
     AlterEventTrigStmt(AlterEventTrigStmt&& other) noexcept;
     ~AlterEventTrigStmt() override;
@@ -10575,6 +11051,8 @@ struct RangeVar;
 
 struct RefreshMatViewStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     bool concurrent;
     bool skip_data;
     ::pg_query::RangeVar* relation;
@@ -10582,6 +11060,7 @@ struct RefreshMatViewStmt : FBE::Base
     size_t fbe_type() const noexcept { return 159; }
 
     RefreshMatViewStmt();
+    explicit RefreshMatViewStmt(allocator_type alloc);
     RefreshMatViewStmt(bool arg_concurrent, bool arg_skip_data, std::unique_ptr<::pg_query::RangeVar> arg_relation);
     RefreshMatViewStmt(const RefreshMatViewStmt& other) = delete;
     RefreshMatViewStmt(RefreshMatViewStmt&& other) noexcept;
@@ -10628,13 +11107,16 @@ namespace pg_query {
 
 struct ReplicaIdentityStmt : FBE::Base
 {
-    std::string identity_type;
-    std::string name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string identity_type;
+    std::pmr::string name;
 
     size_t fbe_type() const noexcept { return 160; }
 
     ReplicaIdentityStmt();
-    ReplicaIdentityStmt(const std::string& arg_identity_type, const std::string& arg_name);
+    explicit ReplicaIdentityStmt(allocator_type alloc);
+    ReplicaIdentityStmt(const std::pmr::string& arg_identity_type, const std::pmr::string& arg_name);
     ReplicaIdentityStmt(const ReplicaIdentityStmt& other) = delete;
     ReplicaIdentityStmt(ReplicaIdentityStmt&& other) noexcept;
     ~ReplicaIdentityStmt() override;
@@ -10682,11 +11164,14 @@ struct VariableSetStmt;
 
 struct AlterSystemStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::VariableSetStmt* setstmt;
 
     size_t fbe_type() const noexcept { return 161; }
 
     AlterSystemStmt();
+    explicit AlterSystemStmt(allocator_type alloc);
     explicit AlterSystemStmt(std::unique_ptr<::pg_query::VariableSetStmt> arg_setstmt);
     AlterSystemStmt(const AlterSystemStmt& other) = delete;
     AlterSystemStmt(AlterSystemStmt&& other) noexcept;
@@ -10735,18 +11220,21 @@ struct RangeVar;
 
 struct CreatePolicyStmt : FBE::Base
 {
-    std::string policy_name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string policy_name;
     ::pg_query::RangeVar* table;
-    std::string cmd_name;
+    std::pmr::string cmd_name;
     bool permissive;
-    std::vector<::pg_query::Node> roles;
+    std::pmr::vector<::pg_query::Node> roles;
     ::pg_query::Node qual;
     ::pg_query::Node with_check;
 
     size_t fbe_type() const noexcept { return 162; }
 
     CreatePolicyStmt();
-    CreatePolicyStmt(const std::string& arg_policy_name, std::unique_ptr<::pg_query::RangeVar> arg_table, const std::string& arg_cmd_name, bool arg_permissive, std::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check);
+    explicit CreatePolicyStmt(allocator_type alloc);
+    CreatePolicyStmt(const std::pmr::string& arg_policy_name, std::unique_ptr<::pg_query::RangeVar> arg_table, const std::pmr::string& arg_cmd_name, bool arg_permissive, std::pmr::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check);
     CreatePolicyStmt(const CreatePolicyStmt& other) = delete;
     CreatePolicyStmt(CreatePolicyStmt&& other) noexcept;
     ~CreatePolicyStmt() override;
@@ -10794,16 +11282,19 @@ struct RangeVar;
 
 struct AlterPolicyStmt : FBE::Base
 {
-    std::string policy_name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string policy_name;
     ::pg_query::RangeVar* table;
-    std::vector<::pg_query::Node> roles;
+    std::pmr::vector<::pg_query::Node> roles;
     ::pg_query::Node qual;
     ::pg_query::Node with_check;
 
     size_t fbe_type() const noexcept { return 163; }
 
     AlterPolicyStmt();
-    AlterPolicyStmt(const std::string& arg_policy_name, std::unique_ptr<::pg_query::RangeVar> arg_table, std::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check);
+    explicit AlterPolicyStmt(allocator_type alloc);
+    AlterPolicyStmt(const std::pmr::string& arg_policy_name, std::unique_ptr<::pg_query::RangeVar> arg_table, std::pmr::vector<::pg_query::Node> arg_roles, ::pg_query::Node&& arg_qual, ::pg_query::Node&& arg_with_check);
     AlterPolicyStmt(const AlterPolicyStmt& other) = delete;
     AlterPolicyStmt(AlterPolicyStmt&& other) noexcept;
     ~AlterPolicyStmt() override;
@@ -10853,16 +11344,19 @@ struct ObjectWithArgs;
 
 struct CreateTransformStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     bool replace;
     ::pg_query::TypeName* type_name;
-    std::string lang;
+    std::pmr::string lang;
     ::pg_query::ObjectWithArgs* fromsql;
     ::pg_query::ObjectWithArgs* tosql;
 
     size_t fbe_type() const noexcept { return 164; }
 
     CreateTransformStmt();
-    CreateTransformStmt(bool arg_replace, std::unique_ptr<::pg_query::TypeName> arg_type_name, const std::string& arg_lang, std::unique_ptr<::pg_query::ObjectWithArgs> arg_fromsql, std::unique_ptr<::pg_query::ObjectWithArgs> arg_tosql);
+    explicit CreateTransformStmt(allocator_type alloc);
+    CreateTransformStmt(bool arg_replace, std::unique_ptr<::pg_query::TypeName> arg_type_name, const std::pmr::string& arg_lang, std::unique_ptr<::pg_query::ObjectWithArgs> arg_fromsql, std::unique_ptr<::pg_query::ObjectWithArgs> arg_tosql);
     CreateTransformStmt(const CreateTransformStmt& other) = delete;
     CreateTransformStmt(CreateTransformStmt&& other) noexcept;
     ~CreateTransformStmt() override;
@@ -10908,14 +11402,17 @@ namespace pg_query {
 
 struct CreateAmStmt : FBE::Base
 {
-    std::string amname;
-    std::vector<::pg_query::Node> handler_name;
-    std::string amtype;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string amname;
+    std::pmr::vector<::pg_query::Node> handler_name;
+    std::pmr::string amtype;
 
     size_t fbe_type() const noexcept { return 165; }
 
     CreateAmStmt();
-    CreateAmStmt(const std::string& arg_amname, std::vector<::pg_query::Node> arg_handler_name, const std::string& arg_amtype);
+    explicit CreateAmStmt(allocator_type alloc);
+    CreateAmStmt(const std::pmr::string& arg_amname, std::pmr::vector<::pg_query::Node> arg_handler_name, const std::pmr::string& arg_amtype);
     CreateAmStmt(const CreateAmStmt& other) = delete;
     CreateAmStmt(CreateAmStmt&& other) noexcept;
     ~CreateAmStmt() override;
@@ -10961,15 +11458,18 @@ namespace pg_query {
 
 struct CreatePublicationStmt : FBE::Base
 {
-    std::string pubname;
-    std::vector<::pg_query::Node> options;
-    std::vector<::pg_query::Node> tables;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string pubname;
+    std::pmr::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> tables;
     bool for_all_tables;
 
     size_t fbe_type() const noexcept { return 166; }
 
     CreatePublicationStmt();
-    CreatePublicationStmt(const std::string& arg_pubname, std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables);
+    explicit CreatePublicationStmt(allocator_type alloc);
+    CreatePublicationStmt(const std::pmr::string& arg_pubname, std::pmr::vector<::pg_query::Node> arg_options, std::pmr::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables);
     CreatePublicationStmt(const CreatePublicationStmt& other) = delete;
     CreatePublicationStmt(CreatePublicationStmt&& other) noexcept;
     ~CreatePublicationStmt() override;
@@ -11015,16 +11515,19 @@ namespace pg_query {
 
 struct AlterPublicationStmt : FBE::Base
 {
-    std::string pubname;
-    std::vector<::pg_query::Node> options;
-    std::vector<::pg_query::Node> tables;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string pubname;
+    std::pmr::vector<::pg_query::Node> options;
+    std::pmr::vector<::pg_query::Node> tables;
     bool for_all_tables;
     ::pg_query::DefElemAction table_action;
 
     size_t fbe_type() const noexcept { return 167; }
 
     AlterPublicationStmt();
-    AlterPublicationStmt(const std::string& arg_pubname, std::vector<::pg_query::Node> arg_options, std::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables, ::pg_query::DefElemAction&& arg_table_action);
+    explicit AlterPublicationStmt(allocator_type alloc);
+    AlterPublicationStmt(const std::pmr::string& arg_pubname, std::pmr::vector<::pg_query::Node> arg_options, std::pmr::vector<::pg_query::Node> arg_tables, bool arg_for_all_tables, ::pg_query::DefElemAction&& arg_table_action);
     AlterPublicationStmt(const AlterPublicationStmt& other) = delete;
     AlterPublicationStmt(AlterPublicationStmt&& other) noexcept;
     ~AlterPublicationStmt() override;
@@ -11070,15 +11573,18 @@ namespace pg_query {
 
 struct CreateSubscriptionStmt : FBE::Base
 {
-    std::string subname;
-    std::string conninfo;
-    std::vector<::pg_query::Node> publication;
-    std::vector<::pg_query::Node> options;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string subname;
+    std::pmr::string conninfo;
+    std::pmr::vector<::pg_query::Node> publication;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 168; }
 
     CreateSubscriptionStmt();
-    CreateSubscriptionStmt(const std::string& arg_subname, const std::string& arg_conninfo, std::vector<::pg_query::Node> arg_publication, std::vector<::pg_query::Node> arg_options);
+    explicit CreateSubscriptionStmt(allocator_type alloc);
+    CreateSubscriptionStmt(const std::pmr::string& arg_subname, const std::pmr::string& arg_conninfo, std::pmr::vector<::pg_query::Node> arg_publication, std::pmr::vector<::pg_query::Node> arg_options);
     CreateSubscriptionStmt(const CreateSubscriptionStmt& other) = delete;
     CreateSubscriptionStmt(CreateSubscriptionStmt&& other) noexcept;
     ~CreateSubscriptionStmt() override;
@@ -11124,16 +11630,19 @@ namespace pg_query {
 
 struct AlterSubscriptionStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::AlterSubscriptionType kind;
-    std::string subname;
-    std::string conninfo;
-    std::vector<::pg_query::Node> publication;
-    std::vector<::pg_query::Node> options;
+    std::pmr::string subname;
+    std::pmr::string conninfo;
+    std::pmr::vector<::pg_query::Node> publication;
+    std::pmr::vector<::pg_query::Node> options;
 
     size_t fbe_type() const noexcept { return 169; }
 
     AlterSubscriptionStmt();
-    AlterSubscriptionStmt(::pg_query::AlterSubscriptionType&& arg_kind, const std::string& arg_subname, const std::string& arg_conninfo, std::vector<::pg_query::Node> arg_publication, std::vector<::pg_query::Node> arg_options);
+    explicit AlterSubscriptionStmt(allocator_type alloc);
+    AlterSubscriptionStmt(::pg_query::AlterSubscriptionType&& arg_kind, const std::pmr::string& arg_subname, const std::pmr::string& arg_conninfo, std::pmr::vector<::pg_query::Node> arg_publication, std::pmr::vector<::pg_query::Node> arg_options);
     AlterSubscriptionStmt(const AlterSubscriptionStmt& other) = delete;
     AlterSubscriptionStmt(AlterSubscriptionStmt&& other) noexcept;
     ~AlterSubscriptionStmt() override;
@@ -11179,14 +11688,17 @@ namespace pg_query {
 
 struct DropSubscriptionStmt : FBE::Base
 {
-    std::string subname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string subname;
     bool missing_ok;
     ::pg_query::DropBehavior behavior;
 
     size_t fbe_type() const noexcept { return 170; }
 
     DropSubscriptionStmt();
-    DropSubscriptionStmt(const std::string& arg_subname, bool arg_missing_ok, ::pg_query::DropBehavior&& arg_behavior);
+    explicit DropSubscriptionStmt(allocator_type alloc);
+    DropSubscriptionStmt(const std::pmr::string& arg_subname, bool arg_missing_ok, ::pg_query::DropBehavior&& arg_behavior);
     DropSubscriptionStmt(const DropSubscriptionStmt& other) = delete;
     DropSubscriptionStmt(DropSubscriptionStmt&& other) noexcept;
     ~DropSubscriptionStmt() override;
@@ -11232,17 +11744,20 @@ namespace pg_query {
 
 struct CreateStatsStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> defnames;
-    std::vector<::pg_query::Node> stat_types;
-    std::vector<::pg_query::Node> exprs;
-    std::vector<::pg_query::Node> relations;
-    std::string stxcomment;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> defnames;
+    std::pmr::vector<::pg_query::Node> stat_types;
+    std::pmr::vector<::pg_query::Node> exprs;
+    std::pmr::vector<::pg_query::Node> relations;
+    std::pmr::string stxcomment;
     bool if_not_exists;
 
     size_t fbe_type() const noexcept { return 171; }
 
     CreateStatsStmt();
-    CreateStatsStmt(std::vector<::pg_query::Node> arg_defnames, std::vector<::pg_query::Node> arg_stat_types, std::vector<::pg_query::Node> arg_exprs, std::vector<::pg_query::Node> arg_relations, const std::string& arg_stxcomment, bool arg_if_not_exists);
+    explicit CreateStatsStmt(allocator_type alloc);
+    CreateStatsStmt(std::pmr::vector<::pg_query::Node> arg_defnames, std::pmr::vector<::pg_query::Node> arg_stat_types, std::pmr::vector<::pg_query::Node> arg_exprs, std::pmr::vector<::pg_query::Node> arg_relations, const std::pmr::string& arg_stxcomment, bool arg_if_not_exists);
     CreateStatsStmt(const CreateStatsStmt& other) = delete;
     CreateStatsStmt(CreateStatsStmt&& other) noexcept;
     ~CreateStatsStmt() override;
@@ -11288,12 +11803,15 @@ namespace pg_query {
 
 struct AlterCollationStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> collname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> collname;
 
     size_t fbe_type() const noexcept { return 172; }
 
     AlterCollationStmt();
-    explicit AlterCollationStmt(std::vector<::pg_query::Node> arg_collname);
+    explicit AlterCollationStmt(allocator_type alloc);
+    explicit AlterCollationStmt(std::pmr::vector<::pg_query::Node> arg_collname);
     AlterCollationStmt(const AlterCollationStmt& other) = delete;
     AlterCollationStmt(AlterCollationStmt&& other) noexcept;
     ~AlterCollationStmt() override;
@@ -11343,12 +11861,15 @@ struct FuncExpr;
 
 struct CallStmt : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::FuncCall* funccall;
     ::pg_query::FuncExpr* funcexpr;
 
     size_t fbe_type() const noexcept { return 173; }
 
     CallStmt();
+    explicit CallStmt(allocator_type alloc);
     CallStmt(std::unique_ptr<::pg_query::FuncCall> arg_funccall, std::unique_ptr<::pg_query::FuncExpr> arg_funcexpr);
     CallStmt(const CallStmt& other) = delete;
     CallStmt(CallStmt&& other) noexcept;
@@ -11395,14 +11916,17 @@ namespace pg_query {
 
 struct AlterStatsStmt : FBE::Base
 {
-    std::vector<::pg_query::Node> defnames;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> defnames;
     int32_t stxstattarget;
     bool missing_ok;
 
     size_t fbe_type() const noexcept { return 174; }
 
     AlterStatsStmt();
-    AlterStatsStmt(std::vector<::pg_query::Node> arg_defnames, int32_t arg_stxstattarget, bool arg_missing_ok);
+    explicit AlterStatsStmt(allocator_type alloc);
+    AlterStatsStmt(std::pmr::vector<::pg_query::Node> arg_defnames, int32_t arg_stxstattarget, bool arg_missing_ok);
     AlterStatsStmt(const AlterStatsStmt& other) = delete;
     AlterStatsStmt(AlterStatsStmt&& other) noexcept;
     ~AlterStatsStmt() override;
@@ -11448,8 +11972,10 @@ namespace pg_query {
 
 struct A_Expr : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::A_Expr_Kind kind;
-    std::vector<::pg_query::Node> name;
+    std::pmr::vector<::pg_query::Node> name;
     ::pg_query::Node lexpr;
     ::pg_query::Node rexpr;
     int32_t location;
@@ -11457,7 +11983,8 @@ struct A_Expr : FBE::Base
     size_t fbe_type() const noexcept { return 175; }
 
     A_Expr();
-    A_Expr(::pg_query::A_Expr_Kind&& arg_kind, std::vector<::pg_query::Node> arg_name, ::pg_query::Node&& arg_lexpr, ::pg_query::Node&& arg_rexpr, int32_t arg_location);
+    explicit A_Expr(allocator_type alloc);
+    A_Expr(::pg_query::A_Expr_Kind&& arg_kind, std::pmr::vector<::pg_query::Node> arg_name, ::pg_query::Node&& arg_lexpr, ::pg_query::Node&& arg_rexpr, int32_t arg_location);
     A_Expr(const A_Expr& other) = delete;
     A_Expr(A_Expr&& other) noexcept;
     ~A_Expr() override;
@@ -11503,13 +12030,16 @@ namespace pg_query {
 
 struct ColumnRef : FBE::Base
 {
-    std::vector<::pg_query::Node> fields;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> fields;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 176; }
 
     ColumnRef();
-    ColumnRef(std::vector<::pg_query::Node> arg_fields, int32_t arg_location);
+    explicit ColumnRef(allocator_type alloc);
+    ColumnRef(std::pmr::vector<::pg_query::Node> arg_fields, int32_t arg_location);
     ColumnRef(const ColumnRef& other) = delete;
     ColumnRef(ColumnRef&& other) noexcept;
     ~ColumnRef() override;
@@ -11555,12 +12085,15 @@ namespace pg_query {
 
 struct ParamRef : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     int32_t number;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 177; }
 
     ParamRef();
+    explicit ParamRef(allocator_type alloc);
     ParamRef(int32_t arg_number, int32_t arg_location);
     ParamRef(const ParamRef& other) = delete;
     ParamRef(ParamRef&& other) noexcept;
@@ -11607,12 +12140,15 @@ namespace pg_query {
 
 struct A_Const : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node val;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 178; }
 
     A_Const();
+    explicit A_Const(allocator_type alloc);
     A_Const(::pg_query::Node&& arg_val, int32_t arg_location);
     A_Const(const A_Const& other) = delete;
     A_Const(A_Const&& other) noexcept;
@@ -11661,9 +12197,11 @@ struct WindowDef;
 
 struct FuncCall : FBE::Base
 {
-    std::vector<::pg_query::Node> funcname;
-    std::vector<::pg_query::Node> args;
-    std::vector<::pg_query::Node> agg_order;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> funcname;
+    std::pmr::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> agg_order;
     ::pg_query::Node agg_filter;
     bool agg_within_group;
     bool agg_star;
@@ -11675,7 +12213,8 @@ struct FuncCall : FBE::Base
     size_t fbe_type() const noexcept { return 179; }
 
     FuncCall();
-    FuncCall(std::vector<::pg_query::Node> arg_funcname, std::vector<::pg_query::Node> arg_args, std::vector<::pg_query::Node> arg_agg_order, ::pg_query::Node&& arg_agg_filter, bool arg_agg_within_group, bool arg_agg_star, bool arg_agg_distinct, bool arg_func_variadic, std::unique_ptr<::pg_query::WindowDef> arg_over, int32_t arg_location);
+    explicit FuncCall(allocator_type alloc);
+    FuncCall(std::pmr::vector<::pg_query::Node> arg_funcname, std::pmr::vector<::pg_query::Node> arg_args, std::pmr::vector<::pg_query::Node> arg_agg_order, ::pg_query::Node&& arg_agg_filter, bool arg_agg_within_group, bool arg_agg_star, bool arg_agg_distinct, bool arg_func_variadic, std::unique_ptr<::pg_query::WindowDef> arg_over, int32_t arg_location);
     FuncCall(const FuncCall& other) = delete;
     FuncCall(FuncCall&& other) noexcept;
     ~FuncCall() override;
@@ -11721,9 +12260,12 @@ namespace pg_query {
 
 struct A_Star : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     size_t fbe_type() const noexcept { return 180; }
 
     A_Star();
+    explicit A_Star(allocator_type alloc);
     A_Star(const A_Star& other) = delete;
     A_Star(A_Star&& other) noexcept;
     ~A_Star() override;
@@ -11769,6 +12311,8 @@ namespace pg_query {
 
 struct A_Indices : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     bool is_slice;
     ::pg_query::Node lidx;
     ::pg_query::Node uidx;
@@ -11776,6 +12320,7 @@ struct A_Indices : FBE::Base
     size_t fbe_type() const noexcept { return 181; }
 
     A_Indices();
+    explicit A_Indices(allocator_type alloc);
     A_Indices(bool arg_is_slice, ::pg_query::Node&& arg_lidx, ::pg_query::Node&& arg_uidx);
     A_Indices(const A_Indices& other) = delete;
     A_Indices(A_Indices&& other) noexcept;
@@ -11822,13 +12367,16 @@ namespace pg_query {
 
 struct A_Indirection : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node arg;
-    std::vector<::pg_query::Node> indirection;
+    std::pmr::vector<::pg_query::Node> indirection;
 
     size_t fbe_type() const noexcept { return 182; }
 
     A_Indirection();
-    A_Indirection(::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_indirection);
+    explicit A_Indirection(allocator_type alloc);
+    A_Indirection(::pg_query::Node&& arg_arg, std::pmr::vector<::pg_query::Node> arg_indirection);
     A_Indirection(const A_Indirection& other) = delete;
     A_Indirection(A_Indirection&& other) noexcept;
     ~A_Indirection() override;
@@ -11874,13 +12422,16 @@ namespace pg_query {
 
 struct A_ArrayExpr : FBE::Base
 {
-    std::vector<::pg_query::Node> elements;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> elements;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 183; }
 
     A_ArrayExpr();
-    A_ArrayExpr(std::vector<::pg_query::Node> arg_elements, int32_t arg_location);
+    explicit A_ArrayExpr(allocator_type alloc);
+    A_ArrayExpr(std::pmr::vector<::pg_query::Node> arg_elements, int32_t arg_location);
     A_ArrayExpr(const A_ArrayExpr& other) = delete;
     A_ArrayExpr(A_ArrayExpr&& other) noexcept;
     ~A_ArrayExpr() override;
@@ -11926,15 +12477,18 @@ namespace pg_query {
 
 struct ResTarget : FBE::Base
 {
-    std::string name;
-    std::vector<::pg_query::Node> indirection;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
+    std::pmr::vector<::pg_query::Node> indirection;
     ::pg_query::Node val;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 184; }
 
     ResTarget();
-    ResTarget(const std::string& arg_name, std::vector<::pg_query::Node> arg_indirection, ::pg_query::Node&& arg_val, int32_t arg_location);
+    explicit ResTarget(allocator_type alloc);
+    ResTarget(const std::pmr::string& arg_name, std::pmr::vector<::pg_query::Node> arg_indirection, ::pg_query::Node&& arg_val, int32_t arg_location);
     ResTarget(const ResTarget& other) = delete;
     ResTarget(ResTarget&& other) noexcept;
     ~ResTarget() override;
@@ -11980,6 +12534,8 @@ namespace pg_query {
 
 struct MultiAssignRef : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node source;
     int32_t colno;
     int32_t ncolumns;
@@ -11987,6 +12543,7 @@ struct MultiAssignRef : FBE::Base
     size_t fbe_type() const noexcept { return 185; }
 
     MultiAssignRef();
+    explicit MultiAssignRef(allocator_type alloc);
     MultiAssignRef(::pg_query::Node&& arg_source, int32_t arg_colno, int32_t arg_ncolumns);
     MultiAssignRef(const MultiAssignRef& other) = delete;
     MultiAssignRef(MultiAssignRef&& other) noexcept;
@@ -12035,6 +12592,8 @@ struct TypeName;
 
 struct TypeCast : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node arg;
     ::pg_query::TypeName* type_name;
     int32_t location;
@@ -12042,6 +12601,7 @@ struct TypeCast : FBE::Base
     size_t fbe_type() const noexcept { return 186; }
 
     TypeCast();
+    explicit TypeCast(allocator_type alloc);
     TypeCast(::pg_query::Node&& arg_arg, std::unique_ptr<::pg_query::TypeName> arg_type_name, int32_t arg_location);
     TypeCast(const TypeCast& other) = delete;
     TypeCast(TypeCast&& other) noexcept;
@@ -12088,14 +12648,17 @@ namespace pg_query {
 
 struct CollateClause : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node arg;
-    std::vector<::pg_query::Node> collname;
+    std::pmr::vector<::pg_query::Node> collname;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 187; }
 
     CollateClause();
-    CollateClause(::pg_query::Node&& arg_arg, std::vector<::pg_query::Node> arg_collname, int32_t arg_location);
+    explicit CollateClause(allocator_type alloc);
+    CollateClause(::pg_query::Node&& arg_arg, std::pmr::vector<::pg_query::Node> arg_collname, int32_t arg_location);
     CollateClause(const CollateClause& other) = delete;
     CollateClause(CollateClause&& other) noexcept;
     ~CollateClause() override;
@@ -12141,16 +12704,19 @@ namespace pg_query {
 
 struct SortBy : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node node;
     ::pg_query::SortByDir sortby_dir;
     ::pg_query::SortByNulls sortby_nulls;
-    std::vector<::pg_query::Node> use_op;
+    std::pmr::vector<::pg_query::Node> use_op;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 188; }
 
     SortBy();
-    SortBy(::pg_query::Node&& arg_node, ::pg_query::SortByDir&& arg_sortby_dir, ::pg_query::SortByNulls&& arg_sortby_nulls, std::vector<::pg_query::Node> arg_use_op, int32_t arg_location);
+    explicit SortBy(allocator_type alloc);
+    SortBy(::pg_query::Node&& arg_node, ::pg_query::SortByDir&& arg_sortby_dir, ::pg_query::SortByNulls&& arg_sortby_nulls, std::pmr::vector<::pg_query::Node> arg_use_op, int32_t arg_location);
     SortBy(const SortBy& other) = delete;
     SortBy(SortBy&& other) noexcept;
     ~SortBy() override;
@@ -12196,10 +12762,12 @@ namespace pg_query {
 
 struct WindowDef : FBE::Base
 {
-    std::string name;
-    std::string refname;
-    std::vector<::pg_query::Node> partition_clause;
-    std::vector<::pg_query::Node> order_clause;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
+    std::pmr::string refname;
+    std::pmr::vector<::pg_query::Node> partition_clause;
+    std::pmr::vector<::pg_query::Node> order_clause;
     int32_t frame_options;
     ::pg_query::Node start_offset;
     ::pg_query::Node end_offset;
@@ -12208,7 +12776,8 @@ struct WindowDef : FBE::Base
     size_t fbe_type() const noexcept { return 189; }
 
     WindowDef();
-    WindowDef(const std::string& arg_name, const std::string& arg_refname, std::vector<::pg_query::Node> arg_partition_clause, std::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, int32_t arg_location);
+    explicit WindowDef(allocator_type alloc);
+    WindowDef(const std::pmr::string& arg_name, const std::pmr::string& arg_refname, std::pmr::vector<::pg_query::Node> arg_partition_clause, std::pmr::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, int32_t arg_location);
     WindowDef(const WindowDef& other) = delete;
     WindowDef(WindowDef&& other) noexcept;
     ~WindowDef() override;
@@ -12256,6 +12825,8 @@ struct Alias;
 
 struct RangeSubselect : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     bool lateral;
     ::pg_query::Node subquery;
     ::pg_query::Alias* alias;
@@ -12263,6 +12834,7 @@ struct RangeSubselect : FBE::Base
     size_t fbe_type() const noexcept { return 190; }
 
     RangeSubselect();
+    explicit RangeSubselect(allocator_type alloc);
     RangeSubselect(bool arg_lateral, ::pg_query::Node&& arg_subquery, std::unique_ptr<::pg_query::Alias> arg_alias);
     RangeSubselect(const RangeSubselect& other) = delete;
     RangeSubselect(RangeSubselect&& other) noexcept;
@@ -12311,17 +12883,20 @@ struct Alias;
 
 struct RangeFunction : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     bool lateral;
     bool ordinality;
     bool is_rowsfrom;
-    std::vector<::pg_query::Node> functions;
+    std::pmr::vector<::pg_query::Node> functions;
     ::pg_query::Alias* alias;
-    std::vector<::pg_query::Node> coldeflist;
+    std::pmr::vector<::pg_query::Node> coldeflist;
 
     size_t fbe_type() const noexcept { return 191; }
 
     RangeFunction();
-    RangeFunction(bool arg_lateral, bool arg_ordinality, bool arg_is_rowsfrom, std::vector<::pg_query::Node> arg_functions, std::unique_ptr<::pg_query::Alias> arg_alias, std::vector<::pg_query::Node> arg_coldeflist);
+    explicit RangeFunction(allocator_type alloc);
+    RangeFunction(bool arg_lateral, bool arg_ordinality, bool arg_is_rowsfrom, std::pmr::vector<::pg_query::Node> arg_functions, std::unique_ptr<::pg_query::Alias> arg_alias, std::pmr::vector<::pg_query::Node> arg_coldeflist);
     RangeFunction(const RangeFunction& other) = delete;
     RangeFunction(RangeFunction&& other) noexcept;
     ~RangeFunction() override;
@@ -12367,16 +12942,19 @@ namespace pg_query {
 
 struct RangeTableSample : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node relation;
-    std::vector<::pg_query::Node> method;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> method;
+    std::pmr::vector<::pg_query::Node> args;
     ::pg_query::Node repeatable;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 192; }
 
     RangeTableSample();
-    RangeTableSample(::pg_query::Node&& arg_relation, std::vector<::pg_query::Node> arg_method, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable, int32_t arg_location);
+    explicit RangeTableSample(allocator_type alloc);
+    RangeTableSample(::pg_query::Node&& arg_relation, std::pmr::vector<::pg_query::Node> arg_method, std::pmr::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable, int32_t arg_location);
     RangeTableSample(const RangeTableSample& other) = delete;
     RangeTableSample(RangeTableSample&& other) noexcept;
     ~RangeTableSample() override;
@@ -12424,18 +13002,21 @@ struct Alias;
 
 struct RangeTableFunc : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     bool lateral;
     ::pg_query::Node docexpr;
     ::pg_query::Node rowexpr;
-    std::vector<::pg_query::Node> namespaces;
-    std::vector<::pg_query::Node> columns;
+    std::pmr::vector<::pg_query::Node> namespaces;
+    std::pmr::vector<::pg_query::Node> columns;
     ::pg_query::Alias* alias;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 193; }
 
     RangeTableFunc();
-    RangeTableFunc(bool arg_lateral, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::vector<::pg_query::Node> arg_namespaces, std::vector<::pg_query::Node> arg_columns, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_location);
+    explicit RangeTableFunc(allocator_type alloc);
+    RangeTableFunc(bool arg_lateral, ::pg_query::Node&& arg_docexpr, ::pg_query::Node&& arg_rowexpr, std::pmr::vector<::pg_query::Node> arg_namespaces, std::pmr::vector<::pg_query::Node> arg_columns, std::unique_ptr<::pg_query::Alias> arg_alias, int32_t arg_location);
     RangeTableFunc(const RangeTableFunc& other) = delete;
     RangeTableFunc(RangeTableFunc&& other) noexcept;
     ~RangeTableFunc() override;
@@ -12483,7 +13064,9 @@ struct TypeName;
 
 struct RangeTableFuncCol : FBE::Base
 {
-    std::string colname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string colname;
     ::pg_query::TypeName* type_name;
     bool for_ordinality;
     bool is_not_null;
@@ -12494,7 +13077,8 @@ struct RangeTableFuncCol : FBE::Base
     size_t fbe_type() const noexcept { return 194; }
 
     RangeTableFuncCol();
-    RangeTableFuncCol(const std::string& arg_colname, std::unique_ptr<::pg_query::TypeName> arg_type_name, bool arg_for_ordinality, bool arg_is_not_null, ::pg_query::Node&& arg_colexpr, ::pg_query::Node&& arg_coldefexpr, int32_t arg_location);
+    explicit RangeTableFuncCol(allocator_type alloc);
+    RangeTableFuncCol(const std::pmr::string& arg_colname, std::unique_ptr<::pg_query::TypeName> arg_type_name, bool arg_for_ordinality, bool arg_is_not_null, ::pg_query::Node&& arg_colexpr, ::pg_query::Node&& arg_coldefexpr, int32_t arg_location);
     RangeTableFuncCol(const RangeTableFuncCol& other) = delete;
     RangeTableFuncCol(RangeTableFuncCol&& other) noexcept;
     ~RangeTableFuncCol() override;
@@ -12540,19 +13124,22 @@ namespace pg_query {
 
 struct TypeName : FBE::Base
 {
-    std::vector<::pg_query::Node> names;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> names;
     uint32_t type_oid;
     bool setof;
     bool pct_type;
-    std::vector<::pg_query::Node> typmods;
+    std::pmr::vector<::pg_query::Node> typmods;
     int32_t typemod;
-    std::vector<::pg_query::Node> array_bounds;
+    std::pmr::vector<::pg_query::Node> array_bounds;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 195; }
 
     TypeName();
-    TypeName(std::vector<::pg_query::Node> arg_names, uint32_t arg_type_oid, bool arg_setof, bool arg_pct_type, std::vector<::pg_query::Node> arg_typmods, int32_t arg_typemod, std::vector<::pg_query::Node> arg_array_bounds, int32_t arg_location);
+    explicit TypeName(allocator_type alloc);
+    TypeName(std::pmr::vector<::pg_query::Node> arg_names, uint32_t arg_type_oid, bool arg_setof, bool arg_pct_type, std::pmr::vector<::pg_query::Node> arg_typmods, int32_t arg_typemod, std::pmr::vector<::pg_query::Node> arg_array_bounds, int32_t arg_location);
     TypeName(const TypeName& other) = delete;
     TypeName(TypeName&& other) noexcept;
     ~TypeName() override;
@@ -12604,28 +13191,31 @@ struct CollateClause;
 
 struct ColumnDef : FBE::Base
 {
-    std::string colname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string colname;
     ::pg_query::TypeName* type_name;
     int32_t inhcount;
     bool is_local;
     bool is_not_null;
     bool is_from_type;
-    std::string storage;
+    std::pmr::string storage;
     ::pg_query::Node raw_default;
     ::pg_query::Node cooked_default;
-    std::string identity;
+    std::pmr::string identity;
     ::pg_query::RangeVar* identity_sequence;
-    std::string generated;
+    std::pmr::string generated;
     ::pg_query::CollateClause* coll_clause;
     uint32_t coll_oid;
-    std::vector<::pg_query::Node> constraints;
-    std::vector<::pg_query::Node> fdwoptions;
+    std::pmr::vector<::pg_query::Node> constraints;
+    std::pmr::vector<::pg_query::Node> fdwoptions;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 196; }
 
     ColumnDef();
-    ColumnDef(const std::string& arg_colname, std::unique_ptr<::pg_query::TypeName> arg_type_name, int32_t arg_inhcount, bool arg_is_local, bool arg_is_not_null, bool arg_is_from_type, const std::string& arg_storage, ::pg_query::Node&& arg_raw_default, ::pg_query::Node&& arg_cooked_default, const std::string& arg_identity, std::unique_ptr<::pg_query::RangeVar> arg_identity_sequence, const std::string& arg_generated, std::unique_ptr<::pg_query::CollateClause> arg_coll_clause, uint32_t arg_coll_oid, std::vector<::pg_query::Node> arg_constraints, std::vector<::pg_query::Node> arg_fdwoptions, int32_t arg_location);
+    explicit ColumnDef(allocator_type alloc);
+    ColumnDef(const std::pmr::string& arg_colname, std::unique_ptr<::pg_query::TypeName> arg_type_name, int32_t arg_inhcount, bool arg_is_local, bool arg_is_not_null, bool arg_is_from_type, const std::pmr::string& arg_storage, ::pg_query::Node&& arg_raw_default, ::pg_query::Node&& arg_cooked_default, const std::pmr::string& arg_identity, std::unique_ptr<::pg_query::RangeVar> arg_identity_sequence, const std::pmr::string& arg_generated, std::unique_ptr<::pg_query::CollateClause> arg_coll_clause, uint32_t arg_coll_oid, std::pmr::vector<::pg_query::Node> arg_constraints, std::pmr::vector<::pg_query::Node> arg_fdwoptions, int32_t arg_location);
     ColumnDef(const ColumnDef& other) = delete;
     ColumnDef(ColumnDef&& other) noexcept;
     ~ColumnDef() override;
@@ -12671,19 +13261,22 @@ namespace pg_query {
 
 struct IndexElem : FBE::Base
 {
-    std::string name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
     ::pg_query::Node expr;
-    std::string indexcolname;
-    std::vector<::pg_query::Node> collation;
-    std::vector<::pg_query::Node> opclass;
-    std::vector<::pg_query::Node> opclassopts;
+    std::pmr::string indexcolname;
+    std::pmr::vector<::pg_query::Node> collation;
+    std::pmr::vector<::pg_query::Node> opclass;
+    std::pmr::vector<::pg_query::Node> opclassopts;
     ::pg_query::SortByDir ordering;
     ::pg_query::SortByNulls nulls_ordering;
 
     size_t fbe_type() const noexcept { return 197; }
 
     IndexElem();
-    IndexElem(const std::string& arg_name, ::pg_query::Node&& arg_expr, const std::string& arg_indexcolname, std::vector<::pg_query::Node> arg_collation, std::vector<::pg_query::Node> arg_opclass, std::vector<::pg_query::Node> arg_opclassopts, ::pg_query::SortByDir&& arg_ordering, ::pg_query::SortByNulls&& arg_nulls_ordering);
+    explicit IndexElem(allocator_type alloc);
+    IndexElem(const std::pmr::string& arg_name, ::pg_query::Node&& arg_expr, const std::pmr::string& arg_indexcolname, std::pmr::vector<::pg_query::Node> arg_collation, std::pmr::vector<::pg_query::Node> arg_opclass, std::pmr::vector<::pg_query::Node> arg_opclassopts, ::pg_query::SortByDir&& arg_ordering, ::pg_query::SortByNulls&& arg_nulls_ordering);
     IndexElem(const IndexElem& other) = delete;
     IndexElem(IndexElem&& other) noexcept;
     ~IndexElem() override;
@@ -12731,31 +13324,33 @@ struct RangeVar;
 
 struct Constraint : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::ConstrType contype;
-    std::string conname;
+    std::pmr::string conname;
     bool deferrable;
     bool initdeferred;
     int32_t location;
     bool is_no_inherit;
     ::pg_query::Node raw_expr;
-    std::string cooked_expr;
-    std::string generated_when;
-    std::vector<::pg_query::Node> keys;
-    std::vector<::pg_query::Node> including;
-    std::vector<::pg_query::Node> exclusions;
-    std::vector<::pg_query::Node> options;
-    std::string indexname;
-    std::string indexspace;
+    std::pmr::string cooked_expr;
+    std::pmr::string generated_when;
+    std::pmr::vector<::pg_query::Node> keys;
+    std::pmr::vector<::pg_query::Node> including;
+    std::pmr::vector<::pg_query::Node> exclusions;
+    std::pmr::vector<::pg_query::Node> options;
+    std::pmr::string indexname;
+    std::pmr::string indexspace;
     bool reset_default_tblspc;
-    std::string access_method;
+    std::pmr::string access_method;
     ::pg_query::Node where_clause;
     ::pg_query::RangeVar* pktable;
-    std::vector<::pg_query::Node> fk_attrs;
-    std::vector<::pg_query::Node> pk_attrs;
-    std::string fk_matchtype;
-    std::string fk_upd_action;
-    std::string fk_del_action;
-    std::vector<::pg_query::Node> old_conpfeqop;
+    std::pmr::vector<::pg_query::Node> fk_attrs;
+    std::pmr::vector<::pg_query::Node> pk_attrs;
+    std::pmr::string fk_matchtype;
+    std::pmr::string fk_upd_action;
+    std::pmr::string fk_del_action;
+    std::pmr::vector<::pg_query::Node> old_conpfeqop;
     uint32_t old_pktable_oid;
     bool skip_validation;
     bool initially_valid;
@@ -12763,7 +13358,8 @@ struct Constraint : FBE::Base
     size_t fbe_type() const noexcept { return 198; }
 
     Constraint();
-    Constraint(::pg_query::ConstrType&& arg_contype, const std::string& arg_conname, bool arg_deferrable, bool arg_initdeferred, int32_t arg_location, bool arg_is_no_inherit, ::pg_query::Node&& arg_raw_expr, const std::string& arg_cooked_expr, const std::string& arg_generated_when, std::vector<::pg_query::Node> arg_keys, std::vector<::pg_query::Node> arg_including, std::vector<::pg_query::Node> arg_exclusions, std::vector<::pg_query::Node> arg_options, const std::string& arg_indexname, const std::string& arg_indexspace, bool arg_reset_default_tblspc, const std::string& arg_access_method, ::pg_query::Node&& arg_where_clause, std::unique_ptr<::pg_query::RangeVar> arg_pktable, std::vector<::pg_query::Node> arg_fk_attrs, std::vector<::pg_query::Node> arg_pk_attrs, const std::string& arg_fk_matchtype, const std::string& arg_fk_upd_action, const std::string& arg_fk_del_action, std::vector<::pg_query::Node> arg_old_conpfeqop, uint32_t arg_old_pktable_oid, bool arg_skip_validation, bool arg_initially_valid);
+    explicit Constraint(allocator_type alloc);
+    Constraint(::pg_query::ConstrType&& arg_contype, const std::pmr::string& arg_conname, bool arg_deferrable, bool arg_initdeferred, int32_t arg_location, bool arg_is_no_inherit, ::pg_query::Node&& arg_raw_expr, const std::pmr::string& arg_cooked_expr, const std::pmr::string& arg_generated_when, std::pmr::vector<::pg_query::Node> arg_keys, std::pmr::vector<::pg_query::Node> arg_including, std::pmr::vector<::pg_query::Node> arg_exclusions, std::pmr::vector<::pg_query::Node> arg_options, const std::pmr::string& arg_indexname, const std::pmr::string& arg_indexspace, bool arg_reset_default_tblspc, const std::pmr::string& arg_access_method, ::pg_query::Node&& arg_where_clause, std::unique_ptr<::pg_query::RangeVar> arg_pktable, std::pmr::vector<::pg_query::Node> arg_fk_attrs, std::pmr::vector<::pg_query::Node> arg_pk_attrs, const std::pmr::string& arg_fk_matchtype, const std::pmr::string& arg_fk_upd_action, const std::pmr::string& arg_fk_del_action, std::pmr::vector<::pg_query::Node> arg_old_conpfeqop, uint32_t arg_old_pktable_oid, bool arg_skip_validation, bool arg_initially_valid);
     Constraint(const Constraint& other) = delete;
     Constraint(Constraint&& other) noexcept;
     ~Constraint() override;
@@ -12809,8 +13405,10 @@ namespace pg_query {
 
 struct DefElem : FBE::Base
 {
-    std::string defnamespace;
-    std::string defname;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string defnamespace;
+    std::pmr::string defname;
     ::pg_query::Node arg;
     ::pg_query::DefElemAction defaction;
     int32_t location;
@@ -12818,7 +13416,8 @@ struct DefElem : FBE::Base
     size_t fbe_type() const noexcept { return 199; }
 
     DefElem();
-    DefElem(const std::string& arg_defnamespace, const std::string& arg_defname, ::pg_query::Node&& arg_arg, ::pg_query::DefElemAction&& arg_defaction, int32_t arg_location);
+    explicit DefElem(allocator_type alloc);
+    DefElem(const std::pmr::string& arg_defnamespace, const std::pmr::string& arg_defname, ::pg_query::Node&& arg_arg, ::pg_query::DefElemAction&& arg_defaction, int32_t arg_location);
     DefElem(const DefElem& other) = delete;
     DefElem(DefElem&& other) noexcept;
     ~DefElem() override;
@@ -12872,29 +13471,31 @@ struct Alias;
 
 struct RangeTblEntry : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RTEKind rtekind;
     uint32_t relid;
-    std::string relkind;
+    std::pmr::string relkind;
     int32_t rellockmode;
     ::pg_query::TableSampleClause* tablesample;
     ::pg_query::Query* subquery;
     bool security_barrier;
     ::pg_query::JoinType jointype;
     int32_t joinmergedcols;
-    std::vector<::pg_query::Node> joinaliasvars;
-    std::vector<::pg_query::Node> joinleftcols;
-    std::vector<::pg_query::Node> joinrightcols;
-    std::vector<::pg_query::Node> functions;
+    std::pmr::vector<::pg_query::Node> joinaliasvars;
+    std::pmr::vector<::pg_query::Node> joinleftcols;
+    std::pmr::vector<::pg_query::Node> joinrightcols;
+    std::pmr::vector<::pg_query::Node> functions;
     bool funcordinality;
     ::pg_query::TableFunc* tablefunc;
-    std::vector<::pg_query::Node> values_lists;
-    std::string ctename;
+    std::pmr::vector<::pg_query::Node> values_lists;
+    std::pmr::string ctename;
     uint32_t ctelevelsup;
     bool self_reference;
-    std::vector<::pg_query::Node> coltypes;
-    std::vector<::pg_query::Node> coltypmods;
-    std::vector<::pg_query::Node> colcollations;
-    std::string enrname;
+    std::pmr::vector<::pg_query::Node> coltypes;
+    std::pmr::vector<::pg_query::Node> coltypmods;
+    std::pmr::vector<::pg_query::Node> colcollations;
+    std::pmr::string enrname;
     double enrtuples;
     ::pg_query::Alias* alias;
     ::pg_query::Alias* eref;
@@ -12903,16 +13504,17 @@ struct RangeTblEntry : FBE::Base
     bool in_from_cl;
     uint32_t required_perms;
     uint32_t check_as_user;
-    std::vector<uint64_t> selected_cols;
-    std::vector<uint64_t> inserted_cols;
-    std::vector<uint64_t> updated_cols;
-    std::vector<uint64_t> extra_updated_cols;
-    std::vector<::pg_query::Node> security_quals;
+    std::pmr::vector<uint64_t> selected_cols;
+    std::pmr::vector<uint64_t> inserted_cols;
+    std::pmr::vector<uint64_t> updated_cols;
+    std::pmr::vector<uint64_t> extra_updated_cols;
+    std::pmr::vector<::pg_query::Node> security_quals;
 
     size_t fbe_type() const noexcept { return 200; }
 
     RangeTblEntry();
-    RangeTblEntry(::pg_query::RTEKind&& arg_rtekind, uint32_t arg_relid, const std::string& arg_relkind, int32_t arg_rellockmode, std::unique_ptr<::pg_query::TableSampleClause> arg_tablesample, std::unique_ptr<::pg_query::Query> arg_subquery, bool arg_security_barrier, ::pg_query::JoinType&& arg_jointype, int32_t arg_joinmergedcols, std::vector<::pg_query::Node> arg_joinaliasvars, std::vector<::pg_query::Node> arg_joinleftcols, std::vector<::pg_query::Node> arg_joinrightcols, std::vector<::pg_query::Node> arg_functions, bool arg_funcordinality, std::unique_ptr<::pg_query::TableFunc> arg_tablefunc, std::vector<::pg_query::Node> arg_values_lists, const std::string& arg_ctename, uint32_t arg_ctelevelsup, bool arg_self_reference, std::vector<::pg_query::Node> arg_coltypes, std::vector<::pg_query::Node> arg_coltypmods, std::vector<::pg_query::Node> arg_colcollations, const std::string& arg_enrname, double arg_enrtuples, std::unique_ptr<::pg_query::Alias> arg_alias, std::unique_ptr<::pg_query::Alias> arg_eref, bool arg_lateral, bool arg_inh, bool arg_in_from_cl, uint32_t arg_required_perms, uint32_t arg_check_as_user, std::vector<uint64_t> arg_selected_cols, std::vector<uint64_t> arg_inserted_cols, std::vector<uint64_t> arg_updated_cols, std::vector<uint64_t> arg_extra_updated_cols, std::vector<::pg_query::Node> arg_security_quals);
+    explicit RangeTblEntry(allocator_type alloc);
+    RangeTblEntry(::pg_query::RTEKind&& arg_rtekind, uint32_t arg_relid, const std::pmr::string& arg_relkind, int32_t arg_rellockmode, std::unique_ptr<::pg_query::TableSampleClause> arg_tablesample, std::unique_ptr<::pg_query::Query> arg_subquery, bool arg_security_barrier, ::pg_query::JoinType&& arg_jointype, int32_t arg_joinmergedcols, std::pmr::vector<::pg_query::Node> arg_joinaliasvars, std::pmr::vector<::pg_query::Node> arg_joinleftcols, std::pmr::vector<::pg_query::Node> arg_joinrightcols, std::pmr::vector<::pg_query::Node> arg_functions, bool arg_funcordinality, std::unique_ptr<::pg_query::TableFunc> arg_tablefunc, std::pmr::vector<::pg_query::Node> arg_values_lists, const std::pmr::string& arg_ctename, uint32_t arg_ctelevelsup, bool arg_self_reference, std::pmr::vector<::pg_query::Node> arg_coltypes, std::pmr::vector<::pg_query::Node> arg_coltypmods, std::pmr::vector<::pg_query::Node> arg_colcollations, const std::pmr::string& arg_enrname, double arg_enrtuples, std::unique_ptr<::pg_query::Alias> arg_alias, std::unique_ptr<::pg_query::Alias> arg_eref, bool arg_lateral, bool arg_inh, bool arg_in_from_cl, uint32_t arg_required_perms, uint32_t arg_check_as_user, std::pmr::vector<uint64_t> arg_selected_cols, std::pmr::vector<uint64_t> arg_inserted_cols, std::pmr::vector<uint64_t> arg_updated_cols, std::pmr::vector<uint64_t> arg_extra_updated_cols, std::pmr::vector<::pg_query::Node> arg_security_quals);
     RangeTblEntry(const RangeTblEntry& other) = delete;
     RangeTblEntry(RangeTblEntry&& other) noexcept;
     ~RangeTblEntry() override;
@@ -12958,18 +13560,21 @@ namespace pg_query {
 
 struct RangeTblFunction : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::Node funcexpr;
     int32_t funccolcount;
-    std::vector<::pg_query::Node> funccolnames;
-    std::vector<::pg_query::Node> funccoltypes;
-    std::vector<::pg_query::Node> funccoltypmods;
-    std::vector<::pg_query::Node> funccolcollations;
-    std::vector<uint64_t> funcparams;
+    std::pmr::vector<::pg_query::Node> funccolnames;
+    std::pmr::vector<::pg_query::Node> funccoltypes;
+    std::pmr::vector<::pg_query::Node> funccoltypmods;
+    std::pmr::vector<::pg_query::Node> funccolcollations;
+    std::pmr::vector<uint64_t> funcparams;
 
     size_t fbe_type() const noexcept { return 201; }
 
     RangeTblFunction();
-    RangeTblFunction(::pg_query::Node&& arg_funcexpr, int32_t arg_funccolcount, std::vector<::pg_query::Node> arg_funccolnames, std::vector<::pg_query::Node> arg_funccoltypes, std::vector<::pg_query::Node> arg_funccoltypmods, std::vector<::pg_query::Node> arg_funccolcollations, std::vector<uint64_t> arg_funcparams);
+    explicit RangeTblFunction(allocator_type alloc);
+    RangeTblFunction(::pg_query::Node&& arg_funcexpr, int32_t arg_funccolcount, std::pmr::vector<::pg_query::Node> arg_funccolnames, std::pmr::vector<::pg_query::Node> arg_funccoltypes, std::pmr::vector<::pg_query::Node> arg_funccoltypmods, std::pmr::vector<::pg_query::Node> arg_funccolcollations, std::pmr::vector<uint64_t> arg_funcparams);
     RangeTblFunction(const RangeTblFunction& other) = delete;
     RangeTblFunction(RangeTblFunction&& other) noexcept;
     ~RangeTblFunction() override;
@@ -13015,14 +13620,17 @@ namespace pg_query {
 
 struct TableSampleClause : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     uint32_t tsmhandler;
-    std::vector<::pg_query::Node> args;
+    std::pmr::vector<::pg_query::Node> args;
     ::pg_query::Node repeatable;
 
     size_t fbe_type() const noexcept { return 202; }
 
     TableSampleClause();
-    TableSampleClause(uint32_t arg_tsmhandler, std::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable);
+    explicit TableSampleClause(allocator_type alloc);
+    TableSampleClause(uint32_t arg_tsmhandler, std::pmr::vector<::pg_query::Node> arg_args, ::pg_query::Node&& arg_repeatable);
     TableSampleClause(const TableSampleClause& other) = delete;
     TableSampleClause(TableSampleClause&& other) noexcept;
     ~TableSampleClause() override;
@@ -13068,16 +13676,19 @@ namespace pg_query {
 
 struct WithCheckOption : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::WCOKind kind;
-    std::string relname;
-    std::string polname;
+    std::pmr::string relname;
+    std::pmr::string polname;
     ::pg_query::Node qual;
     bool cascaded;
 
     size_t fbe_type() const noexcept { return 203; }
 
     WithCheckOption();
-    WithCheckOption(::pg_query::WCOKind&& arg_kind, const std::string& arg_relname, const std::string& arg_polname, ::pg_query::Node&& arg_qual, bool arg_cascaded);
+    explicit WithCheckOption(allocator_type alloc);
+    WithCheckOption(::pg_query::WCOKind&& arg_kind, const std::pmr::string& arg_relname, const std::pmr::string& arg_polname, ::pg_query::Node&& arg_qual, bool arg_cascaded);
     WithCheckOption(const WithCheckOption& other) = delete;
     WithCheckOption(WithCheckOption&& other) noexcept;
     ~WithCheckOption() override;
@@ -13123,6 +13734,8 @@ namespace pg_query {
 
 struct SortGroupClause : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     uint32_t tle_sort_group_ref;
     uint32_t eqop;
     uint32_t sortop;
@@ -13132,6 +13745,7 @@ struct SortGroupClause : FBE::Base
     size_t fbe_type() const noexcept { return 204; }
 
     SortGroupClause();
+    explicit SortGroupClause(allocator_type alloc);
     SortGroupClause(uint32_t arg_tle_sort_group_ref, uint32_t arg_eqop, uint32_t arg_sortop, bool arg_nulls_first, bool arg_hashable);
     SortGroupClause(const SortGroupClause& other) = delete;
     SortGroupClause(SortGroupClause&& other) noexcept;
@@ -13178,14 +13792,17 @@ namespace pg_query {
 
 struct GroupingSet : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::GroupingSetKind kind;
-    std::vector<::pg_query::Node> content;
+    std::pmr::vector<::pg_query::Node> content;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 205; }
 
     GroupingSet();
-    GroupingSet(::pg_query::GroupingSetKind&& arg_kind, std::vector<::pg_query::Node> arg_content, int32_t arg_location);
+    explicit GroupingSet(allocator_type alloc);
+    GroupingSet(::pg_query::GroupingSetKind&& arg_kind, std::pmr::vector<::pg_query::Node> arg_content, int32_t arg_location);
     GroupingSet(const GroupingSet& other) = delete;
     GroupingSet(GroupingSet&& other) noexcept;
     ~GroupingSet() override;
@@ -13231,10 +13848,12 @@ namespace pg_query {
 
 struct WindowClause : FBE::Base
 {
-    std::string name;
-    std::string refname;
-    std::vector<::pg_query::Node> partition_clause;
-    std::vector<::pg_query::Node> order_clause;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
+    std::pmr::string refname;
+    std::pmr::vector<::pg_query::Node> partition_clause;
+    std::pmr::vector<::pg_query::Node> order_clause;
     int32_t frame_options;
     ::pg_query::Node start_offset;
     ::pg_query::Node end_offset;
@@ -13249,7 +13868,8 @@ struct WindowClause : FBE::Base
     size_t fbe_type() const noexcept { return 206; }
 
     WindowClause();
-    WindowClause(const std::string& arg_name, const std::string& arg_refname, std::vector<::pg_query::Node> arg_partition_clause, std::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, uint32_t arg_start_in_range_func, uint32_t arg_end_in_range_func, uint32_t arg_in_range_coll, bool arg_in_range_asc, bool arg_in_range_nulls_first, uint32_t arg_winref, bool arg_copied_order);
+    explicit WindowClause(allocator_type alloc);
+    WindowClause(const std::pmr::string& arg_name, const std::pmr::string& arg_refname, std::pmr::vector<::pg_query::Node> arg_partition_clause, std::pmr::vector<::pg_query::Node> arg_order_clause, int32_t arg_frame_options, ::pg_query::Node&& arg_start_offset, ::pg_query::Node&& arg_end_offset, uint32_t arg_start_in_range_func, uint32_t arg_end_in_range_func, uint32_t arg_in_range_coll, bool arg_in_range_asc, bool arg_in_range_nulls_first, uint32_t arg_winref, bool arg_copied_order);
     WindowClause(const WindowClause& other) = delete;
     WindowClause(WindowClause&& other) noexcept;
     ~WindowClause() override;
@@ -13295,14 +13915,17 @@ namespace pg_query {
 
 struct ObjectWithArgs : FBE::Base
 {
-    std::vector<::pg_query::Node> objname;
-    std::vector<::pg_query::Node> objargs;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> objname;
+    std::pmr::vector<::pg_query::Node> objargs;
     bool args_unspecified;
 
     size_t fbe_type() const noexcept { return 207; }
 
     ObjectWithArgs();
-    ObjectWithArgs(std::vector<::pg_query::Node> arg_objname, std::vector<::pg_query::Node> arg_objargs, bool arg_args_unspecified);
+    explicit ObjectWithArgs(allocator_type alloc);
+    ObjectWithArgs(std::pmr::vector<::pg_query::Node> arg_objname, std::pmr::vector<::pg_query::Node> arg_objargs, bool arg_args_unspecified);
     ObjectWithArgs(const ObjectWithArgs& other) = delete;
     ObjectWithArgs(ObjectWithArgs&& other) noexcept;
     ~ObjectWithArgs() override;
@@ -13348,13 +13971,16 @@ namespace pg_query {
 
 struct AccessPriv : FBE::Base
 {
-    std::string priv_name;
-    std::vector<::pg_query::Node> cols;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string priv_name;
+    std::pmr::vector<::pg_query::Node> cols;
 
     size_t fbe_type() const noexcept { return 208; }
 
     AccessPriv();
-    AccessPriv(const std::string& arg_priv_name, std::vector<::pg_query::Node> arg_cols);
+    explicit AccessPriv(allocator_type alloc);
+    AccessPriv(const std::pmr::string& arg_priv_name, std::pmr::vector<::pg_query::Node> arg_cols);
     AccessPriv(const AccessPriv& other) = delete;
     AccessPriv(AccessPriv&& other) noexcept;
     ~AccessPriv() override;
@@ -13404,17 +14030,20 @@ struct TypeName;
 
 struct CreateOpClassItem : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     int32_t itemtype;
     ::pg_query::ObjectWithArgs* name;
     int32_t number;
-    std::vector<::pg_query::Node> order_family;
-    std::vector<::pg_query::Node> class_args;
+    std::pmr::vector<::pg_query::Node> order_family;
+    std::pmr::vector<::pg_query::Node> class_args;
     ::pg_query::TypeName* storedtype;
 
     size_t fbe_type() const noexcept { return 209; }
 
     CreateOpClassItem();
-    CreateOpClassItem(int32_t arg_itemtype, std::unique_ptr<::pg_query::ObjectWithArgs> arg_name, int32_t arg_number, std::vector<::pg_query::Node> arg_order_family, std::vector<::pg_query::Node> arg_class_args, std::unique_ptr<::pg_query::TypeName> arg_storedtype);
+    explicit CreateOpClassItem(allocator_type alloc);
+    CreateOpClassItem(int32_t arg_itemtype, std::unique_ptr<::pg_query::ObjectWithArgs> arg_name, int32_t arg_number, std::pmr::vector<::pg_query::Node> arg_order_family, std::pmr::vector<::pg_query::Node> arg_class_args, std::unique_ptr<::pg_query::TypeName> arg_storedtype);
     CreateOpClassItem(const CreateOpClassItem& other) = delete;
     CreateOpClassItem(CreateOpClassItem&& other) noexcept;
     ~CreateOpClassItem() override;
@@ -13462,6 +14091,8 @@ struct RangeVar;
 
 struct TableLikeClause : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* relation;
     uint32_t options;
     uint32_t relation_oid;
@@ -13469,6 +14100,7 @@ struct TableLikeClause : FBE::Base
     size_t fbe_type() const noexcept { return 210; }
 
     TableLikeClause();
+    explicit TableLikeClause(allocator_type alloc);
     TableLikeClause(std::unique_ptr<::pg_query::RangeVar> arg_relation, uint32_t arg_options, uint32_t arg_relation_oid);
     TableLikeClause(const TableLikeClause& other) = delete;
     TableLikeClause(TableLikeClause&& other) noexcept;
@@ -13517,7 +14149,9 @@ struct TypeName;
 
 struct FunctionParameter : FBE::Base
 {
-    std::string name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
     ::pg_query::TypeName* arg_type;
     ::pg_query::FunctionParameterMode mode;
     ::pg_query::Node defexpr;
@@ -13525,7 +14159,8 @@ struct FunctionParameter : FBE::Base
     size_t fbe_type() const noexcept { return 211; }
 
     FunctionParameter();
-    FunctionParameter(const std::string& arg_name, std::unique_ptr<::pg_query::TypeName> arg_arg_type, ::pg_query::FunctionParameterMode&& arg_mode, ::pg_query::Node&& arg_defexpr);
+    explicit FunctionParameter(allocator_type alloc);
+    FunctionParameter(const std::pmr::string& arg_name, std::unique_ptr<::pg_query::TypeName> arg_arg_type, ::pg_query::FunctionParameterMode&& arg_mode, ::pg_query::Node&& arg_defexpr);
     FunctionParameter(const FunctionParameter& other) = delete;
     FunctionParameter(FunctionParameter&& other) noexcept;
     ~FunctionParameter() override;
@@ -13571,14 +14206,17 @@ namespace pg_query {
 
 struct LockingClause : FBE::Base
 {
-    std::vector<::pg_query::Node> locked_rels;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> locked_rels;
     ::pg_query::LockClauseStrength strength;
     ::pg_query::LockWaitPolicy wait_policy;
 
     size_t fbe_type() const noexcept { return 212; }
 
     LockingClause();
-    LockingClause(std::vector<::pg_query::Node> arg_locked_rels, ::pg_query::LockClauseStrength&& arg_strength, ::pg_query::LockWaitPolicy&& arg_wait_policy);
+    explicit LockingClause(allocator_type alloc);
+    LockingClause(std::pmr::vector<::pg_query::Node> arg_locked_rels, ::pg_query::LockClauseStrength&& arg_strength, ::pg_query::LockWaitPolicy&& arg_wait_policy);
     LockingClause(const LockingClause& other) = delete;
     LockingClause(LockingClause&& other) noexcept;
     ~LockingClause() override;
@@ -13624,6 +14262,8 @@ namespace pg_query {
 
 struct RowMarkClause : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     uint32_t rti;
     ::pg_query::LockClauseStrength strength;
     ::pg_query::LockWaitPolicy wait_policy;
@@ -13632,6 +14272,7 @@ struct RowMarkClause : FBE::Base
     size_t fbe_type() const noexcept { return 213; }
 
     RowMarkClause();
+    explicit RowMarkClause(allocator_type alloc);
     RowMarkClause(uint32_t arg_rti, ::pg_query::LockClauseStrength&& arg_strength, ::pg_query::LockWaitPolicy&& arg_wait_policy, bool arg_pushed_down);
     RowMarkClause(const RowMarkClause& other) = delete;
     RowMarkClause(RowMarkClause&& other) noexcept;
@@ -13680,6 +14321,8 @@ struct TypeName;
 
 struct XmlSerialize : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::XmlOptionType xmloption;
     ::pg_query::Node expr;
     ::pg_query::TypeName* type_name;
@@ -13688,6 +14331,7 @@ struct XmlSerialize : FBE::Base
     size_t fbe_type() const noexcept { return 214; }
 
     XmlSerialize();
+    explicit XmlSerialize(allocator_type alloc);
     XmlSerialize(::pg_query::XmlOptionType&& arg_xmloption, ::pg_query::Node&& arg_expr, std::unique_ptr<::pg_query::TypeName> arg_type_name, int32_t arg_location);
     XmlSerialize(const XmlSerialize& other) = delete;
     XmlSerialize(XmlSerialize&& other) noexcept;
@@ -13734,14 +14378,17 @@ namespace pg_query {
 
 struct WithClause : FBE::Base
 {
-    std::vector<::pg_query::Node> ctes;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> ctes;
     bool recursive;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 215; }
 
     WithClause();
-    WithClause(std::vector<::pg_query::Node> arg_ctes, bool arg_recursive, int32_t arg_location);
+    explicit WithClause(allocator_type alloc);
+    WithClause(std::pmr::vector<::pg_query::Node> arg_ctes, bool arg_recursive, int32_t arg_location);
     WithClause(const WithClause& other) = delete;
     WithClause(WithClause&& other) noexcept;
     ~WithClause() override;
@@ -13787,15 +14434,18 @@ namespace pg_query {
 
 struct InferClause : FBE::Base
 {
-    std::vector<::pg_query::Node> index_elems;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::vector<::pg_query::Node> index_elems;
     ::pg_query::Node where_clause;
-    std::string conname;
+    std::pmr::string conname;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 216; }
 
     InferClause();
-    InferClause(std::vector<::pg_query::Node> arg_index_elems, ::pg_query::Node&& arg_where_clause, const std::string& arg_conname, int32_t arg_location);
+    explicit InferClause(allocator_type alloc);
+    InferClause(std::pmr::vector<::pg_query::Node> arg_index_elems, ::pg_query::Node&& arg_where_clause, const std::pmr::string& arg_conname, int32_t arg_location);
     InferClause(const InferClause& other) = delete;
     InferClause(InferClause&& other) noexcept;
     ~InferClause() override;
@@ -13843,16 +14493,19 @@ struct InferClause;
 
 struct OnConflictClause : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::OnConflictAction action;
     ::pg_query::InferClause* infer;
-    std::vector<::pg_query::Node> target_list;
+    std::pmr::vector<::pg_query::Node> target_list;
     ::pg_query::Node where_clause;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 217; }
 
     OnConflictClause();
-    OnConflictClause(::pg_query::OnConflictAction&& arg_action, std::unique_ptr<::pg_query::InferClause> arg_infer, std::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, int32_t arg_location);
+    explicit OnConflictClause(allocator_type alloc);
+    OnConflictClause(::pg_query::OnConflictAction&& arg_action, std::unique_ptr<::pg_query::InferClause> arg_infer, std::pmr::vector<::pg_query::Node> arg_target_list, ::pg_query::Node&& arg_where_clause, int32_t arg_location);
     OnConflictClause(const OnConflictClause& other) = delete;
     OnConflictClause(OnConflictClause&& other) noexcept;
     ~OnConflictClause() override;
@@ -13898,22 +14551,25 @@ namespace pg_query {
 
 struct CommonTableExpr : FBE::Base
 {
-    std::string ctename;
-    std::vector<::pg_query::Node> aliascolnames;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string ctename;
+    std::pmr::vector<::pg_query::Node> aliascolnames;
     ::pg_query::CTEMaterialize ctematerialized;
     ::pg_query::Node ctequery;
     int32_t location;
     bool cterecursive;
     int32_t cterefcount;
-    std::vector<::pg_query::Node> ctecolnames;
-    std::vector<::pg_query::Node> ctecoltypes;
-    std::vector<::pg_query::Node> ctecoltypmods;
-    std::vector<::pg_query::Node> ctecolcollations;
+    std::pmr::vector<::pg_query::Node> ctecolnames;
+    std::pmr::vector<::pg_query::Node> ctecoltypes;
+    std::pmr::vector<::pg_query::Node> ctecoltypmods;
+    std::pmr::vector<::pg_query::Node> ctecolcollations;
 
     size_t fbe_type() const noexcept { return 218; }
 
     CommonTableExpr();
-    CommonTableExpr(const std::string& arg_ctename, std::vector<::pg_query::Node> arg_aliascolnames, ::pg_query::CTEMaterialize&& arg_ctematerialized, ::pg_query::Node&& arg_ctequery, int32_t arg_location, bool arg_cterecursive, int32_t arg_cterefcount, std::vector<::pg_query::Node> arg_ctecolnames, std::vector<::pg_query::Node> arg_ctecoltypes, std::vector<::pg_query::Node> arg_ctecoltypmods, std::vector<::pg_query::Node> arg_ctecolcollations);
+    explicit CommonTableExpr(allocator_type alloc);
+    CommonTableExpr(const std::pmr::string& arg_ctename, std::pmr::vector<::pg_query::Node> arg_aliascolnames, ::pg_query::CTEMaterialize&& arg_ctematerialized, ::pg_query::Node&& arg_ctequery, int32_t arg_location, bool arg_cterecursive, int32_t arg_cterefcount, std::pmr::vector<::pg_query::Node> arg_ctecolnames, std::pmr::vector<::pg_query::Node> arg_ctecoltypes, std::pmr::vector<::pg_query::Node> arg_ctecoltypmods, std::pmr::vector<::pg_query::Node> arg_ctecolcollations);
     CommonTableExpr(const CommonTableExpr& other) = delete;
     CommonTableExpr(CommonTableExpr&& other) noexcept;
     ~CommonTableExpr() override;
@@ -13959,14 +14615,17 @@ namespace pg_query {
 
 struct RoleSpec : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RoleSpecType roletype;
-    std::string rolename;
+    std::pmr::string rolename;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 219; }
 
     RoleSpec();
-    RoleSpec(::pg_query::RoleSpecType&& arg_roletype, const std::string& arg_rolename, int32_t arg_location);
+    explicit RoleSpec(allocator_type alloc);
+    RoleSpec(::pg_query::RoleSpecType&& arg_roletype, const std::pmr::string& arg_rolename, int32_t arg_location);
     RoleSpec(const RoleSpec& other) = delete;
     RoleSpec(RoleSpec&& other) noexcept;
     ~RoleSpec() override;
@@ -14012,14 +14671,17 @@ namespace pg_query {
 
 struct TriggerTransition : FBE::Base
 {
-    std::string name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
     bool is_new;
     bool is_table;
 
     size_t fbe_type() const noexcept { return 220; }
 
     TriggerTransition();
-    TriggerTransition(const std::string& arg_name, bool arg_is_new, bool arg_is_table);
+    explicit TriggerTransition(allocator_type alloc);
+    TriggerTransition(const std::pmr::string& arg_name, bool arg_is_new, bool arg_is_table);
     TriggerTransition(const TriggerTransition& other) = delete;
     TriggerTransition(TriggerTransition&& other) noexcept;
     ~TriggerTransition() override;
@@ -14065,16 +14727,19 @@ namespace pg_query {
 
 struct PartitionElem : FBE::Base
 {
-    std::string name;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string name;
     ::pg_query::Node expr;
-    std::vector<::pg_query::Node> collation;
-    std::vector<::pg_query::Node> opclass;
+    std::pmr::vector<::pg_query::Node> collation;
+    std::pmr::vector<::pg_query::Node> opclass;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 221; }
 
     PartitionElem();
-    PartitionElem(const std::string& arg_name, ::pg_query::Node&& arg_expr, std::vector<::pg_query::Node> arg_collation, std::vector<::pg_query::Node> arg_opclass, int32_t arg_location);
+    explicit PartitionElem(allocator_type alloc);
+    PartitionElem(const std::pmr::string& arg_name, ::pg_query::Node&& arg_expr, std::pmr::vector<::pg_query::Node> arg_collation, std::pmr::vector<::pg_query::Node> arg_opclass, int32_t arg_location);
     PartitionElem(const PartitionElem& other) = delete;
     PartitionElem(PartitionElem&& other) noexcept;
     ~PartitionElem() override;
@@ -14120,14 +14785,17 @@ namespace pg_query {
 
 struct PartitionSpec : FBE::Base
 {
-    std::string strategy;
-    std::vector<::pg_query::Node> part_params;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string strategy;
+    std::pmr::vector<::pg_query::Node> part_params;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 222; }
 
     PartitionSpec();
-    PartitionSpec(const std::string& arg_strategy, std::vector<::pg_query::Node> arg_part_params, int32_t arg_location);
+    explicit PartitionSpec(allocator_type alloc);
+    PartitionSpec(const std::pmr::string& arg_strategy, std::pmr::vector<::pg_query::Node> arg_part_params, int32_t arg_location);
     PartitionSpec(const PartitionSpec& other) = delete;
     PartitionSpec(PartitionSpec&& other) noexcept;
     ~PartitionSpec() override;
@@ -14173,19 +14841,22 @@ namespace pg_query {
 
 struct PartitionBoundSpec : FBE::Base
 {
-    std::string strategy;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string strategy;
     bool is_default;
     int32_t modulus;
     int32_t remainder;
-    std::vector<::pg_query::Node> listdatums;
-    std::vector<::pg_query::Node> lowerdatums;
-    std::vector<::pg_query::Node> upperdatums;
+    std::pmr::vector<::pg_query::Node> listdatums;
+    std::pmr::vector<::pg_query::Node> lowerdatums;
+    std::pmr::vector<::pg_query::Node> upperdatums;
     int32_t location;
 
     size_t fbe_type() const noexcept { return 223; }
 
     PartitionBoundSpec();
-    PartitionBoundSpec(const std::string& arg_strategy, bool arg_is_default, int32_t arg_modulus, int32_t arg_remainder, std::vector<::pg_query::Node> arg_listdatums, std::vector<::pg_query::Node> arg_lowerdatums, std::vector<::pg_query::Node> arg_upperdatums, int32_t arg_location);
+    explicit PartitionBoundSpec(allocator_type alloc);
+    PartitionBoundSpec(const std::pmr::string& arg_strategy, bool arg_is_default, int32_t arg_modulus, int32_t arg_remainder, std::pmr::vector<::pg_query::Node> arg_listdatums, std::pmr::vector<::pg_query::Node> arg_lowerdatums, std::pmr::vector<::pg_query::Node> arg_upperdatums, int32_t arg_location);
     PartitionBoundSpec(const PartitionBoundSpec& other) = delete;
     PartitionBoundSpec(PartitionBoundSpec&& other) noexcept;
     ~PartitionBoundSpec() override;
@@ -14231,6 +14902,8 @@ namespace pg_query {
 
 struct PartitionRangeDatum : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::PartitionRangeDatumKind kind;
     ::pg_query::Node value;
     int32_t location;
@@ -14238,6 +14911,7 @@ struct PartitionRangeDatum : FBE::Base
     size_t fbe_type() const noexcept { return 224; }
 
     PartitionRangeDatum();
+    explicit PartitionRangeDatum(allocator_type alloc);
     PartitionRangeDatum(::pg_query::PartitionRangeDatumKind&& arg_kind, ::pg_query::Node&& arg_value, int32_t arg_location);
     PartitionRangeDatum(const PartitionRangeDatum& other) = delete;
     PartitionRangeDatum(PartitionRangeDatum&& other) noexcept;
@@ -14288,12 +14962,15 @@ struct PartitionBoundSpec;
 
 struct PartitionCmd : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* name;
     ::pg_query::PartitionBoundSpec* bound;
 
     size_t fbe_type() const noexcept { return 225; }
 
     PartitionCmd();
+    explicit PartitionCmd(allocator_type alloc);
     PartitionCmd(std::unique_ptr<::pg_query::RangeVar> arg_name, std::unique_ptr<::pg_query::PartitionBoundSpec> arg_bound);
     PartitionCmd(const PartitionCmd& other) = delete;
     PartitionCmd(PartitionCmd&& other) noexcept;
@@ -14342,14 +15019,17 @@ struct RangeVar;
 
 struct VacuumRelation : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     ::pg_query::RangeVar* relation;
     uint32_t oid;
-    std::vector<::pg_query::Node> va_cols;
+    std::pmr::vector<::pg_query::Node> va_cols;
 
     size_t fbe_type() const noexcept { return 226; }
 
     VacuumRelation();
-    VacuumRelation(std::unique_ptr<::pg_query::RangeVar> arg_relation, uint32_t arg_oid, std::vector<::pg_query::Node> arg_va_cols);
+    explicit VacuumRelation(allocator_type alloc);
+    VacuumRelation(std::unique_ptr<::pg_query::RangeVar> arg_relation, uint32_t arg_oid, std::pmr::vector<::pg_query::Node> arg_va_cols);
     VacuumRelation(const VacuumRelation& other) = delete;
     VacuumRelation(VacuumRelation&& other) noexcept;
     ~VacuumRelation() override;
@@ -14395,7 +15075,9 @@ namespace pg_query {
 
 struct InlineCodeBlock : FBE::Base
 {
-    std::string source_text;
+    ArenaManagedCreateOnlyTag;
+
+    std::pmr::string source_text;
     uint32_t lang_oid;
     bool lang_is_trusted;
     bool atomic;
@@ -14403,7 +15085,8 @@ struct InlineCodeBlock : FBE::Base
     size_t fbe_type() const noexcept { return 227; }
 
     InlineCodeBlock();
-    InlineCodeBlock(const std::string& arg_source_text, uint32_t arg_lang_oid, bool arg_lang_is_trusted, bool arg_atomic);
+    explicit InlineCodeBlock(allocator_type alloc);
+    InlineCodeBlock(const std::pmr::string& arg_source_text, uint32_t arg_lang_oid, bool arg_lang_is_trusted, bool arg_atomic);
     InlineCodeBlock(const InlineCodeBlock& other) = delete;
     InlineCodeBlock(InlineCodeBlock&& other) noexcept;
     ~InlineCodeBlock() override;
@@ -14449,11 +15132,14 @@ namespace pg_query {
 
 struct CallContext : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     bool atomic;
 
     size_t fbe_type() const noexcept { return 228; }
 
     CallContext();
+    explicit CallContext(allocator_type alloc);
     explicit CallContext(bool arg_atomic);
     CallContext(const CallContext& other) = delete;
     CallContext(CallContext&& other) noexcept;
@@ -14500,6 +15186,8 @@ namespace pg_query {
 
 struct ScanToken : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     int32_t start;
     int32_t end;
     ::pg_query::Token token;
@@ -14508,6 +15196,7 @@ struct ScanToken : FBE::Base
     size_t fbe_type() const noexcept { return 229; }
 
     ScanToken();
+    explicit ScanToken(allocator_type alloc);
     ScanToken(int32_t arg_start, int32_t arg_end, ::pg_query::Token&& arg_token, ::pg_query::KeywordKind&& arg_keyword_kind);
     ScanToken(const ScanToken& other) = delete;
     ScanToken(ScanToken&& other) noexcept;
@@ -14554,13 +15243,16 @@ namespace pg_query {
 
 struct ParseResult : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     int32_t version;
-    std::vector<::pg_query::RawStmt> stmts;
+    std::pmr::vector<::pg_query::RawStmt> stmts;
 
     size_t fbe_type() const noexcept { return 230; }
 
     ParseResult();
-    ParseResult(int32_t arg_version, std::vector<::pg_query::RawStmt> arg_stmts);
+    explicit ParseResult(allocator_type alloc);
+    ParseResult(int32_t arg_version, std::pmr::vector<::pg_query::RawStmt> arg_stmts);
     ParseResult(const ParseResult& other) = delete;
     ParseResult(ParseResult&& other) noexcept;
     ~ParseResult() override;
@@ -14606,13 +15298,16 @@ namespace pg_query {
 
 struct ScanResult : FBE::Base
 {
+    ArenaManagedCreateOnlyTag;
+
     int32_t version;
-    std::vector<::pg_query::ScanToken> tokens;
+    std::pmr::vector<::pg_query::ScanToken> tokens;
 
     size_t fbe_type() const noexcept { return 231; }
 
     ScanResult();
-    ScanResult(int32_t arg_version, std::vector<::pg_query::ScanToken> arg_tokens);
+    explicit ScanResult(allocator_type alloc);
+    ScanResult(int32_t arg_version, std::pmr::vector<::pg_query::ScanToken> arg_tokens);
     ScanResult(const ScanResult& other) = delete;
     ScanResult(ScanResult&& other) noexcept;
     ~ScanResult() override;
