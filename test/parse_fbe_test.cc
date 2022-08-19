@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <arena/arena.hpp>
 #include <iostream>
 
 #include "parse_tests.c"
@@ -11,8 +12,10 @@
 int main() {
     int ret_code = 0;
 
+    auto arena = stdb::memory::Arena(stdb::memory::Arena::Options::GetDefaultOptions());
+
     for (size_t i = 0; i < testsLength; i += 2) {
-        PgQueryFBEParseResult result = pg_query_parse_fbe(tests[i]);
+        PgQueryFBEParseResult result = pg_query_parse_fbe(arena, tests[i]);
 
         if (result.error != nullptr) {
             ret_code = -1;
