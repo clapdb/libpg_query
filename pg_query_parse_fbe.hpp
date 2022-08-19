@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "arena/arena.hpp"
 #include "fbe/pg_query_ptr.h"
 #include "pg_query.h"
 
@@ -14,10 +15,10 @@ struct PgQueryFBEParseResult
     PgQueryError* error;
 };
 
-pg_query::ParseResult pg_query_nodes_to_fbe(const void* obj);
+pg_query::ParseResult pg_query_nodes_to_fbe(stdb::memory::Arena& arena, const void* obj);
 
 // NOLINTNEXTLINE
-PgQueryFBEParseResult pg_query_parse_fbe(const char* input);
+PgQueryFBEParseResult pg_query_parse_fbe(stdb::memory::Arena& arena, const char* input);
 
 // NOLINTNEXTLINE
 void pg_query_free_fbe_parse_result(PgQueryFBEParseResult& result);
