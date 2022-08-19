@@ -10,7 +10,7 @@ set(CMAKE_C_FLAGS "-g -Wno-unused-function -Wno-unused-value -Wno-unused-variabl
 
 # use -save-temps to generate .i/.ii code after pre-process
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -save-temps=obj")
-#set (CMAKE_CXX_FLAGS "-save-temps=obj")
+#set(CMAKE_CXX_FLAGS "-save-temps=obj")
 
 set(CMAKE_C_FLAGS_DEBUG "-O0 -DUSE_ASSERT_CHECKING")
 set(CMAKE_C_FLAGS_RELEASE "-O3")
@@ -19,10 +19,25 @@ include_directories(SYSTEM ${PROJECT_SOURCE_DIR})
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/vendor)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/src/postgres/include)
 
+# memory
+include_directories(${PROJECT_SOURCE_DIR}/thirdparty/memory)
+
 ## set to c++20
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# fmt
+find_package(fmt REQUIRED)
+
+# sanitizer
+set(SANITIZE_PARAM "-fsanitize=address -fsanitize=undefined -fno-sanitize=vptr -fno-omit-frame-pointer")  # param from seastar.pc
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${SANITIZE_PARAM}")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${SANITIZE_PARAM}")
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} ${SANITIZE_PARAM}")
+set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS_DEBUG} ${SANITIZE_PARAM}")
+
+ # build arena
+ add_subdirectory(thirdparty/memory/arena)
 
 FILE(GLOB_RECURSE SRC
   ${PROJECT_SOURCE_DIR}/src/*.c)
@@ -72,4 +87,4 @@ list(APPEND TEST_LDFLAGS -pthread)
 
 add_executable(pg_query_parse_fbe_test test/parse_fbe_test.cc)
 target_compile_options(pg_query_parse_fbe_test PRIVATE ${TEST_FLAGS})
-target_link_libraries(pg_query_parse_fbe_test pg_query ${TEST_LDFLAGS})
+target_link_libraries(pg_query_parse_fbe_test pg_query arena fmt ${TEST_LDFLAGS})
