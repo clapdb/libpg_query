@@ -1230,7 +1230,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Node& valu
     std::visit(
         overloaded
         {
-            [&stream](auto& ptr) { if(ptr != nullptr) stream << *ptr; },
+            [&stream](auto&) { stream << "unknown type"; },
         },
         value);
     return stream;
