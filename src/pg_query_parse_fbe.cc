@@ -6,7 +6,7 @@
 
 #include <arena/arena.hpp>
 
-#include "fbe/pg_query_ptr.h"
+#include "pg_query_ptr.h"
 
 extern "C"
 {

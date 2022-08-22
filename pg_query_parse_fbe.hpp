@@ -4,8 +4,8 @@
 #include <unistd.h>
 
 #include "arena/arena.hpp"
-#include "fbe/pg_query_ptr.h"
 #include "pg_query.h"
+#include "pg_query_ptr.h"
 
 // NOLINTNEXTLINE
 struct PgQueryFBEParseResult

@@ -7,8 +7,8 @@
 #include <string>
 
 #include "arena/arena.hpp"
-#include "fbe/pg_query_ptr.h"
 #include "pg_query_parse_fbe.hpp"
+#include "pg_query_ptr.h"
 
 using int8 = int8_t;
 using int16 = int16_t;
