@@ -36,8 +36,10 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${SANITIZE_PARAM}")
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} ${SANITIZE_PARAM}")
 set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS_DEBUG} ${SANITIZE_PARAM}")
 
- # build arena
- add_subdirectory(thirdparty/memory/arena)
+# build arena
+if (NOT TARGET arena)
+  add_subdirectory(thirdparty/memory/arena)
+endif()
 
 FILE(GLOB_RECURSE SRC
   ${PROJECT_SOURCE_DIR}/src/*.c)
@@ -54,14 +56,18 @@ LIST(REMOVE_ITEM SRC
   ${PROJECT_SOURCE_DIR}/src/postgres/guc-file.c
   ${PROJECT_SOURCE_DIR}/src/postgres/scan.c)
 
+
+if (NOT FBE_GEN_CODE_DIR)
+  message(STATUS "no FBE_GEN_CODE_DIR provided, default to ${PROJECT_SOURCE_DIR}/fbe/generated")
+  set(FBE_GEN_CODE_DIR ${PROJECT_SOURCE_DIR}/fbe/generated CACHE STRING "" FORCE)
+endif()
+message(STATUS "FBE_GEN_CODE_DIR: ${FBE_GEN_CODE_DIR}")
+include_directories(SYSTEM ${FBE_GEN_CODE_DIR})
+
 LIST(APPEND SRC
   ${PROJECT_SOURCE_DIR}/vendor/protobuf-c/protobuf-c.c
   ${PROJECT_SOURCE_DIR}/vendor/xxhash/xxhash.c
   ${PROJECT_SOURCE_DIR}/protobuf/pg_query.pb-c.c
-  ${PROJECT_SOURCE_DIR}/fbe/fbe.cpp
-  ${PROJECT_SOURCE_DIR}/fbe/fbe_models.cpp
-  ${PROJECT_SOURCE_DIR}/fbe/pg_query_ptr.cpp
-  ${PROJECT_SOURCE_DIR}/fbe/pg_query_ptr_models.cpp
   ${PROJECT_SOURCE_DIR}/src/pg_query_outfuncs_fbe_cpp.cc
   ${PROJECT_SOURCE_DIR}/src/pg_query_parse_fbe.cc
   )
@@ -82,9 +88,18 @@ link_libraries(-Wl,--as-needed) # as-needed is required to skip librte*.so
 
 add_library(pg_query ${SRC})
 
+# test
 list(APPEND TEST_FLAGS -I. -I./vendor -g)
 list(APPEND TEST_LDFLAGS -pthread)
 
-add_executable(pg_query_parse_fbe_test test/parse_fbe_test.cc)
+LIST(APPEND GEN_SRC
+   ${FBE_GEN_CODE_DIR}/fbe.cpp
+   ${FBE_GEN_CODE_DIR}/fbe_models.cpp
+   ${FBE_GEN_CODE_DIR}/pg_query_ptr.cpp
+   ${FBE_GEN_CODE_DIR}/pg_query_ptr_models.cpp
+   )
+add_library(pg_query_gen EXCLUDE_FROM_ALL ${GEN_SRC})
+
+add_executable(pg_query_parse_fbe_test EXCLUDE_FROM_ALL test/parse_fbe_test.cc)
 target_compile_options(pg_query_parse_fbe_test PRIVATE ${TEST_FLAGS})
-target_link_libraries(pg_query_parse_fbe_test pg_query arena fmt ${TEST_LDFLAGS})
+target_link_libraries(pg_query_parse_fbe_test pg_query pg_query_gen arena fmt::fmt ${TEST_LDFLAGS})
