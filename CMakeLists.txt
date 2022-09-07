@@ -103,3 +103,7 @@ add_library(pg_query_gen EXCLUDE_FROM_ALL ${GEN_SRC})
 add_executable(pg_query_parse_fbe_test EXCLUDE_FROM_ALL test/parse_fbe_test.cc)
 target_compile_options(pg_query_parse_fbe_test PRIVATE ${TEST_FLAGS})
 target_link_libraries(pg_query_parse_fbe_test pg_query pg_query_gen arena fmt::fmt ${TEST_LDFLAGS})
+
+add_executable(pg_parse_demo pg_parse_demo.cc)
+target_compile_options(pg_parse_demo PRIVATE ${TEST_FLAGS})
+target_link_libraries(pg_parse_demo pg_query pg_query_gen arena fmt::fmt ${TEST_LDFLAGS})
