@@ -19,8 +19,13 @@ include_directories(SYSTEM ${PROJECT_SOURCE_DIR})
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/vendor)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/src/postgres/include)
 
+
+if(NOT memory_path)
+    set(memory_path ${PROJECT_SOURCE_DIR}/thirdparty/memory)
+endif()
 # memory
-include_directories(${PROJECT_SOURCE_DIR}/thirdparty/memory)
+message(STATUS ${memory_path})
+include_directories(${memory_path}/)
 
 ## set to c++20
 set(CMAKE_CXX_STANDARD 20)
