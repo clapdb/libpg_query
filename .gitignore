@@ -17,3 +17,4 @@ test/*.dSYM
 
 tmp/*
 !tmp/.gitkeep
+cmake-build-*
