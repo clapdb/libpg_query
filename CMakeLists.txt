@@ -62,9 +62,9 @@ LIST(REMOVE_ITEM SRC
   ${PROJECT_SOURCE_DIR}/src/postgres/scan.c)
 
 
+# 依赖 stdb/metas/pg_query.fbe 生成的代码
 if (NOT FBE_GEN_CODE_DIR)
-  message(STATUS "no FBE_GEN_CODE_DIR provided, default to ${PROJECT_SOURCE_DIR}/fbe/generated")
-  set(FBE_GEN_CODE_DIR ${PROJECT_SOURCE_DIR}/fbe/generated CACHE STRING "" FORCE)
+  message(FATAL_ERROR "no FBE_GEN_CODE_DIR provided, maybe stdb/metas/generated ?")
 endif()
 message(STATUS "FBE_GEN_CODE_DIR: ${FBE_GEN_CODE_DIR}")
 include_directories(SYSTEM ${FBE_GEN_CODE_DIR})
@@ -107,8 +107,8 @@ add_library(pg_query_gen EXCLUDE_FROM_ALL ${GEN_SRC})
 
 add_executable(pg_query_parse_fbe_test EXCLUDE_FROM_ALL test/parse_fbe_test.cc)
 target_compile_options(pg_query_parse_fbe_test PRIVATE ${TEST_FLAGS})
-target_link_libraries(pg_query_parse_fbe_test pg_query pg_query_gen arena fmt::fmt ${TEST_LDFLAGS})
+target_link_libraries(pg_query_parse_fbe_test pg_query pg_query_gen uuid arena fmt::fmt ${TEST_LDFLAGS})
 
 add_executable(pg_parse_demo pg_parse_demo.cc)
 target_compile_options(pg_parse_demo PRIVATE ${TEST_FLAGS})
-target_link_libraries(pg_parse_demo pg_query pg_query_gen arena fmt::fmt ${TEST_LDFLAGS})
+target_link_libraries(pg_parse_demo pg_query pg_query_gen uuid arena fmt::fmt ${TEST_LDFLAGS})
