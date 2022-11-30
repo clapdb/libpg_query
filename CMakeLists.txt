@@ -22,7 +22,9 @@ include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/src/postgres/include)
 
 if(NOT memory_path)
     set(memory_path ${PROJECT_SOURCE_DIR}/thirdparty/memory)
+    set(need_arena 1)
 endif()
+
 # memory
 message(STATUS ${memory_path})
 include_directories(${memory_path}/)
@@ -42,8 +44,10 @@ set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} ${SANITIZE_PAR
 set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS_DEBUG} ${SANITIZE_PARAM}")
 
 # build arena
+if (need_arena)
 if (NOT TARGET arena)
   add_subdirectory(thirdparty/memory/arena)
+endif()
 endif()
 
 FILE(GLOB_RECURSE SRC
