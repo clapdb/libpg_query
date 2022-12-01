@@ -1,3 +1,0 @@
-[submodule "thirdparty/memory"]
-	path = thirdparty/memory
-	url = https://github.com/stdbio/memory.git
