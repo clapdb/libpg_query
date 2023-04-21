@@ -498,22 +498,22 @@ struct Integer
 
 struct Float
 {
-  string str; /* string */
+  string fval; /* string */
+}
+
+struct Boolean
+{
+  bool boolval = 1;
 }
 
 struct String
 {
-  string str; /* string */
+  string sval; /* string */
 }
 
 struct BitString
 {
-  string str; /* string */
-}
-
-struct Null
-{
-  // intentionally empty
+  string bsval; /* string */
 }
 
 struct List
@@ -530,6 +530,21 @@ struct IntList
 {
   Node[] items;
 }
+
+variant A_Const_Value {
+  Integer*;
+  Float*;
+  Boolean*;
+  String*;
+  BitString*;
+}
+struct A_Const
+{
+  A_Const_Value val;
+  bool isnull = 10;
+  int32 location = 11;
+}
+
 
 #{fbe_structs}
 
