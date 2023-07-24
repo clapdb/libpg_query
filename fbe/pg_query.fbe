@@ -60,6 +60,8 @@ variant Node {
     DeleteStmt*;
     UpdateStmt*;
     SelectStmt*;
+    ReturnStmt*;
+    PLAssignStmt*;
     AlterTableStmt*;
     AlterTableCmd*;
     AlterDomainStmt*;
@@ -192,6 +194,7 @@ variant Node {
     TypeName*;
     ColumnDef*;
     IndexElem*;
+    StatsElem*;
     Constraint*;
     DefElem*;
     RangeTblEntry*;
@@ -212,6 +215,8 @@ variant Node {
     WithClause*;
     InferClause*;
     OnConflictClause*;
+    CTESearchClause*;
+    CTECycleClause*;
     CommonTableExpr*;
     RoleSpec*;
     TriggerTransition*;
@@ -355,6 +360,8 @@ struct Aggref
   string aggkind;
   uint32 agglevelsup;
   AggSplit aggsplit;
+  int32 aggno;
+  int32 aggtransno;
   int32 location;
 }
 
@@ -388,6 +395,7 @@ struct SubscriptingRef
   Node xpr;
   uint32 refcontainertype;
   uint32 refelemtype;
+  uint32 refrestype;
   int32 reftypmod;
   uint32 refcollid;
   Node[] refupperindexpr;
@@ -463,6 +471,7 @@ struct ScalarArrayOpExpr
   Node xpr;
   uint32 opno;
   uint32 opfuncid;
+  uint32 hashfuncid;
   bool use_or;
   uint32 inputcollid;
   Node[] args;
@@ -779,6 +788,7 @@ struct JoinExpr
   Node larg;
   Node rarg;
   Node[] using_clause;
+  Alias* join_using_alias;
   Node quals;
   Alias* alias;
   int32 rtindex;
@@ -837,6 +847,7 @@ struct Query
   bool has_modifying_cte;
   bool has_for_update;
   bool has_row_security;
+  bool is_return;
   Node[] cte_list;
   Node[] rtable;
   FromExpr* jointree;
@@ -845,6 +856,7 @@ struct Query
   OnConflictExpr* on_conflict;
   Node[] returning_list;
   Node[] group_clause;
+  bool group_distinct;
   Node[] grouping_sets;
   Node having_qual;
   Node[] window_clause;
@@ -899,6 +911,7 @@ struct SelectStmt
   Node[] from_clause;
   Node where_clause;
   Node[] group_clause;
+  bool group_distinct;
   Node having_clause;
   Node[] window_clause;
   Node[] values_lists;
@@ -914,11 +927,25 @@ struct SelectStmt
   SelectStmt* rarg;
 }
 
+struct ReturnStmt
+{
+  Node returnval;
+}
+
+struct PLAssignStmt
+{
+  string name;
+  Node[] indirection;
+  int32 nnames;
+  SelectStmt* val;
+  int32 location;
+}
+
 struct AlterTableStmt
 {
   RangeVar* relation;
   Node[] cmds;
-  ObjectType relkind;
+  ObjectType objtype;
   bool missing_ok;
 }
 
@@ -931,6 +958,7 @@ struct AlterTableCmd
   Node def;
   DropBehavior behavior;
   bool missing_ok;
+  bool recurse;
 }
 
 struct AlterDomainStmt
@@ -964,6 +992,7 @@ struct GrantStmt
   Node[] privileges;
   Node[] grantees;
   bool grant_option;
+  RoleSpec* grantor;
   DropBehavior behavior;
 }
 
@@ -992,7 +1021,7 @@ struct ClusterStmt
 {
   RangeVar* relation;
   string indexname;
-  int32 options;
+  Node[] params;
 }
 
 struct CopyStmt
@@ -1100,6 +1129,7 @@ struct CreateFunctionStmt
   Node[] parameters;
   TypeName* return_type;
   Node[] options;
+  Node sql_body;
 }
 
 struct AlterFunctionStmt
@@ -1215,7 +1245,7 @@ struct CreateTableAsStmt
 {
   Node query;
   IntoClause* into;
-  ObjectType relkind;
+  ObjectType objtype;
   bool is_select_into;
   bool if_not_exists;
 }
@@ -1257,6 +1287,8 @@ struct DiscardStmt
 
 struct CreateTrigStmt
 {
+  bool replace;
+  bool isconstraint;
   string trigname;
   RangeVar* relation;
   Node[] funcname;
@@ -1266,7 +1298,6 @@ struct CreateTrigStmt
   int32 events;
   Node[] columns;
   Node when_clause;
-  bool isconstraint;
   Node[] transition_rels;
   bool deferrable;
   bool initdeferred;
@@ -1321,8 +1352,7 @@ struct ReindexStmt
   ReindexObjectType kind;
   RangeVar* relation;
   string name;
-  int32 options;
-  bool concurrent;
+  Node[] params;
 }
 
 struct CheckPointStmt
@@ -1764,6 +1794,7 @@ struct CreateStatsStmt
   Node[] exprs;
   Node[] relations;
   string stxcomment;
+  bool transformed;
   bool if_not_exists;
 }
 
@@ -1776,6 +1807,7 @@ struct CallStmt
 {
   FuncCall* funccall;
   FuncExpr* funcexpr;
+  Node[] outargs;
 }
 
 struct AlterStatsStmt
@@ -1818,11 +1850,12 @@ struct FuncCall
   Node[] args;
   Node[] agg_order;
   Node agg_filter;
+  WindowDef* over;
   bool agg_within_group;
   bool agg_star;
   bool agg_distinct;
   bool func_variadic;
-  WindowDef* over;
+  CoercionForm funcformat;
   int32 location;
 }
 
@@ -1963,6 +1996,7 @@ struct ColumnDef
 {
   string colname;
   TypeName* type_name;
+  string compression;
   int32 inhcount;
   bool is_local;
   bool is_not_null;
@@ -1990,6 +2024,12 @@ struct IndexElem
   Node[] opclassopts;
   SortByDir ordering;
   SortByNulls nulls_ordering;
+}
+
+struct StatsElem
+{
+  string name;
+  Node expr;
 }
 
 struct Constraint
@@ -2047,6 +2087,7 @@ struct RangeTblEntry
   Node[] joinaliasvars;
   Node[] joinleftcols;
   Node[] joinrightcols;
+  Alias* join_using_alias;
   Node[] functions;
   bool funcordinality;
   TableFunc* tablefunc;
@@ -2138,6 +2179,7 @@ struct ObjectWithArgs
 {
   Node[] objname;
   Node[] objargs;
+  Node[] objfuncargs;
   bool args_unspecified;
 }
 
@@ -2219,12 +2261,36 @@ struct OnConflictClause
   int32 location;
 }
 
+struct CTESearchClause
+{
+  Node[] search_col_list;
+  bool search_breadth_first;
+  string search_seq_column;
+  int32 location;
+}
+
+struct CTECycleClause
+{
+  Node[] cycle_col_list;
+  string cycle_mark_column;
+  Node cycle_mark_value;
+  Node cycle_mark_default;
+  string cycle_path_column;
+  int32 location;
+  uint32 cycle_mark_type;
+  int32 cycle_mark_typmod;
+  uint32 cycle_mark_collation;
+  uint32 cycle_mark_neop;
+}
+
 struct CommonTableExpr
 {
   string ctename;
   Node[] aliascolnames;
   CTEMaterialize ctematerialized;
   Node ctequery;
+  CTESearchClause* search_clause;
+  CTECycleClause* cycle_clause;
   int32 location;
   bool cterecursive;
   int32 cterefcount;
@@ -2287,6 +2353,7 @@ struct PartitionCmd
 {
   RangeVar* name;
   PartitionBoundSpec* bound;
+  bool concurrent;
 }
 
 struct VacuumRelation
@@ -2344,6 +2411,14 @@ enum SortByNulls
   SORTBY_NULLS_LAST = 3;
 }
 
+enum SetQuantifier
+{
+  SET_QUANTIFIER_UNDEFINED = 0;
+  SET_QUANTIFIER_DEFAULT = 1;
+  SET_QUANTIFIER_ALL = 2;
+  SET_QUANTIFIER_DISTINCT = 3;
+}
+
 enum A_Expr_Kind
 {
   A_EXPR_KIND_UNDEFINED = 0;
@@ -2353,39 +2428,39 @@ enum A_Expr_Kind
   AEXPR_DISTINCT = 4;
   AEXPR_NOT_DISTINCT = 5;
   AEXPR_NULLIF = 6;
-  AEXPR_OF = 7;
-  AEXPR_IN = 8;
-  AEXPR_LIKE = 9;
-  AEXPR_ILIKE = 10;
-  AEXPR_SIMILAR = 11;
-  AEXPR_BETWEEN = 12;
-  AEXPR_NOT_BETWEEN = 13;
-  AEXPR_BETWEEN_SYM = 14;
-  AEXPR_NOT_BETWEEN_SYM = 15;
-  AEXPR_PAREN = 16;
+  AEXPR_IN = 7;
+  AEXPR_LIKE = 8;
+  AEXPR_ILIKE = 9;
+  AEXPR_SIMILAR = 10;
+  AEXPR_BETWEEN = 11;
+  AEXPR_NOT_BETWEEN = 12;
+  AEXPR_BETWEEN_SYM = 13;
+  AEXPR_NOT_BETWEEN_SYM = 14;
 }
 
 enum RoleSpecType
 {
   ROLE_SPEC_TYPE_UNDEFINED = 0;
   ROLESPEC_CSTRING = 1;
-  ROLESPEC_CURRENT_USER = 2;
-  ROLESPEC_SESSION_USER = 3;
-  ROLESPEC_PUBLIC = 4;
+  ROLESPEC_CURRENT_ROLE = 2;
+  ROLESPEC_CURRENT_USER = 3;
+  ROLESPEC_SESSION_USER = 4;
+  ROLESPEC_PUBLIC = 5;
 }
 
 enum TableLikeOption
 {
   TABLE_LIKE_OPTION_UNDEFINED = 0;
   CREATE_TABLE_LIKE_COMMENTS = 1;
-  CREATE_TABLE_LIKE_CONSTRAINTS = 2;
-  CREATE_TABLE_LIKE_DEFAULTS = 3;
-  CREATE_TABLE_LIKE_GENERATED = 4;
-  CREATE_TABLE_LIKE_IDENTITY = 5;
-  CREATE_TABLE_LIKE_INDEXES = 6;
-  CREATE_TABLE_LIKE_STATISTICS = 7;
-  CREATE_TABLE_LIKE_STORAGE = 8;
-  CREATE_TABLE_LIKE_ALL = 9;
+  CREATE_TABLE_LIKE_COMPRESSION = 2;
+  CREATE_TABLE_LIKE_CONSTRAINTS = 3;
+  CREATE_TABLE_LIKE_DEFAULTS = 4;
+  CREATE_TABLE_LIKE_GENERATED = 5;
+  CREATE_TABLE_LIKE_IDENTITY = 6;
+  CREATE_TABLE_LIKE_INDEXES = 7;
+  CREATE_TABLE_LIKE_STATISTICS = 8;
+  CREATE_TABLE_LIKE_STORAGE = 9;
+  CREATE_TABLE_LIKE_ALL = 10;
 }
 
 enum DefElemAction
@@ -2533,60 +2608,63 @@ enum AlterTableType
   AT_SetOptions = 11;
   AT_ResetOptions = 12;
   AT_SetStorage = 13;
-  AT_DropColumn = 14;
-  AT_DropColumnRecurse = 15;
-  AT_AddIndex = 16;
-  AT_ReAddIndex = 17;
-  AT_AddConstraint = 18;
-  AT_AddConstraintRecurse = 19;
-  AT_ReAddConstraint = 20;
-  AT_ReAddDomainConstraint = 21;
-  AT_AlterConstraint = 22;
-  AT_ValidateConstraint = 23;
-  AT_ValidateConstraintRecurse = 24;
-  AT_AddIndexConstraint = 25;
-  AT_DropConstraint = 26;
-  AT_DropConstraintRecurse = 27;
-  AT_ReAddComment = 28;
-  AT_AlterColumnType = 29;
-  AT_AlterColumnGenericOptions = 30;
-  AT_ChangeOwner = 31;
-  AT_ClusterOn = 32;
-  AT_DropCluster = 33;
-  AT_SetLogged = 34;
-  AT_SetUnLogged = 35;
-  AT_DropOids = 36;
-  AT_SetTableSpace = 37;
-  AT_SetRelOptions = 38;
-  AT_ResetRelOptions = 39;
-  AT_ReplaceRelOptions = 40;
-  AT_EnableTrig = 41;
-  AT_EnableAlwaysTrig = 42;
-  AT_EnableReplicaTrig = 43;
-  AT_DisableTrig = 44;
-  AT_EnableTrigAll = 45;
-  AT_DisableTrigAll = 46;
-  AT_EnableTrigUser = 47;
-  AT_DisableTrigUser = 48;
-  AT_EnableRule = 49;
-  AT_EnableAlwaysRule = 50;
-  AT_EnableReplicaRule = 51;
-  AT_DisableRule = 52;
-  AT_AddInherit = 53;
-  AT_DropInherit = 54;
-  AT_AddOf = 55;
-  AT_DropOf = 56;
-  AT_ReplicaIdentity = 57;
-  AT_EnableRowSecurity = 58;
-  AT_DisableRowSecurity = 59;
-  AT_ForceRowSecurity = 60;
-  AT_NoForceRowSecurity = 61;
-  AT_GenericOptions = 62;
-  AT_AttachPartition = 63;
-  AT_DetachPartition = 64;
-  AT_AddIdentity = 65;
-  AT_SetIdentity = 66;
-  AT_DropIdentity = 67;
+  AT_SetCompression = 14;
+  AT_DropColumn = 15;
+  AT_DropColumnRecurse = 16;
+  AT_AddIndex = 17;
+  AT_ReAddIndex = 18;
+  AT_AddConstraint = 19;
+  AT_AddConstraintRecurse = 20;
+  AT_ReAddConstraint = 21;
+  AT_ReAddDomainConstraint = 22;
+  AT_AlterConstraint = 23;
+  AT_ValidateConstraint = 24;
+  AT_ValidateConstraintRecurse = 25;
+  AT_AddIndexConstraint = 26;
+  AT_DropConstraint = 27;
+  AT_DropConstraintRecurse = 28;
+  AT_ReAddComment = 29;
+  AT_AlterColumnType = 30;
+  AT_AlterColumnGenericOptions = 31;
+  AT_ChangeOwner = 32;
+  AT_ClusterOn = 33;
+  AT_DropCluster = 34;
+  AT_SetLogged = 35;
+  AT_SetUnLogged = 36;
+  AT_DropOids = 37;
+  AT_SetTableSpace = 38;
+  AT_SetRelOptions = 39;
+  AT_ResetRelOptions = 40;
+  AT_ReplaceRelOptions = 41;
+  AT_EnableTrig = 42;
+  AT_EnableAlwaysTrig = 43;
+  AT_EnableReplicaTrig = 44;
+  AT_DisableTrig = 45;
+  AT_EnableTrigAll = 46;
+  AT_DisableTrigAll = 47;
+  AT_EnableTrigUser = 48;
+  AT_DisableTrigUser = 49;
+  AT_EnableRule = 50;
+  AT_EnableAlwaysRule = 51;
+  AT_EnableReplicaRule = 52;
+  AT_DisableRule = 53;
+  AT_AddInherit = 54;
+  AT_DropInherit = 55;
+  AT_AddOf = 56;
+  AT_DropOf = 57;
+  AT_ReplicaIdentity = 58;
+  AT_EnableRowSecurity = 59;
+  AT_DisableRowSecurity = 60;
+  AT_ForceRowSecurity = 61;
+  AT_NoForceRowSecurity = 62;
+  AT_GenericOptions = 63;
+  AT_AttachPartition = 64;
+  AT_DetachPartition = 65;
+  AT_DetachPartitionFinalize = 66;
+  AT_AddIdentity = 67;
+  AT_SetIdentity = 68;
+  AT_DropIdentity = 69;
+  AT_ReAddStatistics = 70;
 }
 
 enum GrantTargetType
@@ -2660,6 +2738,7 @@ enum FunctionParameterMode
   FUNC_PARAM_INOUT = 3;
   FUNC_PARAM_VARIADIC = 4;
   FUNC_PARAM_TABLE = 5;
+  FUNC_PARAM_DEFAULT = 6;
 }
 
 enum TransactionStmtKind
@@ -2683,13 +2762,6 @@ enum ViewCheckOption
   NO_CHECK_OPTION = 1;
   LOCAL_CHECK_OPTION = 2;
   CASCADED_CHECK_OPTION = 3;
-}
-
-enum ClusterOption
-{
-  CLUSTER_OPTION_UNDEFINED = 0;
-  CLUOPT_RECHECK = 1;
-  CLUOPT_VERBOSE = 2;
 }
 
 enum DiscardMode
@@ -2726,9 +2798,11 @@ enum AlterSubscriptionType
   ALTER_SUBSCRIPTION_TYPE_UNDEFINED = 0;
   ALTER_SUBSCRIPTION_OPTIONS = 1;
   ALTER_SUBSCRIPTION_CONNECTION = 2;
-  ALTER_SUBSCRIPTION_PUBLICATION = 3;
-  ALTER_SUBSCRIPTION_REFRESH = 4;
-  ALTER_SUBSCRIPTION_ENABLED = 5;
+  ALTER_SUBSCRIPTION_SET_PUBLICATION = 3;
+  ALTER_SUBSCRIPTION_ADD_PUBLICATION = 4;
+  ALTER_SUBSCRIPTION_DROP_PUBLICATION = 5;
+  ALTER_SUBSCRIPTION_REFRESH = 6;
+  ALTER_SUBSCRIPTION_ENABLED = 7;
 }
 
 enum OnCommitAction
@@ -2754,7 +2828,8 @@ enum CoercionContext
   COERCION_CONTEXT_UNDEFINED = 0;
   COERCION_IMPLICIT = 1;
   COERCION_ASSIGNMENT = 2;
-  COERCION_EXPLICIT = 3;
+  COERCION_PLPGSQL = 3;
+  COERCION_EXPLICIT = 4;
 }
 
 enum CoercionForm
@@ -2763,6 +2838,7 @@ enum CoercionForm
   COERCE_EXPLICIT_CALL = 1;
   COERCE_EXPLICIT_CAST = 2;
   COERCE_IMPLICIT_CAST = 3;
+  COERCE_SQL_SYNTAX = 4;
 }
 
 enum BoolExprType
@@ -3034,442 +3110,453 @@ enum Token {
   ARRAY = 293;
   AS = 294;
   ASC = 295;
-  ASSERTION = 296;
-  ASSIGNMENT = 297;
-  ASYMMETRIC = 298;
-  AT = 299;
-  ATTACH = 300;
-  ATTRIBUTE = 301;
-  AUTHORIZATION = 302;
-  BACKWARD = 303;
-  BEFORE = 304;
-  BEGIN_P = 305;
-  BETWEEN = 306;
-  BIGINT = 307;
-  BINARY = 308;
-  BIT = 309;
-  BOOLEAN_P = 310;
-  BOTH = 311;
-  BY = 312;
-  CACHE = 313;
-  CALL = 314;
-  CALLED = 315;
-  CASCADE = 316;
-  CASCADED = 317;
-  CASE = 318;
-  CAST = 319;
-  CATALOG_P = 320;
-  CHAIN = 321;
-  CHAR_P = 322;
-  CHARACTER = 323;
-  CHARACTERISTICS = 324;
-  CHECK = 325;
-  CHECKPOINT = 326;
-  CLASS = 327;
-  CLOSE = 328;
-  CLUSTER = 329;
-  COALESCE = 330;
-  COLLATE = 331;
-  COLLATION = 332;
-  COLUMN = 333;
-  COLUMNS = 334;
-  COMMENT = 335;
-  COMMENTS = 336;
-  COMMIT = 337;
-  COMMITTED = 338;
-  CONCURRENTLY = 339;
-  CONFIGURATION = 340;
-  CONFLICT = 341;
-  CONNECTION = 342;
-  CONSTRAINT = 343;
-  CONSTRAINTS = 344;
-  CONTENT_P = 345;
-  CONTINUE_P = 346;
-  CONVERSION_P = 347;
-  COPY = 348;
-  COST = 349;
-  CREATE = 350;
-  CROSS = 351;
-  CSV = 352;
-  CUBE = 353;
-  CURRENT_P = 354;
-  CURRENT_CATALOG = 355;
-  CURRENT_DATE = 356;
-  CURRENT_ROLE = 357;
-  CURRENT_SCHEMA = 358;
-  CURRENT_TIME = 359;
-  CURRENT_TIMESTAMP = 360;
-  CURRENT_USER = 361;
-  CURSOR = 362;
-  CYCLE = 363;
-  DATA_P = 364;
-  DATABASE = 365;
-  DAY_P = 366;
-  DEALLOCATE = 367;
-  DEC = 368;
-  DECIMAL_P = 369;
-  DECLARE = 370;
-  DEFAULT = 371;
-  DEFAULTS = 372;
-  DEFERRABLE = 373;
-  DEFERRED = 374;
-  DEFINER = 375;
-  DELETE_P = 376;
-  DELIMITER = 377;
-  DELIMITERS = 378;
-  DEPENDS = 379;
-  DESC = 380;
-  DETACH = 381;
-  DICTIONARY = 382;
-  DISABLE_P = 383;
-  DISCARD = 384;
-  DISTINCT = 385;
-  DO = 386;
-  DOCUMENT_P = 387;
-  DOMAIN_P = 388;
-  DOUBLE_P = 389;
-  DROP = 390;
-  EACH = 391;
-  ELSE = 392;
-  ENABLE_P = 393;
-  ENCODING = 394;
-  ENCRYPTED = 395;
-  END_P = 396;
-  ENUM_P = 397;
-  ESCAPE = 398;
-  EVENT = 399;
-  EXCEPT = 400;
-  EXCLUDE = 401;
-  EXCLUDING = 402;
-  EXCLUSIVE = 403;
-  EXECUTE = 404;
-  EXISTS = 405;
-  EXPLAIN = 406;
-  EXPRESSION = 407;
-  EXTENSION = 408;
-  EXTERNAL = 409;
-  EXTRACT = 410;
-  FALSE_P = 411;
-  FAMILY = 412;
-  FETCH = 413;
-  FILTER = 414;
-  FIRST_P = 415;
-  FLOAT_P = 416;
-  FOLLOWING = 417;
-  FOR = 418;
-  FORCE = 419;
-  FOREIGN = 420;
-  FORWARD = 421;
-  FREEZE = 422;
-  FROM = 423;
-  FULL = 424;
-  FUNCTION = 425;
-  FUNCTIONS = 426;
-  GENERATED = 427;
-  GLOBAL = 428;
-  GRANT = 429;
-  GRANTED = 430;
-  GREATEST = 431;
-  GROUP_P = 432;
-  GROUPING = 433;
-  GROUPS = 434;
-  HANDLER = 435;
-  HAVING = 436;
-  HEADER_P = 437;
-  HOLD = 438;
-  HOUR_P = 439;
-  IDENTITY_P = 440;
-  IF_P = 441;
-  ILIKE = 442;
-  IMMEDIATE = 443;
-  IMMUTABLE = 444;
-  IMPLICIT_P = 445;
-  IMPORT_P = 446;
-  IN_P = 447;
-  INCLUDE = 448;
-  INCLUDING = 449;
-  INCREMENT = 450;
-  INDEX = 451;
-  INDEXES = 452;
-  INHERIT = 453;
-  INHERITS = 454;
-  INITIALLY = 455;
-  INLINE_P = 456;
-  INNER_P = 457;
-  INOUT = 458;
-  INPUT_P = 459;
-  INSENSITIVE = 460;
-  INSERT = 461;
-  INSTEAD = 462;
-  INT_P = 463;
-  INTEGER = 464;
-  INTERSECT = 465;
-  INTERVAL = 466;
-  INTO = 467;
-  INVOKER = 468;
-  IS = 469;
-  ISNULL = 470;
-  ISOLATION = 471;
-  JOIN = 472;
-  KEY = 473;
-  LABEL = 474;
-  LANGUAGE = 475;
-  LARGE_P = 476;
-  LAST_P = 477;
-  LATERAL_P = 478;
-  LEADING = 479;
-  LEAKPROOF = 480;
-  LEAST = 481;
-  LEFT = 482;
-  LEVEL = 483;
-  LIKE = 484;
-  LIMIT = 485;
-  LISTEN = 486;
-  LOAD = 487;
-  LOCAL = 488;
-  LOCALTIME = 489;
-  LOCALTIMESTAMP = 490;
-  LOCATION = 491;
-  LOCK_P = 492;
-  LOCKED = 493;
-  LOGGED = 494;
-  MAPPING = 495;
-  MATCH = 496;
-  MATERIALIZED = 497;
-  MAXVALUE = 498;
-  METHOD = 499;
-  MINUTE_P = 500;
-  MINVALUE = 501;
-  MODE = 502;
-  MONTH_P = 503;
-  MOVE = 504;
-  NAME_P = 505;
-  NAMES = 506;
-  NATIONAL = 507;
-  NATURAL = 508;
-  NCHAR = 509;
-  NEW = 510;
-  NEXT = 511;
-  NFC = 512;
-  NFD = 513;
-  NFKC = 514;
-  NFKD = 515;
-  NO = 516;
-  NONE = 517;
-  NORMALIZE = 518;
-  NORMALIZED = 519;
-  NOT = 520;
-  NOTHING = 521;
-  NOTIFY = 522;
-  NOTNULL = 523;
-  NOWAIT = 524;
-  NULL_P = 525;
-  NULLIF = 526;
-  NULLS_P = 527;
-  NUMERIC = 528;
-  OBJECT_P = 529;
-  OF = 530;
-  OFF = 531;
-  OFFSET = 532;
-  OIDS = 533;
-  OLD = 534;
-  ON = 535;
-  ONLY = 536;
-  OPERATOR = 537;
-  OPTION = 538;
-  OPTIONS = 539;
-  OR = 540;
-  ORDER = 541;
-  ORDINALITY = 542;
-  OTHERS = 543;
-  OUT_P = 544;
-  OUTER_P = 545;
-  OVER = 546;
-  OVERLAPS = 547;
-  OVERLAY = 548;
-  OVERRIDING = 549;
-  OWNED = 550;
-  OWNER = 551;
-  PARALLEL = 552;
-  PARSER = 553;
-  PARTIAL = 554;
-  PARTITION = 555;
-  PASSING = 556;
-  PASSWORD = 557;
-  PLACING = 558;
-  PLANS = 559;
-  POLICY = 560;
-  POSITION = 561;
-  PRECEDING = 562;
-  PRECISION = 563;
-  PRESERVE = 564;
-  PREPARE = 565;
-  PREPARED = 566;
-  PRIMARY = 567;
-  PRIOR = 568;
-  PRIVILEGES = 569;
-  PROCEDURAL = 570;
-  PROCEDURE = 571;
-  PROCEDURES = 572;
-  PROGRAM = 573;
-  PUBLICATION = 574;
-  QUOTE = 575;
-  RANGE = 576;
-  READ = 577;
-  REAL = 578;
-  REASSIGN = 579;
-  RECHECK = 580;
-  RECURSIVE = 581;
-  REF = 582;
-  REFERENCES = 583;
-  REFERENCING = 584;
-  REFRESH = 585;
-  REINDEX = 586;
-  RELATIVE_P = 587;
-  RELEASE = 588;
-  RENAME = 589;
-  REPEATABLE = 590;
-  REPLACE = 591;
-  REPLICA = 592;
-  RESET = 593;
-  RESTART = 594;
-  RESTRICT = 595;
-  RETURNING = 596;
-  RETURNS = 597;
-  REVOKE = 598;
-  RIGHT = 599;
-  ROLE = 600;
-  ROLLBACK = 601;
-  ROLLUP = 602;
-  ROUTINE = 603;
-  ROUTINES = 604;
-  ROW = 605;
-  ROWS = 606;
-  RULE = 607;
-  SAVEPOINT = 608;
-  SCHEMA = 609;
-  SCHEMAS = 610;
-  SCROLL = 611;
-  SEARCH = 612;
-  SECOND_P = 613;
-  SECURITY = 614;
-  SELECT = 615;
-  SEQUENCE = 616;
-  SEQUENCES = 617;
-  SERIALIZABLE = 618;
-  SERVER = 619;
-  SESSION = 620;
-  SESSION_USER = 621;
-  SET = 622;
-  SETS = 623;
-  SETOF = 624;
-  SHARE = 625;
-  SHOW = 626;
-  SIMILAR = 627;
-  SIMPLE = 628;
-  SKIP = 629;
-  SMALLINT = 630;
-  SNAPSHOT = 631;
-  SOME = 632;
-  SQL_P = 633;
-  STABLE = 634;
-  STANDALONE_P = 635;
-  START = 636;
-  STATEMENT = 637;
-  STATISTICS = 638;
-  STDIN = 639;
-  STDOUT = 640;
-  STORAGE = 641;
-  STORED = 642;
-  STRICT_P = 643;
-  STRIP_P = 644;
-  SUBSCRIPTION = 645;
-  SUBSTRING = 646;
-  SUPPORT = 647;
-  SYMMETRIC = 648;
-  SYSID = 649;
-  SYSTEM_P = 650;
-  TABLE = 651;
-  TABLES = 652;
-  TABLESAMPLE = 653;
-  TABLESPACE = 654;
-  TEMP = 655;
-  TEMPLATE = 656;
-  TEMPORARY = 657;
-  TEXT_P = 658;
-  THEN = 659;
-  TIES = 660;
-  TIME = 661;
-  TIMESTAMP = 662;
-  TO = 663;
-  TRAILING = 664;
-  TRANSACTION = 665;
-  TRANSFORM = 666;
-  TREAT = 667;
-  TRIGGER = 668;
-  TRIM = 669;
-  TRUE_P = 670;
-  TRUNCATE = 671;
-  TRUSTED = 672;
-  TYPE_P = 673;
-  TYPES_P = 674;
-  UESCAPE = 675;
-  UNBOUNDED = 676;
-  UNCOMMITTED = 677;
-  UNENCRYPTED = 678;
-  UNION = 679;
-  UNIQUE = 680;
-  UNKNOWN = 681;
-  UNLISTEN = 682;
-  UNLOGGED = 683;
-  UNTIL = 684;
-  UPDATE = 685;
-  USER = 686;
-  USING = 687;
-  VACUUM = 688;
-  VALID = 689;
-  VALIDATE = 690;
-  VALIDATOR = 691;
-  VALUE_P = 692;
-  VALUES = 693;
-  VARCHAR = 694;
-  VARIADIC = 695;
-  VARYING = 696;
-  VERBOSE = 697;
-  VERSION_P = 698;
-  VIEW = 699;
-  VIEWS = 700;
-  VOLATILE = 701;
-  WHEN = 702;
-  WHERE = 703;
-  WHITESPACE_P = 704;
-  WINDOW = 705;
-  WITH = 706;
-  WITHIN = 707;
-  WITHOUT = 708;
-  WORK = 709;
-  WRAPPER = 710;
-  WRITE = 711;
-  XML_P = 712;
-  XMLATTRIBUTES = 713;
-  XMLCONCAT = 714;
-  XMLELEMENT = 715;
-  XMLEXISTS = 716;
-  XMLFOREST = 717;
-  XMLNAMESPACES = 718;
-  XMLPARSE = 719;
-  XMLPI = 720;
-  XMLROOT = 721;
-  XMLSERIALIZE = 722;
-  XMLTABLE = 723;
-  YEAR_P = 724;
-  YES_P = 725;
-  ZONE = 726;
-  NOT_LA = 727;
-  NULLS_LA = 728;
-  WITH_LA = 729;
-  POSTFIXOP = 730;
-  UMINUS = 731;
+  ASENSITIVE = 296;
+  ASSERTION = 297;
+  ASSIGNMENT = 298;
+  ASYMMETRIC = 299;
+  ATOMIC = 300;
+  AT = 301;
+  ATTACH = 302;
+  ATTRIBUTE = 303;
+  AUTHORIZATION = 304;
+  BACKWARD = 305;
+  BEFORE = 306;
+  BEGIN_P = 307;
+  BETWEEN = 308;
+  BIGINT = 309;
+  BINARY = 310;
+  BIT = 311;
+  BOOLEAN_P = 312;
+  BOTH = 313;
+  BREADTH = 314;
+  BY = 315;
+  CACHE = 316;
+  CALL = 317;
+  CALLED = 318;
+  CASCADE = 319;
+  CASCADED = 320;
+  CASE = 321;
+  CAST = 322;
+  CATALOG_P = 323;
+  CHAIN = 324;
+  CHAR_P = 325;
+  CHARACTER = 326;
+  CHARACTERISTICS = 327;
+  CHECK = 328;
+  CHECKPOINT = 329;
+  CLASS = 330;
+  CLOSE = 331;
+  CLUSTER = 332;
+  COALESCE = 333;
+  COLLATE = 334;
+  COLLATION = 335;
+  COLUMN = 336;
+  COLUMNS = 337;
+  COMMENT = 338;
+  COMMENTS = 339;
+  COMMIT = 340;
+  COMMITTED = 341;
+  COMPRESSION = 342;
+  CONCURRENTLY = 343;
+  CONFIGURATION = 344;
+  CONFLICT = 345;
+  CONNECTION = 346;
+  CONSTRAINT = 347;
+  CONSTRAINTS = 348;
+  CONTENT_P = 349;
+  CONTINUE_P = 350;
+  CONVERSION_P = 351;
+  COPY = 352;
+  COST = 353;
+  CREATE = 354;
+  CROSS = 355;
+  CSV = 356;
+  CUBE = 357;
+  CURRENT_P = 358;
+  CURRENT_CATALOG = 359;
+  CURRENT_DATE = 360;
+  CURRENT_ROLE = 361;
+  CURRENT_SCHEMA = 362;
+  CURRENT_TIME = 363;
+  CURRENT_TIMESTAMP = 364;
+  CURRENT_USER = 365;
+  CURSOR = 366;
+  CYCLE = 367;
+  DATA_P = 368;
+  DATABASE = 369;
+  DAY_P = 370;
+  DEALLOCATE = 371;
+  DEC = 372;
+  DECIMAL_P = 373;
+  DECLARE = 374;
+  DEFAULT = 375;
+  DEFAULTS = 376;
+  DEFERRABLE = 377;
+  DEFERRED = 378;
+  DEFINER = 379;
+  DELETE_P = 380;
+  DELIMITER = 381;
+  DELIMITERS = 382;
+  DEPENDS = 383;
+  DEPTH = 384;
+  DESC = 385;
+  DETACH = 386;
+  DICTIONARY = 387;
+  DISABLE_P = 388;
+  DISCARD = 389;
+  DISTINCT = 390;
+  DO = 391;
+  DOCUMENT_P = 392;
+  DOMAIN_P = 393;
+  DOUBLE_P = 394;
+  DROP = 395;
+  EACH = 396;
+  ELSE = 397;
+  ENABLE_P = 398;
+  ENCODING = 399;
+  ENCRYPTED = 400;
+  END_P = 401;
+  ENUM_P = 402;
+  ESCAPE = 403;
+  EVENT = 404;
+  EXCEPT = 405;
+  EXCLUDE = 406;
+  EXCLUDING = 407;
+  EXCLUSIVE = 408;
+  EXECUTE = 409;
+  EXISTS = 410;
+  EXPLAIN = 411;
+  EXPRESSION = 412;
+  EXTENSION = 413;
+  EXTERNAL = 414;
+  EXTRACT = 415;
+  FALSE_P = 416;
+  FAMILY = 417;
+  FETCH = 418;
+  FILTER = 419;
+  FINALIZE = 420;
+  FIRST_P = 421;
+  FLOAT_P = 422;
+  FOLLOWING = 423;
+  FOR = 424;
+  FORCE = 425;
+  FOREIGN = 426;
+  FORWARD = 427;
+  FREEZE = 428;
+  FROM = 429;
+  FULL = 430;
+  FUNCTION = 431;
+  FUNCTIONS = 432;
+  GENERATED = 433;
+  GLOBAL = 434;
+  GRANT = 435;
+  GRANTED = 436;
+  GREATEST = 437;
+  GROUP_P = 438;
+  GROUPING = 439;
+  GROUPS = 440;
+  HANDLER = 441;
+  HAVING = 442;
+  HEADER_P = 443;
+  HOLD = 444;
+  HOUR_P = 445;
+  IDENTITY_P = 446;
+  IF_P = 447;
+  ILIKE = 448;
+  IMMEDIATE = 449;
+  IMMUTABLE = 450;
+  IMPLICIT_P = 451;
+  IMPORT_P = 452;
+  IN_P = 453;
+  INCLUDE = 454;
+  INCLUDING = 455;
+  INCREMENT = 456;
+  INDEX = 457;
+  INDEXES = 458;
+  INHERIT = 459;
+  INHERITS = 460;
+  INITIALLY = 461;
+  INLINE_P = 462;
+  INNER_P = 463;
+  INOUT = 464;
+  INPUT_P = 465;
+  INSENSITIVE = 466;
+  INSERT = 467;
+  INSTEAD = 468;
+  INT_P = 469;
+  INTEGER = 470;
+  INTERSECT = 471;
+  INTERVAL = 472;
+  INTO = 473;
+  INVOKER = 474;
+  IS = 475;
+  ISNULL = 476;
+  ISOLATION = 477;
+  JOIN = 478;
+  KEY = 479;
+  LABEL = 480;
+  LANGUAGE = 481;
+  LARGE_P = 482;
+  LAST_P = 483;
+  LATERAL_P = 484;
+  LEADING = 485;
+  LEAKPROOF = 486;
+  LEAST = 487;
+  LEFT = 488;
+  LEVEL = 489;
+  LIKE = 490;
+  LIMIT = 491;
+  LISTEN = 492;
+  LOAD = 493;
+  LOCAL = 494;
+  LOCALTIME = 495;
+  LOCALTIMESTAMP = 496;
+  LOCATION = 497;
+  LOCK_P = 498;
+  LOCKED = 499;
+  LOGGED = 500;
+  MAPPING = 501;
+  MATCH = 502;
+  MATERIALIZED = 503;
+  MAXVALUE = 504;
+  METHOD = 505;
+  MINUTE_P = 506;
+  MINVALUE = 507;
+  MODE = 508;
+  MONTH_P = 509;
+  MOVE = 510;
+  NAME_P = 511;
+  NAMES = 512;
+  NATIONAL = 513;
+  NATURAL = 514;
+  NCHAR = 515;
+  NEW = 516;
+  NEXT = 517;
+  NFC = 518;
+  NFD = 519;
+  NFKC = 520;
+  NFKD = 521;
+  NO = 522;
+  NONE = 523;
+  NORMALIZE = 524;
+  NORMALIZED = 525;
+  NOT = 526;
+  NOTHING = 527;
+  NOTIFY = 528;
+  NOTNULL = 529;
+  NOWAIT = 530;
+  NULL_P = 531;
+  NULLIF = 532;
+  NULLS_P = 533;
+  NUMERIC = 534;
+  OBJECT_P = 535;
+  OF = 536;
+  OFF = 537;
+  OFFSET = 538;
+  OIDS = 539;
+  OLD = 540;
+  ON = 541;
+  ONLY = 542;
+  OPERATOR = 543;
+  OPTION = 544;
+  OPTIONS = 545;
+  OR = 546;
+  ORDER = 547;
+  ORDINALITY = 548;
+  OTHERS = 549;
+  OUT_P = 550;
+  OUTER_P = 551;
+  OVER = 552;
+  OVERLAPS = 553;
+  OVERLAY = 554;
+  OVERRIDING = 555;
+  OWNED = 556;
+  OWNER = 557;
+  PARALLEL = 558;
+  PARSER = 559;
+  PARTIAL = 560;
+  PARTITION = 561;
+  PASSING = 562;
+  PASSWORD = 563;
+  PLACING = 564;
+  PLANS = 565;
+  POLICY = 566;
+  POSITION = 567;
+  PRECEDING = 568;
+  PRECISION = 569;
+  PRESERVE = 570;
+  PREPARE = 571;
+  PREPARED = 572;
+  PRIMARY = 573;
+  PRIOR = 574;
+  PRIVILEGES = 575;
+  PROCEDURAL = 576;
+  PROCEDURE = 577;
+  PROCEDURES = 578;
+  PROGRAM = 579;
+  PUBLICATION = 580;
+  QUOTE = 581;
+  RANGE = 582;
+  READ = 583;
+  REAL = 584;
+  REASSIGN = 585;
+  RECHECK = 586;
+  RECURSIVE = 587;
+  REF_P = 588;
+  REFERENCES = 589;
+  REFERENCING = 590;
+  REFRESH = 591;
+  REINDEX = 592;
+  RELATIVE_P = 593;
+  RELEASE = 594;
+  RENAME = 595;
+  REPEATABLE = 596;
+  REPLACE = 597;
+  REPLICA = 598;
+  RESET = 599;
+  RESTART = 600;
+  RESTRICT = 601;
+  RETURN = 602;
+  RETURNING = 603;
+  RETURNS = 604;
+  REVOKE = 605;
+  RIGHT = 606;
+  ROLE = 607;
+  ROLLBACK = 608;
+  ROLLUP = 609;
+  ROUTINE = 610;
+  ROUTINES = 611;
+  ROW = 612;
+  ROWS = 613;
+  RULE = 614;
+  SAVEPOINT = 615;
+  SCHEMA = 616;
+  SCHEMAS = 617;
+  SCROLL = 618;
+  SEARCH = 619;
+  SECOND_P = 620;
+  SECURITY = 621;
+  SELECT = 622;
+  SEQUENCE = 623;
+  SEQUENCES = 624;
+  SERIALIZABLE = 625;
+  SERVER = 626;
+  SESSION = 627;
+  SESSION_USER = 628;
+  SET = 629;
+  SETS = 630;
+  SETOF = 631;
+  SHARE = 632;
+  SHOW = 633;
+  SIMILAR = 634;
+  SIMPLE = 635;
+  SKIP = 636;
+  SMALLINT = 637;
+  SNAPSHOT = 638;
+  SOME = 639;
+  SQL_P = 640;
+  STABLE = 641;
+  STANDALONE_P = 642;
+  START = 643;
+  STATEMENT = 644;
+  STATISTICS = 645;
+  STDIN = 646;
+  STDOUT = 647;
+  STORAGE = 648;
+  STORED = 649;
+  STRICT_P = 650;
+  STRIP_P = 651;
+  SUBSCRIPTION = 652;
+  SUBSTRING = 653;
+  SUPPORT = 654;
+  SYMMETRIC = 655;
+  SYSID = 656;
+  SYSTEM_P = 657;
+  TABLE = 658;
+  TABLES = 659;
+  TABLESAMPLE = 660;
+  TABLESPACE = 661;
+  TEMP = 662;
+  TEMPLATE = 663;
+  TEMPORARY = 664;
+  TEXT_P = 665;
+  THEN = 666;
+  TIES = 667;
+  TIME = 668;
+  TIMESTAMP = 669;
+  TO = 670;
+  TRAILING = 671;
+  TRANSACTION = 672;
+  TRANSFORM = 673;
+  TREAT = 674;
+  TRIGGER = 675;
+  TRIM = 676;
+  TRUE_P = 677;
+  TRUNCATE = 678;
+  TRUSTED = 679;
+  TYPE_P = 680;
+  TYPES_P = 681;
+  UESCAPE = 682;
+  UNBOUNDED = 683;
+  UNCOMMITTED = 684;
+  UNENCRYPTED = 685;
+  UNION = 686;
+  UNIQUE = 687;
+  UNKNOWN = 688;
+  UNLISTEN = 689;
+  UNLOGGED = 690;
+  UNTIL = 691;
+  UPDATE = 692;
+  USER = 693;
+  USING = 694;
+  VACUUM = 695;
+  VALID = 696;
+  VALIDATE = 697;
+  VALIDATOR = 698;
+  VALUE_P = 699;
+  VALUES = 700;
+  VARCHAR = 701;
+  VARIADIC = 702;
+  VARYING = 703;
+  VERBOSE = 704;
+  VERSION_P = 705;
+  VIEW = 706;
+  VIEWS = 707;
+  VOLATILE = 708;
+  WHEN = 709;
+  WHERE = 710;
+  WHITESPACE_P = 711;
+  WINDOW = 712;
+  WITH = 713;
+  WITHIN = 714;
+  WITHOUT = 715;
+  WORK = 716;
+  WRAPPER = 717;
+  WRITE = 718;
+  XML_P = 719;
+  XMLATTRIBUTES = 720;
+  XMLCONCAT = 721;
+  XMLELEMENT = 722;
+  XMLEXISTS = 723;
+  XMLFOREST = 724;
+  XMLNAMESPACES = 725;
+  XMLPARSE = 726;
+  XMLPI = 727;
+  XMLROOT = 728;
+  XMLSERIALIZE = 729;
+  XMLTABLE = 730;
+  YEAR_P = 731;
+  YES_P = 732;
+  ZONE = 733;
+  NOT_LA = 734;
+  NULLS_LA = 735;
+  WITH_LA = 736;
+  MODE_TYPE_NAME = 737;
+  MODE_PLPGSQL_EXPR = 738;
+  MODE_PLPGSQL_ASSIGN1 = 739;
+  MODE_PLPGSQL_ASSIGN2 = 740;
+  MODE_PLPGSQL_ASSIGN3 = 741;
+  UMINUS = 742;
 }
 
 struct ScanToken {

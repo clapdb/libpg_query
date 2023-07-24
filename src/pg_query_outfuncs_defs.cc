@@ -57,6 +57,8 @@ static void _outInsertStmt(::stdb::memory::Arena& arena, OUT_TYPE(InsertStmt, In
 static void _outDeleteStmt(::stdb::memory::Arena& arena, OUT_TYPE(DeleteStmt, DeleteStmt) out_node, const DeleteStmt *node);
 static void _outUpdateStmt(::stdb::memory::Arena& arena, OUT_TYPE(UpdateStmt, UpdateStmt) out_node, const UpdateStmt *node);
 static void _outSelectStmt(::stdb::memory::Arena& arena, OUT_TYPE(SelectStmt, SelectStmt) out_node, const SelectStmt *node);
+static void _outReturnStmt(::stdb::memory::Arena& arena, OUT_TYPE(ReturnStmt, ReturnStmt) out_node, const ReturnStmt *node);
+static void _outPLAssignStmt(::stdb::memory::Arena& arena, OUT_TYPE(PLAssignStmt, PLAssignStmt) out_node, const PLAssignStmt *node);
 static void _outAlterTableStmt(::stdb::memory::Arena& arena, OUT_TYPE(AlterTableStmt, AlterTableStmt) out_node, const AlterTableStmt *node);
 static void _outAlterTableCmd(::stdb::memory::Arena& arena, OUT_TYPE(AlterTableCmd, AlterTableCmd) out_node, const AlterTableCmd *node);
 static void _outAlterDomainStmt(::stdb::memory::Arena& arena, OUT_TYPE(AlterDomainStmt, AlterDomainStmt) out_node, const AlterDomainStmt *node);
@@ -189,6 +191,7 @@ static void _outRangeTableFuncCol(::stdb::memory::Arena& arena, OUT_TYPE(RangeTa
 static void _outTypeName(::stdb::memory::Arena& arena, OUT_TYPE(TypeName, TypeName) out_node, const TypeName *node);
 static void _outColumnDef(::stdb::memory::Arena& arena, OUT_TYPE(ColumnDef, ColumnDef) out_node, const ColumnDef *node);
 static void _outIndexElem(::stdb::memory::Arena& arena, OUT_TYPE(IndexElem, IndexElem) out_node, const IndexElem *node);
+static void _outStatsElem(::stdb::memory::Arena& arena, OUT_TYPE(StatsElem, StatsElem) out_node, const StatsElem *node);
 static void _outConstraint(::stdb::memory::Arena& arena, OUT_TYPE(Constraint, Constraint) out_node, const Constraint *node);
 static void _outDefElem(::stdb::memory::Arena& arena, OUT_TYPE(DefElem, DefElem) out_node, const DefElem *node);
 static void _outRangeTblEntry(::stdb::memory::Arena& arena, OUT_TYPE(RangeTblEntry, RangeTblEntry) out_node, const RangeTblEntry *node);
@@ -209,6 +212,8 @@ static void _outXmlSerialize(::stdb::memory::Arena& arena, OUT_TYPE(XmlSerialize
 static void _outWithClause(::stdb::memory::Arena& arena, OUT_TYPE(WithClause, WithClause) out_node, const WithClause *node);
 static void _outInferClause(::stdb::memory::Arena& arena, OUT_TYPE(InferClause, InferClause) out_node, const InferClause *node);
 static void _outOnConflictClause(::stdb::memory::Arena& arena, OUT_TYPE(OnConflictClause, OnConflictClause) out_node, const OnConflictClause *node);
+static void _outCTESearchClause(::stdb::memory::Arena& arena, OUT_TYPE(CTESearchClause, CTESearchClause) out_node, const CTESearchClause *node);
+static void _outCTECycleClause(::stdb::memory::Arena& arena, OUT_TYPE(CTECycleClause, CTECycleClause) out_node, const CTECycleClause *node);
 static void _outCommonTableExpr(::stdb::memory::Arena& arena, OUT_TYPE(CommonTableExpr, CommonTableExpr) out_node, const CommonTableExpr *node);
 static void _outRoleSpec(::stdb::memory::Arena& arena, OUT_TYPE(RoleSpec, RoleSpec) out_node, const RoleSpec *node);
 static void _outTriggerTransition(::stdb::memory::Arena& arena, OUT_TYPE(TriggerTransition, TriggerTransition) out_node, const TriggerTransition *node);
@@ -308,6 +313,8 @@ _outAggref(::stdb::memory::Arena& arena, OUT_TYPE(Aggref, Aggref) out, const Agg
   WRITE_CHAR_FIELD(aggkind, aggkind, aggkind);
   WRITE_UINT_FIELD(agglevelsup, agglevelsup, agglevelsup);
   WRITE_ENUM_FIELD(AggSplit, aggsplit, aggsplit, aggsplit);
+  WRITE_INT_FIELD(aggno, aggno, aggno);
+  WRITE_INT_FIELD(aggtransno, aggtransno, aggtransno);
   WRITE_INT_FIELD(location, location, location);
 }
 
@@ -341,6 +348,7 @@ _outSubscriptingRef(::stdb::memory::Arena& arena, OUT_TYPE(SubscriptingRef, Subs
 {
   WRITE_UINT_FIELD(refcontainertype, refcontainertype, refcontainertype);
   WRITE_UINT_FIELD(refelemtype, refelemtype, refelemtype);
+  WRITE_UINT_FIELD(refrestype, refrestype, refrestype);
   WRITE_INT_FIELD(reftypmod, reftypmod, reftypmod);
   WRITE_UINT_FIELD(refcollid, refcollid, refcollid);
   WRITE_LIST_FIELD(refupperindexpr, refupperindexpr, refupperindexpr);
@@ -416,6 +424,7 @@ _outScalarArrayOpExpr(::stdb::memory::Arena& arena, OUT_TYPE(ScalarArrayOpExpr, 
 {
   WRITE_UINT_FIELD(opno, opno, opno);
   WRITE_UINT_FIELD(opfuncid, opfuncid, opfuncid);
+  WRITE_UINT_FIELD(hashfuncid, hashfuncid, hashfuncid);
   WRITE_BOOL_FIELD(use_or, useOr, useOr);
   WRITE_UINT_FIELD(inputcollid, inputcollid, inputcollid);
   WRITE_LIST_FIELD(args, args, args);
@@ -734,6 +743,7 @@ _outJoinExpr(::stdb::memory::Arena& arena, OUT_TYPE(JoinExpr, JoinExpr) out, con
   WRITE_NODE_PTR_FIELD(larg, larg, larg);
   WRITE_NODE_PTR_FIELD(rarg, rarg, rarg);
   WRITE_LIST_FIELD(using_clause, usingClause, usingClause);
+  WRITE_SPECIFIC_NODE_PTR_FIELD(Alias, alias, join_using_alias, join_using_alias, join_using_alias);
   WRITE_NODE_PTR_FIELD(quals, quals, quals);
   WRITE_SPECIFIC_NODE_PTR_FIELD(Alias, alias, alias, alias, alias);
   WRITE_INT_FIELD(rtindex, rtindex, rtindex);
@@ -797,6 +807,7 @@ _outQuery(::stdb::memory::Arena& arena, OUT_TYPE(Query, Query) out, const Query 
   WRITE_BOOL_FIELD(has_modifying_cte, hasModifyingCTE, hasModifyingCTE);
   WRITE_BOOL_FIELD(has_for_update, hasForUpdate, hasForUpdate);
   WRITE_BOOL_FIELD(has_row_security, hasRowSecurity, hasRowSecurity);
+  WRITE_BOOL_FIELD(is_return, isReturn, isReturn);
   WRITE_LIST_FIELD(cte_list, cteList, cteList);
   WRITE_LIST_FIELD(rtable, rtable, rtable);
   WRITE_SPECIFIC_NODE_PTR_FIELD(FromExpr, from_expr, jointree, jointree, jointree);
@@ -805,6 +816,7 @@ _outQuery(::stdb::memory::Arena& arena, OUT_TYPE(Query, Query) out, const Query 
   WRITE_SPECIFIC_NODE_PTR_FIELD(OnConflictExpr, on_conflict_expr, on_conflict, onConflict, onConflict);
   WRITE_LIST_FIELD(returning_list, returningList, returningList);
   WRITE_LIST_FIELD(group_clause, groupClause, groupClause);
+  WRITE_BOOL_FIELD(group_distinct, groupDistinct, groupDistinct);
   WRITE_LIST_FIELD(grouping_sets, groupingSets, groupingSets);
   WRITE_NODE_PTR_FIELD(having_qual, havingQual, havingQual);
   WRITE_LIST_FIELD(window_clause, windowClause, windowClause);
@@ -863,6 +875,7 @@ _outSelectStmt(::stdb::memory::Arena& arena, OUT_TYPE(SelectStmt, SelectStmt) ou
   WRITE_LIST_FIELD(from_clause, fromClause, fromClause);
   WRITE_NODE_PTR_FIELD(where_clause, whereClause, whereClause);
   WRITE_LIST_FIELD(group_clause, groupClause, groupClause);
+  WRITE_BOOL_FIELD(group_distinct, groupDistinct, groupDistinct);
   WRITE_NODE_PTR_FIELD(having_clause, havingClause, havingClause);
   WRITE_LIST_FIELD(window_clause, windowClause, windowClause);
   WRITE_LIST_FIELD(values_lists, valuesLists, valuesLists);
@@ -879,11 +892,27 @@ _outSelectStmt(::stdb::memory::Arena& arena, OUT_TYPE(SelectStmt, SelectStmt) ou
 }
 
 static void
+_outReturnStmt(::stdb::memory::Arena& arena, OUT_TYPE(ReturnStmt, ReturnStmt) out, const ReturnStmt *node)
+{
+  WRITE_NODE_PTR_FIELD(returnval, returnval, returnval);
+}
+
+static void
+_outPLAssignStmt(::stdb::memory::Arena& arena, OUT_TYPE(PLAssignStmt, PLAssignStmt) out, const PLAssignStmt *node)
+{
+  WRITE_STRING_FIELD(name, name, name);
+  WRITE_LIST_FIELD(indirection, indirection, indirection);
+  WRITE_INT_FIELD(nnames, nnames, nnames);
+  WRITE_SPECIFIC_NODE_PTR_FIELD(SelectStmt, select_stmt, val, val, val);
+  WRITE_INT_FIELD(location, location, location);
+}
+
+static void
 _outAlterTableStmt(::stdb::memory::Arena& arena, OUT_TYPE(AlterTableStmt, AlterTableStmt) out, const AlterTableStmt *node)
 {
   WRITE_SPECIFIC_NODE_PTR_FIELD(RangeVar, range_var, relation, relation, relation);
   WRITE_LIST_FIELD(cmds, cmds, cmds);
-  WRITE_ENUM_FIELD(ObjectType, relkind, relkind, relkind);
+  WRITE_ENUM_FIELD(ObjectType, objtype, objtype, objtype);
   WRITE_BOOL_FIELD(missing_ok, missing_ok, missing_ok);
 }
 
@@ -897,6 +926,7 @@ _outAlterTableCmd(::stdb::memory::Arena& arena, OUT_TYPE(AlterTableCmd, AlterTab
   WRITE_NODE_PTR_FIELD(def, def, def);
   WRITE_ENUM_FIELD(DropBehavior, behavior, behavior, behavior);
   WRITE_BOOL_FIELD(missing_ok, missing_ok, missing_ok);
+  WRITE_BOOL_FIELD(recurse, recurse, recurse);
 }
 
 static void
@@ -933,6 +963,7 @@ _outGrantStmt(::stdb::memory::Arena& arena, OUT_TYPE(GrantStmt, GrantStmt) out, 
   WRITE_LIST_FIELD(privileges, privileges, privileges);
   WRITE_LIST_FIELD(grantees, grantees, grantees);
   WRITE_BOOL_FIELD(grant_option, grant_option, grant_option);
+  WRITE_SPECIFIC_NODE_PTR_FIELD(RoleSpec, role_spec, grantor, grantor, grantor);
   WRITE_ENUM_FIELD(DropBehavior, behavior, behavior, behavior);
 }
 
@@ -965,7 +996,7 @@ _outClusterStmt(::stdb::memory::Arena& arena, OUT_TYPE(ClusterStmt, ClusterStmt)
 {
   WRITE_SPECIFIC_NODE_PTR_FIELD(RangeVar, range_var, relation, relation, relation);
   WRITE_STRING_FIELD(indexname, indexname, indexname);
-  WRITE_INT_FIELD(options, options, options);
+  WRITE_LIST_FIELD(params, params, params);
 }
 
 static void
@@ -1082,6 +1113,7 @@ _outCreateFunctionStmt(::stdb::memory::Arena& arena, OUT_TYPE(CreateFunctionStmt
   WRITE_LIST_FIELD(parameters, parameters, parameters);
   WRITE_SPECIFIC_NODE_PTR_FIELD(TypeName, type_name, return_type, returnType, returnType);
   WRITE_LIST_FIELD(options, options, options);
+  WRITE_NODE_PTR_FIELD(sql_body, sql_body, sql_body);
 }
 
 static void
@@ -1213,7 +1245,7 @@ _outCreateTableAsStmt(::stdb::memory::Arena& arena, OUT_TYPE(CreateTableAsStmt, 
 {
   WRITE_NODE_PTR_FIELD(query, query, query);
   WRITE_SPECIFIC_NODE_PTR_FIELD(IntoClause, into_clause, into, into, into);
-  WRITE_ENUM_FIELD(ObjectType, relkind, relkind, relkind);
+  WRITE_ENUM_FIELD(ObjectType, objtype, objtype, objtype);
   WRITE_BOOL_FIELD(is_select_into, is_select_into, is_select_into);
   WRITE_BOOL_FIELD(if_not_exists, if_not_exists, if_not_exists);
 }
@@ -1261,6 +1293,8 @@ _outDiscardStmt(::stdb::memory::Arena& arena, OUT_TYPE(DiscardStmt, DiscardStmt)
 static void
 _outCreateTrigStmt(::stdb::memory::Arena& arena, OUT_TYPE(CreateTrigStmt, CreateTrigStmt) out, const CreateTrigStmt *node)
 {
+  WRITE_BOOL_FIELD(replace, replace, replace);
+  WRITE_BOOL_FIELD(isconstraint, isconstraint, isconstraint);
   WRITE_STRING_FIELD(trigname, trigname, trigname);
   WRITE_SPECIFIC_NODE_PTR_FIELD(RangeVar, range_var, relation, relation, relation);
   WRITE_LIST_FIELD(funcname, funcname, funcname);
@@ -1270,7 +1304,6 @@ _outCreateTrigStmt(::stdb::memory::Arena& arena, OUT_TYPE(CreateTrigStmt, Create
   WRITE_INT_FIELD(events, events, events);
   WRITE_LIST_FIELD(columns, columns, columns);
   WRITE_NODE_PTR_FIELD(when_clause, whenClause, whenClause);
-  WRITE_BOOL_FIELD(isconstraint, isconstraint, isconstraint);
   WRITE_LIST_FIELD(transition_rels, transitionRels, transitionRels);
   WRITE_BOOL_FIELD(deferrable, deferrable, deferrable);
   WRITE_BOOL_FIELD(initdeferred, initdeferred, initdeferred);
@@ -1332,8 +1365,7 @@ _outReindexStmt(::stdb::memory::Arena& arena, OUT_TYPE(ReindexStmt, ReindexStmt)
   WRITE_ENUM_FIELD(ReindexObjectType, kind, kind, kind);
   WRITE_SPECIFIC_NODE_PTR_FIELD(RangeVar, range_var, relation, relation, relation);
   WRITE_STRING_FIELD(name, name, name);
-  WRITE_INT_FIELD(options, options, options);
-  WRITE_BOOL_FIELD(concurrent, concurrent, concurrent);
+  WRITE_LIST_FIELD(params, params, params);
 }
 
 static void
@@ -1834,6 +1866,7 @@ _outCreateStatsStmt(::stdb::memory::Arena& arena, OUT_TYPE(CreateStatsStmt, Crea
   WRITE_LIST_FIELD(exprs, exprs, exprs);
   WRITE_LIST_FIELD(relations, relations, relations);
   WRITE_STRING_FIELD(stxcomment, stxcomment, stxcomment);
+  WRITE_BOOL_FIELD(transformed, transformed, transformed);
   WRITE_BOOL_FIELD(if_not_exists, if_not_exists, if_not_exists);
 }
 
@@ -1848,6 +1881,7 @@ _outCallStmt(::stdb::memory::Arena& arena, OUT_TYPE(CallStmt, CallStmt) out, con
 {
   WRITE_SPECIFIC_NODE_PTR_FIELD(FuncCall, func_call, funccall, funccall, funccall);
   WRITE_SPECIFIC_NODE_PTR_FIELD(FuncExpr, func_expr, funcexpr, funcexpr, funcexpr);
+  WRITE_LIST_FIELD(outargs, outargs, outargs);
 }
 
 static void
@@ -1896,11 +1930,12 @@ _outFuncCall(::stdb::memory::Arena& arena, OUT_TYPE(FuncCall, FuncCall) out, con
   WRITE_LIST_FIELD(args, args, args);
   WRITE_LIST_FIELD(agg_order, agg_order, agg_order);
   WRITE_NODE_PTR_FIELD(agg_filter, agg_filter, agg_filter);
+  WRITE_SPECIFIC_NODE_PTR_FIELD(WindowDef, window_def, over, over, over);
   WRITE_BOOL_FIELD(agg_within_group, agg_within_group, agg_within_group);
   WRITE_BOOL_FIELD(agg_star, agg_star, agg_star);
   WRITE_BOOL_FIELD(agg_distinct, agg_distinct, agg_distinct);
   WRITE_BOOL_FIELD(func_variadic, func_variadic, func_variadic);
-  WRITE_SPECIFIC_NODE_PTR_FIELD(WindowDef, window_def, over, over, over);
+  WRITE_ENUM_FIELD(CoercionForm, funcformat, funcformat, funcformat);
   WRITE_INT_FIELD(location, location, location);
 }
 
@@ -2058,6 +2093,7 @@ _outColumnDef(::stdb::memory::Arena& arena, OUT_TYPE(ColumnDef, ColumnDef) out, 
 {
   WRITE_STRING_FIELD(colname, colname, colname);
   WRITE_SPECIFIC_NODE_PTR_FIELD(TypeName, type_name, type_name, typeName, typeName);
+  WRITE_STRING_FIELD(compression, compression, compression);
   WRITE_INT_FIELD(inhcount, inhcount, inhcount);
   WRITE_BOOL_FIELD(is_local, is_local, is_local);
   WRITE_BOOL_FIELD(is_not_null, is_not_null, is_not_null);
@@ -2086,6 +2122,13 @@ _outIndexElem(::stdb::memory::Arena& arena, OUT_TYPE(IndexElem, IndexElem) out, 
   WRITE_LIST_FIELD(opclassopts, opclassopts, opclassopts);
   WRITE_ENUM_FIELD(SortByDir, ordering, ordering, ordering);
   WRITE_ENUM_FIELD(SortByNulls, nulls_ordering, nulls_ordering, nulls_ordering);
+}
+
+static void
+_outStatsElem(::stdb::memory::Arena& arena, OUT_TYPE(StatsElem, StatsElem) out, const StatsElem *node)
+{
+  WRITE_STRING_FIELD(name, name, name);
+  WRITE_NODE_PTR_FIELD(expr, expr, expr);
 }
 
 static void
@@ -2146,6 +2189,7 @@ _outRangeTblEntry(::stdb::memory::Arena& arena, OUT_TYPE(RangeTblEntry, RangeTbl
   WRITE_LIST_FIELD(joinaliasvars, joinaliasvars, joinaliasvars);
   WRITE_LIST_FIELD(joinleftcols, joinleftcols, joinleftcols);
   WRITE_LIST_FIELD(joinrightcols, joinrightcols, joinrightcols);
+  WRITE_SPECIFIC_NODE_PTR_FIELD(Alias, alias, join_using_alias, join_using_alias, join_using_alias);
   WRITE_LIST_FIELD(functions, functions, functions);
   WRITE_BOOL_FIELD(funcordinality, funcordinality, funcordinality);
   WRITE_SPECIFIC_NODE_PTR_FIELD(TableFunc, table_func, tablefunc, tablefunc, tablefunc);
@@ -2244,6 +2288,7 @@ _outObjectWithArgs(::stdb::memory::Arena& arena, OUT_TYPE(ObjectWithArgs, Object
 {
   WRITE_LIST_FIELD(objname, objname, objname);
   WRITE_LIST_FIELD(objargs, objargs, objargs);
+  WRITE_LIST_FIELD(objfuncargs, objfuncargs, objfuncargs);
   WRITE_BOOL_FIELD(args_unspecified, args_unspecified, args_unspecified);
 }
 
@@ -2336,12 +2381,38 @@ _outOnConflictClause(::stdb::memory::Arena& arena, OUT_TYPE(OnConflictClause, On
 }
 
 static void
+_outCTESearchClause(::stdb::memory::Arena& arena, OUT_TYPE(CTESearchClause, CTESearchClause) out, const CTESearchClause *node)
+{
+  WRITE_LIST_FIELD(search_col_list, search_col_list, search_col_list);
+  WRITE_BOOL_FIELD(search_breadth_first, search_breadth_first, search_breadth_first);
+  WRITE_STRING_FIELD(search_seq_column, search_seq_column, search_seq_column);
+  WRITE_INT_FIELD(location, location, location);
+}
+
+static void
+_outCTECycleClause(::stdb::memory::Arena& arena, OUT_TYPE(CTECycleClause, CTECycleClause) out, const CTECycleClause *node)
+{
+  WRITE_LIST_FIELD(cycle_col_list, cycle_col_list, cycle_col_list);
+  WRITE_STRING_FIELD(cycle_mark_column, cycle_mark_column, cycle_mark_column);
+  WRITE_NODE_PTR_FIELD(cycle_mark_value, cycle_mark_value, cycle_mark_value);
+  WRITE_NODE_PTR_FIELD(cycle_mark_default, cycle_mark_default, cycle_mark_default);
+  WRITE_STRING_FIELD(cycle_path_column, cycle_path_column, cycle_path_column);
+  WRITE_INT_FIELD(location, location, location);
+  WRITE_UINT_FIELD(cycle_mark_type, cycle_mark_type, cycle_mark_type);
+  WRITE_INT_FIELD(cycle_mark_typmod, cycle_mark_typmod, cycle_mark_typmod);
+  WRITE_UINT_FIELD(cycle_mark_collation, cycle_mark_collation, cycle_mark_collation);
+  WRITE_UINT_FIELD(cycle_mark_neop, cycle_mark_neop, cycle_mark_neop);
+}
+
+static void
 _outCommonTableExpr(::stdb::memory::Arena& arena, OUT_TYPE(CommonTableExpr, CommonTableExpr) out, const CommonTableExpr *node)
 {
   WRITE_STRING_FIELD(ctename, ctename, ctename);
   WRITE_LIST_FIELD(aliascolnames, aliascolnames, aliascolnames);
   WRITE_ENUM_FIELD(CTEMaterialize, ctematerialized, ctematerialized, ctematerialized);
   WRITE_NODE_PTR_FIELD(ctequery, ctequery, ctequery);
+  WRITE_SPECIFIC_NODE_PTR_FIELD(CTESearchClause, ctesearch_clause, search_clause, search_clause, search_clause);
+  WRITE_SPECIFIC_NODE_PTR_FIELD(CTECycleClause, ctecycle_clause, cycle_clause, cycle_clause, cycle_clause);
   WRITE_INT_FIELD(location, location, location);
   WRITE_BOOL_FIELD(cterecursive, cterecursive, cterecursive);
   WRITE_INT_FIELD(cterefcount, cterefcount, cterefcount);
@@ -2411,6 +2482,7 @@ _outPartitionCmd(::stdb::memory::Arena& arena, OUT_TYPE(PartitionCmd, PartitionC
 {
   WRITE_SPECIFIC_NODE_PTR_FIELD(RangeVar, range_var, name, name, name);
   WRITE_SPECIFIC_NODE_PTR_FIELD(PartitionBoundSpec, partition_bound_spec, bound, bound, bound);
+  WRITE_BOOL_FIELD(concurrent, concurrent, concurrent);
 }
 
 static void
