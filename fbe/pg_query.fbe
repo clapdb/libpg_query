@@ -931,6 +931,7 @@ struct AlterTableCmd
   Node def;
   DropBehavior behavior;
   bool missing_ok;
+  bool recurse;
 }
 
 struct AlterDomainStmt
@@ -3320,7 +3321,7 @@ enum Token {
   REASSIGN = 579;
   RECHECK = 580;
   RECURSIVE = 581;
-  REF = 582;
+  REF_P = 582;
   REFERENCES = 583;
   REFERENCING = 584;
   REFRESH = 585;
