@@ -3,6 +3,8 @@ postgres.tar.bz2
 
 *.o
 *.a
+*.obj
+pg_query.lib
 
 examples/*
 !examples/*.c
@@ -18,3 +20,4 @@ test/*.dSYM
 tmp/*
 !tmp/.gitkeep
 cmake-build-*
+.vs/*
