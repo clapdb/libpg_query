@@ -1,8 +1,9 @@
+// NOTE: make sure to keep this in sync with normalize_utility_tests.c
 const char* tests[] = {
   "SELECT 1",
   "SELECT $1",
-	"SELECT $1, 1",
-	"SELECT $1, $2",
+  "SELECT $1, 1",
+  "SELECT $1, $2",
   "CREATE ROLE postgres PASSWORD 'xyz'",
   "CREATE ROLE postgres PASSWORD $1",
   "CREATE ROLE postgres ENCRYPTED PASSWORD 'xyz'",
@@ -45,6 +46,8 @@ const char* tests[] = {
   "FETCH 1000 FROM cursor_a",
   "CLOSE cursor_a",
   "CLOSE cursor_a",
+  "SELECT 1; ALTER USER a WITH PASSWORD 'b'",
+  "SELECT $1; ALTER USER a WITH PASSWORD $2",
 };
 
-size_t testsLength = __LINE__ - 6;
+size_t testsLength = __LINE__ - 7;
