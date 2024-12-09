@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-PgQuerySplitResult pg_query_split_with_scanner(const char* input)
+PgQuerySplitResult pg_query_split_with_scanner(const char* input, size_t input_len)
 {
   MemoryContext ctx = NULL;
   PgQuerySplitResult result = {0};
@@ -54,7 +54,7 @@ PgQuerySplitResult pg_query_split_with_scanner(const char* input)
   PG_TRY();
   {
     // Really this is stupid, we only run twice so we can pre-allocate the output array correctly
-    yyscanner = scanner_init(input, &yyextra, &ScanKeywords, ScanKeywordTokens);
+    yyscanner = scanner_init(input, input_len, &yyextra, &ScanKeywords, ScanKeywordTokens);
     while (true)
     {
       int tok = core_yylex(&yylval, &yylloc, yyscanner);
@@ -84,7 +84,7 @@ PgQuerySplitResult pg_query_split_with_scanner(const char* input)
     // Now actually set the output values
     keyword_before_terminator = false;
     open_parens = 0;
-    yyscanner = scanner_init(input, &yyextra, &ScanKeywords, ScanKeywordTokens);
+    yyscanner = scanner_init(input, input_len, &yyextra, &ScanKeywords, ScanKeywordTokens);
     while (true)
     {
       int tok = core_yylex(&yylval, &yylloc, yyscanner);
@@ -162,7 +162,7 @@ PgQuerySplitResult pg_query_split_with_scanner(const char* input)
   return result;
 }
 
-PgQuerySplitResult pg_query_split_with_parser(const char* input)
+PgQuerySplitResult pg_query_split_with_parser(const char* input, size_t input_len)
 {
 	MemoryContext ctx = NULL;
 	PgQueryInternalParsetreeAndError parsetree_and_error;
@@ -170,7 +170,7 @@ PgQuerySplitResult pg_query_split_with_parser(const char* input)
 
 	ctx = pg_query_enter_memory_context();
 
-	parsetree_and_error = pg_query_raw_parse(input);
+	parsetree_and_error = pg_query_raw_parse(input, input_len);
 
 	// These are all malloc-ed and will survive exiting the memory context, the caller is responsible to free them now
 	result.stderr_buffer = parsetree_and_error.stderr_buffer;

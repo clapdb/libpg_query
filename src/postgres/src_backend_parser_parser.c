@@ -51,14 +51,14 @@ static char *str_udeescape(const char *str, char escape,
  * list have the form required by the specified RawParseMode.
  */
 List *
-raw_parser(const char *str, RawParseMode mode)
+raw_parser(const char *str, size_t slen, RawParseMode mode)
 {
 	core_yyscan_t yyscanner;
 	base_yy_extra_type yyextra;
 	int			yyresult;
 
 	/* initialize the flex scanner */
-	yyscanner = scanner_init(str, &yyextra.core_yy_extra,
+	yyscanner = scanner_init(str, slen, &yyextra.core_yy_extra,
 							 &ScanKeywords, ScanKeywordTokens);
 
 	/* base_yylex() only needs us to initialize the lookahead token, if any */

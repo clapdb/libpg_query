@@ -100,7 +100,7 @@ comp_location(const void *a, const void *b)
  * reason for a constant to start with a '-'.
  */
 static void
-fill_in_constant_lengths(pgssConstLocations *jstate, const char *query)
+fill_in_constant_lengths(pgssConstLocations *jstate, const char *query, int query_len)
 {
 	pgssLocationLen *locs;
 	core_yyscan_t yyscanner;
@@ -120,7 +120,7 @@ fill_in_constant_lengths(pgssConstLocations *jstate, const char *query)
 	locs = jstate->clocations;
 
 	/* initialize the flex scanner --- should match raw_parser() */
-	yyscanner = scanner_init(query,
+	yyscanner = scanner_init(query, query_len,
 							 &yyextra,
 							 &ScanKeywords,
 							 ScanKeywordTokens);
@@ -235,7 +235,7 @@ generate_normalized_query(pgssConstLocations *jstate, int query_loc, int* query_
 	 * Get constants' lengths (core system only gives us locations).  Note
 	 * this also ensures the items are sorted by location.
 	 */
-	fill_in_constant_lengths(jstate, query);
+	fill_in_constant_lengths(jstate, query, query_len);
 
 	/*
 	 * Allow for $n symbols to be longer than the constants they replace.
@@ -558,7 +558,7 @@ static bool const_record_walker(Node *node, pgssConstLocations *jstate)
 	return false;
 }
 
-PgQueryNormalizeResult pg_query_normalize(const char* input)
+PgQueryNormalizeResult pg_query_normalize(const char* input, size_t input_len)
 {
 	MemoryContext ctx = NULL;
 	PgQueryNormalizeResult result = {0};
@@ -572,7 +572,7 @@ PgQueryNormalizeResult pg_query_normalize(const char* input)
 		int query_len;
 
 		/* Parse query */
-		tree = raw_parser(input, RAW_PARSE_DEFAULT);
+		tree = raw_parser(input, input_len, RAW_PARSE_DEFAULT);
 
 		query_len = (int) strlen(input);
 

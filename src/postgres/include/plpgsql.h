@@ -1233,7 +1233,7 @@ extern PLpgSQL_plugin **plpgsql_plugin_ptr;
  */
 extern PLpgSQL_function *plpgsql_compile(FunctionCallInfo fcinfo,
 										 bool forValidator);
-extern PLpgSQL_function *plpgsql_compile_inline(char *proc_source);
+extern PLpgSQL_function *plpgsql_compile_inline(char *proc_source, size_t proc_source_len);
 extern void plpgsql_parser_setup(struct ParseState *pstate,
 								 PLpgSQL_expr *expr);
 extern bool plpgsql_parse_word(char *word1, const char *yytxt, bool lookup,
@@ -1334,7 +1334,7 @@ extern int	plpgsql_scanner_errposition(int location);
 extern void plpgsql_yyerror(const char *message) pg_attribute_noreturn();
 extern int	plpgsql_location_to_lineno(int location);
 extern int	plpgsql_latest_lineno(void);
-extern void plpgsql_scanner_init(const char *str);
+extern void plpgsql_scanner_init(const char *str, size_t str_len);
 extern void plpgsql_scanner_finish(void);
 
 /*

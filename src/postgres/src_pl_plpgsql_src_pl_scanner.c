@@ -634,10 +634,10 @@ plpgsql_latest_lineno(void)
  * to cite in error messages.
  */
 void
-plpgsql_scanner_init(const char *str)
+plpgsql_scanner_init(const char *str, size_t str_len)
 {
 	/* Start up the core scanner */
-	yyscanner = scanner_init(str, &core_yy,
+	yyscanner = scanner_init(str, str_len, &core_yy,
 							 &ReservedPLKeywords, ReservedPLKeywordTokens);
 
 	/*

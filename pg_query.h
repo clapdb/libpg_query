@@ -74,13 +74,13 @@ typedef struct {
 extern "C" {
 #endif
 
-PgQueryNormalizeResult pg_query_normalize(const char* input);
-PgQueryScanResult pg_query_scan(const char* input);
-PgQueryParseResult pg_query_parse(const char* input);
-PgQueryProtobufParseResult pg_query_parse_protobuf(const char* input);
-PgQueryPlpgsqlParseResult pg_query_parse_plpgsql(const char* input);
+PgQueryNormalizeResult pg_query_normalize(const char* input, size_t input_len);
+PgQueryScanResult pg_query_scan(const char* input, size_t input_len);
+PgQueryParseResult pg_query_parse(const char* input, size_t input_len);
+PgQueryProtobufParseResult pg_query_parse_protobuf(const char* input, size_t input_len);
+PgQueryPlpgsqlParseResult pg_query_parse_plpgsql(const char* input, size_t input_len);
 
-PgQueryFingerprintResult pg_query_fingerprint(const char* input);
+PgQueryFingerprintResult pg_query_fingerprint(const char* input, size_t input_len);
 
 // Use pg_query_split_with_scanner when you need to split statements that may
 // contain parse errors, otherwise pg_query_split_with_parser is recommended
@@ -89,8 +89,8 @@ PgQueryFingerprintResult pg_query_fingerprint(const char* input);
 // Note that we try to support special cases like comments, strings containing
 // ";" on both, as well as oddities like "CREATE RULE .. (SELECT 1; SELECT 2);"
 // which is treated as as single statement.
-PgQuerySplitResult pg_query_split_with_scanner(const char *input);
-PgQuerySplitResult pg_query_split_with_parser(const char *input);
+PgQuerySplitResult pg_query_split_with_scanner(const char *input, size_t input_len);
+PgQuerySplitResult pg_query_split_with_parser(const char *input, size_t input_len);
 
 PgQueryDeparseResult pg_query_deparse_protobuf(PgQueryProtobuf parse_tree);
 

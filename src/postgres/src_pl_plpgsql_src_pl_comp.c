@@ -213,7 +213,7 @@ static void delete_function(PLpgSQL_function *func);
  * ----------
  */
 PLpgSQL_function *
-plpgsql_compile_inline(char *proc_source)
+plpgsql_compile_inline(char *proc_source, size_t proc_source_len)
 {
 	char	   *func_name = "inline_code_block";
 	PLpgSQL_function *function;
@@ -227,7 +227,7 @@ plpgsql_compile_inline(char *proc_source)
 	 * cannot be invoked recursively, so there's no need to save and restore
 	 * the static variables used here.
 	 */
-	plpgsql_scanner_init(proc_source);
+	plpgsql_scanner_init(proc_source, proc_source_len);
 
 	plpgsql_error_funcname = func_name;
 

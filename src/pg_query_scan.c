@@ -23,7 +23,7 @@ struct yyguts_t
   size_t yyleng_r;
 };
 
-PgQueryScanResult pg_query_scan(const char* input)
+PgQueryScanResult pg_query_scan(const char* input, size_t input_len)
 {
   MemoryContext ctx = NULL;
   PgQueryScanResult result = {0};
@@ -69,7 +69,7 @@ PgQueryScanResult pg_query_scan(const char* input)
   PG_TRY();
   {
     // Really this is stupid, we only run twice so we can pre-allocate the output array correctly
-    yyscanner = scanner_init(input, &yyextra, &ScanKeywords, ScanKeywordTokens);
+    yyscanner = scanner_init(input, input_len, &yyextra, &ScanKeywords, ScanKeywordTokens);
     for (;; token_count++)
     {
       if (core_yylex(&yylval, &yylloc, yyscanner) == 0) break;
@@ -79,7 +79,7 @@ PgQueryScanResult pg_query_scan(const char* input)
     output_tokens = malloc(sizeof(PgQuery__ScanToken *) * token_count);
 
     /* initialize the flex scanner --- should match raw_parser() */
-    yyscanner = scanner_init(input, &yyextra, &ScanKeywords, ScanKeywordTokens);
+    yyscanner = scanner_init(input, input_len, &yyextra, &ScanKeywords, ScanKeywordTokens);
 
     /* Lex tokens  */
     for (i = 0; ; i++)

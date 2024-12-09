@@ -99,7 +99,7 @@ static PLpgSQL_function *compile_do_stmt(DoStmt* stmt)
 	if(strcmp(language, "plpgsql") != 0) {
 		return (PLpgSQL_function *) palloc0(sizeof(PLpgSQL_function));
 	}
-	return plpgsql_compile_inline(proc_source);
+	return plpgsql_compile_inline(proc_source, strlen(proc_source));
 
 }
 
@@ -167,7 +167,7 @@ static PLpgSQL_function *compile_create_function_stmt(CreateFunctionStmt* stmt)
 	 * cannot be invoked recursively, so there's no need to save and restore
 	 * the static variables used here.
 	 */
-	plpgsql_scanner_init(proc_source);
+	plpgsql_scanner_init(proc_source, strlen(proc_source));
 
 	plpgsql_error_funcname = func_name;
 
@@ -439,7 +439,7 @@ static bool stmts_walker(Node *node, plStmts *state)
 	return result;
 }
 
-PgQueryPlpgsqlParseResult pg_query_parse_plpgsql(const char* input)
+PgQueryPlpgsqlParseResult pg_query_parse_plpgsql(const char* input, size_t input_len)
 {
 	MemoryContext ctx = NULL;
 	PgQueryPlpgsqlParseResult result = {0};
@@ -449,7 +449,7 @@ PgQueryPlpgsqlParseResult pg_query_parse_plpgsql(const char* input)
 
 	ctx = pg_query_enter_memory_context();
 
-	parse_result = pg_query_raw_parse(input);
+	parse_result = pg_query_raw_parse(input, input_len);
 	result.error = parse_result.error;
 	if (result.error != NULL) {
 		pg_query_exit_memory_context(ctx);
