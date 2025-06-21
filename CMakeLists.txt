@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.19.0)
 
 project(libpg_query)
 
-set(CMAKE_C_FLAGS "-g -Wno-unused-function -Wno-unused-value -Wno-unused-variable -fno-strict-aliasing -fwrapv -fPIC")
+set(CMAKE_C_FLAGS "-g -Wno-unused-function -Wno-unused-value -Wno-unused-variable -Wno-deprecated-non-prototype -fno-strict-aliasing -fwrapv -fPIC")
 
 set(CMAKE_C_FLAGS_DEBUG "-O0 -DUSE_ASSERT_CHECKING")
 set(CMAKE_C_FLAGS_RELEASE "-O3")
