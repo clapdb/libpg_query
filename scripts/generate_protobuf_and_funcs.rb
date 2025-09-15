@@ -298,7 +298,7 @@ case T_A_Const:
       c_type = type.gsub(/_/, '')
 
       out_defs += format("static void _out%s(OUT_TYPE(%s, %s) out_node, const %s *node);\n", c_type, type, c_type, type)
-      out_defs_arena += format("static void _out%s(::stdb::memory::Arena& arena, OUT_TYPE(%s, %s) out_node, const %s *node);\n", c_type, type, c_type, type)
+      out_defs_arena += format("static void _out%s(arena::Arena& arena, OUT_TYPE(%s, %s) out_node, const %s *node);\n", c_type, type, c_type, type)
 
       out_impls += "static void\n"
       out_impls += format("_out%s(OUT_TYPE(%s, %s) out, const %s *node)\n", c_type, type, c_type, type)
@@ -308,7 +308,7 @@ case T_A_Const:
       out_impls += "\n"
 
       out_impls_arena += "static void\n"
-      out_impls_arena += format("_out%s(::stdb::memory::Arena& arena, OUT_TYPE(%s, %s) out, const %s *node)\n", c_type, type, c_type, type)
+      out_impls_arena += format("_out%s(arena::Arena& arena, OUT_TYPE(%s, %s) out, const %s *node)\n", c_type, type, c_type, type)
       out_impls_arena += "{\n"
       out_impls_arena += outmethod
       out_impls_arena += "}\n"
