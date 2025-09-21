@@ -5,6 +5,17 @@
 require 'bundler'
 require 'json'
 
+# accarding to https://github.com/clapdb/FBE/blob/master/source/fbe.l
+# according to cpp keywords https://en.cppreference.com/w/cpp/keyword
+def wrap_underscores_FBE_keyword(word)
+  fbe_keywords_need_wrap = %w[string] # only 'string' for now, if needed we can add more here
+  if fbe_keywords_need_wrap.include?(word)
+    "__#{word}__"
+  else
+    word
+  end
+end
+
 class Generator
   def initialize
     @nodetypes = JSON.parse(File.read('./srcdata/nodetypes.json'))
@@ -72,108 +83,110 @@ class Generator
             @outmethods[node_type] += format("  WRITE_CHAR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_CHAR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  string %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  string %s;\n", outname)
+            @fbe_structs[node_type] += format("  string %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['bool'].include?(type)
             @outmethods[node_type] += format("  WRITE_BOOL_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_BOOL_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  bool %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  bool %s;\n", outname)
+            @fbe_structs[node_type] += format("  bool %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['long'].include?(type)
             @outmethods[node_type] += format("  WRITE_LONG_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_LONG_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  int64 %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  int64 %s;\n", outname)
+            @fbe_structs[node_type] += format("  int64 %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['int', 'int16', 'int32', 'AttrNumber', 'ParseLoc'].include?(type)
             @outmethods[node_type] += format("  WRITE_INT_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_INT_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  int32 %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  int32 %s;\n", outname)
+            @fbe_structs[node_type] += format("  int32 %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['uint', 'uint16', 'uint32', 'Index', 'bits32', 'Oid', 'SubTransactionId', 'RelFileNumber'].include?(type)
             @outmethods[node_type] += format("  WRITE_UINT_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_UINT_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  uint32 %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  uint32 %s;\n", outname)
+            @fbe_structs[node_type] += format("  uint32 %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['uint64', 'AclMode'].include?(type)
             @outmethods[node_type] += format("  WRITE_UINT64_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_UINT64_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  uint64 %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
+            @fbe_structs[node_type] += format("  uint64 %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif type == 'char*'
             @outmethods[node_type] += format("  WRITE_STRING_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_STRING_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  string %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  string %s;\n", outname)
+            @fbe_structs[node_type] += format("  string %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['float', 'double', 'Cost', 'Cardinality', 'Selectivity'].include?(type)
             @outmethods[node_type] += format("  WRITE_FLOAT_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_FLOAT_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  double %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  double %s;\n", outname)
+            @fbe_structs[node_type] += format("  double %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['Bitmapset*', 'Relids'].include?(type)
             @outmethods[node_type] += format("  WRITE_BITMAPSET_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_BITMAPSET_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  repeated uint64 %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  uint64[] %s;\n", outname)
+            @fbe_structs[node_type] += format("  uint64[] %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['Value'].include?(type)
             @outmethods[node_type] += format("  WRITE_NODE_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_VALUE_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  Node %s;\n", outname)
+            @fbe_structs[node_type] += format("  Node %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['Value*'].include?(type)
             @outmethods[node_type] += format("  WRITE_NODE_PTR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_VALUE_PTR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  Node %s;\n", outname)
+            @fbe_structs[node_type] += format("  Node %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['List*'].include?(type)
             @outmethods[node_type] += format("  WRITE_LIST_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_LIST_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  repeated Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  Node[] %s;\n", outname)
+            @fbe_structs[node_type] += format("  Node[] %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['Node*'].include?(type)
             @outmethods[node_type] += format("  WRITE_NODE_PTR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_NODE_PTR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  Node %s;\n", outname)
+            @fbe_structs[node_type] += format("  Node %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['Node'].include?(type)
             @outmethods[node_type] += format("  WRITE_NODE_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_NODE_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @protobuf_messages[node_type] += format("  Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
+            @fbe_structs[node_type] += format("  Node %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           # Abstract node types that require casting.
           elsif ['Expr*', 'JsonTablePlan*'].include?(type)
             @outmethods[node_type] += format("  WRITE_NODE_PTR_FIELD(%s, %s, %s);\n", outname, outname_json, name)
             @readmethods[node_type] += format("  READ_ABSTRACT_PTR_FIELD(%s, %s, %s, %s);\n", outname, outname_json, name, type)
             @protobuf_messages[node_type] += format("  Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  Node %s;\n", outname)
+            @fbe_structs[node_type] += format("  Node %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           # Abstract types that have no read or out methods.
           elsif ['Expr', 'JsonTablePlan'].include?(type)
             # FIXME
             @protobuf_messages[node_type] += format("  Node %s = %d [json_name=\"%s\"];\n", outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  Node %s;\n", outname)
+            @fbe_structs[node_type] += format("  Node %s;\n", wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif ['CreateStmt'].include?(type)
             @outmethods[node_type] += format("  WRITE_SPECIFIC_NODE_FIELD(%s, %s, %s, %s, %s);\n", type.gsub('*', ''), underscore(type.gsub('*', '')).downcase, outname, outname_json, name)
             @readmethods[node_type] += format("  READ_SPECIFIC_NODE_FIELD(%s, %s, %s, %s, %s);\n", type.gsub('*', ''), underscore(type.gsub('*', '')).downcase, outname, outname_json, name)
             @protobuf_messages[node_type] += format("  %s %s = %d [json_name=\"%s\"];\n", type.gsub('*', ''), outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  %s %s;\n", type.gsub('*', ''), outname)
+            @fbe_structs[node_type] += format("  %s %s;\n", type.gsub('*', ''), wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif @nodetypes.include?(type[0..-2])
             @outmethods[node_type] += format("  WRITE_SPECIFIC_NODE_PTR_FIELD(%s, %s, %s, %s, %s);\n", type.gsub('*', ''), underscore(type.gsub('*', '')).downcase, outname, outname_json, name)
             @readmethods[node_type] += format("  READ_SPECIFIC_NODE_PTR_FIELD(%s, %s, %s, %s, %s);\n", type.gsub('*', ''), underscore(type.gsub('*', '')).downcase, outname, outname_json, name)
             @protobuf_messages[node_type] += format("  %s %s = %d [json_name=\"%s\"];\n", type.gsub('*', ''), outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  %s* %s;\n", type.gsub('*', ''), outname)
+            @fbe_structs[node_type] += format("  %s* %s;\n", type.gsub('*', ''), wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           elsif type.end_with?('*')
             puts format('ERR: %s %s', name, type)
@@ -181,7 +194,7 @@ class Generator
             @outmethods[node_type] += format("  WRITE_ENUM_FIELD(%s, %s, %s, %s);\n", type, outname, outname_json, name)
             @readmethods[node_type] += format("  READ_ENUM_FIELD(%s, %s, %s, %s);\n", type, outname, outname_json, name)
             @protobuf_messages[node_type] += format("  %s %s = %d [json_name=\"%s\"];\n", type, outname, protobuf_field_count, name)
-            @fbe_structs[node_type] += format("  %s %s;\n", type, outname)
+            @fbe_structs[node_type] += format("  %s %s;\n", type, wrap_underscores_FBE_keyword(outname))
             protobuf_field_count += 1
           end
         end
@@ -193,7 +206,7 @@ class Generator
         next if enum_type == 'NodeTag'
 
         @protobuf_enums[enum_type] = format("enum %s\n{\n", enum_type)
-        @fbe_enums[enum_type] = format("enum %s\n{\n", enum_type)
+        @fbe_enums[enum_type] = format("enum %s\n{\n", wrap_underscores_FBE_keyword(enum_type))
         @enum_to_strings[enum_type] = format("static const char*\n_enumToString%s(%s value) {\n  switch(value) {\n", enum_type, enum_type)
         @enum_to_ints[enum_type] = format("static int\n_enumToInt%s(%s value) {\n  switch(value) {\n", enum_type, enum_type)
         @int_to_enums[enum_type] = format("static %s\n_intToEnum%s(int value) {\n  switch(value) {\n", enum_type, enum_type)
@@ -208,7 +221,7 @@ class Generator
           next unless value['name']
 
           @protobuf_enums[enum_type] += format("  %s = %d;\n", value['name'], protobuf_field)
-          @fbe_enums[enum_type] += format("  %s = %d;\n", value['name'], protobuf_field)
+          @fbe_enums[enum_type] += format("  %s = %d;\n", wrap_underscores_FBE_keyword(value['name']), protobuf_field)
           @enum_to_strings[enum_type] += format("    case %s: return \"%s\";\n", value['name'], value['name'])
           @enum_to_ints[enum_type] += format("    case %s: return %d;\n", value['name'], protobuf_field)
           @int_to_enums[enum_type] += format("    case %d: return %s;\n", protobuf_field, value['name'])

@@ -23,18 +23,6 @@ else()
 endif()
 set(SO_VERSION "${SO_VERSION_FORMATTED}.${VERSION_MINOR}")
 
-# Platform-specific library naming (from Makefile)
-if(APPLE)
-    set(SOLIB "libpg_query.dylib")
-    set(SONAME "libpg_query.${SO_VERSION}.dylib")
-    set(SOLIBVER "libpg_query.${SO_VERSION}.${VERSION_PATCH}.dylib")
-    set(SOFLAG "-install_name")
-else()
-    set(SOLIB "libpg_query.so")
-    set(SONAME "${SOLIB}.${SO_VERSION}")
-    set(SOLIBVER "${SONAME}.${VERSION_PATCH}")
-    set(SOFLAG "-soname")
-endif()
 
 # Options (from Makefile)
 option(DEBUG "Enable debug build" OFF)
@@ -149,37 +137,7 @@ if(USE_PROTOBUF_CPP)
     target_link_libraries(pg_query ${PROTOBUF_LIBRARIES})
 endif()
 
-# Create shared library (SOLIB from Makefile)
-add_library(pg_query_shared SHARED ${FINAL_SRC_FILES})
-target_include_directories(pg_query_shared PUBLIC ${INCLUDE_DIRS})
-target_compile_options(pg_query_shared PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:${ALL_CFLAGS}>
-    $<$<COMPILE_LANGUAGE:CXX>:${CXXFLAGS}>
-)
-target_link_options(pg_query_shared PRIVATE -shared)
 
-if(USE_PROTOBUF_CPP)
-    target_link_libraries(pg_query_shared ${PROTOBUF_LIBRARIES})
-endif()
-
-# Set shared library properties
-set_target_properties(pg_query_shared PROPERTIES
-    OUTPUT_NAME pg_query
-    SOVERSION ${SO_VERSION}
-    VERSION ${SO_VERSION}.${VERSION_PATCH}
-)
-
-# Test flags (from Makefile lines 46-47)
-set(TEST_CFLAGS -g -I${CMAKE_CURRENT_SOURCE_DIR} -I${CMAKE_CURRENT_SOURCE_DIR}/vendor -Wall -std=c99 -D_GNU_SOURCE)
-set(TEST_LDFLAGS -pthread)
-
-if(USE_PROTOBUF_CPP)
-    list(APPEND TEST_LDFLAGS ${PROTOBUF_LIBRARIES} -lstdc++ -lm)
-endif()
-
-if(VALGRIND)
-    list(APPEND TEST_CFLAGS -DUSE_VALGRIND)
-endif()
 
 # Examples (from Makefile line 216)
 set(EXAMPLES simple scan normalize simple_error normalize_error simple_plpgsql)
@@ -192,38 +150,6 @@ foreach(example ${EXAMPLES})
     set_target_properties(example_${example} PROPERTIES OUTPUT_NAME ${example})
 endforeach()
 
-# Tests (from Makefile line 243)
-set(TESTS complex concurrency deparse fingerprint fingerprint_opts normalize normalize_utility parse parse_opts parse_protobuf parse_protobuf_opts parse_plpgsql scan split)
-
-# Test source file mappings - note that *_tests.c files are included by the main test files
-set(complex_SOURCES test/complex.c)
-set(concurrency_SOURCES test/concurrency.c)
-set(deparse_SOURCES test/deparse.c)
-set(fingerprint_SOURCES test/fingerprint.c)
-set(fingerprint_opts_SOURCES test/fingerprint_opts.c)
-set(normalize_SOURCES test/normalize.c)
-set(normalize_utility_SOURCES test/normalize_utility.c)
-set(parse_SOURCES test/parse.c)
-set(parse_opts_SOURCES test/parse_opts.c)
-set(parse_plpgsql_SOURCES test/parse_plpgsql.c)
-set(parse_protobuf_SOURCES test/parse_protobuf.c)
-set(parse_protobuf_opts_SOURCES test/parse_protobuf_opts.c)
-set(scan_SOURCES test/scan.c)
-set(split_SOURCES test/split.c)
-
-foreach(test ${TESTS})
-    add_executable(test_${test} ${${test}_SOURCES})
-    target_include_directories(test_${test} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
-    target_compile_options(test_${test} PRIVATE ${TEST_CFLAGS})
-
-    # Some tests need src/ directory access (from Makefile comments)
-    if(test STREQUAL "complex" OR test STREQUAL "fingerprint" OR test STREQUAL "fingerprint_opts")
-        target_include_directories(test_${test} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-    endif()
-
-    target_link_libraries(test_${test} pg_query ${TEST_LDFLAGS})
-    set_target_properties(test_${test} PROPERTIES OUTPUT_NAME ${test})
-endforeach()
 
 # Custom targets matching Makefile behavior
 set(EXAMPLE_TARGETS)
@@ -242,61 +168,20 @@ add_custom_target(examples
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-set(TEST_TARGETS)
-foreach(test ${TESTS})
-    list(APPEND TEST_TARGETS test_${test})
-endforeach()
-
-add_custom_target(test_all
-    DEPENDS ${TEST_TARGETS}
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/complex
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/concurrency
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/deparse
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/fingerprint
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/fingerprint_opts
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/normalize
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/normalize_utility
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/parse
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/parse_opts
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/parse_protobuf
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/parse_protobuf_opts
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/scan
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/split
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/parse_plpgsql
-    COMMAND diff -Naur test/plpgsql_samples.expected.json test/plpgsql_samples.actual.json
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
 
 # Build target (matches Makefile line 107)
 add_custom_target(build DEPENDS pg_query)
 
-# Build shared target (matches Makefile line 109)
-add_custom_target(build_shared DEPENDS pg_query_shared)
 
 # All target (matches Makefile line 105) - using build_all to avoid reserved name
-add_custom_target(build_all DEPENDS examples test_all build)
+add_custom_target(build_all DEPENDS examples build)
 
 # Installation (matches Makefile lines 330-338)
 include(GNUInstallDirs)
 
-install(TARGETS pg_query pg_query_shared
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+install(TARGETS pg_query
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
-
-# Install with version symlinks for shared library
-if(UNIX AND NOT APPLE)
-    install(CODE "
-        execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
-            ${SOLIBVER}
-            \$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${SONAME}
-        )
-        execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
-            ${SOLIBVER}
-            \$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${SOLIB}
-        )
-    ")
-endif()
 
 install(FILES pg_query.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -334,4 +219,3 @@ add_custom_target(protobuf_files DEPENDS
 )
 
 add_dependencies(pg_query protobuf_files)
-add_dependencies(pg_query_shared protobuf_files)

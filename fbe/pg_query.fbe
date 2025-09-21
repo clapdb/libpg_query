@@ -1364,6 +1364,7 @@ struct RTEPermissionInfo
 {
   uint32 relid;
   bool inh;
+  uint64 required_perms;
   uint32 check_as_user;
   uint64[] selected_cols;
   uint64[] inserted_cols;
@@ -1548,7 +1549,7 @@ struct JsonFuncExpr
 
 struct JsonTablePathSpec
 {
-  Node string;
+  Node __string__;
   string name;
   int32 name_location;
   int32 location;
