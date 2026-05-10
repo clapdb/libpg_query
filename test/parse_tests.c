@@ -1,3 +1,6 @@
+// Needed when this fixture is compiled as a standalone C translation unit.
+#include <stddef.h>
+
 const char* tests[] = {
   "SELECT FALSE",
   "{\"version\":170004,\"stmts\":[{\"stmt\":{\"SelectStmt\":{\"targetList\":[{\"ResTarget\":{\"val\":{\"A_Const\":{\"boolval\":{},\"location\":7}},\"location\":7}}],\"limitOption\":\"LIMIT_OPTION_DEFAULT\",\"op\":\"SETOP_NONE\"}}}]}",
